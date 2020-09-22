@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import Vendor from './Vendor'
+import Vendor from "./Vendor";
 import { Link } from "react-router-dom";
-import {defaultRouteLink} from '../../common/config';
+import { defaultRouteLink } from "../../common/config";
 
 class ManageVendor extends Component {
     state = {
@@ -9,7 +9,7 @@ class ManageVendor extends Component {
         loading: true
     };
     fetchallvendor = async () => {
-        const res = await axios.get(defaultRouteLink+"/api/all-vendor");
+        const res = await axios.get(defaultRouteLink + "/api/all-vendor");
         if (res.data.status === 200) {
             this.setState({ vendors: res.data.vendors });
             this.setState({ loading: false });
@@ -35,17 +35,14 @@ class ManageVendor extends Component {
                     <div className="col-xs-6">
                         <h4 className="page-title"></h4>
                     </div>
-                    <div className="col-xs-6">
-                        <div className="row">
-                            <Link
-                                to="/dbBackup/create-vendor"
-                                type="button"
-                                className="btn btn-primary"
-                            >
-                                Create Vendor
-                            </Link>
-                        </div>
-                    </div>
+
+                    <Link
+                        to="/dbBackup/create-vendor"
+                        type="button"
+                        className="btn btn-primary"
+                    >
+                        Create Vendor
+                    </Link>
                 </div>
                 <div className="row">
                     <div className="col-md-12">
@@ -59,14 +56,15 @@ class ManageVendor extends Component {
                                             <td>SL</td>
                                             <td>Name</td>
                                             <td>Email</td>
+                                            <td>Address</td>
+                                            <td>Phone</td>
+                                            <td>Remarks</td>
                                             <td>Accounts No</td>
-                                            {/* <td>Action</td> */}
+                                            <td>Action</td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <Vendor
-                                            vendor={this.state.vendors}
-                                        />
+                                        <Vendor vendor={this.state.vendors} />
                                     </tbody>
                                 </table>
                             </div>

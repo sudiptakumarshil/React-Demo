@@ -36,7 +36,8 @@ Route::namespace('Vendor')->group(function () {
     Route::post('/save-vendor', 'VendorController@create_vendor')->name('save-vendor');
     Route::get('/all-vendor', 'VendorController@index')->name('all-vendor');
     Route::post('/save-vendor', 'VendorController@create_vendor')->name('save-vendor');
-    Route::post('/save-vendor', 'VendorController@create_vendor')->name('save-vendor');
+    Route::get('/edit-vendor/{id}', 'VendorController@edit_vendor')->name('edit-vendor');
+    Route::patch('/update-vendor/{id}', 'VendorController@update_vendor')->name('update-vendor');
 });
 
 Route::namespace('Accounts')->group(function () {

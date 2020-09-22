@@ -535,7 +535,7 @@ class EditWareHouse extends Component {
                                         <div className="col-md-10">
                                             <div className="input-group">
                                                 <button className="btn btn-primary text-center">
-                                                    save
+                                                    Update
                                                 </button>
                                             </div>
                                         </div>

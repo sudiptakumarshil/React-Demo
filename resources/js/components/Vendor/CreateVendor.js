@@ -12,8 +12,10 @@ class CreateVendor extends Component {
             toggle: true,
             name: "",
             email: "",
-            password: "",
             accounts_no: "",
+            phone:"",
+            address:"",
+            remarks:"",
             accounts_id: ""
         };
     }
@@ -37,7 +39,9 @@ class CreateVendor extends Component {
         this.setState({
             name: "",
             email: "",
-            password: "",
+            phone: "",
+            address:"",
+            remarks:"",
             accounts_no: ""
         });
         if (res.data.status === 200) {
@@ -85,8 +89,9 @@ class CreateVendor extends Component {
                                             <input
                                                 type="text"
                                                 className="form-control"
-                                                placeholder="Title"
+                                                placeholder="Name"
                                                 name="name"
+                                                required
                                                 value={this.state.name}
                                                 onChange={this.handleInput}
                                             ></input>
@@ -112,18 +117,50 @@ class CreateVendor extends Component {
                                 </div>
                                 <div className="form-group">
                                     <label className="control-label col-lg-2">
-                                        Password
+                                        Address
                                     </label>
                                     <div className="col-md-4">
                                         <div className="input-group">
                                             <input
-                                                type="password"
+                                                type="text"
                                                 className="form-control"
-                                                placeholder="Password"
-                                                name="password"
-                                                value={this.state.password}
+                                                placeholder="Address"
+                                                name="address"
+                                                value={this.state.address}
                                                 onChange={this.handleInput}
                                             ></input>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label className="control-label col-lg-2">
+                                        Phone
+                                    </label>
+                                    <div className="col-md-4">
+                                        <div className="input-group">
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="phone"
+                                                name="phone"
+                                                value={this.state.phone}
+                                                onChange={this.handleInput}
+                                            ></input>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="form-group">
+                                    <label className="control-label col-lg-2">
+                                        Remarks
+                                    </label>
+                                    <div className="col-md-4">
+                                        <div className="input-group">
+                                            <textarea className="form-control"
+                                                placeholder="remarks"
+                                                name="remarks"
+                                                value={this.state.remarks}
+                                                onChange={this.handleInput}></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -138,6 +175,7 @@ class CreateVendor extends Component {
                                                 className="form-control"
                                                 placeholder="Accounts No"
                                                 name="accounts_no"
+                                                required
                                                 value={this.state.accounts_no}
                                                 data-id={this.state.accounts_id}
                                                 onChange={this.handleInput}

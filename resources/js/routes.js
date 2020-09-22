@@ -13,6 +13,7 @@ import AddWareHouse from './Components/WareHouse/addWareHouse';
 import EditWareHouse from './Components/WareHouse/EditWareHouse';
 // for vendor part.....
 import CreateVendor from './Components/Vendor/CreateVendor';
+import EditVendor from './components/Vendor/Edit_vendor'
 import ManageVendor from './Components/Vendor/ManageVendor'
 
 import {defaultRouteLink,getAccessTokenName,userLogout,isLoginExist} from './common/config';
@@ -79,6 +80,11 @@ export const Routes=(props)=> {
                               exact
                               path={defaultRouteLink + "/manage-vendor"}
                               component={ManageVendor}
+                          />
+                         <Route
+                              exact
+                              path={defaultRouteLink + "/edit-vendor/:id"}
+                              render={props => <EditVendor {...props} />}
                           />
                       </Header>
                   ) : (

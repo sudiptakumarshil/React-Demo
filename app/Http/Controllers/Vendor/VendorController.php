@@ -23,8 +23,10 @@ class VendorController extends Controller
         $vendor = new Vendor();
         $vendor->name = $request->name;
         $vendor->email  = $request->email;
-        $vendor->password = bcrypt($request->password);
-        $vendor->accounts_no = $request->accounts_no;
+        $vendor->address  = $request->address;
+        $vendor->phone  = $request->phone;
+        $vendor->remarks  = $request->remarks;
+        $vendor->accounts_no = $request->accounts_id;
         $vendor->save();
         return response()->json([
             'status' => 200,
@@ -49,8 +51,10 @@ class VendorController extends Controller
         $vendor = Vendor::find($id);
         $vendor->name = $request->name;
         $vendor->email  = $request->email;
-        $vendor->password = bcrypt($request->password);
-        $vendor->accounts_no = $request->accounts_no;
+        $vendor->address  = $request->address;
+        $vendor->phone  = $request->phone;
+        $vendor->remarks  = $request->remarks;
+        $vendor->accounts_no = $request->accounts_id;
         $vendor->save();
         return response()->json([
             'status' => 200,

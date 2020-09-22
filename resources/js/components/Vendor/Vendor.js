@@ -15,9 +15,12 @@ class Vendor extends Component {
                     <td>{vendor.id}</td>
                     <td>{vendor.name}</td>
                     <td>{vendor.email}</td>
+                    <td>{vendor.address}</td>
+                    <td>{vendor.phone}</td>
+                    <td>{vendor.remarks}</td>
                     <td>{vendor.accounts_no}</td>
 
-                    {/* <td>
+                    <td>
                         <Link
                             to={`/dbBackup/edit-vendor/${vendor.id}`}
                             className="btn btn-primary"
@@ -25,7 +28,7 @@ class Vendor extends Component {
                         >
                             Edit
                         </Link>
-                    </td> */}
+                    </td>
                 </tr>
             );
         });
