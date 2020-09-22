@@ -16,7 +16,7 @@ class Edit_vendor extends Component {
             phone: "",
             address: "",
             remarks: "",
-            accounts_id: ""
+            accounts_no: ""
         };
     }
 
@@ -74,7 +74,7 @@ class Edit_vendor extends Component {
         this.setState({ phone: vInfo.phone });
         this.setState({ address: vInfo.address });
         this.setState({ remarks: vInfo.remarks });
-        this.setState({ accounts_id: vInfo.accounts_no });
+        this.setState({ accounts_no: vInfo.accounts_no });
 
         this.setState({ loading: false });
     }
@@ -195,7 +195,7 @@ class Edit_vendor extends Component {
                                                 value={this.state.accounts_no}
                                                 data-id={this.state.accounts_id}
                                                 onChange={this.handleInput}
-                                                
+
                                             />
                                             <ModalAccountsLedgerList
                                                 handleAccountsid={

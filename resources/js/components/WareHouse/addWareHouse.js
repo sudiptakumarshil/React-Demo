@@ -102,6 +102,7 @@ class addWareHouse extends Component {
                                                         className="form-control"
                                                         placeholder="Name"
                                                         name="name"
+                                                        required
                                                         value={this.state.name}
                                                         onChange={
                                                             this.handleInput
@@ -121,6 +122,7 @@ class addWareHouse extends Component {
                                                         className="form-control"
                                                         placeholder="Foreign Name"
                                                         name="foreign_name"
+                                                        required
                                                         value={
                                                             this.state
                                                                 .foreign_name
@@ -143,6 +145,7 @@ class addWareHouse extends Component {
                                                         className="form-control"
                                                         placeholder="Wh Keeper"
                                                         name="wh_keeper"
+                                                        required
                                                         value={
                                                             this.state.wh_keeper
                                                         }
@@ -164,6 +167,7 @@ class addWareHouse extends Component {
                                                         className="form-control"
                                                         placeholder="Location"
                                                         name="location"
+                                                        required
                                                         value={
                                                             this.state.location
                                                         }
@@ -185,6 +189,7 @@ class addWareHouse extends Component {
                                                         className="form-control"
                                                         placeholder="Telephone"
                                                         name="telephone"
+                                                        required
                                                         value={
                                                             this.state.telephone
                                                         }
@@ -206,6 +211,7 @@ class addWareHouse extends Component {
                                                         className="form-control"
                                                         placeholder="Sequence"
                                                         name="sequence"
+                                                        required
                                                         value={
                                                             this.state.sequence
                                                         }
@@ -228,6 +234,7 @@ class addWareHouse extends Component {
                                                         className="form-control"
                                                         placeholder="Province No"
                                                         name="province_no"
+                                                        required
                                                         value={
                                                             this.state
                                                                 .province_no
@@ -250,6 +257,7 @@ class addWareHouse extends Component {
                                                         className="form-control"
                                                         placeholder="Province No"
                                                         name="resign_code"
+                                                        required
                                                         value={
                                                             this.state
                                                                 .resign_code
@@ -272,6 +280,7 @@ class addWareHouse extends Component {
                                                         className="form-control"
                                                         placeholder="Wh Transfer Interface Account"
                                                         name="wh_transfer_interface_account"
+                                                        required
                                                         value={
                                                             this.state
                                                                 .wh_transfer_interface_account
@@ -294,6 +303,7 @@ class addWareHouse extends Component {
                                                         className="form-control"
                                                         placeholder="Item Activity"
                                                         name="item_activity"
+                                                        required
                                                         value={
                                                             this.state
                                                                 .item_activity
@@ -316,6 +326,7 @@ class addWareHouse extends Component {
                                                         className="form-control"
                                                         placeholder="Default Cc Code"
                                                         name="default_cc_code"
+                                                        required
                                                         value={
                                                             this.state
                                                                 .default_cc_code
@@ -339,6 +350,7 @@ class addWareHouse extends Component {
                                                         className="form-control"
                                                         placeholder="Account Name"
                                                         name="account_name"
+                                                        required
                                                         value={
                                                             this.state
                                                                 .account_name
@@ -362,6 +374,7 @@ class addWareHouse extends Component {
                                                         className="form-control"
                                                         placeholder="Branch"
                                                         name="branch"
+                                                        required
                                                         value={
                                                             this.state.branch
                                                         }
@@ -383,6 +396,7 @@ class addWareHouse extends Component {
                                                         className="form-control"
                                                         placeholder="Pricing Level"
                                                         name="pricing_level"
+                                                        required
                                                         value={
                                                             this.state
                                                                 .pricing_level
@@ -405,6 +419,7 @@ class addWareHouse extends Component {
                                                         className="form-control"
                                                         placeholder="Global Location No"
                                                         name="global_location_no"
+                                                        required
                                                         value={
                                                             this.state
                                                                 .global_location_no
@@ -427,6 +442,7 @@ class addWareHouse extends Component {
                                                         className="form-control"
                                                         placeholder="Longitude"
                                                         name="longitude"
+                                                        required
                                                         value={
                                                             this.state.longitude
                                                         }
@@ -448,6 +464,7 @@ class addWareHouse extends Component {
                                                         className="form-control"
                                                         placeholder="Latitude"
                                                         name="latitude"
+                                                        required
                                                         value={
                                                             this.state.latitude
                                                         }
@@ -469,6 +486,7 @@ class addWareHouse extends Component {
                                                         className="form-control"
                                                         placeholder="Address"
                                                         name="address"
+                                                        required
                                                         value={
                                                             this.state.address
                                                         }
@@ -490,6 +508,7 @@ class addWareHouse extends Component {
                                                         className="form-control"
                                                         placeholder="Foreign Address"
                                                         name="foreign_address"
+                                                        required
                                                         value={
                                                             this.state
                                                                 .foreign_address
