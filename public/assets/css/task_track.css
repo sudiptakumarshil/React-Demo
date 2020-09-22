@@ -1,0 +1,112 @@
+*, *::after, *::before {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+html {
+    font-size: 62.5%;
+}
+
+h2, h4, h6 {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+}
+.root {
+    padding: 3rem 1.5rem;
+    border-radius: 5px;
+    box-shadow: 0 2rem 6rem rgba(0, 0, 0, 0.3);
+}
+figure {
+
+
+}
+
+figure figcaption {
+
+}
+figure figcaption h1 {
+    font-size: 23px;
+    font-weight: 500;
+}
+
+.order-track {
+    margin-top: 2rem;
+    padding: 0 1rem;
+    padding-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+}
+.order-track-step {
+    display: flex;
+}
+.order-track-step:last-child {
+    overflow: hidden;
+    height: 4rem;
+}
+.order-track-step:last-child .order-track-status span:last-of-type {
+    display: none;
+}
+.order-track-status {
+    margin-right: 1.5rem;
+    position: relative;
+}
+
+.order-track-status-done:before {
+    /*position: relative;*/
+    /*bottom: -2.5em;*/
+    float: left;
+    /*left: 50%;*/
+    line-height: 1em;
+}
+
+.order-track-status-done:before{
+    content: "\2713";
+    color: white;
+    background-color: #03A679;
+    height: 2.2em;
+    width: 2.2em;
+    /*line-height: 2.2em;*/
+    border: none;
+    border-radius: 2.2em;
+    padding: 7px 7px 7px 7px;
+}
+
+.order-track-status-blank:before{
+    float: left;
+    line-height: 1em;
+}
+
+.order-track-status-blank:before{
+    content: "";
+    color: white;
+    background-color: #ccc;
+    height: 2.2em;
+    width: 2.2em;
+    /*line-height: 2.2em;*/
+    border: none;
+    border-radius: 2.2em;
+    padding: 7px 7px 7px 7px;
+}
+
+
+.order-track-status-line {
+    display: block;
+    margin: 0 auto;
+    width: 2px;
+    height: 7rem;
+    background: #ccc;
+}
+.order-track-text-stat {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-bottom: 3px;
+}
+.order-track-text-sub {
+    font-size: 1rem;
+    font-weight: 300;
+}
+.order-track {
+    transition: all 0.3s height 0.3s;
+    transform-origin: top center;
+}
