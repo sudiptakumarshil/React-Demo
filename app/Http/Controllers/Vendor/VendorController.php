@@ -11,10 +11,10 @@ class VendorController extends Controller
 
     public function index()
     {
-        $vendor = Vendor::all();
+        $vendors = Vendor::all();
         return response()->json([
             'status' => 200,
-            'vendor' => $vendor
+            'vendors' => $vendors
         ]);
     }
 

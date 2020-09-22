@@ -1,8 +1,9 @@
 import React, { Component, useState } from "react";
 import { Button, ButtonToolbar, Modal } from "react-bootstrap";
 import "../css/style_frontend.css";
+import Swal from "sweetalert2";
 
-import ModalAccountsLedgerList from '../modal/ModalAccountsLedgerList';
+import ModalAccountsLedgerList from "../modal/ModalAccountsLedgerList";
 
 class CreateVendor extends Component {
     constructor(props) {
@@ -13,7 +14,7 @@ class CreateVendor extends Component {
             email: "",
             password: "",
             accounts_no: "",
-            accounts_id: "",
+            accounts_id: ""
         };
     }
 
@@ -21,13 +22,13 @@ class CreateVendor extends Component {
         this.setState({ [event.target.name]: event.target.value });
     };
 
-    handleAccountsid=(object)=>{
+    handleAccountsid = object => {
         //console.log("accId="+object.id);
         this.setState({
-            accounts_no: object.id,
+            accounts_no: object.ledger_title,
             accounts_id: object.id
-        })
-    }
+        });
+    };
 
     Createvendor = async event => {
         event.preventDefault();
@@ -42,6 +43,22 @@ class CreateVendor extends Component {
         if (res.data.status === 200) {
             this.props.history.push("/dbBackup/manage-vendor");
         }
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            onOpen: toast => {
+                toast.addEventListener("mouseenter", Swal.stopTimer);
+                toast.addEventListener("mouseleave", Swal.resumeTimer);
+            }
+        });
+
+        Toast.fire({
+            icon: "success",
+            title: "Vendor Create  Successfully!!"
+        });
     };
     render() {
         return (
@@ -125,7 +142,10 @@ class CreateVendor extends Component {
                                                 data-id={this.state.accounts_id}
                                                 onChange={this.handleInput}
                                             />
-                                            <ModalAccountsLedgerList handleAccountsid={this.handleAccountsid}
+                                            <ModalAccountsLedgerList
+                                                handleAccountsid={
+                                                    this.handleAccountsid
+                                                }
                                             />
                                         </div>
                                     </div>

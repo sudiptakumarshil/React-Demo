@@ -141,8 +141,8 @@ const Header = props => {
                                     style={{ display: "none" }}
                                 >
                                     <li className="">
-                                        <Link to="/dbBackup/create-vendor">
-                                           Create Vendor
+                                        <Link to="/dbBackup/manage-vendor">
+                                          Manage All Vendor
                                         </Link>
                                     </li>
                                     <li className="">

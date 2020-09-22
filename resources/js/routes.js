@@ -74,6 +74,7 @@ export const Routes=(props)=> {
                               path={defaultRouteLink + "/create-vendor"}
                               component={CreateVendor}
                           />
+
                           <Route
                               exact
                               path={defaultRouteLink + "/manage-vendor"}
