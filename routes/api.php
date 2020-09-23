@@ -45,3 +45,26 @@ Route::namespace('Accounts')->group(function () {
     Route::get('/all-ledger', 'LedgerController@index')->name('all-ledger');
 
 });
+
+//for customer mnagement..
+Route::namespace('frontend')->group(function () {
+    Route::namespace('api')->group(function () {
+        Route::namespace('Customer')->group(function () {
+            Route::post('/create-customer', 'CustomerController@create_customer')->name("create-customer");
+            Route::get('/all-customer', 'CustomerController@index')->name("all-customer");
+            Route::get('/edit-customer/{id}', 'CustomerController@edit_customer')->name("edit-customer");
+            Route::patch('/update-customer/{id}', 'CustomerController@update_customer')->name("update-customer");
+        });
+    });
+});
+Route::namespace('frontend')->group(function () {
+    Route::namespace('api')->group(function () {
+        Route::namespace('InventoryCategory')->group(function () {
+            Route::get('/all-inventcategory', 'InventoryCategoryController@getAccountsInfoAsTree')->name("all-inventcategory");
+
+        });
+    });
+});
+
+
+

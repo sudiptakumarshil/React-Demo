@@ -11,6 +11,10 @@ import { connect } from 'react-redux'
 import ManageWareHouse from './Components/WareHouse/ManageWareHouse'
 import AddWareHouse from './Components/WareHouse/addWareHouse';
 import EditWareHouse from './Components/WareHouse/EditWareHouse';
+import CreateCustomer from "./components/Customer/CreateCustomer";
+import ManageCustomer from "./components/Customer/ManageCustomer";
+import EditCustomer from "./components/Customer/EditCustomer";
+import CreateInventCategory from "./components/InventoryCategory/CreateInventCategory";
 // for vendor part.....
 import CreateVendor from './Components/Vendor/CreateVendor';
 import EditVendor from './components/Vendor/Edit_vendor'
@@ -85,6 +89,28 @@ export const Routes=(props)=> {
                               exact
                               path={defaultRouteLink + "/edit-vendor/:id"}
                               render={props => <EditVendor {...props} />}
+                          />
+
+
+                      {/*    route for Customer*/}
+                          <Route
+                              exact
+                              path={defaultRouteLink + "/create-customer"}
+                              component={CreateCustomer}
+                          /> <Route
+                              exact
+                              path={defaultRouteLink + "/manage-customer"}
+                              component={ManageCustomer}
+                          />
+                          <Route
+                              exact
+                              path={defaultRouteLink + "/edit-customer/:id"}
+                              render={props => <EditCustomer {...props} />}
+                          />
+                          <Route
+                              exact
+                              path={defaultRouteLink + "/create-invent-category"}
+                              component={CreateInventCategory}
                           />
                       </Header>
                   ) : (

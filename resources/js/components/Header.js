@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { compose } from "redux";
-import { connect } from "react-redux";
-import { withRouter, Redirect } from "react-router-dom";
+import React, {useState, useEffect} from "react";
+import {compose} from "redux";
+import {connect} from "react-redux";
+import {withRouter, Redirect} from "react-router-dom";
 import {
     defaultRouteLink,
     getAccessTokenName,
@@ -13,7 +13,7 @@ import {
     setCookie,
     removeCookie
 } from "../common/CookieService";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import Dashboard from "./Dashboard";
 import Swal from "sweetalert2";
 
@@ -31,7 +31,7 @@ const Header = props => {
                         <div className="page-title-box pull-left">
                             <h3>Admin</h3>
                         </div>
-                        <div style={{ textAlign: "center" }}>
+                        <div style={{textAlign: "center"}}>
                             <ul className="nav navbar-nav navbar-right user-menu pull-right">
                                 <div className="dropdown">
                                     <a
@@ -119,7 +119,7 @@ const Header = props => {
                                 </a>
                                 <ul
                                     className="list-unstyled"
-                                    style={{ display: "none" }}
+                                    style={{display: "none"}}
                                 >
                                     <li className="">
                                         <Link to="/dbBackup/manage-warehouse">
@@ -138,11 +138,21 @@ const Header = props => {
                                 </a>
                                 <ul
                                     className="list-unstyled"
-                                    style={{ display: "none" }}
+                                    style={{display: "none"}}
                                 >
                                     <li className="">
                                         <Link to="/dbBackup/manage-vendor">
-                                          Manage All Vendor
+                                            Manage All Vendor
+                                        </Link>
+                                    </li>
+                                    <li className="">
+                                        <Link to="/dbBackup/manage-Customer">
+                                            Manage All Customer
+                                        </Link>
+                                    </li>
+                                    <li className="">
+                                        <Link to="/dbBackup/create-invent-category">
+                                            Create Inventory Category
                                         </Link>
                                     </li>
                                     <li className="">
@@ -174,7 +184,7 @@ const Header = props => {
                                 </a>
                                 <ul
                                     className="list-unstyled"
-                                    style={{ display: "none" }}
+                                    style={{display: "none"}}
                                 >
                                     <li className="">
                                         <a

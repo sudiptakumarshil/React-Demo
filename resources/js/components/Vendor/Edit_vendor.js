@@ -16,7 +16,7 @@ class Edit_vendor extends Component {
             phone: "",
             address: "",
             remarks: "",
-            accounts_no: ""
+            accounts_id: ""
         };
     }
 

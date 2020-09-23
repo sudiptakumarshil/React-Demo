@@ -27,6 +27,8 @@
     <link rel="stylesheet" type="text/css" href="<?= asset('public/assets/css/style.css') ?>">
     <link rel="stylesheet" type="text/css" href="<?= asset('public/assets/css/datatables-select.min.css') ?>">
     <link rel="stylesheet" type="text/css" href="<?= asset('public/assets/css/bootstrap-timepicker.css') ?>">
+    {{--    for tree view--}}
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
     <link rel="stylesheet" href=" https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap.min.css">
@@ -47,7 +49,6 @@
     <script src="{{ asset('public/assets/js/jquery-3.2.1.min.js') }}"></script>
 
     <script type="text/javascript" src="<?= asset('public/assets/js/google-chart.js') ?>"></script>
-    <script src="https://rawgit.com/jonmiles/bootstrap-treeview/master/public/js/bootstrap-treeview.js"></script>
     <script src="https://cdn.ckeditor.com/4.14.1/standard/ckeditor.js"></script>
     <script src="http://vitalets.github.io/bootstrap-datepicker/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
     <script type="text/javascript" src="<?= asset('public/assets/js/moment.min.js') ?>"></script>
@@ -57,6 +58,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>
     <script src="https://unpkg.com/react/umd/react.production.min.js" crossorigin></script>
 
+     {{--    for react treeview--}}
     <script
     src="https://unpkg.com/react-dom/umd/react-dom.production.min.js"
     crossorigin></script>
