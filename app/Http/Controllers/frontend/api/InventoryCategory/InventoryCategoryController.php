@@ -61,7 +61,7 @@ class InventoryCategoryController extends Controller
             $acc_ledger_id = 0;
             $acc_ledger_acc_id = 0;
 
-            $ara["id"] = $val;
+            $ara["id"] = $val->id;
             $ara["text"] = $val->category_name;
             $ara["head_title"] = 0;
             $ara["name"] = $val->category_name;

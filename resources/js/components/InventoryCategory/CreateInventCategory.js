@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component,useState,useEffect } from "react";
 import { Link } from "react-router-dom";
 import Customer from "../Customer/Customer";
 import { defaultRouteLink } from "../../common/config";
@@ -8,81 +8,102 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeItem from "@material-ui/lab/TreeItem";
 import { data, map } from "jquery";
 
-class CreateInventCategory extends Component {
-    state = {
-        list: [],
-        loading: true,
-        category_name: [],
-        invent_category: [],
-        root_id: [],
-        status: []
+const CreateInventCategory=(props)=> {
+
+    const [list,setList]=useState([]);
+    const [loading,setLoading]=useState(false);
+    const [category_name,setCategory_name]=useState([]);
+    const [invent_category,setInvent_category]=useState([]);
+    const [root_id,setRoot_id]=useState([]);
+    const [status,setStatus]=useState([]);
+
+    const handleInput = event => {
+        //this.setState({ [event.target.name]: event.target.value });
+        if(event.target.name == "invent_category")
+            setInvent_category(event.target.value);
+        else
+            setStatus(event.target.value);
+
     };
 
-    handleInput = event => {
-        this.setState({ [event.target.name]: event.target.value });
-    };
-
-    SaveInventCategory = async event => {
+    const SaveInventCategory = async event => {
         event.preventDefault();
 
-        const res = await axios.post(
-            "/dbBackup/api/save-inventcategory",
-            this.state
-        );
-        this.setState({
-            root_id: "",
-            invent_category: ""
-        });
-        if (res.data.status === 200) {
-            // this.props.history.push("/dbBackup/manage-vendor");
+        const data={
+            status:status,
+            root_id:root_id,
+            category_name:category_name,
+            invent_category:invent_category
         }
+
+      const res = await axios.post(
+            "/dbBackup/api/save-inventcategory",
+            data
+        );
+        setRoot_id(root_id);
+        setInvent_category("");
+        fetchallinventCategory();
+
     };
 
-    fetchallinventCategory = async () => {
+    const fetchallinventCategory = async () => {
         const res = await axios.get(
             defaultRouteLink + "/api/all-inventcategory"
         );
         // if (res.data.status === 200) {
+        setList(res.data.list);
+        setLoading(false);
 
-        this.setState({ list: res.data.list });
-        this.setState({ loading: false });
+        //this.setState({ list: res.data.list });
+        //this.setState({ loading: false });
         // }
         // console.log(res);
     };
-    fetchTreeItemData(event, data) {}
-    componentDidMount = () => {
-        this.fetchallinventCategory();
-    };
+   // fetchTreeItemData(event, data) {}
+   useEffect(()=>{
+        fetchallinventCategory();
+   },[]);
 
-    renderTree = nodes => (
-        <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name}>
+    const renderTree = nodes => (
+        <TreeItem  data-id={nodes.id} key={nodes.id} nodeId={nodes.id} label={renderLabel(nodes)}>
             {Array.isArray(nodes.children)
-                ? nodes.children.map(node => this.renderTree(node))
+                ? nodes.children.map(node => renderTree(node))
                 : null}
         </TreeItem>
     );
 
-    handleNodeData = (event, data) => {
-        console.log("test="+data.category_name);
-        this.setState({
-            root_id: data.id,
-            category_name: data.category_name
-        });
+    const renderLabel = item => (
+        <span
+          onClick={event => {
+            //console.log(item.name);
+            //setActiveItemId(item.id);
+            setRoot_id(item.id);
+            setCategory_name(item.name);
+            // if you want after click do expand/collapse comment this two line
+            event.stopPropagation();
+            event.preventDefault();
+          }}
+        >
+          {item.name}
+        </span>
+      );
+
+    const handleNodeData = (data) => {
+
+        console.log("test="+event);
+
     };
 
-    render() {
-        if (this.state.list.length >= 0) {
-        }
         return (
             <div>
                 <div className="col-md-12">
                     <div className="row">
                         <div className="col-md-6">
-                            <form onSubmit={this.SaveInventCategory}>
+                            <form onSubmit={SaveInventCategory}>
                                 <div className="form-group">
                                     <label className="control-label">
                                         Category Root :
-                                        {this.state.category_name}
+                                        {category_name}
                                     </label>
                                     <div>
                                         <div className="input-group">
@@ -92,10 +113,10 @@ class CreateInventCategory extends Component {
                                                 placeholder="Category Name"
                                                 name="invent_category"
                                                 value={
-                                                    this.state.invent_category
+                                                    invent_category
                                                 }
-                                                data-id={this.state.root_id}
-                                                onChange={this.handleInput}
+                                                data-id={root_id}
+                                                onChange={handleInput}
                                             ></input>
                                         </div>
                                     </div>
@@ -103,7 +124,7 @@ class CreateInventCategory extends Component {
                                     <div className="mt-4">
                                         <select
                                             name="status"
-                                            onChange={this.handleInput}
+                                            onChange={handleInput}
                                         >
                                             <option disabled>
                                                 Select Status
@@ -127,15 +148,14 @@ class CreateInventCategory extends Component {
                             </form>
                         </div>
                         <div className="col-md-6">
-                            {this.state.list.map(item => {
+                            {list.map(item => {
                                 return (
                                     <TreeView
-                                        onNodeSelect={this.handleNodeData}
                                         defaultCollapseIcon={<ExpandMoreIcon />}
                                         defaultExpanded={["root"]}
                                         defaultExpandIcon={<ChevronRightIcon />}
                                     >
-                                        {this.renderTree(item)}
+                                        {renderTree(item)}
                                     </TreeView>
                                 );
                             })}
@@ -145,6 +165,6 @@ class CreateInventCategory extends Component {
             </div>
         );
     }
-}
+
 
 export default CreateInventCategory;
