@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Model\InventoryCategory\InventoryCategory;
-
+use Illuminate\Support\Facades\DB;
 class InventoryCategoryController extends Controller
 {
 
@@ -61,7 +61,7 @@ class InventoryCategoryController extends Controller
             $acc_ledger_id = 0;
             $acc_ledger_acc_id = 0;
 
-            $ara["id"] = $val->id;
+            $ara["id"] = $val;
             $ara["text"] = $val->category_name;
             $ara["head_title"] = 0;
             $ara["name"] = $val->category_name;
@@ -79,6 +79,35 @@ class InventoryCategoryController extends Controller
         if ($id == $fid || $id == '0') {
             return $res;
         }
+    }
+
+
+    public function save_category(Request $request){
+
+
+        // return $request->all();
+        // exit();
+
+        // $category = array();
+        // $category['root_id'] = $request->root_id;
+        // $category['category_name'] = $request->invent_category;
+        // $category['status'] = $request->status;
+        // DB::table('inventory_categories')->insert($category);
+
+        $category  = new InventoryCategory();
+        $category->root_id = $request->root_id;
+        $category->category_name = $request->invent_category;
+        // $category->status = $request->status;
+        $category->save();
+        return response()->json([
+            'status'=>200,
+            'message'=>'Category Saved Successfully!!'
+        ]);
+
+
+
+
+
     }
 
 

@@ -61,7 +61,7 @@ Route::namespace('frontend')->group(function () {
     Route::namespace('api')->group(function () {
         Route::namespace('InventoryCategory')->group(function () {
             Route::get('/all-inventcategory', 'InventoryCategoryController@getAccountsInfoAsTree')->name("all-inventcategory");
-
+            Route::post('/save-inventcategory', 'InventoryCategoryController@save_category')->name("save-inventcategory");
         });
     });
 });
