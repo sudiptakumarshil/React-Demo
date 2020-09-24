@@ -55,7 +55,7 @@ class CreateInventCategory extends Component {
     };
 
     renderTree = nodes => (
-        <TreeItem key={nodes.id.id} nodeId={nodes.id} label={nodes.name}>
+        <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name}>
             {Array.isArray(nodes.children)
                 ? nodes.children.map(node => this.renderTree(node))
                 : null}
@@ -63,11 +63,11 @@ class CreateInventCategory extends Component {
     );
 
     handleNodeData = (event, data) => {
-        // console.log("test="+data.category_name);
-        // this.setState({
-        //     root_id: data.id,
-        //     category_name: data.category_name
-        // });
+        console.log("test="+data.category_name);
+        this.setState({
+            root_id: data.id,
+            category_name: data.category_name
+        });
     };
 
     render() {
