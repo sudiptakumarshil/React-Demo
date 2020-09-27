@@ -10,8 +10,7 @@ class InventoryCategory extends Model
     protected  $guarded = [];
 
     public function subcategory(){
-        return $this->hasMany('App\Model\InventoryCategory\InventoryCategory', 'root_id');
-
+        return $this->belongsTo(InventoryCategory::class,'root_id');
 
     }
 }

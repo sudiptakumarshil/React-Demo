@@ -1,4 +1,4 @@
-import React, { Component,useState,useEffect } from "react";
+import React, { Component, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Customer from "../Customer/Customer";
 import { defaultRouteLink } from "../../common/config";
@@ -8,45 +8,85 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeItem from "@material-ui/lab/TreeItem";
 import { data, map } from "jquery";
 
-const CreateInventCategory=(props)=> {
-
-    const [list,setList]=useState([]);
-    const [loading,setLoading]=useState(false);
-    const [category_name,setCategory_name]=useState([]);
-    const [invent_category,setInvent_category]=useState([]);
-    const [root_id,setRoot_id]=useState([]);
-    const [status,setStatus]=useState([]);
+const CreateInventCategory = props => {
+    const [list, setList] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [category_name, setCategory_name] = useState([]);
+    const [invent_category, setInvent_category] = useState([]);
+    const [root_id, setRoot_id] = useState([]);
+    const [root_name, setRoot_name] = useState([]);
+    const [id, setid] = useState([]);
+    const [status, setStatus] = useState([]);
+    const [isBtnSave, setIsBtnSave] = useState(false);
 
     const handleInput = event => {
         //this.setState({ [event.target.name]: event.target.value });
-        if(event.target.name == "invent_category")
+        if (event.target.name == "invent_category")
             setInvent_category(event.target.value);
-        else
-            setStatus(event.target.value);
-
+        else setStatus(event.target.value);
     };
 
     const SaveInventCategory = async event => {
         event.preventDefault();
 
-        const data={
-            status:status,
-            root_id:root_id,
-            category_name:category_name,
-            invent_category:invent_category
-        }
+        const data = {
+            status: status,
+            root_id: root_id,
+            category_name: category_name,
+            invent_category: invent_category
+        };
 
-      const res = await axios.post(
-            "/dbBackup/api/save-inventcategory",
-            data
-        );
+        const res = await axios.post("/dbBackup/api/save-inventcategory", data);
         setRoot_id(root_id);
         setInvent_category("");
         fetchallinventCategory();
+    };
 
+    const newInventcategory = async event => {
+        event.preventDefault();
+        setRoot_name(invent_category);
+        setInvent_category("");
+        setIsBtnSave(true);
+    };
+
+    const updateInventCategory = async event => {
+        event.preventDefault();
+
+        const data = {
+            id: id,
+            status: status,
+            invent_category: invent_category
+        };
+
+        const res = await axios.patch(
+            `/dbBackup/api/update-inventcategory/${id}`,
+            data
+        );
+        // if (res.data.status === 200) {
+        //     this.props.history.push("/dbBackup/manage-vendor");
+        // }
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            onOpen: toast => {
+                toast.addEventListener("mouseenter", Swal.stopTimer);
+                toast.addEventListener("mouseleave", Swal.resumeTimer);
+            }
+        });
+        fetchallinventCategory();
+
+        Toast.fire({
+            icon: "success",
+            title: "Ctaegory Updated  Successfully!!"
+        });
     };
 
     const fetchallinventCategory = async () => {
+        const id = props.match.params.id;
+
         const res = await axios.get(
             defaultRouteLink + "/api/all-inventcategory"
         );
@@ -59,13 +99,18 @@ const CreateInventCategory=(props)=> {
         // }
         // console.log(res);
     };
-   // fetchTreeItemData(event, data) {}
-   useEffect(()=>{
+    // fetchTreeItemData(event, data) {}
+    useEffect(() => {
         fetchallinventCategory();
-   },[]);
+    }, []);
 
     const renderTree = nodes => (
-        <TreeItem  data-id={nodes.id} key={nodes.id} nodeId={nodes.id} label={renderLabel(nodes)}>
+        <TreeItem
+            data-id={nodes.id}
+            key={nodes.id}
+            nodeId={nodes.id}
+            label={renderLabel(nodes)}
+        >
             {Array.isArray(nodes.children)
                 ? nodes.children.map(node => renderTree(node))
                 : null}
@@ -74,97 +119,134 @@ const CreateInventCategory=(props)=> {
 
     const renderLabel = item => (
         <span
-          onClick={event => {
-            //console.log(item.name);
-            //setActiveItemId(item.id);
-            setRoot_id(item.id);
-            setCategory_name(item.name);
-            // if you want after click do expand/collapse comment this two line
-            event.stopPropagation();
-            event.preventDefault();
-          }}
+            onClick={event => {
+                // console.log(item.invent_category);
+                // console.log(item.id)
+                // console.log(item.name)
+
+                // setActiveItemId(item.id);
+
+                setRoot_id(item.acc_code);
+                setInvent_category(item.name);
+                setRoot_name(item.root_category);
+                setid(item.id);
+                // if you want after click do expand/collapse comment this two line
+                event.stopPropagation();
+                event.preventDefault();
+            }}
         >
-          {item.name}
+            {item.name}
         </span>
-      );
+    );
 
-    const handleNodeData = (data) => {
-
-        console.log("test="+event);
-
+    const handleNodeData = data => {
+        console.log("test=" + event);
     };
 
-        return (
-            <div>
-                <div className="col-md-12">
-                    <div className="row">
-                        <div className="col-md-6">
-                            <form onSubmit={SaveInventCategory}>
-                                <div className="form-group">
-                                    <label className="control-label">
-                                        Category Root :
-                                        {category_name}
-                                    </label>
-                                    <div>
-                                        <div className="input-group">
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                placeholder="Category Name"
-                                                name="invent_category"
-                                                value={
-                                                    invent_category
-                                                }
-                                                data-id={root_id}
-                                                onChange={handleInput}
-                                            ></input>
-                                        </div>
-                                    </div>
-
-                                    <div className="mt-4">
-                                        <select
-                                            name="status"
+    return (
+        <div>
+            <div className="col-md-12">
+                <div className="row">
+                    <div className="col-md-6">
+                        {/* <form onSubmit={SaveInventCategory}> */}
+                        <form>
+                            <div className="form-group">
+                                <label className="control-label">
+                                    Category Root :{/*{category_name}*/}
+                                </label>
+                                <div>
+                                    <div className="input-group">
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder=""
+                                            name="category_name"
+                                            value={root_name}
+                                            data-id={root_id}
                                             onChange={handleInput}
-                                        >
-                                            <option disabled>
-                                                Select Status
-                                            </option>
-                                            <option value="1" selected>
-                                                Active
-                                            </option>
-                                            <option value="0">Inactive</option>
-                                        </select>
+                                        ></input>
                                     </div>
+                                    <br />
+                                    <div className="input-group">
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder=""
+                                            name="invent_category"
+                                            value={
+                                                invent_category
+                                                // category_name
+                                            }
+                                            data-id={setid}
+                                            onChange={handleInput}
+                                        ></input>
+                                    </div>
+                                </div>
 
-                                    <div className="mt-4 text-center">
+                                <div className="mt-4">
+                                    <select
+                                        name="status"
+                                        onChange={handleInput}
+                                    >
+                                        <option disabled>Select Status</option>
+                                        <option value="1" selected>
+                                            Active
+                                        </option>
+                                        <option value="0">Inactive</option>
+                                    </select>
+                                </div>
+
+                                <div className="mt-4 text-center">
+                                    {isBtnSave ? (
                                         <button
                                             className="btn btn-primary"
                                             type="submit"
+                                            onClick={SaveInventCategory}
+                                            // onClick={newInventcategory}
                                         >
                                             Save
                                         </button>
-                                    </div>
+                                    ) : (
+                                        <div>
+                                            <button
+                                                className="btn btn-warning"
+                                                type="submit"
+                                                // onClick={SaveInventCategory}
+                                                onClick={newInventcategory}
+                                            >
+                                                New
+                                            </button>
+
+                                            <button
+                                                className="btn btn-danger"
+                                                type="submit"
+                                                onClick={updateInventCategory}
+                                            >
+                                                Update
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
-                            </form>
-                        </div>
-                        <div className="col-md-6">
-                            {list.map(item => {
-                                return (
-                                    <TreeView
-                                        defaultCollapseIcon={<ExpandMoreIcon />}
-                                        defaultExpanded={["root"]}
-                                        defaultExpandIcon={<ChevronRightIcon />}
-                                    >
-                                        {renderTree(item)}
-                                    </TreeView>
-                                );
-                            })}
-                        </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div className="col-md-6">
+                        {list.map(item => {
+                            return (
+                                <TreeView
+                                    defaultCollapseIcon={<ExpandMoreIcon />}
+                                    defaultExpanded={["root"]}
+                                    defaultExpandIcon={<ChevronRightIcon />}
+                                >
+                                    {renderTree(item)}
+                                </TreeView>
+                            );
+                        })}
                     </div>
                 </div>
             </div>
-        );
-    }
-
+        </div>
+    );
+};
 
 export default CreateInventCategory;
