@@ -40,11 +40,14 @@ const CreateInventCategory = props => {
         setRoot_id(root_id);
         setInvent_category("");
         fetchallinventCategory();
+        setIsBtnSave(false);
     };
 
     const newInventcategory = async event => {
         event.preventDefault();
         setRoot_name(invent_category);
+        setRoot_id(id);
+
         setInvent_category("");
         setIsBtnSave(true);
     };
