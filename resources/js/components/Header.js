@@ -156,6 +156,11 @@ const Header = props => {
                                         </Link>
                                     </li>
                                     <li className="">
+                                        <Link to="/dbBackup/manage-product">
+                                            Manage Inventory Product
+                                        </Link>
+                                    </li>
+                                    <li className="">
                                         <a
                                             data-id="0"
                                             href="{{ url('/task_all') }}"

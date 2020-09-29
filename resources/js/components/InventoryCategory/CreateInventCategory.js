@@ -8,6 +8,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeItem from "@material-ui/lab/TreeItem";
 import { data, map } from "jquery";
 
+
 const CreateInventCategory = props => {
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(false);
