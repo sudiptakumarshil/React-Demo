@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Customer from "../Customer/Customer";
 import { defaultRouteLink } from "../../common/config";
 import TreeView from "@material-ui/lab/TreeView";
@@ -25,6 +25,7 @@ const ManageProduct = props => {
     }, []);
 
     return (
+
         <div className="col-md-12">
             <div className="row">
                 <div className="col-md-12">

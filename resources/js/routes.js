@@ -1,33 +1,47 @@
-import React, {useEffect} from 'react';
-import {BrowserRouter, Route, Switch, IndexRoute} from 'react-router-dom'
-import ReactDOM from 'react-dom';
-import App from './components/Home';
-import LoginPage from './components/Login';
-import Header from './components/Header';
-import Orders from './components/Orders';
-import Dashboard from './components/Dashboard';
-import NotFound from './components/NotFound';
-import {connect} from 'react-redux'
-import ManageWareHouse from './Components/WareHouse/ManageWareHouse'
-import AddWareHouse from './Components/WareHouse/addWareHouse';
-import EditWareHouse from './Components/WareHouse/EditWareHouse';
+import React, { useEffect } from "react";
+import {
+    BrowserRouter,
+    useParams,
+    Route,
+    Switch,
+    IndexRoute
+} from "react-router-dom";
+import ReactDOM from "react-dom";
+import App from "./components/Home";
+import LoginPage from "./components/Login";
+import Header from "./components/Header";
+import Orders from "./components/Orders";
+import Dashboard from "./components/Dashboard";
+import NotFound from "./components/NotFound";
+import { connect } from "react-redux";
+import ManageWareHouse from "./Components/WareHouse/ManageWareHouse";
+import AddWareHouse from "./Components/WareHouse/addWareHouse";
+import EditWareHouse from "./Components/WareHouse/EditWareHouse";
 import CreateCustomer from "./components/Customer/CreateCustomer";
 import ManageCustomer from "./components/Customer/ManageCustomer";
 import EditCustomer from "./components/Customer/EditCustomer";
 import CreateInventCategory from "./components/InventoryCategory/CreateInventCategory";
-import ManageProduct from './components/InventoryProduct/ManageProduct';
+import ManageProduct from "./components/InventoryProduct/ManageProduct";
 // for vendor part.....
-import CreateVendor from './Components/Vendor/CreateVendor';
-import EditVendor from './components/Vendor/Edit_vendor'
-import ManageVendor from './Components/Vendor/ManageVendor'
+import CreateVendor from "./Components/Vendor/CreateVendor";
+import EditVendor from "./components/Vendor/Edit_vendor";
+import ManageVendor from "./Components/Vendor/ManageVendor";
 
-import {defaultRouteLink, getAccessTokenName, userLogout, isLoginExist} from './common/config';
-import {getCookieKeyInfo, setCookie, removeCookie} from './common/CookieService'
+import {
+    defaultRouteLink,
+    getAccessTokenName,
+    userLogout,
+    isLoginExist
+} from "./common/config";
+import {
+    getCookieKeyInfo,
+    setCookie,
+    removeCookie
+} from "./common/CookieService";
 import AddProduct from "./components/InventoryProduct/AddProduct";
-import EditProduct from "./components/InventoryProduct/EditProduct"
+import EditProduct from "./components/InventoryProduct/EditProduct";
 
-export const Routes = (props) => {
-
+export const Routes = props => {
     let isLoginExit = getCookieKeyInfo(getAccessTokenName);
     useEffect(() => {
         console.log("hoeel");
@@ -63,26 +77,22 @@ export const Routes = (props) => {
                                 path={defaultRouteLink + "/add-warehouse"}
                                 component={AddWareHouse}
                             />
-
                             <Route
                                 exact
                                 path={defaultRouteLink + "/manage-warehouse"}
                                 component={ManageWareHouse}
                             />
-
                             <Route
                                 exact
                                 path={defaultRouteLink + "/edit-warehouse/:id"}
                                 render={props => <EditWareHouse {...props} />}
                             />
-
                             {/* route for Vendor creation */}
                             <Route
                                 exact
                                 path={defaultRouteLink + "/create-vendor"}
                                 component={CreateVendor}
                             />
-
                             <Route
                                 exact
                                 path={defaultRouteLink + "/manage-vendor"}
@@ -93,18 +103,17 @@ export const Routes = (props) => {
                                 path={defaultRouteLink + "/edit-vendor/:id"}
                                 render={props => <EditVendor {...props} />}
                             />
-
-
                             {/*    route for Customer*/}
                             <Route
                                 exact
                                 path={defaultRouteLink + "/create-customer"}
                                 component={CreateCustomer}
-                            /> <Route
-                            exact
-                            path={defaultRouteLink + "/manage-customer"}
-                            component={ManageCustomer}
-                        />
+                            />{" "}
+                            <Route
+                                exact
+                                path={defaultRouteLink + "/manage-customer"}
+                                component={ManageCustomer}
+                            />
                             <Route
                                 exact
                                 path={defaultRouteLink + "/edit-customer/:id"}
@@ -112,7 +121,9 @@ export const Routes = (props) => {
                             />
                             <Route
                                 exact
-                                path={defaultRouteLink + "/create-invent-category"}
+                                path={
+                                    defaultRouteLink + "/create-invent-category"
+                                }
                                 component={CreateInventCategory}
                             />
                             <Route
@@ -125,24 +136,23 @@ export const Routes = (props) => {
                                 path={defaultRouteLink + "/add-product"}
                                 component={AddProduct}
                             />
-                             <Route
+                            <Route
                                 exact
-                                path={defaultRouteLink + "/edit-product/:id"}
-                                render={props => <EditProduct {...props} />}
+                                path={defaultRouteLink + "/edit-product/:pe_id"}
+                                component={EditProduct}
                             />
-
                         </Header>
                     ) : (
-                        <Route component={NotFound}/>
+                        <Route component={NotFound} />
                     )
                 }
             />
         </Switch>
     );
-}
-const mapStateToProps = (state) => {
+};
+const mapStateToProps = state => {
     return {
-        is_login: state.auth.isAuthenticated,
-    }
-}
-export default connect(mapStateToProps, null)(Routes)
+        is_login: state.auth.isAuthenticated
+    };
+};
+export default connect(mapStateToProps, null)(Routes);

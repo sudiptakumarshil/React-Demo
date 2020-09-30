@@ -43,7 +43,6 @@ Route::namespace('Vendor')->group(function () {
 Route::namespace('Accounts')->group(function () {
 
     Route::get('/all-ledger', 'LedgerController@index')->name('all-ledger');
-
 });
 
 //for customer mnagement..
@@ -69,11 +68,11 @@ Route::namespace('frontend')->group(function () {
 Route::namespace('frontend')->group(function () {
     Route::namespace('api')->group(function () {
         Route::namespace('InventoryProduct')->group(function () {
-        Route::get('/all-warehouse', 'InventoryProductController@getall_warehouse')->name("all-warehouse");
-        Route::post('/save-inventproduct', 'InventoryProductController@save_product')->name("save-inventproduct");
-        Route::get('/all-inventproduct', 'InventoryProductController@index')->name("all-inventproduct");
-        Route::get('/edit-inventproduct/{id}', 'InventoryProductController@edit_product')->name("edit-inventproduct");
+            Route::get('/all-warehouse', 'InventoryProductController@getall_warehouse')->name("all-warehouse");
+            Route::post('/save-inventproduct', 'InventoryProductController@save_product')->name("save-inventproduct");
+            Route::get('/all-inventproduct', 'InventoryProductController@index')->name("all-inventproduct");
+            Route::get('/edit-inventproduct/{id}', 'InventoryProductController@edit_product')->name("edit-inventproduct");
+            Route::patch('/update-inventproduct/{id}', 'InventoryProductController@update_product')->name("update-inventproduct");
+        });
     });
 });
-});
-

@@ -5,12 +5,14 @@ import AddWareHouse from "./addWareHouse";
 import { Link, Router } from "react-router-dom";
 
 class ManageWareHouse extends Component {
+
     state = {
         warehouses: [],
         loading: true
     };
     fetchallwarehouse = async () => {
         const res = await axios.get("/dbBackup/api/all-warehouse");
+
         if (res.data.status === 200) {
             this.setState({ warehouses: res.data.warehouses });
             this.setState({ loading: false });
@@ -22,13 +24,13 @@ class ManageWareHouse extends Component {
     };
 
     render() {
-        if (this.state.loading) {
-            return (
-                <h2 className="text-center mt-50">
-                    <i className="fas fa-spinner fa-spin"></i>
-                </h2>
-            );
-        }
+        // if (this.state.loading) {
+        //     return (
+        //         <h2 className="text-center mt-50">
+        //             <i className="fas fa-spinner fa-spin fa-3x"></i>
+        //         </h2>
+        //     );
+        // }
 
         return (
             <div className="content container-fluid">

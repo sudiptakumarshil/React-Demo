@@ -113,7 +113,7 @@ class InventoryProductController extends Controller
 
         return response()->json([
             'status'=>200,
-            'message'=>"Product Saved Successfully!!"
+            'message'=>"Product Updated Successfully!!"
         ]);
     }
 }

@@ -38,7 +38,27 @@ const AddProduct = props => {
             "/dbBackup/api/save-inventproduct",
             formData
         );
-        // setProduct_image(product_image)
+
+        try {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                onOpen: toast => {
+                    toast.addEventListener("mouseenter", Swal.stopTimer);
+                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+                }
+            });
+
+            Toast.fire({
+                icon: "success",
+                title: "Product Saved  Successfully!!"
+            });
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const fetchallinventCategory = async () => {
@@ -63,11 +83,12 @@ const AddProduct = props => {
     const handleInput = event => {
         //this.setState({ [event.target.name]: event.target.value });
         //console.log(event.target.value);
-        const { name,files, value} = event.target;
-        setFormData(oldState => ({ ...oldState,
-            [name]: value,
+        const { name, files, value } = event.target;
+        setFormData(oldState => ({
+            ...oldState,
+            [name]: value
             // [files]: value
-         }));
+        }));
         // setFormData(oldState => ({ ...oldState, [name]: files }));
     };
 
@@ -114,21 +135,23 @@ const AddProduct = props => {
         console.log("test=" + event);
     };
 
-    const warhouses  = warehouselist.map(function (item ,index) {
-        return <option value={item.id}> {item.name}</option>
+    const warhouses = warehouselist.map(function(item, index) {
+        return <option value={item.id}> {item.name}</option>;
         setFormData(oldState => ({
             ...oldState,
-            warehouse_id: item.id,
+            warehouse_id: item.id
         }));
-
-        });
+    });
 
     return (
         <div className="col-md-12">
             <div className="row">
                 <div className="col-md-8">
                     <h2>Add product </h2>
-                    <form onSubmit={SaveInventProduct} enctype="multipart/form-data">
+                    <form
+                        onSubmit={SaveInventProduct}
+                        enctype="multipart/form-data"
+                    >
                         <div className="row pt-3">
                             <div className="col-md-4">
                                 <label className="control-label">
@@ -212,8 +235,7 @@ const AddProduct = props => {
                                             name="warehouse_id"
                                             onChange={handleInput}
                                         >
-                                           {warhouses}
-
+                                            {warhouses}
                                         </select>
                                     </div>
                                 </div>

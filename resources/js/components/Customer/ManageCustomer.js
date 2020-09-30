@@ -26,7 +26,7 @@ class ManageCustomer extends Component {
         if (this.state.loading) {
             return (
                 <h2 className="text-center mt-50">
-                    <i className="fas fa-spinner fa-spin"></i>
+                    <i className="fas fa-spinner fa-spin fa-3x"></i>
                 </h2>
             );
         }
