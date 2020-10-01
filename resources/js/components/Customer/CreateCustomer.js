@@ -2,11 +2,12 @@ import React, {Component} from 'react';
 import Swal from "sweetalert2";
 import "../css/style_frontend.css";
 import ModalAccountsLedgerList from "../modal/ModalAccountsLedgerList";
-
+import { defaultRouteLink } from "../../common/config";
 class CreateCustomer extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            warehouseList: [],
             toggle: true,
             name: "",
             email: "",
@@ -14,7 +15,8 @@ class CreateCustomer extends Component {
             phone: "",
             address: "",
             remarks: "",
-            accounts_id: ""
+            accounts_id: "",
+            warehouse_id: []
         };
     }
 
@@ -29,6 +31,19 @@ class CreateCustomer extends Component {
             accounts_id: object.id
         });
     };
+
+    fetchallwarehouse = async () => {
+        const response = await axios.get(
+            defaultRouteLink + "/api/all-warehouse"
+        );
+        console.log(response);
+
+        this.setState({ warehouseList: response.data.warehouses });
+    };
+
+    async componentDidMount() {
+        this.fetchallwarehouse();
+    }
 
     CreateCustomer = async event => {
         event.preventDefault();
@@ -64,6 +79,16 @@ class CreateCustomer extends Component {
     };
 
     render() {
+        let warhouses = this.state.warehouseList.map((item, index) => {
+            // if (warhouses.length === 0) return 1;
+
+            return <option value={item.id}> {item.name}</option>;
+
+            this.setState({
+                warehouse_id: item.id
+            });
+        });
+
         return (
             <div className="content container-fluid">
                 <div className="row">
@@ -145,6 +170,23 @@ class CreateCustomer extends Component {
                                                 value={this.state.phone}
                                                 onChange={this.handleInput}
                                             ></input>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label className="control-label col-lg-2">
+                                        Warehouse
+                                    </label>
+                                    <div className="col-md-4">
+                                        <div className="input-group">
+                                            <select
+                                                className="form-control"
+                                                id="exampleFormControlSelect1"
+                                                name="warehouse_id"
+                                                onChange={this.handleInput}
+                                            >
+                                                {warhouses}
+                                            </select>
                                         </div>
                                     </div>
                                 </div>

@@ -18,8 +18,8 @@ class Customer extends Component {
                     <td>{customer.address}</td>
                     <td>{customer.phone}</td>
                     <td>{customer.remarks}</td>
+                    <td>{customer.wname}</td>
                     <td>{customer.accounts_no}</td>
-
                     <td>
                         <Link
                             to={`/dbBackup/edit-customer/${customer.id}`}

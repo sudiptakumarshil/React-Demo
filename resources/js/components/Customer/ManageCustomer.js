@@ -16,7 +16,7 @@ class ManageCustomer extends Component {
             this.setState({ customers: res.data.customers });
             this.setState({ loading: false });
         }
-        // console.log(res);
+        console.log(res);
     };
     componentDidMount = () => {
         this.fetchallCustomer();
@@ -61,6 +61,7 @@ class ManageCustomer extends Component {
                                         <td>Address</td>
                                         <td>Phone</td>
                                         <td>Remarks</td>
+                                        <td>WareHouse Name</td>
                                         <td>Accounts No</td>
                                         <td>Action</td>
                                     </tr>

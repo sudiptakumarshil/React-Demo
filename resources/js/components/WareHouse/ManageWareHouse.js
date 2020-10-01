@@ -13,12 +13,14 @@ class ManageWareHouse extends Component {
     fetchallwarehouse = async () => {
         const res = await axios.get("/dbBackup/api/all-warehouse");
 
-        if (res.data.status === 200) {
-            this.setState({ warehouses: res.data.warehouses });
+        // if (res.data.status === 200) {
+            this.setState({ warehouses: res.data.warehouses});
             this.setState({ loading: false });
-        }
+        // }
         // console.log(res);
     };
+
+
     componentDidMount = () => {
         this.fetchallwarehouse();
     };

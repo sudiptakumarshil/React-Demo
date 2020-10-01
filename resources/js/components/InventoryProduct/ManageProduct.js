@@ -7,7 +7,6 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeItem from "@material-ui/lab/TreeItem";
 import { data, map } from "jquery";
-// import Product from "./Product";
 
 const ManageProduct = props => {
     const [productlist, setProductlist] = useState([]);

@@ -24,26 +24,54 @@ Route::namespace('frontend')->group(function () {
     });
 });
 
-Route::namespace('WareHouse')->group(function () {
+// Route::namespace('WareHouse')->group(function () {
 
-    Route::post('/save-warehouse', 'WareHouseController@add_warehouse')->name('save-warehouse');
-    Route::get('/all-warehouse', 'WareHouseController@index')->name('all-warehouse');
-    Route::get('/edit-warehouse/{id}', 'WareHouseController@edit_warehouse')->name('edit-warehouse');
-    Route::patch('/update-warehouse/{id}', 'WareHouseController@update_warehouse')->name('edit-warehouse');
-});
-Route::namespace('Vendor')->group(function () {
+//     Route::post('/save-warehouse', 'WareHouseController@add_warehouse')->name('save-warehouse');
+//     Route::get('/all-warehouse', 'WareHouseController@index')->name('all-warehouse');
+//     Route::get('/edit-warehouse/{id}', 'WareHouseController@edit_warehouse')->name('edit-warehouse');
+//     Route::patch('/update-warehouse/{id}', 'WareHouseController@update_warehouse')->name('edit-warehouse');
+// });
 
-    Route::post('/save-vendor', 'VendorController@create_vendor')->name('save-vendor');
-    Route::get('/all-vendor', 'VendorController@index')->name('all-vendor');
-    Route::post('/save-vendor', 'VendorController@create_vendor')->name('save-vendor');
-    Route::get('/edit-vendor/{id}', 'VendorController@edit_vendor')->name('edit-vendor');
-    Route::patch('/update-vendor/{id}', 'VendorController@update_vendor')->name('update-vendor');
+Route::namespace('frontend')->group(function () {
+    Route::namespace('api')->group(function () {
+        Route::namespace('WareHouse')->group(function () {
+            Route::post('/save-warehouse', 'WareHouseController@add_warehouse')->name('save-warehouse');
+            Route::get('/all-warehouse', 'WareHouseController@index')->name('all-warehouse');
+            Route::get('/edit-warehouse/{id}', 'WareHouseController@edit_warehouse')->name('edit-warehouse');
+            Route::patch('/update-warehouse/{id}', 'WareHouseController@update_warehouse')->name('edit-warehouse');
+        });
+    });
 });
+// Route::namespace('Vendor')->group(function () {
+
+//     Route::post('/save-vendor', 'VendorController@create_vendor')->name('save-vendor');
+//     Route::get('/all-vendor', 'VendorController@index')->name('all-vendor');
+//     Route::post('/save-vendor', 'VendorController@create_vendor')->name('save-vendor');
+//     Route::get('/edit-vendor/{id}', 'VendorController@edit_vendor')->name('edit-vendor');
+//     Route::patch('/update-vendor/{id}', 'VendorController@update_vendor')->name('update-vendor');
+// });
+
+Route::namespace('frontend')->group(function () {
+    Route::namespace('api')->group(function () {
+        Route::namespace('Vendor')->group(function () {
+            Route::post('/save-vendor', 'VendorController@create_vendor')->name('save-vendor');
+            Route::get('/all-vendor', 'VendorController@index')->name('all-vendor');
+            Route::post('/save-vendor', 'VendorController@create_vendor')->name('save-vendor');
+            Route::get('/edit-vendor/{id}', 'VendorController@edit_vendor')->name('edit-vendor');
+            Route::patch('/update-vendor/{id}', 'VendorController@update_vendor')->name('update-vendor');
+        });
+    });
+});
+
+
 
 Route::namespace('Accounts')->group(function () {
 
     Route::get('/all-ledger', 'LedgerController@index')->name('all-ledger');
+
 });
+
+
 
 //for customer mnagement..
 Route::namespace('frontend')->group(function () {
@@ -73,6 +101,7 @@ Route::namespace('frontend')->group(function () {
             Route::get('/all-inventproduct', 'InventoryProductController@index')->name("all-inventproduct");
             Route::get('/edit-inventproduct/{id}', 'InventoryProductController@edit_product')->name("edit-inventproduct");
             Route::patch('/update-inventproduct/{id}', 'InventoryProductController@update_product')->name("update-inventproduct");
-        });
     });
 });
+});
+

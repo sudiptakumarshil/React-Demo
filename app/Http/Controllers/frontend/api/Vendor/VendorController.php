@@ -1,17 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\Vendor;
+namespace App\Http\Controllers\Frontend\Api\Vendor;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\Vendor\Vendor;
-
+use DB;
 class VendorController extends Controller
 {
 
     public function index()
     {
-        $vendors = Vendor::all();
+        // $vendors = Vendor::all();
+        $vendors = DB::table('vendors')
+        ->join('ware_house_details','vendors.ware_id','ware_house_details.id')
+        ->select('vendors.*','ware_house_details.name as wname')
+        ->get();
         return response()->json([
             'status' => 200,
             'vendors' => $vendors
@@ -27,6 +31,7 @@ class VendorController extends Controller
         $vendor->phone  = $request->phone;
         $vendor->remarks  = $request->remarks;
         $vendor->accounts_no = $request->accounts_id;
+        $vendor->ware_id = $request->warehouse_id;
         $vendor->save();
         return response()->json([
             'status' => 200,

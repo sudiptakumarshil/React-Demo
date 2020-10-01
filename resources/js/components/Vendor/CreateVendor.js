@@ -2,21 +2,23 @@ import React, { Component, useState } from "react";
 import { Button, ButtonToolbar, Modal } from "react-bootstrap";
 import "../css/style_frontend.css";
 import Swal from "sweetalert2";
-
+import { defaultRouteLink } from "../../common/config";
 import ModalAccountsLedgerList from "../modal/ModalAccountsLedgerList";
 
 class CreateVendor extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            warehouseList: [],
             toggle: true,
             name: "",
             email: "",
             accounts_no: "",
-            phone:"",
-            address:"",
-            remarks:"",
-            accounts_id: ""
+            phone: "",
+            address: "",
+            remarks: "",
+            accounts_id: "",
+            warehouse_id: []
         };
     }
 
@@ -32,6 +34,19 @@ class CreateVendor extends Component {
         });
     };
 
+    fetchallwarehouse = async () => {
+        const response = await axios.get(
+            defaultRouteLink + "/api/all-warehouse"
+        );
+        console.log(response);
+
+        this.setState({ warehouseList: response.data.warehouses });
+    };
+
+    async componentDidMount() {
+        this.fetchallwarehouse();
+    }
+
     Createvendor = async event => {
         event.preventDefault();
 
@@ -40,8 +55,8 @@ class CreateVendor extends Component {
             name: "",
             email: "",
             phone: "",
-            address:"",
-            remarks:"",
+            address: "",
+            remarks: "",
             accounts_no: ""
         });
         if (res.data.status === 200) {
@@ -64,7 +79,18 @@ class CreateVendor extends Component {
             title: "Vendor Create  Successfully!!"
         });
     };
+
     render() {
+        let warhouses = this.state.warehouseList.map((item, index) => {
+            // if (warhouses.length === 0) return 1;
+
+            return <option value={item.id}> {item.name}</option>;
+
+            this.setState({
+                warehouse_id: item.id
+            });
+        });
+
         return (
             <div className="content container-fluid">
                 <div className="row">
@@ -117,6 +143,24 @@ class CreateVendor extends Component {
                                 </div>
                                 <div className="form-group">
                                     <label className="control-label col-lg-2">
+                                        Warehouse
+                                    </label>
+                                    <div className="col-md-4">
+                                        <div className="input-group">
+                                            <select
+                                                className="form-control"
+                                                id="exampleFormControlSelect1"
+                                                name="warehouse_id"
+                                                onChange={this.handleInput}
+                                            >
+                                                {warhouses}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="form-group">
+                                    <label className="control-label col-lg-2">
                                         Address
                                     </label>
                                     <div className="col-md-4">
@@ -156,11 +200,13 @@ class CreateVendor extends Component {
                                     </label>
                                     <div className="col-md-4">
                                         <div className="input-group">
-                                            <textarea className="form-control"
+                                            <textarea
+                                                className="form-control"
                                                 placeholder="remarks"
                                                 name="remarks"
                                                 value={this.state.remarks}
-                                                onChange={this.handleInput}></textarea>
+                                                onChange={this.handleInput}
+                                            ></textarea>
                                         </div>
                                     </div>
                                 </div>

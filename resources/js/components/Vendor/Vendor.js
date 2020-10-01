@@ -18,6 +18,7 @@ class Vendor extends Component {
                     <td>{vendor.address}</td>
                     <td>{vendor.phone}</td>
                     <td>{vendor.remarks}</td>
+                    <td>{vendor.wname}</td>
                     <td>{vendor.accounts_no}</td>
 
                     <td>
