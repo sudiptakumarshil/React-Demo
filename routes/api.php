@@ -24,13 +24,6 @@ Route::namespace('frontend')->group(function () {
     });
 });
 
-// Route::namespace('WareHouse')->group(function () {
-
-//     Route::post('/save-warehouse', 'WareHouseController@add_warehouse')->name('save-warehouse');
-//     Route::get('/all-warehouse', 'WareHouseController@index')->name('all-warehouse');
-//     Route::get('/edit-warehouse/{id}', 'WareHouseController@edit_warehouse')->name('edit-warehouse');
-//     Route::patch('/update-warehouse/{id}', 'WareHouseController@update_warehouse')->name('edit-warehouse');
-// });
 
 Route::namespace('frontend')->group(function () {
     Route::namespace('api')->group(function () {
@@ -42,14 +35,6 @@ Route::namespace('frontend')->group(function () {
         });
     });
 });
-// Route::namespace('Vendor')->group(function () {
-
-//     Route::post('/save-vendor', 'VendorController@create_vendor')->name('save-vendor');
-//     Route::get('/all-vendor', 'VendorController@index')->name('all-vendor');
-//     Route::post('/save-vendor', 'VendorController@create_vendor')->name('save-vendor');
-//     Route::get('/edit-vendor/{id}', 'VendorController@edit_vendor')->name('edit-vendor');
-//     Route::patch('/update-vendor/{id}', 'VendorController@update_vendor')->name('update-vendor');
-// });
 
 Route::namespace('frontend')->group(function () {
     Route::namespace('api')->group(function () {
@@ -96,12 +81,23 @@ Route::namespace('frontend')->group(function () {
 Route::namespace('frontend')->group(function () {
     Route::namespace('api')->group(function () {
         Route::namespace('InventoryProduct')->group(function () {
-            Route::get('/all-warehouse', 'InventoryProductController@getall_warehouse')->name("all-warehouse");
+            // Route::get('/all-warehouse', 'InventoryProductController@getall_warehouse')->name("all-warehouse");
             Route::post('/save-inventproduct', 'InventoryProductController@save_product')->name("save-inventproduct");
             Route::get('/all-inventproduct', 'InventoryProductController@index')->name("all-inventproduct");
             Route::get('/edit-inventproduct/{id}', 'InventoryProductController@edit_product')->name("edit-inventproduct");
             Route::patch('/update-inventproduct/{id}', 'InventoryProductController@update_product')->name("update-inventproduct");
+        });
     });
 });
+
+Route::namespace('frontend')->group(function () {
+    Route::namespace('api')->group(function () {
+        Route::namespace('Store')->group(function () {
+            Route::get('/all-store', 'StoreController@index')->name("all-store");
+            Route::post('/save-store', 'StoreController@save_store')->name("save-store");
+            Route::get('/edit-store/{id}', 'StoreController@edit_store')->name("edit-store");
+            Route::patch('/update-store/{id}', 'StoreController@update_store')->name("update-store");
+        });
+    });
 });
 

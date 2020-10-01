@@ -26,7 +26,10 @@ import ManageProduct from "./components/InventoryProduct/ManageProduct";
 import CreateVendor from "./Components/Vendor/CreateVendor";
 import EditVendor from "./components/Vendor/Edit_vendor";
 import ManageVendor from "./Components/Vendor/ManageVendor";
-
+import AddStore from "./components/Store/AddStore";
+import ManageStore from "./components/Store/ManageStore";
+import EditStore from "./components/Store/EditStore";
+import StoreInvoice from "./components/StoreInvoice/AddStoreInvoice";
 import {
     defaultRouteLink,
     getAccessTokenName,
@@ -141,6 +144,27 @@ export const Routes = props => {
                                 path={defaultRouteLink + "/edit-product/:pe_id"}
                                 component={EditProduct}
                             />
+                             <Route
+                                exact
+                                path={defaultRouteLink + "/add-store"}
+                                component={AddStore}
+                            />
+                            <Route
+                                exact
+                                path={defaultRouteLink + "/manage-store"}
+                                component={ManageStore}
+                            />
+                           <Route
+                                exact
+                                path={defaultRouteLink + "/edit-store/:id"}
+                                render={props => <EditStore {...props} />}
+                            />
+                           <Route
+                                exact
+                                path={defaultRouteLink + "/store-invoice"}
+                                component={StoreInvoice}
+                            />
+
                         </Header>
                     ) : (
                         <Route component={NotFound} />

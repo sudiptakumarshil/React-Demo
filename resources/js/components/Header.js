@@ -155,28 +155,23 @@ const Header = props => {
                                             Create Inventory Category
                                         </Link>
                                     </li>
+
                                     <li className="">
                                         <Link to="/dbBackup/manage-product">
                                             Manage Inventory Product
                                         </Link>
                                     </li>
                                     <li className="">
-                                        <a
-                                            data-id="0"
-                                            href="{{ url('/task_all') }}"
-                                        >
-                                            All
-                                        </a>
+                                        <Link to="/dbBackup/manage-store">
+                                            Manage Store
+                                        </Link>
                                     </li>
                                     <li className="">
-                                        <a
-                                            data-id="0"
-                                            href="{{ url('/req_task_list') }}"
-                                        >
-                                            {" "}
-                                            Request List
-                                        </a>
+                                        <Link to="/dbBackup/store-invoice">
+                                            Store Invoice 
+                                        </Link>
                                     </li>
+
                                 </ul>
                             </li>
                             <li className="submenu">
