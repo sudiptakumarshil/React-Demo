@@ -8,8 +8,8 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeItem from "@material-ui/lab/TreeItem";
 import { data, map } from "jquery";
 
-
 const CreateInventCategory = props => {
+    // STATE DECLARATION ....
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [category_name, setCategory_name] = useState([]);
@@ -21,12 +21,12 @@ const CreateInventCategory = props => {
     const [isBtnSave, setIsBtnSave] = useState(false);
 
     const handleInput = event => {
-        //this.setState({ [event.target.name]: event.target.value });
         if (event.target.name == "invent_category")
             setInvent_category(event.target.value);
         else setStatus(event.target.value);
     };
 
+    // SAVE FORM DATA METHOD  ....
     const SaveInventCategory = async event => {
         event.preventDefault();
 
@@ -38,6 +38,7 @@ const CreateInventCategory = props => {
         };
 
         const res = await axios.post("/dbBackup/api/save-inventcategory", data);
+        // UPDATE STATE
         setRoot_id(root_id);
         setInvent_category("");
         fetchallinventCategory();
@@ -53,6 +54,8 @@ const CreateInventCategory = props => {
         setIsBtnSave(true);
     };
 
+    // FORM DATA UPDATE METHOD .....
+
     const updateInventCategory = async event => {
         event.preventDefault();
 
@@ -66,9 +69,10 @@ const CreateInventCategory = props => {
             `/dbBackup/api/update-inventcategory/${id}`,
             data
         );
-        // if (res.data.status === 200) {
-        //     this.props.history.push("/dbBackup/manage-vendor");
-        // }
+
+        fetchallinventCategory(); // CALLING THIS METHOD FOR DATA REFRESH
+
+        // SUCCESS MESSAGE USING SWEET ALERT ...
         const Toast = Swal.mixin({
             toast: true,
             position: "top-end",
@@ -80,7 +84,6 @@ const CreateInventCategory = props => {
                 toast.addEventListener("mouseleave", Swal.resumeTimer);
             }
         });
-        fetchallinventCategory();
 
         Toast.fire({
             icon: "success",

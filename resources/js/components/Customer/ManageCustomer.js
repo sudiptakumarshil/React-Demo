@@ -1,15 +1,17 @@
-import React, {Component} from 'react';
-import {defaultRouteLink} from "../../common/config";
-import {Link} from "react-router-dom";
+import React, { Component } from "react";
+import { defaultRouteLink } from "../../common/config";
+import { Link } from "react-router-dom";
 import Vendor from "../Vendor/Vendor";
 import Customer from "./Customer";
 
-
 class ManageCustomer extends Component {
+    // state declaration
     state = {
         customers: [],
         loading: true
     };
+
+    // get all customer from customers table ..
     fetchallCustomer = async () => {
         const res = await axios.get(defaultRouteLink + "/api/all-customer");
         if (res.data.status === 200) {
@@ -18,11 +20,13 @@ class ManageCustomer extends Component {
         }
         console.log(res);
     };
+
     componentDidMount = () => {
-        this.fetchallCustomer();
+        this.fetchallCustomer(); // calling  fetchallCustomer function
     };
 
     render() {
+        //  first page loading icon
         if (this.state.loading) {
             return (
                 <h2 className="text-center mt-50">
@@ -54,20 +58,23 @@ class ManageCustomer extends Component {
                                 <p className="content-group"></p>
                                 <table className="table table-bordered">
                                     <thead>
-                                    <tr>
-                                        <td>SL</td>
-                                        <td>Name</td>
-                                        <td>Email</td>
-                                        <td>Address</td>
-                                        <td>Phone</td>
-                                        <td>Remarks</td>
-                                        <td>WareHouse Name</td>
-                                        <td>Accounts No</td>
-                                        <td>Action</td>
-                                    </tr>
+                                        <tr>
+                                            <td>SL</td>
+                                            <td>Name</td>
+                                            <td>Email</td>
+                                            <td>Address</td>
+                                            <td>Phone</td>
+                                            <td>Remarks</td>
+                                            <td>WareHouse Name</td>
+                                            <td>Accounts No</td>
+                                            <td>Action</td>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    <Customer customer={this.state.customers} />
+                                        {/* Customer.js component   */}
+                                        <Customer
+                                            customer={this.state.customers}
+                                        />
                                     </tbody>
                                 </table>
                             </div>

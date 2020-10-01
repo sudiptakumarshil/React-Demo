@@ -1,9 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from "react";
 import Swal from "sweetalert2";
 import "../css/style_frontend.css";
 import ModalAccountsLedgerList from "../modal/ModalAccountsLedgerList";
 import { defaultRouteLink } from "../../common/config";
 class CreateCustomer extends Component {
+    // STATE DECLARATION
+    // NOTE: DON'T NEED TO ADD CONSTRUCTOR IN REACT NEW VERSION .. YOU CAN USE STATE DIRECTLY ..
     constructor(props) {
         super(props);
         this.state = {
@@ -21,7 +23,7 @@ class CreateCustomer extends Component {
     }
 
     handleInput = event => {
-        this.setState({[event.target.name]: event.target.value});
+        this.setState({ [event.target.name]: event.target.value });
     };
 
     handleAccountsid = object => {
@@ -31,7 +33,7 @@ class CreateCustomer extends Component {
             accounts_id: object.id
         });
     };
-
+    // GET ALL WAREHOUSE LIST
     fetchallwarehouse = async () => {
         const response = await axios.get(
             defaultRouteLink + "/api/all-warehouse"
@@ -42,13 +44,16 @@ class CreateCustomer extends Component {
     };
 
     async componentDidMount() {
-        this.fetchallwarehouse();
+        this.fetchallwarehouse(); //CALLING (fetchallwarehouse) FUNCTION
     }
-
+    // SAVE FORM DATA METHOD ....
     CreateCustomer = async event => {
         event.preventDefault();
 
-        const res = await axios.post("/dbBackup/api/create-customer", this.state);
+        const res = await axios.post(
+            "/dbBackup/api/create-customer",
+            this.state
+        );
         this.setState({
             name: "",
             email: "",
@@ -60,6 +65,7 @@ class CreateCustomer extends Component {
         if (res.data.status === 200) {
             this.props.history.push("/dbBackup/manage-customer");
         }
+        // SUCCESS MESSAGE USING SWEET ALERT
         const Toast = Swal.mixin({
             toast: true,
             position: "top-end",
@@ -79,13 +85,14 @@ class CreateCustomer extends Component {
     };
 
     render() {
+        // FETCH ALL WAREHOUSE DATA... LOOP
         let warhouses = this.state.warehouseList.map((item, index) => {
             // if (warhouses.length === 0) return 1;
 
             return <option value={item.id}> {item.name}</option>;
 
             this.setState({
-                warehouse_id: item.id
+                warehouse_id: item.id // UPDATE STATE ..
             });
         });
 
@@ -197,11 +204,13 @@ class CreateCustomer extends Component {
                                     </label>
                                     <div className="col-md-4">
                                         <div className="input-group">
-                                            <textarea className="form-control"
-                                                      placeholder="remarks"
-                                                      name="remarks"
-                                                      value={this.state.remarks}
-                                                      onChange={this.handleInput}></textarea>
+                                            <textarea
+                                                className="form-control"
+                                                placeholder="remarks"
+                                                name="remarks"
+                                                value={this.state.remarks}
+                                                onChange={this.handleInput}
+                                            ></textarea>
                                         </div>
                                     </div>
                                 </div>

@@ -105,10 +105,8 @@ class Edit_vendor extends Component {
                                                 className="form-control"
                                                 placeholder="Name"
                                                 name="name"
-
                                                 value={this.state.name}
                                                 onChange={this.handleInput}
-
                                             ></input>
                                         </div>
                                     </div>
@@ -195,7 +193,6 @@ class Edit_vendor extends Component {
                                                 value={this.state.accounts_no}
                                                 data-id={this.state.accounts_id}
                                                 onChange={this.handleInput}
-
                                             />
                                             <ModalAccountsLedgerList
                                                 handleAccountsid={

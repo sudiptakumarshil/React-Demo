@@ -61,6 +61,7 @@ const AddProduct = props => {
         }
     };
 
+    //  GET ALL CATEGORY ..
     const fetchallinventCategory = async () => {
         const res = await axios.get(
             defaultRouteLink + "/api/all-inventcategory"
@@ -69,6 +70,8 @@ const AddProduct = props => {
         setList(res.data.list);
         setLoading(false);
     };
+
+    //  GET ALL WAREHOUSE ...
 
     const fetchallwarehouse = async () => {
         const response = await axios.get(
@@ -134,7 +137,7 @@ const AddProduct = props => {
     const handleNodeData = data => {
         console.log("test=" + event);
     };
-
+    // GET ALL WAREHOUSE LIST FROM (ware_house_details) TABLE
     const warhouses = warehouselist.map(function(item, index) {
         return <option value={item.id}> {item.name}</option>;
         setFormData(oldState => ({

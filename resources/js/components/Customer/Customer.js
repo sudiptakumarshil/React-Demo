@@ -1,14 +1,14 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {Link} from "react-router-dom";
-import {defaultRouteLink} from '../../common/config';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { defaultRouteLink } from "../../common/config";
 class Customer extends Component {
     render() {
         {
-            props => <PageStart {...props} key={this.props.location.key}/>;
+            props => <PageStart {...props} key={this.props.location.key} />; // hold customer id from url
         }
 
-        const {customer} = this.props;
+        const { customer } = this.props;
         return customer.map(customer => {
             return (
                 <tr>

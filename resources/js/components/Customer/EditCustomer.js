@@ -1,9 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import ModalAccountsLedgerList from "../modal/ModalAccountsLedgerList";
 
 class EditCustomer extends Component {
+    // STATE DECLARATION ....
+    // DON'T NEED TO ADD CONSTRUCTOR IN REACT NEW VERSION ... YOU CAN USE STATE DIRECTLY ..
     constructor(props) {
         super(props);
         this.state = {
@@ -19,7 +21,7 @@ class EditCustomer extends Component {
     }
 
     handleInput = event => {
-        this.setState({[event.target.name]: event.target.value});
+        this.setState({ [event.target.name]: event.target.value });
     };
 
     handleAccountsid = object => {
@@ -29,7 +31,7 @@ class EditCustomer extends Component {
             accounts_id: object.id
         });
     };
-
+    // FOR UPDATE REQUEST SEND IN SERVER
     updateCustomer = async event => {
         event.preventDefault();
 
@@ -42,6 +44,7 @@ class EditCustomer extends Component {
         if (res.data.status === 200) {
             this.props.history.push("/dbBackup/manage-customer");
         }
+        // SUCCESS ALERT MESSAGE USING SWEET ALERT
         const Toast = Swal.mixin({
             toast: true,
             position: "top-end",
@@ -61,20 +64,23 @@ class EditCustomer extends Component {
     };
 
     async componentDidMount() {
+        // GET SPECIFIC DATA FROM CUSTOMER TABLE BY ID ...
         const id = this.props.match.params.id;
         const res = await axios.get(`/dbBackup/api/edit-customer/${id}`);
         // assign data into new constant....
         const vInfo = res.data.customer;
         // console.log("data=" + res.data);
         // assign data into state....
-        this.setState({name: vInfo.name});
-        this.setState({email: vInfo.email});
-        this.setState({phone: vInfo.phone});
-        this.setState({address: vInfo.address});
-        this.setState({remarks: vInfo.remarks});
-        this.setState({accounts_no: vInfo.accounts_no});
 
-        this.setState({loading: false});
+        // UPDATE STATE
+        this.setState({ name: vInfo.name });
+        this.setState({ email: vInfo.email });
+        this.setState({ phone: vInfo.phone });
+        this.setState({ address: vInfo.address });
+        this.setState({ remarks: vInfo.remarks });
+        this.setState({ accounts_no: vInfo.accounts_no });
+
+        this.setState({ loading: false });
     }
 
     render() {
@@ -104,10 +110,8 @@ class EditCustomer extends Component {
                                                 className="form-control"
                                                 placeholder="Name"
                                                 name="name"
-
                                                 value={this.state.name}
                                                 onChange={this.handleInput}
-
                                             ></input>
                                         </div>
                                     </div>
@@ -194,7 +198,6 @@ class EditCustomer extends Component {
                                                 value={this.state.accounts_no}
                                                 data-id={this.state.accounts_id}
                                                 onChange={this.handleInput}
-
                                             />
                                             <ModalAccountsLedgerList
                                                 handleAccountsid={
