@@ -159,10 +159,30 @@ export const Routes = props => {
                                 path={defaultRouteLink + "/edit-store/:id"}
                                 render={props => <EditStore {...props} />}
                             />
-                           <Route
+                           {/* <Route
                                 exact
                                 path={defaultRouteLink + "/store-invoice"}
                                 component={StoreInvoice}
+                            /> */}
+                              <Route
+                                exact
+                                path={defaultRouteLink + "/new-purshase/:idx"}
+                                render={props => <StoreInvoice {...props} />}
+                            />
+                              <Route
+                                exact
+                                path={defaultRouteLink + "/purshase-return/:idx"}
+                                render={props => <StoreInvoice {...props} />}
+                            />
+                              <Route
+                                exact
+                                path={defaultRouteLink + "/sale-return/:idx"}
+                                render={props => <StoreInvoice {...props} />}
+                            />
+                              <Route
+                                exact
+                                path={defaultRouteLink + "/sale/:idx"}
+                                render={props => <StoreInvoice {...props} />}
                             />
 
                         </Header>

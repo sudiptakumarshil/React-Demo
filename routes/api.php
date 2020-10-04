@@ -53,12 +53,12 @@ Route::namespace('frontend')->group(function () {
 Route::namespace('Accounts')->group(function () {
 
     Route::get('/all-ledger', 'LedgerController@index')->name('all-ledger');
-
 });
 
 
 
-//for customer mnagement..
+//for customer mnagement....
+
 Route::namespace('frontend')->group(function () {
     Route::namespace('api')->group(function () {
         Route::namespace('Customer')->group(function () {
@@ -69,6 +69,7 @@ Route::namespace('frontend')->group(function () {
         });
     });
 });
+
 Route::namespace('frontend')->group(function () {
     Route::namespace('api')->group(function () {
         Route::namespace('InventoryCategory')->group(function () {
@@ -101,3 +102,10 @@ Route::namespace('frontend')->group(function () {
     });
 });
 
+Route::namespace('frontend')->group(function () {
+    Route::namespace('api')->group(function () {
+        Route::namespace('StoreInvoice')->group(function () {
+            Route::post('/save-storeinvoice', 'StoreInvoiceController@save_invoice_transection')->name("save-storeinvoice");
+        });
+    });
+});

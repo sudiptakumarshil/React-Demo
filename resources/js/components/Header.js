@@ -168,7 +168,27 @@ const Header = props => {
                                     </li>
                                     <li className="">
                                         <Link to="/dbBackup/store-invoice">
-                                            Store Invoice 
+                                            Store Invoice
+                                        </Link>
+                                    </li>
+                                    <li className="">
+                                        <Link to={`/dbBackup/new-purshase/${1}`}>
+                                            New Purshase
+                                        </Link>
+                                    </li>
+                                    <li className="">
+                                        <Link to={`/dbBackup/purshase-return/${2}`}>
+                                        Purshase Return
+                                        </Link>
+                                    </li>
+                                    <li className="">
+                                        <Link to={`/dbBackup/sale-return/${3}`}>
+                                            Sale Return
+                                        </Link>
+                                    </li>
+                                    <li className="">
+                                        <Link to={`/dbBackup/sale/${4}`}>
+                                            Sale
                                         </Link>
                                     </li>
 
