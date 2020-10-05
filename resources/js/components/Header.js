@@ -166,11 +166,11 @@ const Header = props => {
                                             Manage Store
                                         </Link>
                                     </li>
-                                    <li className="">
+                                    {/* <li className="">
                                         <Link to="/dbBackup/store-invoice">
                                             Store Invoice
                                         </Link>
-                                    </li>
+                                    </li> */}
                                     <li className="">
                                         <Link to={`/dbBackup/new-purshase/${1}`}>
                                             New Purshase

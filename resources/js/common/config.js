@@ -17,6 +17,7 @@ export const getApiServerDashboard =
 export const defaultRouteLink = "/dbBackup";
 
 export const getAccessTokenName = "userId";
+export const getAccessTokenNameInfo = "userInfo";
 import { getCookieKeyInfo, setCookie, removeCookie } from "./CookieService";
 import {
     SET_CURRENT_USER,

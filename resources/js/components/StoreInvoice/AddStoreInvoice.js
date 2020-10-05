@@ -1,11 +1,27 @@
 import React, { Component } from "react";
 import { defaultRouteLink } from "../../common/config";
+import { Link } from "react-router-dom";
+import EditInvoiceTransec from "../modal/EditInvoiceTransectionModal";
+import {
+    getAccessTokenNameInfo,
+    getAccessTokenName,
+    getApiServerDashboard
+} from "../../common/config";
+
+import {
+    getCookieKeyInfo,
+    setCookie,
+    removeCookie
+} from "../../common/CookieService";
+
 class AddStoreInvoice extends Component {
     constructor(props) {
         super(props);
+        // this.delinvoicetransec = this.delinvoicetransec.bind(this);
         this.state = {
             warehouseList: [],
-            customerList:[],
+            invoicetransectionList: [],
+            customerList: [],
             toggle: true,
             invoice_code: "",
             remarks: "",
@@ -21,12 +37,17 @@ class AddStoreInvoice extends Component {
             cash_amount: "",
             bank_account: "",
             bank_id: "",
-            customer_id:"",
+            customer_id: "",
             product_id: "",
             productList: [],
             quantity: "",
             price: "",
-            idx:""
+            idx: "",
+            user_id: "",
+            isModalShow: false,
+            modalData: {},
+            value: "",
+            vat_name: ""
         };
     }
     handleInput = event => {
@@ -42,7 +63,6 @@ class AddStoreInvoice extends Component {
             this.state
         );
         this.setState({
-
             Invoice_code: "",
             remarks: "",
             // warehouse_id: [],
@@ -57,6 +77,7 @@ class AddStoreInvoice extends Component {
             quantity: "",
             price: ""
         });
+        this.fetchallinvoicetransection();
 
         // SUCCESS MESSAGE USING SWEET ALERT
         try {
@@ -74,7 +95,7 @@ class AddStoreInvoice extends Component {
 
             Toast.fire({
                 icon: "success",
-                title: "Store Create  Successfully!!"
+                title: "Store Created  Successfully!!"
             });
         } catch (error) {
             Swal.fire({
@@ -85,66 +106,100 @@ class AddStoreInvoice extends Component {
             });
         }
     };
+    // for getting warehouse ,store ,product , vendor ,customer
+    fetchalldata = async () => {
+        const response = await axios.get(defaultRouteLink + "/api/all-data");
+        console.log(response);
+        // setwarehouseList()
 
-    // GET ALL WAREHOUSE LIST
-    fetchallwarehouse = async () => {
+        this.setState({
+            warehouseList: response.data.warehouses,
+            vendorlist: response.data.vendors,
+            storelist: response.data.stores,
+            productList: response.data.products,
+            customerList: response.data.customers
+        });
+    };
+
+    fetchallinvoicetransection = async () => {
         const response = await axios.get(
-            defaultRouteLink + "/api/all-warehouse"
+            defaultRouteLink + "/api/all-invoice-transec"
         );
-        console.log(response);
-
-        this.setState({ warehouseList: response.data.warehouses });
+        this.setState({ invoicetransectionList: response.data.invotransec });
     };
-    fetchallvendor = async () => {
-        const response = await axios.get(defaultRouteLink + "/api/all-vendor");
-        console.log(response);
-
-        this.setState({ vendorlist: response.data.vendors });
-    };
-    fetchallstore = async () => {
-        const response = await axios.get(defaultRouteLink + "/api/all-store");
-        console.log(response);
-
-        this.setState({ storelist: response.data.stores });
-    };
-
-    fetchallproduct = async () => {
-        const response = await axios.get(
-            defaultRouteLink + "/api/all-inventproduct"
-        );
-        console.log(response);
-
-        this.setState({ productList: response.data.products });
-    };
-
-    fetchallcustomer = async () => {
-        const response = await axios.get(
-            defaultRouteLink + "/api/all-customer"
-
-        );
-
-        this.setState({ customerList: response.data.customers });
-    }
 
     async componentDidMount() {
         const idx = this.props.match.params.idx;
+        const id = this.props.match.params.id;
         console.log(idx);
         this.setState({
-            idx:idx
+            idx: idx
         });
-
-        this.fetchallwarehouse();
-        this.fetchallvendor();
-        this.fetchallstore();
-        this.fetchallproduct();
-        this.fetchallcustomer();
+        const isLoginExit = JSON.stringify(
+            getCookieKeyInfo(getAccessTokenName)
+        );
+        this.setState({
+            user_id: isLoginExit
+        });
+        console.log("user id=" + isLoginExit);
+        this.fetchalldata();
+        this.fetchallinvoicetransection();
     }
 
+    // FOR DELETE INVOICES
+    delinvoicetransec = async e => {
+        const removeId = e.target.getAttribute("data-id");
+        const response = await axios.get(
+            defaultRouteLink + "/api/delete-invoice-transec/" + removeId
+        );
+        // SUCCESS MESSAGE USING SWEET ALERT
+        try {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                onOpen: toast => {
+                    toast.addEventListener("mouseenter", Swal.stopTimer);
+                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+                }
+            });
+
+            Toast.fire({
+                icon: "success",
+                title: "Invoice Transection Deleted Successfully!!"
+            });
+        } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Something went wrong!",
+                footer: "<a href>Why do I have this issue?</a>"
+            });
+        }
+
+        this.fetchallinvoicetransection();
+    };
+    handleModalClose = () => {
+        this.setState({
+            isModalShow: false
+        });
+    };
+    handleProductEdit = async item_id => {
+        this.setState({
+            isModalShow: true
+        });
+        // editInvoiceTransection = async () => {
+        const response = await axios.get(
+            defaultRouteLink + "/api/edit-invoice-transec/" + item_id
+        );
+        this.setState({ modalData: response.data.invoice });
+        // };
+    };
     render() {
         // FETCH ALL WAREHOUSE DATA... LOOP
         let warhouses = this.state.warehouseList.map((item, index) => {
-            // if (warhouses.length === 0) return 1;
-
             return (
                 <option value={item.id} data-tokens="item.name">
                     {item.name}
@@ -199,23 +254,103 @@ class AddStoreInvoice extends Component {
 
             // console.log(this.state.price);
         });
-
+        // FETCH ALL CUSTOMER DATA... LOOP
         let customers = this.state.customerList.map((item, index) => {
             return (
-
                 <option value={item.id} data-tokens="item.name">
                     {item.name}
                 </option>
             );
             this.setState({
-                customer_id: item.id, // UPDATE STATE ........
+                customer_id: item.id // UPDATE STATE ........
             });
 
             // console.log(this.state.price);
         });
+        let discounttaka;
+        let totaldiscount;
+        let totalpriceQuantity;
+        let totalpercent;
+        let totalvat;
+        let vatcount;
+        // FETCH ALL Invoice transection  DATA... LOOP
+        let invotransec = this.state.invoicetransectionList.map(
+            (item, index) => {
+                // if (warhouses.length === 0) return 1;
+                const idx = this.props.match.params.idx;
+                return (
+                    <tr>
+                        <td>{index}</td>
+
+                        {item.dp_name != null ? (
+                            <td>{item.dp_name}</td>
+                        ) : (
+                            <td>{item.cp_name}</td>
+                        )}
+                        <td>{item.quantity}</td>
+                        <td>{item.price}</td>
+                        <td>
+                            {(totalpriceQuantity = item.price * item.quantity)}
+                        </td>
+                        <td>{item.discount_taka}</td>
+                        <td>{item.discount_percent}</td>
+                        <td>{item.vat_name}</td>
+                        <td>{item.value}</td>
+                        <input
+                            type="hidden"
+                            value={
+                                (totalpercent =
+                                    (totalpriceQuantity *
+                                        item.discount_percent) /
+                                    100)
+                            }
+                        ></input>
+                        <input
+                            type="hidden"
+                            value={(discounttaka = item.discount_taka)}
+                        ></input>
+                        <input
+                            type="hidden"
+                            value={
+                                (totaldiscount = totalpercent + discounttaka)
+                            }
+                        ></input>
+                        <input
+                            type="hidden"
+                            value={
+                                (totalvat = totalpriceQuantity - totaldiscount)
+                            }
+                        ></input>
+
+                        <input
+                            type="hidden"
+                            value={(vatcount = (totalvat * item.value) / 100)}
+                        ></input>
+                        <td>{totalvat - vatcount}</td>
+                        <td>
+                            <button
+                                onClick={() => this.handleProductEdit(item.id)}
+                                className="btn btn-primary"
+                            >
+                                Edit
+                            </button>
+                            <button
+                                onClick={this.delinvoicetransec}
+                                className="btn btn-primary"
+                                data-id={item.id}
+                            >
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                );
+                // this.setState({
+                //     warehouse_id: item.id // UPDATE STATE ..
+                // });
+            }
+        );
 
         const idx = this.props.match.params.idx;
-
 
         let pagetitle1 = "";
         if (idx == 1) {
@@ -228,16 +363,19 @@ class AddStoreInvoice extends Component {
             pagetitle1 = "Sale";
         }
 
-
-
         return (
             <div>
+                <EditInvoiceTransec
+                    show={this.state.isModalShow}
+                    modalData={this.state.modalData}
+                    handleClose={this.handleModalClose}
+                    {...this.props}
+                />
                 <div className="col-md-12">
                     <div className="row">
                         <div className="col-md-12">
                             <h2 className="text-center">Transaction</h2>
                             <div class="card text-center">
-
                                 <div class="card-header">{pagetitle1}</div>
                                 <div class="card-body">
                                     <form
@@ -281,52 +419,70 @@ class AddStoreInvoice extends Component {
                                                             this.handleInput
                                                         }
                                                     >
-                                                        <option selected disabled>Choose One</option>
+                                                        <option
+                                                            selected
+                                                            disabled
+                                                        >
+                                                            Choose One
+                                                        </option>
                                                         {warhouses}
                                                     </select>
                                                 </div>
-                                                {
-                                                idx == 1 ?
-                                                <div className="col-md-2">
-                                                    <label className="control-label">
-                                                        Vendor
-                                                    </label>
-                                                    <select
-                                                        className="form-control"
-                                                        // id="exampleFormControlSelect1"
-                                                        // className="selectpicker"
-                                                        data-live-search="true"
-                                                        value={this.state.vendor_id}
-                                                        name="vendor_id"
-                                                        onChange={
-                                                            this.handleInput
-                                                        }
-                                                    >
-                                                    <option selected disabled>Choose One</option>
-                                                        {vendors}
-                                                    </select>
-                                                </div>
-                                                :
-                                                <div className="col-md-2">
-                                                <label className="control-label">
-                                                    Customer
-                                                </label>
-                                                <select
-                                                    className="form-control"
-                                                    data-live-search="true"
-                                                    name="customer_id"
-                                                    value={this.state.customer_id}
-                                                    onChange={
-                                                        this.handleInput
-                                                    }
-                                                >
-                                                    <option selected disabled>Choose One</option>
-                                                    {customers}
-                                                </select>
-                                            </div>
-
-
-                                                }
+                                                {idx == 1 ? (
+                                                    <div className="col-md-2">
+                                                        <label className="control-label">
+                                                            Vendor
+                                                        </label>
+                                                        <select
+                                                            className="form-control"
+                                                            // id="exampleFormControlSelect1"
+                                                            // className="selectpicker"
+                                                            data-live-search="true"
+                                                            value={
+                                                                this.state
+                                                                    .vendor_id
+                                                            }
+                                                            name="vendor_id"
+                                                            onChange={
+                                                                this.handleInput
+                                                            }
+                                                        >
+                                                            <option
+                                                                selected
+                                                                disabled
+                                                            >
+                                                                Choose One
+                                                            </option>
+                                                            {vendors}
+                                                        </select>
+                                                    </div>
+                                                ) : (
+                                                    <div className="col-md-2">
+                                                        <label className="control-label">
+                                                            Customer
+                                                        </label>
+                                                        <select
+                                                            className="form-control"
+                                                            data-live-search="true"
+                                                            name="customer_id"
+                                                            value={
+                                                                this.state
+                                                                    .customer_id
+                                                            }
+                                                            onChange={
+                                                                this.handleInput
+                                                            }
+                                                        >
+                                                            <option
+                                                                selected
+                                                                disabled
+                                                            >
+                                                                Choose One
+                                                            </option>
+                                                            {customers}
+                                                        </select>
+                                                    </div>
+                                                )}
 
                                                 <div className="col-md-2">
                                                     <label className="control-label">
@@ -353,43 +509,58 @@ class AddStoreInvoice extends Component {
                                                         data-live-search="true"
                                                         // id="exampleFormControlSelect1"
                                                         name="store_id"
-                                                        value={this.state.store_id}
+                                                        value={
+                                                            this.state.store_id
+                                                        }
                                                         onChange={
                                                             this.handleInput
                                                         }
                                                     >
-                                                         <option selected disabled>Choose One</option>
+                                                        <option
+                                                            selected
+                                                            disabled
+                                                        >
+                                                            Choose One
+                                                        </option>
                                                         {stores}
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="card text-center">
+                                        <div class="card text-center mt-5">
                                             <div class="card-header">
                                                 Default Store
                                             </div>
                                             <div class="card-body">
                                                 <div class="container">
                                                     <div class="row">
-                                                        <div className="col-md-2">
+                                                        <div className="col-md-3">
                                                             <label className="control-label"></label>
                                                             <select
                                                                 className="form-control"
                                                                 data-live-search="true"
                                                                 name="product_id"
-                                                                value={this.state.product_id}
+                                                                value={
+                                                                    this.state
+                                                                        .product_id
+                                                                }
                                                                 onChange={
                                                                     this
                                                                         .handleInput
                                                                 }
                                                             >
-                                                             <option selected disabled>Choose One</option>
+                                                                <option
+                                                                    selected
+                                                                    disabled
+                                                                >
+                                                                    Choose One
+                                                                </option>
                                                                 {products}
                                                             </select>
                                                         </div>
 
-                                                        <div className="col-md-2">
+                                                        <div className="col-md-3">
                                                             <label className="control-label"></label>
                                                             <input
                                                                 type="text"
@@ -406,7 +577,7 @@ class AddStoreInvoice extends Component {
                                                                 placeholder="Quantity"
                                                             ></input>
                                                         </div>
-                                                        <div className="col-md-2">
+                                                        <div className="col-md-3">
                                                             <label className="control-label"></label>
                                                             <input
                                                                 type="text"
@@ -423,7 +594,40 @@ class AddStoreInvoice extends Component {
                                                                 placeholder="Price"
                                                             ></input>
                                                         </div>
-                                                        <button className="btn btn-primary">
+                                                        <div className="col-md-3">
+                                                            <label className="control-label"></label>
+                                                            <input
+                                                                type="text"
+                                                                name="vat_name"
+                                                                value={
+                                                                    this.state
+                                                                        .vat_name
+                                                                }
+                                                                onChange={
+                                                                    this
+                                                                        .handleInput
+                                                                }
+                                                                className="form-control"
+                                                                placeholder="Vat Name"
+                                                            ></input>
+                                                        </div>
+                                                        <div className="col-md-3">
+                                                            <label className="control-label"></label>
+                                                            <input
+                                                                type="text"
+                                                                name="value"
+                                                                onChange={
+                                                                    this
+                                                                        .handleInput
+                                                                }
+                                                                className="form-control"
+                                                                placeholder="Vat Amount"
+                                                            ></input>
+                                                        </div>
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-danger"
+                                                        >
                                                             Submit
                                                         </button>
                                                     </div>
@@ -438,6 +642,33 @@ class AddStoreInvoice extends Component {
                                 <div class="card-footer text-muted"></div>
                             </div>
                         </div>
+                    </div>
+
+                    {/* fetch all Invoice Transection */}
+                    <div class="card text-center mt-5">
+                        <div class="card-header">All Data</div>
+                        <div class="card-body">
+                            <table className="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td>SL</td>
+                                        <td>Product Name</td>
+                                        <td>Quantity</td>
+                                        <td>Price</td>
+                                        <td>Total</td>
+                                        <td>Discount Taka</td>
+                                        <td>Discount Percent </td>
+                                        <td>Vat Name</td>
+                                        <td>Vat Amount</td>
+                                        <td>Net</td>
+                                        <td>Action</td>
+                                    </tr>
+                                </thead>
+                                <tbody>{invotransec}</tbody>
+                            </table>
+                        </div>
+
+                        <div class="card-footer text-muted"></div>
                     </div>
 
                     <div className="col-md-6 pt-5"></div>

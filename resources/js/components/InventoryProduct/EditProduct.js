@@ -16,6 +16,7 @@ const EditProduct = props => {
     const [productvalue] = useState([]);
 
     const { pe_id } = useParams();
+
     // console.log("test="+pe_id);
 
     const data = {
@@ -378,7 +379,7 @@ const EditProduct = props => {
                                         name="price_type"
                                         onChange={handleInput}
                                     >
-                                        <option value="1" >
+                                        <option value="1">
                                             Customize Price
                                         </option>
                                         <option value="2">Fixed Price</option>

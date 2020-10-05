@@ -12,7 +12,6 @@ const AddProduct = props => {
     const [list, setList] = useState([]);
     const [warehouselist, setWarehouselist] = useState([]);
     const [loading, setLoading] = useState(false);
-    // const [category_name, setCategory_name] = useState([]);
     const data = {
         product_code: "",
         product_name: "",

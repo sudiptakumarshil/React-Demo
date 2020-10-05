@@ -6,7 +6,7 @@ export const setCookie=(key,val,options)=>{
     cookie.set(key,val,options);
 }
 export const getCookieKeyInfo=(key)=>{
-    return cookie.get(key);
+    return cookie.get(key); 
 }
 export const removeCookie=(key)=>{
     //cookie.remove(key);

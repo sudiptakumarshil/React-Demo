@@ -106,6 +106,11 @@ Route::namespace('frontend')->group(function () {
     Route::namespace('api')->group(function () {
         Route::namespace('StoreInvoice')->group(function () {
             Route::post('/save-storeinvoice', 'StoreInvoiceController@save_invoice_transection')->name("save-storeinvoice");
+            Route::get('/all-invoice-transec', 'StoreInvoiceController@getallinvoicetransection')->name("all-invoice-transec");
+            Route::get('/edit-invoice-transec/{id}', 'StoreInvoiceController@editinvoicetransection')->name("edit-invoice-transec");
+            Route::get('/all-data', 'StoreInvoiceController@fetch_all_data')->name("all-data");
+            Route::get('/delete-invoice-transec/{id}', 'StoreInvoiceController@delete_invoice_transec')->name("delete-invoice-transec");
+            Route::patch('/update-transecinvoice/{id}', 'StoreInvoiceController@update_invoice_transection')->name("update-transecinvoice");
         });
     });
 });
