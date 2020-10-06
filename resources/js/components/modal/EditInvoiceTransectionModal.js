@@ -4,6 +4,7 @@ import { defaultRouteLink } from "../../common/config";
 import { Link, useParams } from "react-router-dom";
 import ContentLoader, { Facebook, BulletList } from "react-content-loader";
 const MyBulletListLoader = () => <BulletList />;
+import AddstoreInvoice from "../StoreInvoice/AddStoreInvoice"
 
 const EditInvoiceTransectionModal = props => {
     const [warehouselist, setWarehouselist] = useState([]);
@@ -11,7 +12,7 @@ const EditInvoiceTransectionModal = props => {
     const [storelist, setstorelist] = useState([]);
     const [productList, setproductList] = useState([]);
     const { idx } = useParams();
-    console.log("test=" + idx);
+    // console.log("test=" + idx);
 
     // const i_id = props.modalData.id;
 
@@ -56,6 +57,7 @@ const EditInvoiceTransectionModal = props => {
         setstorelist(response.data.stores);
         setproductList(response.data.products);
     };
+
     // setFormData(oldState => ({
     //     ...oldState,
     //     i_id: props.modalData.id,
@@ -94,6 +96,8 @@ const EditInvoiceTransectionModal = props => {
 
     useEffect(() => {
         fetchalldata();
+        // fetchallinvoicetransection();
+        // window.location.reload();
     }, []);
 
     // GET ALL WAREHOUSE LIST FROM (ware_house_details) TABLE

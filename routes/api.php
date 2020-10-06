@@ -111,6 +111,11 @@ Route::namespace('frontend')->group(function () {
             Route::get('/all-data', 'StoreInvoiceController@fetch_all_data')->name("all-data");
             Route::get('/delete-invoice-transec/{id}', 'StoreInvoiceController@delete_invoice_transec')->name("delete-invoice-transec");
             Route::patch('/update-transecinvoice/{id}', 'StoreInvoiceController@update_invoice_transection')->name("update-transecinvoice");
+            Route::get('/get-invoice-number-type-1', 'StoreInvoiceController@get_invoice_number_for_type1');
+            Route::get('/get-invoice-number-type-2', 'StoreInvoiceController@get_invoice_number_for_type2');
+            Route::get('/get-invoice-number-type-3', 'StoreInvoiceController@get_invoice_number_for_type3');
+            Route::get('/get-invoice-number-type-4', 'StoreInvoiceController@get_invoice_number_for_type4');
+            Route::get('/get-warehouse/{id}', 'StoreInvoiceController@getwarehouse');
         });
     });
 });

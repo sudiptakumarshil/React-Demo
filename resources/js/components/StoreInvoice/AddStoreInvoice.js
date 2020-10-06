@@ -13,6 +13,7 @@ import {
     setCookie,
     removeCookie
 } from "../../common/CookieService";
+import { isFunction } from "lodash";
 
 class AddStoreInvoice extends Component {
     constructor(props) {
@@ -23,7 +24,7 @@ class AddStoreInvoice extends Component {
             invoicetransectionList: [],
             customerList: [],
             toggle: true,
-            invoice_code: "",
+            invoice_code: [],
             remarks: "",
             warehouse_id: "",
             vendor_id: "",
@@ -46,13 +47,33 @@ class AddStoreInvoice extends Component {
             user_id: "",
             isModalShow: false,
             modalData: {},
-            value: "",
-            vat_name: ""
+            vatList: [],
+            vat_id: ""
         };
     }
+    get_warhousewiseStore = async () => {
+        let ware_id = this.state.warehouse_id;
+
+        const response = await axios.get(
+            defaultRouteLink + "/api/get-warehouse/" + ware_id
+        );
+        console.log(response.data.store);
+        if (typeof response.data.store != "undefined") {
+            this.setState({
+                storelist: response.data.store
+            });
+        } else {
+            this.setState({
+                storelist: []
+            });
+        }
+    };
+
     handleInput = event => {
         this.setState({ [event.target.name]: event.target.value });
+        this.get_warhousewiseStore();
     };
+
     // save invoice transection .......
 
     saveinvoiceTransection = async event => {
@@ -63,7 +84,7 @@ class AddStoreInvoice extends Component {
             this.state
         );
         this.setState({
-            Invoice_code: "",
+            // Invoice_code: "",
             remarks: "",
             // warehouse_id: [],
             // vendor_id: [],
@@ -106,7 +127,7 @@ class AddStoreInvoice extends Component {
             });
         }
     };
-    // for getting warehouse ,store ,product , vendor ,customer
+    // for getting warehouse ,store ,product , vendor ,customer,vat
     fetchalldata = async () => {
         const response = await axios.get(defaultRouteLink + "/api/all-data");
         console.log(response);
@@ -115,26 +136,60 @@ class AddStoreInvoice extends Component {
         this.setState({
             warehouseList: response.data.warehouses,
             vendorlist: response.data.vendors,
-            storelist: response.data.stores,
+            // storelist: response.data.stores,
             productList: response.data.products,
-            customerList: response.data.customers
+            customerList: response.data.customers,
+            vatList: response.data.vats
         });
     };
-
+    // GET ALL TRANSECTION DATA........
     fetchallinvoicetransection = async () => {
         const response = await axios.get(
             defaultRouteLink + "/api/all-invoice-transec"
         );
         this.setState({ invoicetransectionList: response.data.invotransec });
     };
+    // FOR GETTING AUTO INVOICE NUMBER .............
+    getinvoiceNumber = async () => {
+        const idx = this.props.match.params.idx;
+
+        if (idx == 1) {
+            const response = await axios.get(
+                defaultRouteLink + "/api/get-invoice-number-type-1"
+            );
+
+            this.setState({ invoice_code: response.data.invoice_number });
+        } else if (idx == 2) {
+            const response2 = await axios.get(
+                defaultRouteLink + "/api/get-invoice-number-type-2"
+            );
+
+            this.setState({ invoice_code: response2.data.invoice_number });
+        } else if (idx == 3) {
+            const response3 = await axios.get(
+                defaultRouteLink + "/api/get-invoice-number-type-3"
+            );
+            this.setState({ invoice_code: response3.data.invoice_number });
+        } else if (idx == 4) {
+            const response4 = await axios.get(
+                defaultRouteLink + "/api/get-invoice-number-type-4"
+            );
+            this.setState({ invoice_code: response4.data.invoice_number });
+        } else {
+            console.log("ok");
+        }
+    };
 
     async componentDidMount() {
         const idx = this.props.match.params.idx;
+
         const id = this.props.match.params.id;
         console.log(idx);
+
         this.setState({
             idx: idx
         });
+
         const isLoginExit = JSON.stringify(
             getCookieKeyInfo(getAccessTokenName)
         );
@@ -144,6 +199,8 @@ class AddStoreInvoice extends Component {
         console.log("user id=" + isLoginExit);
         this.fetchalldata();
         this.fetchallinvoicetransection();
+        // this.invoiceNumbers();
+        this.getinvoiceNumber();
     }
 
     // FOR DELETE INVOICES
@@ -226,8 +283,6 @@ class AddStoreInvoice extends Component {
         });
         // FETCH ALL STORE DATA... LOOP
         let stores = this.state.storelist.map((item, index) => {
-            // if (warhouses.length === 0) return 1;
-
             return (
                 <option value={item.id} data-tokens="item.name">
                     {" "}
@@ -267,6 +322,7 @@ class AddStoreInvoice extends Component {
 
             // console.log(this.state.price);
         });
+
         let discounttaka;
         let totaldiscount;
         let totalpriceQuantity;
@@ -309,6 +365,8 @@ class AddStoreInvoice extends Component {
                             type="hidden"
                             value={(discounttaka = item.discount_taka)}
                         ></input>
+                        {/* <td>{(totaldiscount = totalpercent + discounttaka)}</td> */}
+
                         <input
                             type="hidden"
                             value={
@@ -321,6 +379,9 @@ class AddStoreInvoice extends Component {
                                 (totalvat = totalpriceQuantity - totaldiscount)
                             }
                         ></input>
+                        {/* <td>
+                            {(totalvat = totalpriceQuantity - totaldiscount)}
+                        </td> */}
 
                         <input
                             type="hidden"
@@ -349,6 +410,17 @@ class AddStoreInvoice extends Component {
                 // });
             }
         );
+        // FETCH ALL VAT DATA... LOOP
+        let allvat = this.state.vatList.map((item, index) => {
+            return (
+                <option value={item.id} data-tokens="item.name">
+                    {item.vat_name}
+                </option>
+            );
+            this.setState({
+                vat_id: item.id // UPDATE STATE ........
+            });
+        });
 
         const idx = this.props.match.params.idx;
 
@@ -397,9 +469,9 @@ class AddStoreInvoice extends Component {
                                                                 .invoice_code
                                                         }
                                                         required
-                                                        onChange={
-                                                            this.handleInput
-                                                        }
+                                                        // onChange={
+                                                        //     this.handleInput
+                                                        // }
                                                     ></input>
                                                 </div>
 
@@ -598,30 +670,57 @@ class AddStoreInvoice extends Component {
                                                             <label className="control-label"></label>
                                                             <input
                                                                 type="text"
-                                                                name="vat_name"
+                                                                name="discount_taka"
                                                                 value={
                                                                     this.state
-                                                                        .vat_name
+                                                                        .discount_taka
                                                                 }
                                                                 onChange={
                                                                     this
                                                                         .handleInput
                                                                 }
                                                                 className="form-control"
-                                                                placeholder="Vat Name"
+                                                                placeholder="Discount Taka"
                                                             ></input>
+                                                        </div>
+                                                        <div className="col-md-3">
+                                                            <label className="control-label"></label>
+                                                            <select
+                                                                className="form-control"
+                                                                // className="selectpicker"
+                                                                data-live-search="true"
+                                                                // id="exampleFormControlSelect1"
+                                                                name="vat_id"
+                                                                value={
+                                                                    this.state
+                                                                        .vat_id
+                                                                }
+                                                                onChange={
+                                                                    this
+                                                                        .handleInput
+                                                                }
+                                                            >
+                                                                <option
+                                                                    selected
+                                                                    disabled
+                                                                >
+                                                                    Choose One
+                                                                    Vat
+                                                                </option>
+                                                                {allvat}
+                                                            </select>
                                                         </div>
                                                         <div className="col-md-3">
                                                             <label className="control-label"></label>
                                                             <input
                                                                 type="text"
-                                                                name="value"
+                                                                name="discount_percent"
                                                                 onChange={
                                                                     this
                                                                         .handleInput
                                                                 }
                                                                 className="form-control"
-                                                                placeholder="Vat Amount"
+                                                                placeholder="Discount persent"
                                                             ></input>
                                                         </div>
                                                         <button

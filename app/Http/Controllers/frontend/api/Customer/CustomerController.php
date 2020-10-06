@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\Customer\Customer;
 use DB;
+
 class CustomerController extends Controller
 {
 
@@ -15,9 +16,9 @@ class CustomerController extends Controller
         // $customers = Customer::all();
 
         $customers = DB::table('customers')
-        ->join('ware_house_details','customers.ware_id','ware_house_details.id')
-        ->select('customers.*','ware_house_details.name as wname')
-        ->get();
+            ->join('ware_house_details', 'customers.ware_id', 'ware_house_details.id')
+            ->select('customers.*', 'ware_house_details.name as wname')
+            ->get();
 
         return response()->json([
             'status' => 200,
@@ -57,8 +58,8 @@ class CustomerController extends Controller
     public function update_customer(Request $request, $id)
     {
 
-//        return $request->all();
-//        exit();
+        //        return $request->all();
+        //        exit();
         $customer = Customer::find($id);
         $customer->name = $request->name;
         $customer->email = $request->email;
