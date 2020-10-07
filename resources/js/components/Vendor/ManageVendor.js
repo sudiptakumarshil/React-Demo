@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import Vendor from "./Vendor";
 import { Link } from "react-router-dom";
 import { defaultRouteLink } from "../../common/config";
-
+import ContentLoader, { Facebook,BulletList  } from 'react-content-loader'
+const MyBulletListLoader = () => <BulletList />
 class ManageVendor extends Component {
     state = {
         vendors: [],
@@ -25,6 +26,7 @@ class ManageVendor extends Component {
             return (
                 <h2 className="text-center mt-3">
                     <i className="fas fa-spinner fa-spin fa-3x"></i>
+                    <MyBulletListLoader/>
                 </h2>
             );
         }

@@ -110,12 +110,15 @@ class StoreInvoiceController extends Controller
             ->select('customers.*', 'ware_house_details.name as wname')
             ->get();
 
-        // $vats = DB::table('vats')
-        //     ->join('ware_house_details', 'vats.ware_id', 'ware_house_details.id')
-        //     ->select('vats.*', 'ware_house_details.name as wname')
-        //     ->get();
         $vats = Vat::all();
         $warehouses = WareHouseDetails::all();
+
+        $invotransec = DB::table('invoice_trasections')
+            ->leftJoin('inventory_products as dip', 'invoice_trasections.d_id', '=', 'dip.id')
+            ->leftJoin('inventory_products as cip', 'invoice_trasections.c_id', '=', 'cip.id')
+            ->leftJoin('vats', 'invoice_trasections.vat', 'vats.id')
+            ->select('invoice_trasections.*', 'dip.product_name as dp_name', 'vats.vat_name', 'vats.value', 'cip.product_name as cp_name')
+            ->get();
 
 
         return response()->json([
@@ -126,6 +129,18 @@ class StoreInvoiceController extends Controller
             'warehouses' => $warehouses,
             'customers' => $customers,
             'vats' => $vats,
+            'invotransec' => $invotransec
+        ]);
+    }
+
+
+    public function product_wise_price($id)
+    {
+        $productPrice = DB::table('inventory_products')
+            ->where('id', $id)
+            ->first();
+        return response()->json([
+            'productPrice' => $productPrice
         ]);
     }
 
@@ -192,11 +207,12 @@ class StoreInvoiceController extends Controller
 
     public function getwarehouse($id)
     {
-        $store = DB::table('stores')
-            ->join('ware_house_details', 'stores.ware_id', 'ware_house_details.id')
-            ->select('stores.*', 'ware_house_details.name')
-            ->where('ware_id', $id)
-            ->get();
+        // $store = DB::table('stores')
+        //     ->join('ware_house_details', 'stores.ware_id', 'ware_house_details.id')
+        //     ->select('stores.*')
+        //     ->where('ware_id', $id)
+        //     ->get();
+        $store = Store::where('ware_id', $id)->get();
         return response()->json([
             'store' => $store
         ]);
@@ -257,7 +273,7 @@ class StoreInvoiceController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => "Invoices Transectionm  Saved Successfully!!"
+            'message' => "Invoices Transection  UpdatedSuccessfully!!"
         ]);
     }
 }

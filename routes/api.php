@@ -116,6 +116,7 @@ Route::namespace('frontend')->group(function () {
             Route::get('/get-invoice-number-type-3', 'StoreInvoiceController@get_invoice_number_for_type3');
             Route::get('/get-invoice-number-type-4', 'StoreInvoiceController@get_invoice_number_for_type4');
             Route::get('/get-warehouse/{id}', 'StoreInvoiceController@getwarehouse');
+            Route::get('/get-product-wise-price/{id}', 'StoreInvoiceController@product_wise_price');
         });
     });
 });

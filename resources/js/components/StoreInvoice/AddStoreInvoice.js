@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import { defaultRouteLink } from "../../common/config";
 import { Link } from "react-router-dom";
 import EditInvoiceTransec from "../modal/EditInvoiceTransectionModal";
+import ContentLoader, { Facebook, BulletList } from "react-content-loader";
+
+const MyBulletListLoader = () => <BulletList />;
 import {
     getAccessTokenNameInfo,
     getAccessTokenName,
@@ -13,7 +16,8 @@ import {
     setCookie,
     removeCookie
 } from "../../common/CookieService";
-import { isFunction } from "lodash";
+import { isEmpty, isFunction } from "lodash";
+import { red } from "@material-ui/core/colors";
 
 class AddStoreInvoice extends Component {
     constructor(props) {
@@ -48,11 +52,14 @@ class AddStoreInvoice extends Component {
             isModalShow: false,
             modalData: {},
             vatList: [],
-            vat_id: ""
+            vat_id: "",
+            loading: true
         };
     }
+    // FOR GETTING WAREHOUSE WISE STORE
     get_warhousewiseStore = async () => {
         let ware_id = this.state.warehouse_id;
+        // console.log(ware_id);
 
         const response = await axios.get(
             defaultRouteLink + "/api/get-warehouse/" + ware_id
@@ -68,87 +75,185 @@ class AddStoreInvoice extends Component {
             });
         }
     };
+    // FOR GETTING PRODUCT WISE PRICE  ........
+    getProductWisePriceAuto = async () => {
+        let productid = this.state.product_id;
+
+        const response = await axios.get(
+            defaultRouteLink + "/api/get-product-wise-price/" + productid
+        );
+        console.log(response.data.productPrice);
+
+        if (typeof response.data.productPrice != "undefined") {
+            this.setState({
+                price: response.data.productPrice.selling_price
+            });
+        } else {
+            this.setState({
+                price: ""
+            });
+        }
+    };
 
     handleInput = event => {
         this.setState({ [event.target.name]: event.target.value });
         this.get_warhousewiseStore();
+        this.getProductWisePriceAuto();
     };
+
+    // VALIDATION ..
+    validate = () => {};
 
     // save invoice transection .......
 
     saveinvoiceTransection = async event => {
         event.preventDefault();
-
-        const res = await axios.post(
-            "/dbBackup/api/save-storeinvoice",
-            this.state
-        );
-        this.setState({
-            // Invoice_code: "",
-            remarks: "",
-            // warehouse_id: [],
-            // vendor_id: [],
-            date: "",
-            // store_id: [],
-            discount_taka: "",
-            discount_percent: "",
-            cash_amount: "",
-            bank_account: "",
-            // product_id: "",
-            quantity: "",
-            price: ""
-        });
-        this.fetchallinvoicetransection();
-
-        // SUCCESS MESSAGE USING SWEET ALERT
-        try {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                onOpen: toast => {
-                    toast.addEventListener("mouseenter", Swal.stopTimer);
-                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+        if (this.state.warehouse_id == 0) {
+            Swal.fire({
+                title: "WareHouse Cannot Be Empty!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
                 }
             });
-
-            Toast.fire({
-                icon: "success",
-                title: "Store Created  Successfully!!"
-            });
-        } catch (error) {
+        } else if (this.state.vendor_id == 0) {
             Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Something went wrong!",
-                footer: "<a href>Why do I have this issue?</a>"
+                title: "Vendor  Cannot Be Empty!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
+                }
             });
+        } else if (this.state.date == 0) {
+            Swal.fire({
+                title: "Date  Cannot Be Empty!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
+                }
+            });
+        } else if (this.state.store_id == 0) {
+            Swal.fire({
+                title: "Store  Cannot Be Empty!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
+                }
+            });
+        } else if (this.state.product_id == 0) {
+            Swal.fire({
+                title: "Product  Cannot Be Empty!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
+                }
+            });
+        } else if (this.state.quantity == 0) {
+            Swal.fire({
+                title: "Quantity  Cannot Be Empty!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
+                }
+            });
+        } else if (this.state.price == 0) {
+            Swal.fire({
+                title: "Price  Cannot Be Empty!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
+                }
+            });
+        } else {
+            const res = await axios.post(
+                "/dbBackup/api/save-storeinvoice",
+                this.state
+            );
+            this.setState({
+                // Invoice_code: "",
+                remarks: "",
+                // warehouse_id: [],
+                // vendor_id: [],
+                date: "",
+                // store_id: [],
+                discount_taka: "",
+                discount_percent: "",
+                cash_amount: "",
+                bank_account: "",
+                // product_id: "",
+                quantity: "",
+                price: ""
+            });
+            this.fetchallinvoicetransection();
+
+            // SUCCESS MESSAGE USING SWEET ALERT
+            try {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    onOpen: toast => {
+                        toast.addEventListener("mouseenter", Swal.stopTimer);
+                        toast.addEventListener("mouseleave", Swal.resumeTimer);
+                    }
+                });
+
+                Toast.fire({
+                    icon: "success",
+                    title: "Store Created  Successfully!!"
+                });
+            } catch (error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Something went wrong!",
+                    footer: "<a href>Why do I have this issue?</a>"
+                });
+            }
         }
     };
     // for getting warehouse ,store ,product , vendor ,customer,vat
     fetchalldata = async () => {
         const response = await axios.get(defaultRouteLink + "/api/all-data");
-        console.log(response);
-        // setwarehouseList()
 
-        this.setState({
-            warehouseList: response.data.warehouses,
-            vendorlist: response.data.vendors,
-            // storelist: response.data.stores,
-            productList: response.data.products,
-            customerList: response.data.customers,
-            vatList: response.data.vats
-        });
+        if (response.data.status === 200) {
+            this.setState({
+                warehouseList: response.data.warehouses,
+                vendorlist: response.data.vendors,
+                // storelist: response.data.stores,
+                productList: response.data.products,
+                customerList: response.data.customers,
+                vatList: response.data.vats,
+                invoicetransectionList: response.data.invotransec
+            });
+            this.setState({ loading: false });
+        }
     };
+
     // GET ALL TRANSECTION DATA........
-    fetchallinvoicetransection = async () => {
-        const response = await axios.get(
-            defaultRouteLink + "/api/all-invoice-transec"
-        );
-        this.setState({ invoicetransectionList: response.data.invotransec });
-    };
+    // fetchallinvoicetransection = async () => {
+    //     const response = await axios.get(
+    //         defaultRouteLink + "/api/all-invoice-transec"
+    //     );
+    //     this.setState({ invoicetransectionList: response.data.invotransec });
+    // };
+
     // FOR GETTING AUTO INVOICE NUMBER .............
     getinvoiceNumber = async () => {
         const idx = this.props.match.params.idx;
@@ -198,7 +303,6 @@ class AddStoreInvoice extends Component {
         });
         console.log("user id=" + isLoginExit);
         this.fetchalldata();
-        this.fetchallinvoicetransection();
         // this.invoiceNumbers();
         this.getinvoiceNumber();
     }
@@ -303,11 +407,8 @@ class AddStoreInvoice extends Component {
             );
             this.setState({
                 product_id: item.id, // UPDATE STATE ........
-                // price: item.selling_price
-                price: item.id
+                price: item.selling_price
             });
-
-            // console.log(this.state.price);
         });
         // FETCH ALL CUSTOMER DATA... LOOP
         let customers = this.state.customerList.map((item, index) => {
@@ -319,8 +420,6 @@ class AddStoreInvoice extends Component {
             this.setState({
                 customer_id: item.id // UPDATE STATE ........
             });
-
-            // console.log(this.state.price);
         });
 
         let discounttaka;
@@ -332,11 +431,10 @@ class AddStoreInvoice extends Component {
         // FETCH ALL Invoice transection  DATA... LOOP
         let invotransec = this.state.invoicetransectionList.map(
             (item, index) => {
-                // if (warhouses.length === 0) return 1;
                 const idx = this.props.match.params.idx;
                 return (
                     <tr>
-                        <td>{index}</td>
+                        <td>{index + 1}</td>
 
                         {item.dp_name != null ? (
                             <td>{item.dp_name}</td>
@@ -405,9 +503,6 @@ class AddStoreInvoice extends Component {
                         </td>
                     </tr>
                 );
-                // this.setState({
-                //     warehouse_id: item.id // UPDATE STATE ..
-                // });
             }
         );
         // FETCH ALL VAT DATA... LOOP
@@ -428,11 +523,19 @@ class AddStoreInvoice extends Component {
         if (idx == 1) {
             pagetitle1 = "NEW PURCHASE";
         } else if (idx == 2) {
-            pagetitle1 = "Purshase Return";
+            pagetitle1 = "PURSHASE RETURN";
         } else if (idx == 3) {
-            pagetitle1 = "Sale Rteurn";
+            pagetitle1 = "SALE RETURN";
         } else {
-            pagetitle1 = "Sale";
+            pagetitle1 = "SALE";
+        }
+        if (this.state.loading) {
+            return (
+                <h2 className="text-center mt-3">
+                    <i className="fas fa-spinner fa-spin fa-3x"></i>
+                    <MyBulletListLoader />
+                </h2>
+            );
         }
 
         return (
@@ -443,6 +546,7 @@ class AddStoreInvoice extends Component {
                     handleClose={this.handleModalClose}
                     {...this.props}
                 />
+
                 <div className="col-md-12">
                     <div className="row">
                         <div className="col-md-12">
@@ -450,6 +554,7 @@ class AddStoreInvoice extends Component {
                             <div class="card text-center">
                                 <div class="card-header">{pagetitle1}</div>
                                 <div class="card-body">
+                                    <span align="center"></span>
                                     <form
                                         onSubmit={this.saveinvoiceTransection}
                                     >
@@ -457,13 +562,14 @@ class AddStoreInvoice extends Component {
                                             <div class="row">
                                                 <div className="col-md-2">
                                                     <label className="control-label">
-                                                        Invoice Code
+                                                        Invoice Number
                                                     </label>
                                                     <input
                                                         type="text"
                                                         className="form-control"
                                                         placeholder="Invoice Code"
                                                         name="invoice_code"
+                                                        disabled
                                                         value={
                                                             this.state
                                                                 .invoice_code
@@ -484,17 +590,13 @@ class AddStoreInvoice extends Component {
                                                         className="form-control"
                                                         data-live-search="true"
                                                         data-width="fit"
-                                                        // ref="selectPicker"
-                                                        // id="exampleFormControlSelect1"
                                                         name="warehouse_id"
                                                         onChange={
                                                             this.handleInput
                                                         }
+                                                        required
                                                     >
-                                                        <option
-                                                            selected
-                                                            disabled
-                                                        >
+                                                        <option value="0">
                                                             Choose One
                                                         </option>
                                                         {warhouses}
@@ -521,7 +623,7 @@ class AddStoreInvoice extends Component {
                                                         >
                                                             <option
                                                                 selected
-                                                                disabled
+                                                                value="0"
                                                             >
                                                                 Choose One
                                                             </option>
@@ -547,7 +649,7 @@ class AddStoreInvoice extends Component {
                                                         >
                                                             <option
                                                                 selected
-                                                                disabled
+                                                                value="0"
                                                             >
                                                                 Choose One
                                                             </option>
@@ -564,7 +666,6 @@ class AddStoreInvoice extends Component {
                                                         type="date"
                                                         className="form-control"
                                                         name="date"
-                                                        required
                                                         value={this.state.date}
                                                         onChange={
                                                             this.handleInput
@@ -590,7 +691,7 @@ class AddStoreInvoice extends Component {
                                                     >
                                                         <option
                                                             selected
-                                                            disabled
+                                                            value="0"
                                                         >
                                                             Choose One
                                                         </option>
@@ -624,7 +725,7 @@ class AddStoreInvoice extends Component {
                                                             >
                                                                 <option
                                                                     selected
-                                                                    disabled
+                                                                    value="0"
                                                                 >
                                                                     Choose One
                                                                 </option>
@@ -687,9 +788,7 @@ class AddStoreInvoice extends Component {
                                                             <label className="control-label"></label>
                                                             <select
                                                                 className="form-control"
-                                                                // className="selectpicker"
                                                                 data-live-search="true"
-                                                                // id="exampleFormControlSelect1"
                                                                 name="vat_id"
                                                                 value={
                                                                     this.state
@@ -702,7 +801,7 @@ class AddStoreInvoice extends Component {
                                                             >
                                                                 <option
                                                                     selected
-                                                                    disabled
+                                                                    value="0"
                                                                 >
                                                                     Choose One
                                                                     Vat
@@ -841,9 +940,7 @@ class AddStoreInvoice extends Component {
                                         ></textarea>
                                     </div>
                                 </div>
-                                <div class="card-footer text-muted">
-                                    2 days ago
-                                </div>
+                                <div class="card-footer text-muted"></div>
                             </div>
                         </div>
                     </div>
