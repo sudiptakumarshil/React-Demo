@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.2
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 21, 2020 at 01:40 PM
--- Server version: 10.1.34-MariaDB
--- PHP Version: 7.2.7
+-- Generation Time: Oct 08, 2020 at 10:49 AM
+-- Server version: 10.4.14-MariaDB
+-- PHP Version: 7.4.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -19,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `reactlaravel`
+-- Database: `laravelpos`
 --
 
 -- --------------------------------------------------------
@@ -46,6 +45,36 @@ INSERT INTO `contacts` (`id`, `title`, `description`, `created_at`, `updated_at`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `customers`
+--
+
+CREATE TABLE `customers` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `remarks` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `accounts_no` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `type` tinyint(4) NOT NULL DEFAULT 0,
+  `ware_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `customers`
+--
+
+INSERT INTO `customers` (`id`, `name`, `email`, `address`, `phone`, `remarks`, `accounts_no`, `status`, `type`, `ware_id`, `created_at`, `updated_at`) VALUES
+(1, 'sudipto kumar shil2', 'sudiptoshil@outlook.com', 'chittagong', '01624772008', 'hello', 192, 0, 0, 0, '2020-09-23 00:44:55', '2020-09-23 01:29:40'),
+(2, 'test', 'test@mail.com', 'dhaka', '01746952187', 'hello', 203, 0, 0, 4, '2020-09-30 23:24:48', '2020-09-30 23:24:48'),
+(3, 'hasan', 'hasan@gmail.com', 'dhaka', '01746952187', 'hello', 432, 0, 0, 4, '2020-10-04 00:54:06', '2020-10-04 00:54:06');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `failed_jobs`
 --
 
@@ -55,8 +84,157 @@ CREATE TABLE `failed_jobs` (
   `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inventory_categories`
+--
+
+CREATE TABLE `inventory_categories` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `root_id` int(11) UNSIGNED DEFAULT NULL,
+  `category_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `short_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `home_page` int(11) DEFAULT 0,
+  `ware_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `status` int(11) DEFAULT 1 COMMENT 'active = 1 and inactive = 2',
+  `category_image` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `inventory_categories`
+--
+
+INSERT INTO `inventory_categories` (`id`, `root_id`, `category_name`, `short_name`, `home_page`, `ware_id`, `status`, `category_image`, `created_at`, `updated_at`) VALUES
+(1, 0, 'Category', 'pc', 1, 0, 1, 'public/category_image/81YUHsnzj1L._AC_SL1500_.jpg', '2020-07-01 23:15:15', '2020-07-22 02:28:10'),
+(2, 1, 'Desktop Component', 'dc', 1, 0, 1, 'public/category_image/open.jpg', '2020-07-01 23:15:15', '2020-07-23 06:08:41'),
+(3, 2, 'UPS', 'ups', 1, 0, 1, 'public/category_image/open.jpg', '2020-07-01 23:15:15', '2020-07-01 23:15:15'),
+(4, 3, 'windows os', 'win', 1, 0, 1, 'public/category_image/download (4).jpg', '2020-07-01 23:47:01', '2020-07-01 23:47:01'),
+(5, 1, 'Monitor', 'mon', 1, 0, 1, 'public/category_image/tft-led-wide-screen-smart-tv-icon-127253013.jpg', '2020-07-02 00:34:26', '2020-08-18 00:51:04'),
+(6, 5, 'hp monitor', 'hp', 1, 0, 1, 'public/category_image/download (4).jpg', '2020-07-02 01:25:36', '2020-07-02 01:25:36'),
+(7, 5, 'LG monitor', 'lg', 1, 0, 1, 'public/category_image/04-macbook-pro-2019.webp', '2020-07-02 01:29:58', '2020-07-02 01:29:58'),
+(8, 1, 'bike', 'bk', 1, 0, 0, 'public/category_image/logo.png', '2020-07-04 00:38:50', '2020-07-25 01:01:23'),
+(9, 8, 'motor bike', 'mtbk', 1, 0, 1, 'public/category_image/logo.png', '2020-07-04 00:39:43', '2020-07-04 00:39:43'),
+(10, 1, 'Mobilee', 'mob', 1, 0, 0, 'category_image/61wumn0iZSL._SY445_.jpg', '2020-07-12 00:06:13', '2020-07-25 01:02:23'),
+(11, 10, 'Android', 'and', 1, 0, 1, 'category_image/61wumn0iZSL._SY445_.jpg', '2020-07-12 00:08:54', '2020-07-12 00:08:54'),
+(12, 1, 'Router', 'roo', 1, 0, 0, 'public/category_image/A3002RU-V2_wr_01.jpg', '2020-07-13 05:09:37', '2020-07-25 01:03:01'),
+(13, 1, 't-shirt', 'tch', 1, 0, 0, 'public/category_image/open.jpg', '2020-07-15 00:34:45', '2020-07-25 01:02:35'),
+(14, 13, 'cotton', 'co', 1, 0, 1, 'public/category_image/download.png', '2020-07-15 00:42:14', '2020-07-15 00:42:14'),
+(15, 5, 'Acer Monitor', 'acer-monitor', 1, 0, 1, 'public/category_image/Acer.jpg', '2020-07-15 00:44:44', '2020-07-23 06:09:05'),
+(16, 5, 'AOC Monitor', 'aoc', 1, 0, 1, 'public/category_image/images.jpg', '2020-07-15 01:00:11', '2020-07-23 06:09:39'),
+(17, 5, 'Dell Monitor', 'dell', 1, 0, 1, 'public/category_image/download.jpg', '2020-07-15 03:17:33', '2020-07-23 06:10:20'),
+(18, 5, 'Hp Monitor2345', 'hp', 1, 0, 1, 'public/category_image/techland-HP V194-1044x966.jpg', '2020-07-15 03:20:11', '2020-09-27 05:08:46'),
+(19, 5, 'Asus Monitor', 'asus', 1, 0, 1, 'public/category_image/ASUS VX24AH-500x500.jpg', '2020-07-15 03:29:34', '2020-07-23 06:10:44'),
+(20, 5, 'Viewsonic Monitor', 'viewsonic', 1, 0, 1, 'public/category_image/images (1).jpg', '2020-07-15 03:31:32', '2020-07-23 06:11:14'),
+(21, 5, 'Samsung Monitor', 'samsung', 1, 0, 1, 'public/category_image/5044701ld.jpg', '2020-07-15 03:32:05', '2020-07-23 06:11:25'),
+(22, 5, 'Philips Monitor', 'philips', 1, 0, 1, 'public/category_image/philips-monitor-led-21-5-224e5qhsb-vga-hdmi-mhl-castleit-1312-23-castleIT@12.jpg', '2020-07-15 03:32:54', '2020-07-23 06:11:38'),
+(28, 11, 'Android 10', 'a10', 1, 0, 1, 'public/category_image/61wumn0iZSL._SY445_.jpg', '2020-07-18 04:01:33', '2020-07-18 04:01:33'),
+(29, 1, 'Hard Disk Drive', 'hard-disk', 1, 0, 0, 'public/category_image/seagate-12tb-hard-drive.jpg', '2020-07-18 05:58:18', '2020-09-01 23:59:15'),
+(30, 1, 'Component', 'component', 1, 0, 1, 'public/category_image/115605719-computer-components-laptop-ssd-icons-motherboard-cpu-internet-cables-icons-wifi-router-computer-moni.jpg', '2020-07-18 22:59:08', '2020-07-23 06:11:57'),
+(31, 30, 'SSD', 'SSD', 1, 0, 1, 'public/category_image/storage-u.2_ssd_form_factors_mobile.png', '2020-07-18 23:10:48', '2020-07-18 23:10:48'),
+(38, 30, 'Hard Disk Drive', 'Hard Disk', 1, 0, 1, 'public/category_image/414Rj6OWa+L._SX466_.jpg', '2020-07-22 01:09:25', '2020-07-22 01:09:25'),
+(39, 38, 'Western digital', 'western-digital', 1, 0, 1, 'public/category_image/414Rj6OWa+L._SX466_.jpg', '2020-07-22 01:13:30', '2020-08-23 23:02:06'),
+(40, 38, 'Seagate', 'seagate', 1, 0, 1, 'public/category_image/414Rj6OWa+L._SX466_.jpg', '2020-07-22 01:13:57', '2020-08-23 23:02:18'),
+(41, 38, 'Toshiba', 'toshiba', 1, 0, 1, 'public/category_image/414Rj6OWa+L._SX466_.jpg', '2020-07-22 01:15:22', '2020-08-23 23:02:37'),
+(42, 1, 'Storage', 'Storage', 1, 0, 1, 'public/category_image/unnamed.jpg', '2020-07-22 02:24:19', '2020-07-22 02:24:19'),
+(43, 42, 'External HDD', 'External HDD', 1, 0, 1, 'public/category_image/unnamed.jpg', '2020-07-22 02:25:06', '2020-07-22 02:25:06'),
+(44, 2, 'Mainboard', 'Mainboard', 1, 0, 1, 'public/category_image/36944c14-aee0-4291-9ce6-89a51e347132.jpg', '2020-07-22 02:51:03', '2020-07-22 02:51:03'),
+(45, 30, 'Processor', 'processor', 1, 0, 1, 'public/category_image/17533122-cpu-processor-chip-on-white-isolated.jpg', '2020-08-04 02:29:16', '2020-08-04 02:29:16'),
+(46, 2, 'Graphics Card', 'graphics-card', 1, 0, 1, 'public/category_image/img_3455.jpg', '2020-08-05 23:22:31', '2020-08-05 23:22:31'),
+(47, 2, 'Power Supply', 'power-supply', 1, 0, 1, 'public/category_image/images.jpg', '2020-08-07 23:10:51', '2020-08-07 23:10:51'),
+(48, 2, 'Optical Device', 'optical-device', 1, 0, 1, 'public/category_image/dvd-rom.jpg', '2020-08-08 03:55:55', '2020-08-08 03:55:55'),
+(49, 2, 'Casing Fan', 'casing-fan', 1, 0, 1, 'public/category_image/COOLER-MASTER-12CM-CASING-FAN.jpg', '2020-08-08 04:56:04', '2020-08-08 04:56:04'),
+(50, 2, 'Casing', 'casing', 1, 0, 1, 'public/category_image/thunderbolt-battle-field-gaming-casing.jpg', '2020-08-11 00:06:52', '2020-08-11 00:06:52'),
+(51, 2, 'Keyboard', 'keyboard', 1, 0, 1, 'public/category_image/a.jpg.png', '2020-08-17 03:41:37', '2020-08-17 03:41:37'),
+(52, 2, 'Mouse', 'mouse', 1, 0, 1, 'public/category_image/421-4212127_computer-mouse-drawing-easy-hd-png-download.png', '2020-08-18 03:23:43', '2020-08-18 03:23:43'),
+(53, 10, 'bettry', NULL, 0, 0, 1, NULL, NULL, NULL),
+(54, 8, 'apache', NULL, 0, 0, 1, NULL, '2020-09-24 00:30:52', '2020-09-24 00:30:52'),
+(55, 1, 'laptop', NULL, 0, 0, 1, NULL, '2020-09-24 00:34:09', '2020-09-24 00:34:09'),
+(56, 10, 'nokia', NULL, 0, 0, 1, NULL, '2020-09-24 00:53:50', '2020-09-24 00:53:50'),
+(57, 56, 'lumia', NULL, 0, 0, 1, NULL, '2020-09-24 00:54:50', '2020-09-24 00:54:50'),
+(447, 2, 'Test 1', NULL, 0, 0, 1, NULL, '2020-09-24 09:45:05', '2020-09-24 09:45:05'),
+(448, 42, 'S1', NULL, 0, 0, 1, NULL, '2020-09-24 09:45:50', '2020-09-24 09:45:50'),
+(449, 43, 'HDD-1', NULL, 0, 0, 1, NULL, '2020-09-24 09:46:11', '2020-09-24 09:46:11'),
+(450, 5, 'hp monitors', NULL, 0, 0, 1, NULL, '2020-09-27 04:24:14', '2020-09-27 04:24:14'),
+(451, 5, 'LG monitor567', NULL, 0, 0, 1, NULL, '2020-09-27 04:35:10', '2020-09-27 05:51:23'),
+(452, 8, 'bajaj', NULL, 0, 0, 1, NULL, '2020-09-27 05:32:06', '2020-09-27 05:32:06'),
+(453, 2, 'potato', NULL, 0, 0, 1, NULL, '2020-09-27 05:55:39', '2020-09-27 05:55:39'),
+(454, 10, 'lolipop', NULL, 0, 0, 1, NULL, '2020-09-27 05:56:30', '2020-09-27 05:56:30'),
+(455, 10, 'android2', NULL, 0, 0, 1, NULL, '2020-09-27 06:20:21', '2020-09-27 06:20:21'),
+(456, 452, 'v15', NULL, 0, 0, 1, NULL, '2020-09-27 06:23:53', '2020-09-27 06:23:53');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inventory_products`
+--
+
+CREATE TABLE `inventory_products` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `product_code` int(10) UNSIGNED NOT NULL,
+  `product_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pices_of_carton` int(11) NOT NULL,
+  `category_id` int(10) UNSIGNED NOT NULL,
+  `warehouse_id` int(10) UNSIGNED NOT NULL,
+  `sorting` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `unit` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `opening_stock` int(10) UNSIGNED NOT NULL,
+  `buy_price` double(8,2) NOT NULL,
+  `cost` double(8,2) NOT NULL,
+  `selling_price` double(8,2) NOT NULL,
+  `price_type` tinyint(4) NOT NULL COMMENT ' Customize Price = 1 Fixed Price =2',
+  `product_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `inventory_products`
+--
+
+INSERT INTO `inventory_products` (`id`, `product_code`, `product_name`, `pices_of_carton`, `category_id`, `warehouse_id`, `sorting`, `unit`, `opening_stock`, `buy_price`, `cost`, `selling_price`, `price_type`, `product_image`, `created_at`, `updated_at`) VALUES
+(1, 123445, 'acer aspire', 1, 43, 3, 'ere', '1', 12, 123.00, 200.00, 300.00, 2, NULL, '2020-09-29 05:04:22', '2020-09-30 04:27:45'),
+(2, 34225, 'machine learninng', 20, 7, 2, 'array', '1', 10, 23000.00, 2000.00, 30000.00, 1, NULL, '2020-09-29 06:49:19', '2020-09-30 02:33:38'),
+(3, 2345, 'python programming', 20, 12, 3, 'ere', '1', 10, 123.00, 2000.00, 30000.00, 2, NULL, '2020-09-30 03:23:16', '2020-09-30 03:23:16');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `invoice_trasections`
+--
+
+CREATE TABLE `invoice_trasections` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `invoice_id` int(10) UNSIGNED NOT NULL,
+  `d_id` int(10) UNSIGNED DEFAULT NULL,
+  `c_id` int(10) UNSIGNED DEFAULT NULL,
+  `party_id` int(10) UNSIGNED NOT NULL COMMENT 'vendor id or customer id',
+  `date` date NOT NULL,
+  `ware_id` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(4) NOT NULL,
+  `store_id` int(10) UNSIGNED NOT NULL,
+  `quantity` double(8,2) NOT NULL,
+  `price` int(11) NOT NULL,
+  `discount_taka` double(8,2) NOT NULL,
+  `discount_percent` double(8,2) NOT NULL,
+  `vat` int(10) UNSIGNED NOT NULL,
+  `publishing_by` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `invoice_trasections`
+--
+
+INSERT INTO `invoice_trasections` (`id`, `invoice_id`, `d_id`, `c_id`, `party_id`, `date`, `ware_id`, `status`, `store_id`, `quantity`, `price`, `discount_taka`, `discount_percent`, `vat`, `publishing_by`, `type`, `created_at`, `updated_at`) VALUES
+(33, 0, 2, NULL, 5, '2020-10-09', 1, 1, 6, 25.00, 300, 0.00, 0.00, 4, '\"1\"', 1, '2020-10-07 23:37:02', '2020-10-08 00:13:54');
 
 -- --------------------------------------------------------
 
@@ -73,11 +251,11 @@ CREATE TABLE `ledger_copy` (
   `remarks` varchar(100) DEFAULT NULL,
   `by` varchar(20) DEFAULT NULL,
   `type` int(20) DEFAULT NULL,
-  `ware` int(20) NOT NULL DEFAULT '0',
-  `accounts_id` text,
-  `status` int(11) NOT NULL DEFAULT '1' COMMENT '1=Active; 2 = Inactive',
+  `ware` int(20) NOT NULL DEFAULT 0,
+  `accounts_id` text DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT 1 COMMENT '1=Active; 2 = Inactive',
   `foreign_name` varchar(255) NOT NULL,
-  `trash` int(1) NOT NULL DEFAULT '0'
+  `trash` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -528,12 +706,18 @@ CREATE TABLE `migrations` (
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-(6, '2014_10_12_000000_create_users_table', 1),
-(7, '2014_10_12_100000_create_password_resets_table', 1),
-(8, '2019_08_19_000000_create_failed_jobs_table', 1),
 (9, '2020_09_15_103734_create_contacts_table', 1),
 (10, '2020_09_19_055839_create_ware_house_details_table', 1),
-(11, '2020_09_21_092601_create_vendors_table', 2);
+(15, '2014_10_12_000000_create_users_table', 2),
+(16, '2014_10_12_100000_create_password_resets_table', 2),
+(17, '2019_08_19_000000_create_failed_jobs_table', 2),
+(18, '2020_09_21_092601_create_vendors_table', 2),
+(19, '2020_09_23_062754_create_customers_table', 3),
+(20, '2020_09_28_124703_create_inventory_products_table', 4),
+(23, '2020_10_01_070848_create_stores_table', 5),
+(25, '2020_10_01_111954_create_store_invoices_table', 6),
+(26, '2020_10_03_123700_create_invoice_trasections_table', 7),
+(27, '2020_10_05_100421_create_vats_table', 8);
 
 -- --------------------------------------------------------
 
@@ -542,8 +726,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 --
 
 CREATE TABLE `password_resets` (
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -563,8 +747,8 @@ CREATE TABLE `setting_copy` (
   `by` int(11) NOT NULL,
   `note` varchar(100) NOT NULL,
   `accounts_id` bigint(20) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT '1' COMMENT '1=active,2=inactive',
-  `trash` int(1) NOT NULL DEFAULT '0'
+  `status` int(1) NOT NULL DEFAULT 1 COMMENT '1=active,2=inactive',
+  `trash` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -645,16 +829,71 @@ INSERT INTO `setting_copy` (`id`, `head`, `type`, `name`, `foreign_name`, `ware`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `stores`
+--
+
+CREATE TABLE `stores` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `store_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remarks` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ware_id` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
+  `trash` tinyint(4) NOT NULL DEFAULT 3,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `stores`
+--
+
+INSERT INTO `stores` (`id`, `store_name`, `remarks`, `ware_id`, `status`, `trash`, `created_at`, `updated_at`) VALUES
+(6, 'mitali enterprice2', 'good practise', 1, 1, 3, '2020-10-07 06:30:35', '2020-10-07 06:30:35'),
+(7, 'ma enterprice', 'bad practise', 2, 1, 3, '2020-10-07 06:31:02', '2020-10-07 22:54:00'),
+(8, 'hello world', 'hello world', 1, 1, 3, '2020-10-07 06:31:29', '2020-10-07 06:31:29'),
+(9, 'banoful', 'good', 2, 1, 3, '2020-10-07 06:31:48', '2020-10-07 06:31:48'),
+(10, 'madhubon', 'good', 2, 1, 3, '2020-10-07 06:32:15', '2020-10-07 06:32:15');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `store_invoices`
+--
+
+CREATE TABLE `store_invoices` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `invoice_number` int(11) NOT NULL,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `vendor_id` int(10) UNSIGNED NOT NULL,
+  `ware_id` int(10) UNSIGNED NOT NULL,
+  `date` date NOT NULL,
+  `posting_by` int(10) UNSIGNED NOT NULL,
+  `store_id` int(10) UNSIGNED NOT NULL,
+  `gross_amount` double(8,2) NOT NULL,
+  `discount_taka` double(8,2) NOT NULL,
+  `discount_percent` double(8,2) NOT NULL,
+  `cash_amount` double(8,2) NOT NULL,
+  `bank_account` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `bank_id` int(11) NOT NULL,
+  `remarks` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ware_id` int(10) UNSIGNED NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -664,8 +903,35 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `status`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'sudipto kumar shil', 'sudiptoshil@outlook.com', NULL, '$2y$10$Rb7e8G/D/xJN6wWHO5FHzOwcovLzaE/LCK/yaiO8t7ApaMQBQD5ji', 1, NULL, '2020-09-19 02:21:24', '2020-09-19 02:21:24');
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `ware_id`, `status`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'sudipto kumar shil', 'sudiptoshil@outlook.com', NULL, '$2y$10$HgeE3AlnBidwVEN74yKeH.LmG/UvJf2WjzngJi4KOWluXLNhTxwga', 1, 1, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vats`
+--
+
+CREATE TABLE `vats` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `vat_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` int(11) NOT NULL,
+  `ware_id` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(4) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `vats`
+--
+
+INSERT INTO `vats` (`id`, `vat_name`, `value`, `ware_id`, `status`, `created_at`, `updated_at`) VALUES
+(3, '20', 20, 5, 1, '2020-10-05 05:09:36', '2020-10-05 05:09:36'),
+(4, '20%', 20, 1, 1, '2020-10-05 07:12:56', '2020-10-05 07:12:56'),
+(5, '30%', 30, 1, 1, '2020-10-05 07:17:07', '2020-10-05 07:17:07'),
+(6, '20%', 20, 3, 1, '2020-10-05 07:19:00', '2020-10-05 07:19:00'),
+(7, '20%', 0, 3, 1, '2020-10-05 07:27:10', '2020-10-05 07:27:10');
 
 -- --------------------------------------------------------
 
@@ -677,9 +943,13 @@ CREATE TABLE `vendors` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `remarks` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `accounts_no` int(10) UNSIGNED NOT NULL,
-  `status` tinyint(4) DEFAULT '1',
+  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `type` tinyint(4) NOT NULL DEFAULT 0,
+  `ware_id` int(3) UNSIGNED NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -688,8 +958,13 @@ CREATE TABLE `vendors` (
 -- Dumping data for table `vendors`
 --
 
-INSERT INTO `vendors` (`id`, `name`, `email`, `password`, `accounts_no`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'sudipto', 'sudiptoshil@outlook.com', '$2y$10$tQYUPGgEgY2nY1wtSFUuTebJ/Fa/g1gmU/429bqI7SRWDJJCK2/fi', 1234455, 1, '2020-09-21 04:40:38', '2020-09-21 04:40:38');
+INSERT INTO `vendors` (`id`, `name`, `email`, `address`, `phone`, `remarks`, `accounts_no`, `status`, `type`, `ware_id`, `created_at`, `updated_at`) VALUES
+(1, 'sudipto kumar shil2', 'sudiptoshil@outlook.com', 'chittagong', '01624772008', 'hello', 192, 0, 0, 0, '2020-09-22 07:24:57', '2020-09-22 23:38:55'),
+(2, 'vendor', 'vendor@mial.com', 'ctg', '01746952187', 'good', 225, 0, 0, 0, '2020-09-22 08:03:17', '2020-09-22 08:06:40'),
+(3, 'customer', 'customer@mail.com', 'chittagong', '01746952187', 'best', 192, 0, 0, 0, '2020-09-23 00:42:15', '2020-09-23 00:42:15'),
+(4, 'ayman sadiq', 'ayman@gmail.com', 'dhaka', '01624772008', 'best', 225, 0, 0, 5, '2020-09-30 23:17:12', '2020-09-30 23:17:12'),
+(5, 'vendor2', 'vendor@mial.com', 'chittagong', '01624772008', 'hello', 203, 0, 0, 2, '2020-10-04 00:52:42', '2020-10-04 00:52:42'),
+(6, 'super123', 'admin@mail.com', 'ctg', '01746952187', 'hello', 432, 0, 0, 4, '2020-10-04 00:53:34', '2020-10-04 00:53:34');
 
 -- --------------------------------------------------------
 
@@ -727,13 +1002,8 @@ CREATE TABLE `ware_house_details` (
 --
 
 INSERT INTO `ware_house_details` (`id`, `name`, `foreign_name`, `wh_keeper`, `location`, `telephone`, `sequence`, `province_no`, `resign_code`, `wh_transfer_interface_account`, `item_activity`, `default_cc_code`, `account_name`, `branch`, `pricing_level`, `global_location_no`, `longitude`, `latitude`, `address`, `foreign_address`, `created_at`, `updated_at`) VALUES
-(1, 'sudipto kumar shil', 'world', 'ok', 'ctg', '010393', '123', 2344, 1233, '2234', 'defa', 234, 'ali', 'ctg', '123', 123, '22', 'dd', 'dee', 'ee', '2020-09-19 02:22:19', '2020-09-19 02:22:19'),
-(2, 'Coursegolang', 'courses', 'ok', 'ctg', '010393', '123', 2344, 1233, '2234', 'defa', 234, 'eee', 'ctg', '5676', 2354, '22', 'ssl http', 'dee', 'ee', '2020-09-21 00:08:24', '2020-09-21 02:32:11'),
-(3, 'go lang', 'php', 'ok', 'ctg', '010393', '123', 2344, 1233, '2234', 'defa', 234, 'ali', 'ctg', '123', 2354, '22', '22', 'dee', 'ee', '2020-09-21 00:19:06', '2020-09-21 00:19:06'),
-(4, 'python programming', 'python oop', 'ok', 'ctg', '010393', '123', 2344, 1233, '2234', 'defa', 234, 'ali', 'ctg', '123', 1234, '22', 'dd', 'dee', 'ee', '2020-09-21 00:23:10', '2020-09-21 00:23:10'),
-(5, 'rust programming', 'rust programming language', 'ok', 'ctg', '010393', '123', 2344, 1233, '2234', 'defa', 234, 'ali', 'ctg', '123', 1234, '22', 'dd', 'dee', 'ee', '2020-09-21 00:24:02', '2020-09-21 00:24:02'),
-(6, 'dono .js', 'dono .js', 'dono .js', 'ctg', '010393', '123', 2344, 1233, '2234', 'defa', 234, 'eee', 'ctg', '123', 2354, '22', 'dd', 'ctg', 'uk', '2020-09-21 01:57:27', '2020-09-21 01:57:27'),
-(7, 'Course.php2344', 'courses152', 'ok', 'ctg', '010393', '123', 2344, 1233, '2234', 'defa', 234, 'eee', 'ctg', '5676', 2354, '22', 'dd slsl', 'dee', 'ee', '2020-09-21 02:21:31', '2020-09-21 02:21:31');
+(1, 'warehouse1', 'warehouse1', '2', 'ctg', '01624777200', 'maintain', 123, 2342, '123', '33', 33, '33', '33', '44', 556, '66', '77', 'chittagong', 'chittagong', '2020-10-07 06:28:45', '2020-10-07 06:28:45'),
+(2, 'warehouse2', 'warehouse2', '4', 'dhaka', '001112223', 'maintain', 123, 33, '44', '55', 66, '67', '55', '455', 566, '777', '88', 'chittagong', 'chittagong', '2020-10-07 06:29:37', '2020-10-07 06:29:37');
 
 --
 -- Indexes for dumped tables
@@ -746,9 +1016,33 @@ ALTER TABLE `contacts`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `customers`
+--
+ALTER TABLE `customers`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `inventory_categories`
+--
+ALTER TABLE `inventory_categories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `inventory_products`
+--
+ALTER TABLE `inventory_products`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `invoice_trasections`
+--
+ALTER TABLE `invoice_trasections`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -777,11 +1071,29 @@ ALTER TABLE `setting_copy`
   ADD UNIQUE KEY `id` (`id`);
 
 --
+-- Indexes for table `stores`
+--
+ALTER TABLE `stores`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `store_invoices`
+--
+ALTER TABLE `store_invoices`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `users_email_unique` (`email`);
+
+--
+-- Indexes for table `vats`
+--
+ALTER TABLE `vats`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `vendors`
@@ -806,10 +1118,34 @@ ALTER TABLE `contacts`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `customers`
+--
+ALTER TABLE `customers`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `inventory_categories`
+--
+ALTER TABLE `inventory_categories`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=457;
+
+--
+-- AUTO_INCREMENT for table `inventory_products`
+--
+ALTER TABLE `inventory_products`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `invoice_trasections`
+--
+ALTER TABLE `invoice_trasections`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `ledger_copy`
@@ -821,7 +1157,7 @@ ALTER TABLE `ledger_copy`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `setting_copy`
@@ -830,22 +1166,40 @@ ALTER TABLE `setting_copy`
   MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=498;
 
 --
+-- AUTO_INCREMENT for table `stores`
+--
+ALTER TABLE `stores`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `store_invoices`
+--
+ALTER TABLE `store_invoices`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `vats`
+--
+ALTER TABLE `vats`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT for table `vendors`
 --
 ALTER TABLE `vendors`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `ware_house_details`
 --
 ALTER TABLE `ware_house_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
