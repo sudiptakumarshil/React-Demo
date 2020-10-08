@@ -12,43 +12,22 @@ const EditInvoiceTransectionModal = props => {
     const [storelist, setstorelist] = useState([]);
     const [productList, setproductList] = useState([]);
     const { idx } = useParams();
-    // console.log("test=" + idx);
+    const dataObj={};
+    const [formData, setFormData] = useState(dataObj);
+    console.log("test 5=" + JSON.stringify(props.modalData));
 
+    useEffect(() => {
+
+        setFormData(props.modalData);
+        fetchalldata();
+        // fetchallinvoicetransection();
+        // window.location.reload();
+    }, [props]);
+
+    console.log("test fdata55="+JSON.stringify(formData));
     // const i_id = props.modalData.id;
 
-    const alldata = {
-        // warehouseList: [],
-        invoicetransectionList: [],
-        // customerList: [],
-        toggle: true,
-        name:"",
-        invoice_code: "",
-        remarks: "",
-        warehouse_id: "",
-        vendor_id: "",
-        vendorlist: [],
-        date: "",
-        store_id: "",
-        // storelist: [],
-        gross_amount: "",
-        discount_taka: "",
-        discount_percent: "",
-        cash_amount: "",
-        bank_account: "",
-        bank_id: "",
-        customer_id: "",
-        product_id: "",
-        productList: [],
-        quantity: "",
-        price: "",
-        idx: "",
-        user_id: "",
-        isModalShow: false,
-        // modalData: {},
-        i_id: "",
-        loading: true
-    };
-    const [formData, setFormData] = useState(alldata);
+   // console.log(props.modalData.quantity+","+JSON.stringify(formData));
 
     const fetchalldata = async () => {
         const response = await axios.get(defaultRouteLink + "/api/all-data");
@@ -85,7 +64,7 @@ const EditInvoiceTransectionModal = props => {
             [name]: value
         }));
 
-        setFormData(oldState => ({
+        /*setFormData(oldState => ({
             ...oldState,
             i_id: props.modalData.id,
             price: props.modalData.price,
@@ -94,16 +73,14 @@ const EditInvoiceTransectionModal = props => {
             discount_percent: props.modalData.discount_percent,
             discount_taka: props.modalData.discount_taka,
             idx: idx
-        }));
+        }));*/
 
 
     };
 
-    useEffect(() => {
-        fetchalldata();
-        // fetchallinvoicetransection();
-        // window.location.reload();
-    }, []);
+
+
+
 
     // GET ALL WAREHOUSE LIST FROM (ware_house_details) TABLE
 

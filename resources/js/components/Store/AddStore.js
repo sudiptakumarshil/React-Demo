@@ -125,10 +125,12 @@ class AddStore extends Component {
                                         <div className="input-group">
                                             <select
                                                 className="form-control"
-                                                id="exampleFormControlSelect1"
+                                                // id="exampleFormControlSelect1"
                                                 name="warehouse_id"
+                                                required
                                                 onChange={this.handleInput}
                                             >
+                                            <option value="0" selected>Choose One</option>
                                                 {warhouses}
                                             </select>
                                         </div>
@@ -145,6 +147,7 @@ class AddStore extends Component {
                                                 className="form-control"
                                                 placeholder="remarks"
                                                 name="remarks"
+                                                required
                                                 value={this.state.remarks}
                                                 onChange={this.handleInput}
                                             ></textarea>
@@ -162,7 +165,9 @@ class AddStore extends Component {
                                                 id="exampleFormControlSelect1"
                                                 name="status"
                                                 onChange={this.handleInput}
+                                                required
                                             >
+                                                <option selected>Choose one </option>
                                                 <option value="1">
                                                     Active
                                                 </option>

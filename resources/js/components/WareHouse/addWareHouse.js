@@ -207,7 +207,7 @@ class addWareHouse extends Component {
                                             <div className="form-group">
                                                 <div className="input-group">
                                                     <input
-                                                        type="text"
+                                                        type="number"
                                                         className="form-control"
                                                         placeholder="Sequence"
                                                         name="sequence"
@@ -230,7 +230,7 @@ class addWareHouse extends Component {
                                             <div className="form-group">
                                                 <div className="input-group">
                                                     <input
-                                                        type="text"
+                                                        type="number"
                                                         className="form-control"
                                                         placeholder="Province No"
                                                         name="province_no"
@@ -253,7 +253,7 @@ class addWareHouse extends Component {
                                             <div className="form-group">
                                                 <div className="input-group">
                                                     <input
-                                                        type="text"
+                                                        type="number"
                                                         className="form-control"
                                                         placeholder="Province No"
                                                         name="resign_code"
@@ -392,7 +392,7 @@ class addWareHouse extends Component {
                                             <div className="form-group">
                                                 <div className="input-group">
                                                     <input
-                                                        type="text"
+                                                        type="number"
                                                         className="form-control"
                                                         placeholder="Pricing Level"
                                                         name="pricing_level"
@@ -415,7 +415,7 @@ class addWareHouse extends Component {
                                             <div className="form-group">
                                                 <div className="input-group">
                                                     <input
-                                                        type="text"
+                                                        type="number"
                                                         className="form-control"
                                                         placeholder="Global Location No"
                                                         name="global_location_no"

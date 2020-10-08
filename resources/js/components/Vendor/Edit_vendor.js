@@ -3,8 +3,6 @@ import { Button, ButtonToolbar, Modal } from "react-bootstrap";
 import axios from "axios";
 import "../css/style_frontend.css";
 import Swal from "sweetalert2";
-
-
 import ModalAccountsLedgerList from "../modal/ModalAccountsLedgerList";
 class Edit_vendor extends Component {
     constructor(props) {
@@ -91,15 +89,6 @@ class Edit_vendor extends Component {
                     <div className="col-lg-12">
                         <div className="card-box">
                             <h4 className="card-title">Create Vendor</h4>
-                            <span align="center">
-                                <Loader
-                                    type="Puff"
-                                    color="#00BFFF"
-                                    height={100}
-                                    width={100}
-                                    timeout={4000} //3 secs
-                                />
-                            </span>
                             <form
                                 className="form-horizontal"
                                 onSubmit={this.updatevendor}

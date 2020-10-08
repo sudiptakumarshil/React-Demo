@@ -135,6 +135,7 @@ class CreateVendor extends Component {
                                                 className="form-control"
                                                 placeholder="Email"
                                                 name="email"
+                                                required
                                                 value={this.state.email}
                                                 onChange={this.handleInput}
                                             ></input>
@@ -153,6 +154,7 @@ class CreateVendor extends Component {
                                                 name="warehouse_id"
                                                 onChange={this.handleInput}
                                             >
+                                            <option value="0">Choose One </option>
                                                 {warhouses}
                                             </select>
                                         </div>
@@ -170,6 +172,7 @@ class CreateVendor extends Component {
                                                 className="form-control"
                                                 placeholder="Address"
                                                 name="address"
+                                                required
                                                 value={this.state.address}
                                                 onChange={this.handleInput}
                                             ></input>
@@ -187,6 +190,7 @@ class CreateVendor extends Component {
                                                 className="form-control"
                                                 placeholder="phone"
                                                 name="phone"
+                                                required
                                                 value={this.state.phone}
                                                 onChange={this.handleInput}
                                             ></input>
@@ -204,6 +208,7 @@ class CreateVendor extends Component {
                                                 className="form-control"
                                                 placeholder="remarks"
                                                 name="remarks"
+                                                required
                                                 value={this.state.remarks}
                                                 onChange={this.handleInput}
                                             ></textarea>

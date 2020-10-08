@@ -198,7 +198,7 @@ class AddStoreInvoice extends Component {
                 quantity: "",
                 price: ""
             });
-            this.fetchallinvoicetransection();
+            this.fetchalldata();
 
             // SUCCESS MESSAGE USING SWEET ALERT
             try {
@@ -340,7 +340,7 @@ class AddStoreInvoice extends Component {
             });
         }
 
-        this.fetchallinvoicetransection();
+        this.fetchalldata();
     };
     handleModalClose = () => {
         this.setState({

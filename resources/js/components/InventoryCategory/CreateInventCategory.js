@@ -155,7 +155,6 @@ const CreateInventCategory = props => {
             <div className="col-md-12">
                 <div className="row">
                     <div className="col-md-6">
-                        {/* <form onSubmit={SaveInventCategory}> */}
                         <form>
                             <div className="form-group">
                                 <label className="control-label">

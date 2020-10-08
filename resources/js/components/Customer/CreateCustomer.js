@@ -110,7 +110,7 @@ class CreateCustomer extends Component {
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="card-box">
-                            <h4 className="card-title">Create Vendor</h4>
+                            <h4 className="card-title">Create Customer</h4>
                             <form
                                 className="form-horizontal"
                                 onSubmit={this.CreateCustomer}
@@ -144,6 +144,7 @@ class CreateCustomer extends Component {
                                                 className="form-control"
                                                 placeholder="Email"
                                                 name="email"
+                                                required
                                                 value={this.state.email}
                                                 onChange={this.handleInput}
                                             ></input>
@@ -161,6 +162,7 @@ class CreateCustomer extends Component {
                                                 className="form-control"
                                                 placeholder="Address"
                                                 name="address"
+                                                required
                                                 value={this.state.address}
                                                 onChange={this.handleInput}
                                             ></input>
@@ -178,6 +180,7 @@ class CreateCustomer extends Component {
                                                 className="form-control"
                                                 placeholder="phone"
                                                 name="phone"
+                                                required
                                                 value={this.state.phone}
                                                 onChange={this.handleInput}
                                             ></input>
@@ -195,7 +198,10 @@ class CreateCustomer extends Component {
                                                 id="exampleFormControlSelect1"
                                                 name="warehouse_id"
                                                 onChange={this.handleInput}
+                                                required
                                             >
+                                                <option value="0" selected>Choose One</option>
+
                                                 {warhouses}
                                             </select>
                                         </div>
@@ -212,6 +218,7 @@ class CreateCustomer extends Component {
                                                 className="form-control"
                                                 placeholder="remarks"
                                                 name="remarks"
+                                                required
                                                 value={this.state.remarks}
                                                 onChange={this.handleInput}
                                             ></textarea>
