@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="a80652d5-40a4-49a4-84a1-977bf49b29f6" name="gadgetoy" url="http://gadgetoy.com">
+        <fileTransfer host="gadgetoy.com" port="21" rootFolder="/public_html/library">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

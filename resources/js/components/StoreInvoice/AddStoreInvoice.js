@@ -1,9 +1,15 @@
 import React, { Component } from "react";
 import { defaultRouteLink } from "../../common/config";
-import { Link } from "react-router-dom";
 import EditInvoiceTransec from "../modal/EditInvoiceTransectionModal";
 import ContentLoader, { Facebook, BulletList } from "react-content-loader";
+import { useDispatch, useSelector } from "react-redux";
+import { connect} from 'react-redux';
 
+import { compose } from 'redux'
+import { MemoryRouter, HashRouter, Link,Redirect ,withRouter } from "react-router-dom";
+import {updateStoreInvoice} from '../../actions/authActions';
+import {SET_REFRESH_STORETRANSECTION, SET_CURRENT_USER , SET_CURRENT_USER_EXIST,SET_CURRENT_USER_NOT_FOUND} from '../../actions/user_types';
+// const dispatch=useDispatch();
 const MyBulletListLoader = () => <BulletList />;
 import {
     getAccessTokenNameInfo,
@@ -18,11 +24,10 @@ import {
 } from "../../common/CookieService";
 import { isEmpty, isFunction } from "lodash";
 import { red } from "@material-ui/core/colors";
-
+// const mapDispatch = {action};
 class AddStoreInvoice extends Component {
     constructor(props) {
         super(props);
-        // this.delinvoicetransec = this.delinvoicetransec.bind(this);
         this.state = {
             warehouseList: [],
             invoicetransectionList: [],
@@ -53,9 +58,36 @@ class AddStoreInvoice extends Component {
             modalData: {},
             vatList: [],
             vat_id: "",
-            loading: true
+            loading: true,
+            time:""
         };
     }
+
+
+
+    async componentDidMount() {
+        const idx = this.props.match.params.idx;
+        const id = this.props.match.params.id;
+        console.log(idx);
+
+        this.setState({
+            idx: idx
+        });
+
+        const isLoginExit = JSON.stringify(
+            getCookieKeyInfo(getAccessTokenName)
+        );
+        this.setState({
+            user_id: isLoginExit
+        });
+        console.log("user id=" + isLoginExit);
+        this.fetchalldata();
+        // this.invoiceNumbers();
+        this.getinvoiceNumber();
+
+
+    }
+
     // FOR GETTING WAREHOUSE WISE STORE
     get_warhousewiseStore = async () => {
         let ware_id = this.state.warehouse_id;
@@ -82,7 +114,7 @@ class AddStoreInvoice extends Component {
         const response = await axios.get(
             defaultRouteLink + "/api/get-product-wise-price/" + productid
         );
-        console.log(response.data.productPrice);
+        // console.log(response.data.productPrice);
 
         if (typeof response.data.productPrice != "undefined") {
             this.setState({
@@ -101,8 +133,6 @@ class AddStoreInvoice extends Component {
         this.getProductWisePriceAuto();
     };
 
-    // VALIDATION ..
-    validate = () => {};
 
     // save invoice transection .......
 
@@ -198,6 +228,13 @@ class AddStoreInvoice extends Component {
                 quantity: "",
                 price: ""
             });
+
+            // dispatch({
+            //     type:SET_REFRESH_STORETRANSECTION,
+            //     updateinvoiceTransection:res.data
+            // });
+
+
             this.fetchalldata();
 
             // SUCCESS MESSAGE USING SWEET ALERT
@@ -228,7 +265,8 @@ class AddStoreInvoice extends Component {
             }
         }
     };
-    // for getting warehouse ,store ,product , vendor ,customer,vat
+
+    // for getting warehouse ,store ,product , vendor ,customer,vat....
     fetchalldata = async () => {
         const response = await axios.get(defaultRouteLink + "/api/all-data");
 
@@ -242,7 +280,15 @@ class AddStoreInvoice extends Component {
                 vatList: response.data.vats,
                 invoicetransectionList: response.data.invotransec
             });
+
+
+            this.props.updateStoreInvoice(response.data.invotransec);
+
             this.setState({ loading: false });
+            // dispatch({
+            //     type:SET_REFRESH_STORETRANSECTION,
+            //     data:{}
+            // });
         }
     };
 
@@ -285,27 +331,6 @@ class AddStoreInvoice extends Component {
         }
     };
 
-    async componentDidMount() {
-        const idx = this.props.match.params.idx;
-
-        const id = this.props.match.params.id;
-        console.log(idx);
-
-        this.setState({
-            idx: idx
-        });
-
-        const isLoginExit = JSON.stringify(
-            getCookieKeyInfo(getAccessTokenName)
-        );
-        this.setState({
-            user_id: isLoginExit
-        });
-        console.log("user id=" + isLoginExit);
-        this.fetchalldata();
-        // this.invoiceNumbers();
-        this.getinvoiceNumber();
-    }
 
     // FOR DELETE INVOICES
     delinvoicetransec = async e => {
@@ -356,9 +381,15 @@ class AddStoreInvoice extends Component {
             defaultRouteLink + "/api/edit-invoice-transec/" + item_id
         );
         this.setState({ modalData: response.data.invoice });
+
         // };
     };
+
+
     render() {
+
+        // console.log("product lsit="+this.state.data_p_list);
+         console.log("props="+this.props.data_p_list);
         // FETCH ALL WAREHOUSE DATA... LOOP
         let warhouses = this.state.warehouseList.map((item, index) => {
             return (
@@ -398,7 +429,8 @@ class AddStoreInvoice extends Component {
                 store_id: item.id // UPDATE STATE ..
             });
         });
-        // fetch all product data ..
+        // this.props.addSearchProductList(response.data.product_list);
+        // fetch all product data ......
         let products = this.state.productList.map((item, index) => {
             return (
                 <option value={item.id} data-tokens="item.product_name">
@@ -408,6 +440,7 @@ class AddStoreInvoice extends Component {
             this.setState({
                 product_id: item.id, // UPDATE STATE ........
                 price: item.selling_price
+
             });
         });
         // FETCH ALL CUSTOMER DATA... LOOP
@@ -429,7 +462,8 @@ class AddStoreInvoice extends Component {
         let totalvat;
         let vatcount;
         // FETCH ALL Invoice transection  DATA... LOOP
-        let invotransec = this.state.invoicetransectionList.map(
+       // let invotransec = this.state.invoicetransectionList.map(
+         let invotransec = this.props.data_p_list.map(
             (item, index) => {
                 const idx = this.props.match.params.idx;
                 return (
@@ -537,6 +571,7 @@ class AddStoreInvoice extends Component {
                 </h2>
             );
         }
+
 
         return (
             <div>
@@ -950,4 +985,14 @@ class AddStoreInvoice extends Component {
     }
 }
 
-export default AddStoreInvoice;
+const mapStateToProps = (state)=>{
+    return{
+        // data_redux: state.auth.pro_trans_list,
+        data_p_list: state.auth.invoicetransectionList,
+    }
+}
+// export default connect(mapStateToProps,null)(AddStoreInvoice)
+//export default compose(withRouter,connect(null,{}))(AddStoreInvoice);
+
+export default connect(mapStateToProps,{updateStoreInvoice})(AddStoreInvoice)
+

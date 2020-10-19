@@ -271,8 +271,16 @@ class StoreInvoiceController extends Controller
         $invotran->discount_percent = $request->discount_percent;
         $invotran->save();
 
+        $invotransec = DB::table('invoice_trasections')
+            ->leftJoin('inventory_products as dip', 'invoice_trasections.d_id', '=', 'dip.id')
+            ->leftJoin('inventory_products as cip', 'invoice_trasections.c_id', '=', 'cip.id')
+            ->leftJoin('vats', 'invoice_trasections.vat', 'vats.id')
+            ->select('invoice_trasections.*', 'dip.product_name as dp_name', 'vats.vat_name', 'vats.value', 'cip.product_name as cp_name')
+            ->get();
+
         return response()->json([
             'status' => 200,
+            'products' => $invotransec,
             'message' => "Invoices Transection  UpdatedSuccessfully!!"
         ]);
     }

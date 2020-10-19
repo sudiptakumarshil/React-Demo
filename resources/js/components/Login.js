@@ -6,9 +6,9 @@ import Button from '@material-ui/core/Button';
 import Alert from 'react-bootstrap/Alert';
 import {getCookieKeyInfo,setCookie,removeCookie} from '../common/CookieService';
 import {defaultRouteLink,dispatchLoginAction} from '../common/config';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 import {useDispatch,useSelector} from 'react-redux';
-import { withRouter,Redirect } from "react-router-dom";
+import {withRouter,Redirect } from "react-router-dom";
 
 
 
@@ -47,7 +47,7 @@ const LoginPage=(props)=>{
         setUserInfo({
             ...userInfo,
             [e.target.name]:e.target.value,
-        });  
+        });
     }
     const isValidSignIn=(e)=>{
         e.preventDefault();
@@ -55,7 +55,7 @@ const LoginPage=(props)=>{
         setUserInfo({
             ...userInfo,
             "isBtnClick":true,
-            
+
         });
         setSignButtonDisabled(true);
         let formData={
@@ -66,7 +66,7 @@ const LoginPage=(props)=>{
               .then(res => {
                     setUserInfo({
                         ...userInfo,
-                        "isBtnClick":false,     
+                        "isBtnClick":false,
                     });
                     setSignButtonDisabled(false);
                     const options={path:'/'};
@@ -87,13 +87,13 @@ const LoginPage=(props)=>{
                             }
                             setCookie("userInfo",res.data.info,options);
                             setCookie("userId",res.data.user_id,options);
-                            
+
                         }
                           let info={
                                     userId:res.data.user_id,
                                     userInfo:res.data.info,
-                                };            
-                            dispatch(dispatchLoginAction(info)); 
+                                };
+                            dispatch(dispatchLoginAction(info));
                     }
                     else{
                         setShow(true);
@@ -105,10 +105,10 @@ const LoginPage=(props)=>{
                     }
 
 
-                    
-                   
-            
-              
+
+
+
+
             }).catch(function(err){
                 setShow(true);
                 setUserInfo({
@@ -130,7 +130,7 @@ const LoginPage=(props)=>{
                     <div className="account-logo">
                         <a href="/"><img src={`public`+ImgLogo} alt="Preadmin" /></a>
                     </div>
-                    <h3 className="account-title">User Login</h3>         
+                    <h3 className="account-title">User Login</h3>
                     <div className="account-wrapper">
                         <form className="form-signin">
                             {
@@ -152,8 +152,8 @@ const LoginPage=(props)=>{
                                 <input onChange={handleCheck} defaultChecked={userInfo.isChecked} type="checkbox" name="rem_me" /> Remember Me
                             </div>
                             <div className="form-group text-center">
-                                <Button  type="button"  onClick={isValidSignIn} 
-                                    className="col-12" variant="contained"  
+                                <Button  type="button"  onClick={isValidSignIn}
+                                    className="col-12" variant="contained"
                                     color="secondary" disabled={signButtonDisabled}>
                                         {
                                             (userInfo.isBtnClick) ? "Loading" : "Login"

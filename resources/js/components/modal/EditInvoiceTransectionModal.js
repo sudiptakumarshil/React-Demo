@@ -1,10 +1,16 @@
 import React, { Component, useState, useEffect } from "react";
 import { Button, ButtonToolbar, Modal } from "react-bootstrap";
-import { defaultRouteLink } from "../../common/config";
+import { defaultRouteLink, dispatchEditAction } from "../../common/config";
 import { Link, useParams } from "react-router-dom";
 import ContentLoader, { Facebook, BulletList } from "react-content-loader";
+import { fetchalldata } from "../StoreInvoice/AddStoreInvoice";
+import AddStoreInvoice from "../StoreInvoice/AddStoreInvoice";
+import { useDispatch, useSelector } from "react-redux";
+import { connect } from 'react-redux';
+import {SET_REFRESH_STORETRANSECTION, SET_CURRENT_USER , SET_CURRENT_USER_EXIST,SET_CURRENT_USER_NOT_FOUND} from '../../actions/user_types';
+
+// import {defaultRouteLink,dispatchEditAction} from '../common/config';
 const MyBulletListLoader = () => <BulletList />;
-import AddstoreInvoice from "../StoreInvoice/AddStoreInvoice";
 
 const EditInvoiceTransectionModal = props => {
     const [warehouselist, setWarehouselist] = useState([]);
@@ -12,32 +18,31 @@ const EditInvoiceTransectionModal = props => {
     const [storelist, setstorelist] = useState([]);
     const [productList, setproductList] = useState([]);
     const { idx } = useParams();
-    const dataObj={};
+    const dataObj = {};
     const [formData, setFormData] = useState(dataObj);
     console.log("test 5=" + JSON.stringify(props.modalData));
-
+    const dispatch=useDispatch();
     useEffect(() => {
-
         setFormData(props.modalData);
-        fetchalldata();
+
         // fetchallinvoicetransection();
         // window.location.reload();
     }, [props]);
 
-    console.log("test fdata55="+JSON.stringify(formData));
+    //console.log("test fdata55=" + JSON.stringify(formData));
     // const i_id = props.modalData.id;
 
-   // console.log(props.modalData.quantity+","+JSON.stringify(formData));
+    // console.log(props.modalData.quantity+","+JSON.stringify(formData));
 
-    const fetchalldata = async () => {
-        const response = await axios.get(defaultRouteLink + "/api/all-data");
-        // console.log(response)
-        // console.log("test data" + response);
-        setWarehouselist(response.data.warehouses);
-        setvendorlist(response.data.vendors);
-        setstorelist(response.data.stores);
-        setproductList(response.data.products);
-    };
+    // const alldata = async () => {
+    //     const response = await axios.get(defaultRouteLink + "/api/all-data");
+    //     // console.log(response)
+    //     // console.log("test data" + response);
+    //     setWarehouselist(response.data.warehouses);
+    //     setvendorlist(response.data.vendors);
+    //     setstorelist(response.data.stores);
+    //     setproductList(response.data.products);
+    // };
 
     // setFormData(oldState => ({
     //     ...oldState,
@@ -48,14 +53,25 @@ const EditInvoiceTransectionModal = props => {
 
     const updateinvoiceTransection = async event => {
         const i_id = props.modalData.id;
-
         event.preventDefault();
         const res = await axios.patch(
             `/dbBackup/api/update-transecinvoice/${i_id}`,
             formData
         );
-    };
 
+
+        // props.action
+      //  console.log("log333="+JSON.stringify(res.data));
+        dispatch({
+            type:SET_REFRESH_STORETRANSECTION,
+            updateinvoiceTransection:res.data.products,
+        });
+
+
+
+       // window.location.reload(false);
+
+    };
 
     const handleInputs = event => {
         const { name, value } = event.target;
@@ -74,13 +90,7 @@ const EditInvoiceTransectionModal = props => {
             discount_taka: props.modalData.discount_taka,
             idx: idx
         }));*/
-
-
     };
-
-
-
-
 
     // GET ALL WAREHOUSE LIST FROM (ware_house_details) TABLE
 
@@ -92,6 +102,7 @@ const EditInvoiceTransectionModal = props => {
             warehouse_id: item.id
         }));
     });
+
     // GET ALL VENDOR LIST
 
     const vendors = vendorlist.map(function(item, index) {
@@ -140,13 +151,15 @@ const EditInvoiceTransectionModal = props => {
                 fade={false}
                 style={{ opacity: 1 }}
                 size="lg"
+                onHide={close}
+                // saveModalDetails={saveModalDetails}
             >
                 <Modal.Header closeButton>
                     <Modal.Title>Edit Product</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     {productList.length < 0 ? (
-                        <MyBulletListLoader/>
+                        <MyBulletListLoader />
                     ) : (
                         <div className="row">
                             <div className="col-md-12">
@@ -233,7 +246,6 @@ const EditInvoiceTransectionModal = props => {
                                                                         //     .price
                                                                         formData.price
                                                                     }
-
                                                                     className="form-control"
                                                                     placeholder="Price"
                                                                 ></input>
@@ -253,7 +265,6 @@ const EditInvoiceTransectionModal = props => {
                                                                     value={
                                                                         formData.discount_taka
                                                                     }
-
                                                                     className="form-control"
                                                                     placeholder="Discount Taka"
                                                                 ></input>
@@ -272,7 +283,6 @@ const EditInvoiceTransectionModal = props => {
                                                                     value={
                                                                         formData.discount_percent
                                                                     }
-
                                                                     className="form-control"
                                                                     placeholder="Discount Percent"
                                                                 ></input>
@@ -308,6 +318,9 @@ const EditInvoiceTransectionModal = props => {
         </>
     );
 };
+
+
+
 
 //   render(<EditInvoiceTransectionModal />);
 export default EditInvoiceTransectionModal;

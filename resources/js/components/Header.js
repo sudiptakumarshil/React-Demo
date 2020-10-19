@@ -194,45 +194,6 @@ const Header = props => {
 
                                 </ul>
                             </li>
-                            <li className="submenu">
-                                <a href="#">
-                                    <i className="icofont-list"></i>
-                                    <span>Report</span>
-                                    <span className="menu-arrow">
-                                        <i className="icofont-simple-right"></i>
-                                    </span>
-                                </a>
-                                <ul
-                                    className="list-unstyled"
-                                    style={{display: "none"}}
-                                >
-                                    <li className="">
-                                        <a
-                                            data-id="0"
-                                            href="{{ url('/report_all') }}"
-                                        >
-                                            All
-                                        </a>
-                                    </li>
-                                    <li className="">
-                                        <a
-                                            data-id="0"
-                                            href="{{ url('/getTaskSituation') }}"
-                                        >
-                                            {" "}
-                                            Task Status
-                                        </a>
-                                    </li>
-                                    <li className="">
-                                        <a
-                                            data-id="0"
-                                            href="{{ url('/taskDetailsReport') }}"
-                                        >
-                                            Activites
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
                         </ul>
                     </div>
                 </div>

@@ -1,14 +1,16 @@
 
 import isEmpty from 'lodash/isEmpty';
-import { SET_CURRENT_USER , SET_CURRENT_USER_EXIST,SET_CURRENT_USER_NOT_FOUND} from '../actions/user_types';
+import {SET_REFRESH_STORETRANSECTION, SET_CURRENT_USER , SET_CURRENT_USER_EXIST,SET_CURRENT_USER_NOT_FOUND} from '../actions/user_types';
 const initialState = {
     isAuthenticated: false,
     isUserLogin: {},
-    userStatusType : {}
+    userStatusType : {},
+    invoicetransectionList:[],
 }
-export default (state = initialState, action = {}) => 
+
+export default (state = initialState, action = {}) =>
 {
-    switch(action.type) 
+    switch(action.type)
     {
         case SET_CURRENT_USER:
             return {
@@ -16,6 +18,7 @@ export default (state = initialState, action = {}) =>
                 isUserLogin: action.user,
                 userStatusType : action.type
             };
+
         case SET_CURRENT_USER_EXIST:
             return {
                 isAuthenticated: false,
@@ -28,6 +31,14 @@ export default (state = initialState, action = {}) =>
                 isUserLogin: action.user,
                 userStatusType : action.type
             };
+
+            case SET_REFRESH_STORETRANSECTION:
+                return {
+                    ...state,
+                    invoicetransectionList:action.updateinvoiceTransection,
+                };
         default: return state;
     }
+
+
 }

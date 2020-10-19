@@ -35,9 +35,24 @@ export const isLoginExist = (props, key) => {
         props.history.push(defaultRouteLink + "/admin_dashboard");
     else props.history.push(defaultRouteLink + "/admin_login");
 };
+
 export const dispatchLoginAction = info => {
     return {
         type: SET_CURRENT_USER,
         user: info
     };
 };
+
+
+// export const dispatchEditAction =  => {
+//     return {
+//         type: SET_REFRESH_STORETRANSECTION,
+//         Edit:
+//     };
+// };
+
+
+
+
+
+
