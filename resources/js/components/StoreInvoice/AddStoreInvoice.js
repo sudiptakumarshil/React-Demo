@@ -3,12 +3,23 @@ import { defaultRouteLink } from "../../common/config";
 import EditInvoiceTransec from "../modal/EditInvoiceTransectionModal";
 import ContentLoader, { Facebook, BulletList } from "react-content-loader";
 import { useDispatch, useSelector } from "react-redux";
-import { connect} from 'react-redux';
+import { connect } from "react-redux";
 
-import { compose } from 'redux'
-import { MemoryRouter, HashRouter, Link,Redirect ,withRouter } from "react-router-dom";
-import {updateStoreInvoice} from '../../actions/authActions';
-import {SET_REFRESH_STORETRANSECTION, SET_CURRENT_USER , SET_CURRENT_USER_EXIST,SET_CURRENT_USER_NOT_FOUND} from '../../actions/user_types';
+import { compose } from "redux";
+import {
+    MemoryRouter,
+    HashRouter,
+    Link,
+    Redirect,
+    withRouter
+} from "react-router-dom";
+import { updateStoreInvoice } from "../../actions/authActions";
+import {
+    SET_REFRESH_STORETRANSECTION,
+    SET_CURRENT_USER,
+    SET_CURRENT_USER_EXIST,
+    SET_CURRENT_USER_NOT_FOUND
+} from "../../actions/user_types";
 // const dispatch=useDispatch();
 const MyBulletListLoader = () => <BulletList />;
 import {
@@ -57,13 +68,15 @@ class AddStoreInvoice extends Component {
             isModalShow: false,
             modalData: {},
             vatList: [],
+            bankdetailsList: [],
+            cashamountList: [],
             vat_id: "",
             loading: true,
-            time:""
+            time: "",
+            bankdetails_id: "",
+            cashamount_id: ""
         };
     }
-
-
 
     async componentDidMount() {
         const idx = this.props.match.params.idx;
@@ -84,8 +97,6 @@ class AddStoreInvoice extends Component {
         this.fetchalldata();
         // this.invoiceNumbers();
         this.getinvoiceNumber();
-
-
     }
 
     // FOR GETTING WAREHOUSE WISE STORE
@@ -132,7 +143,6 @@ class AddStoreInvoice extends Component {
         this.get_warhousewiseStore();
         this.getProductWisePriceAuto();
     };
-
 
     // save invoice transection .......
 
@@ -234,7 +244,6 @@ class AddStoreInvoice extends Component {
             //     updateinvoiceTransection:res.data
             // });
 
-
             this.fetchalldata();
 
             // SUCCESS MESSAGE USING SWEET ALERT
@@ -278,9 +287,10 @@ class AddStoreInvoice extends Component {
                 productList: response.data.products,
                 customerList: response.data.customers,
                 vatList: response.data.vats,
-                invoicetransectionList: response.data.invotransec
+                invoicetransectionList: response.data.invotransec,
+                bankdetailsList: response.data.bankdetails,
+                cashamountList: response.data.cashaccount
             });
-
 
             this.props.updateStoreInvoice(response.data.invotransec);
 
@@ -291,14 +301,6 @@ class AddStoreInvoice extends Component {
             // });
         }
     };
-
-    // GET ALL TRANSECTION DATA........
-    // fetchallinvoicetransection = async () => {
-    //     const response = await axios.get(
-    //         defaultRouteLink + "/api/all-invoice-transec"
-    //     );
-    //     this.setState({ invoicetransectionList: response.data.invotransec });
-    // };
 
     // FOR GETTING AUTO INVOICE NUMBER .............
     getinvoiceNumber = async () => {
@@ -330,7 +332,6 @@ class AddStoreInvoice extends Component {
             console.log("ok");
         }
     };
-
 
     // FOR DELETE INVOICES
     delinvoicetransec = async e => {
@@ -385,11 +386,9 @@ class AddStoreInvoice extends Component {
         // };
     };
 
-
     render() {
-
         // console.log("product lsit="+this.state.data_p_list);
-         console.log("props="+this.props.data_p_list);
+        console.log("props=" + this.props.data_p_list);
         // FETCH ALL WAREHOUSE DATA... LOOP
         let warhouses = this.state.warehouseList.map((item, index) => {
             return (
@@ -440,7 +439,6 @@ class AddStoreInvoice extends Component {
             this.setState({
                 product_id: item.id, // UPDATE STATE ........
                 price: item.selling_price
-
             });
         });
         // FETCH ALL CUSTOMER DATA... LOOP
@@ -461,89 +459,137 @@ class AddStoreInvoice extends Component {
         let totalpercent;
         let totalvat;
         let vatcount;
+        let alldiscounttaka = 0;
+        let totalDiscountTaka = 0;
+        let totalPercentTaka = 0;
+        let totalGrossAmount = 0;
+        let alltoTalQty = 0;
+        let allTotalPrice = 0;
+        let grossAmountToMinusDiscounttaka = 0;
+        let allvattotal = 0;
+
         // FETCH ALL Invoice transection  DATA... LOOP
-       // let invotransec = this.state.invoicetransectionList.map(
-         let invotransec = this.props.data_p_list.map(
-            (item, index) => {
-                const idx = this.props.match.params.idx;
-                return (
-                    <tr>
-                        <td>{index + 1}</td>
+        // let invotransec = this.state.invoicetransectionList.map(
+        let invotransec = this.props.data_p_list.map((item, index) => {
+            const idx = this.props.match.params.idx;
+            return (
+                <tr>
+                    <td>{index + 1}</td>
 
-                        {item.dp_name != null ? (
-                            <td>{item.dp_name}</td>
-                        ) : (
-                            <td>{item.cp_name}</td>
-                        )}
-                        <td>{item.quantity}</td>
-                        <td>{item.price}</td>
-                        <td>
-                            {(totalpriceQuantity = item.price * item.quantity)}
-                        </td>
-                        <td>{item.discount_taka}</td>
-                        <td>{item.discount_percent}</td>
-                        <td>{item.vat_name}</td>
-                        <td>{item.value}</td>
-                        <input
-                            type="hidden"
-                            value={
-                                (totalpercent =
-                                    (totalpriceQuantity *
-                                        item.discount_percent) /
-                                    100)
-                            }
-                        ></input>
-                        <input
-                            type="hidden"
-                            value={(discounttaka = item.discount_taka)}
-                        ></input>
-                        {/* <td>{(totaldiscount = totalpercent + discounttaka)}</td> */}
+                    {item.dp_name != null ? (
+                        <td>{item.dp_name}</td>
+                    ) : (
+                        <td>{item.cp_name}</td>
+                    )}
+                    <td>{item.quantity}</td>
+                    <td>{item.price}</td>
+                    <td>{(totalpriceQuantity = item.price * item.quantity)}</td>
+                    <td>{item.discount_taka}</td>
+                    <td>{item.discount_percent}</td>
+                    <td>{item.vat_name}</td>
+                    <td>{item.value}</td>
+                    <input
+                        type="hidden"
+                        value={
+                            (totalpercent =
+                                (totalpriceQuantity * item.discount_percent) /
+                                100)
+                        }
+                    ></input>
+                    <input
+                        type="hidden"
+                        value={(discounttaka = item.discount_taka)}
+                    ></input>
+                    {/* start all discount percent and manually taka additionn */}
+                    <input
+                        type="hidden"
+                        value={(totalPercentTaka += totalpercent)}
+                    ></input>
+                    <input
+                        type="hidden"
+                        value={(totalDiscountTaka += discounttaka)}
+                    ></input>
+                    {/* end all discount percent and manually taka additionn */}
 
-                        <input
-                            type="hidden"
-                            value={
-                                (totaldiscount = totalpercent + discounttaka)
-                            }
-                        ></input>
-                        <input
-                            type="hidden"
-                            value={
-                                (totalvat = totalpriceQuantity - totaldiscount)
-                            }
-                        ></input>
-                        {/* <td>
-                            {(totalvat = totalpriceQuantity - totaldiscount)}
-                        </td> */}
+                    {/* start all qty  and price and manually taka substruction */}
+                    <input
+                        type="hidden"
+                        value={(alltoTalQty += totalpriceQuantity)}
+                    ></input>
 
-                        <input
-                            type="hidden"
-                            value={(vatcount = (totalvat * item.value) / 100)}
-                        ></input>
-                        <td>{totalvat - vatcount}</td>
-                        <td>
-                            <button
-                                onClick={() => this.handleProductEdit(item.id)}
-                                className="btn btn-primary"
-                            >
-                                Edit
-                            </button>
-                            <button
-                                onClick={this.delinvoicetransec}
-                                className="btn btn-primary"
-                                data-id={item.id}
-                            >
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-                );
-            }
-        );
+                    {/* end all qty  and price and manually taka substruction */}
+
+                    {/* for all vat total */}
+
+
+                    {/* end all vat total */}
+
+                    <input
+                        type="hidden"
+                        value={(totaldiscount = totalpercent + discounttaka)}
+                    ></input>
+
+                    <input
+                        type="hidden"
+                        value={(totalvat = totalpriceQuantity - totaldiscount)}
+                    ></input>
+
+                    <input
+                        type="hidden"
+                        value={(vatcount = (totalvat * item.value) / 100)}
+                    ></input>
+                    <td>{totalvat + vatcount}</td>
+
+                    <input type="hidden"
+                    value={allvattotal+=vatcount}
+                    >
+                    </input>
+                    <td>
+                        <button
+                            onClick={() => this.handleProductEdit(item.id)}
+                            className="btn btn-primary"
+                        >
+                            Edit
+                        </button>
+                        <button
+                            onClick={this.delinvoicetransec}
+                            className="btn btn-primary"
+                            data-id={item.id}
+                        >
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            );
+        });
+
         // FETCH ALL VAT DATA... LOOP
         let allvat = this.state.vatList.map((item, index) => {
             return (
                 <option value={item.id} data-tokens="item.name">
                     {item.vat_name}
+                </option>
+            );
+            this.setState({
+                vat_id: item.id // UPDATE STATE ........
+            });
+        });
+        // FETCH ALL BANK ACCOUNT LIST ... LOOP
+        let allbanklist = this.state.bankdetailsList.map((item, index) => {
+            return (
+                <option value={item.id} data-tokens="item.name">
+                    {item.bank_name}
+                </option>
+            );
+            this.setState({
+                vat_id: item.id // UPDATE STATE ........
+            });
+        });
+        // FETCH ALL CASH ACCOUNT DETAILS LIST ... LOOP
+        let allaccountlist = this.state.cashamountList.map((item, index) => {
+            return (
+                <option value={item.id} data-tokens="item.name">
+                    {item.cash_name}
                 </option>
             );
             this.setState({
@@ -571,7 +617,6 @@ class AddStoreInvoice extends Component {
                 </h2>
             );
         }
-
 
         return (
             <div>
@@ -857,12 +902,12 @@ class AddStoreInvoice extends Component {
                                                                 placeholder="Discount persent"
                                                             ></input>
                                                         </div>
-                                                        <button
+                                                        {/* <button
                                                             type="submit"
                                                             class="btn btn-danger"
                                                         >
                                                             Submit
-                                                        </button>
+                                                        </button> */}
                                                     </div>
                                                 </div>
                                             </div>
@@ -910,32 +955,50 @@ class AddStoreInvoice extends Component {
                             <div class="card">
                                 <div class="card-header">Featured</div>
                                 <div class="card-body">
-                                    <div className="col-md-4">
+                                <div className="col-md-4">
                                         <label className="control-label">
                                             Gross Amount
                                         </label>
                                         <input
                                             type="text"
+                                            readOnly
                                             className="form-control"
                                             name="gross_amount"
                                             required
-                                            value={this.state.gross_amount}
+                                            value={alltoTalQty}
                                             onChange={this.handleInput}
                                         ></input>
                                     </div>
+
                                     <div className="col-md-4">
                                         <label className="control-label">
                                             Discount Taka
                                         </label>
                                         <input
                                             type="text"
+                                            readOnly
                                             className="form-control"
                                             name="discount_taka"
-                                            value={this.state.discount_taka}
+                                            value={
+                                                alldiscounttaka = totalDiscountTaka +
+                                                totalPercentTaka
+                                            }
+                                            required
+                                            onChange={this.handleInput}
+                                        ></input>
+
+                                        <input
+                                            type="hidden"
+                                            className="form-control"
+                                            name="discount_taka"
+                                            value={
+                                                grossAmountToMinusDiscounttaka = alltoTalQty -alldiscounttaka
+                                            }
                                             required
                                             onChange={this.handleInput}
                                         ></input>
                                     </div>
+
                                     <div className="col-md-4">
                                         <label className="control-label">
                                             Discount Percent
@@ -944,10 +1007,60 @@ class AddStoreInvoice extends Component {
                                             type="text"
                                             className="form-control"
                                             name="discount_percent"
-                                            value={this.state.discount_percent}
+                                            // value={allvattotal}
                                             required
                                             onChange={this.handleInput}
                                         ></input>
+                                    </div>
+                                    <div className="col-md-4">
+                                        <label className="control-label">
+                                            Total Vat
+                                        </label>
+                                        <input
+                                            type="text"
+                                            readOnly
+                                            className="form-control"
+                                            name="discount_taka"
+                                            value={
+                                                allvattotal
+                                            }
+                                            required
+                                            onChange={this.handleInput}
+                                        ></input>
+
+                                    </div>
+                                    <div className="col-md-4">
+                                        <label className="control-label">
+                                            Net Payable
+                                        </label>
+                                        <input
+                                            type="text"
+                                            readOnly
+                                            className="form-control"
+                                            name="discount_taka"
+                                            value={
+                                                (grossAmountToMinusDiscounttaka + allvattotal)
+                                            }
+                                            onChange={this.handleInput}
+                                        ></input>
+
+                                    </div>
+                                    <div className="col-md-4">
+                                        <label className="control-label">
+                                            Cash Account
+                                        </label>
+                                        <select
+                                            className="form-control"
+                                            data-live-search="true"
+                                            name="cashamount_id"
+                                            value={this.state.cashamount_id}
+                                            onChange={this.handleInput}
+                                        >
+                                            <option selected value="0">
+                                                Choose One
+                                            </option>
+                                            {allaccountlist}
+                                        </select>
                                     </div>
                                     <div className="col-md-4">
                                         <label className="control-label">
@@ -962,6 +1075,25 @@ class AddStoreInvoice extends Component {
                                             onChange={this.handleInput}
                                         ></input>
                                     </div>
+
+                                    <div className="col-md-4">
+                                        <label className="control-label">
+                                            Bank Account
+                                        </label>
+                                        <select
+                                            className="form-control"
+                                            data-live-search="true"
+                                            name="bankdetails_id"
+                                            value={this.state.bankdetails_id}
+                                            onChange={this.handleInput}
+                                        >
+                                            <option selected value="0">
+                                                Choose One
+                                            </option>
+                                            {allbanklist}
+                                        </select>
+                                    </div>
+
                                     <div className="col-md-4">
                                         <label className="control-label">
                                             Remarks
@@ -974,6 +1106,9 @@ class AddStoreInvoice extends Component {
                                             onChange={this.handleInput}
                                         ></textarea>
                                     </div>
+                                    {/* <div className="col-md-4">
+                                        <h3>Net Payable = {(grossAmountToMinusDiscounttaka + allvattotal)}</h3>
+                                    </div> */}
                                 </div>
                                 <div class="card-footer text-muted"></div>
                             </div>
@@ -985,14 +1120,13 @@ class AddStoreInvoice extends Component {
     }
 }
 
-const mapStateToProps = (state)=>{
-    return{
-        // data_redux: state.auth.pro_trans_list,
-        data_p_list: state.auth.invoicetransectionList,
-    }
-}
-// export default connect(mapStateToProps,null)(AddStoreInvoice)
-//export default compose(withRouter,connect(null,{}))(AddStoreInvoice);
+// for redux configuration ..............
+const mapStateToProps = state => {
+    return {
+        data_p_list: state.auth.invoicetransectionList
+    };
+};
 
-export default connect(mapStateToProps,{updateStoreInvoice})(AddStoreInvoice)
-
+export default connect(mapStateToProps, { updateStoreInvoice })(
+    AddStoreInvoice
+);

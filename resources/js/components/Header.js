@@ -191,6 +191,17 @@ const Header = props => {
                                             Sale
                                         </Link>
                                     </li>
+                                    <li className="">
+                                        <Link to="/dbBackup/manage-bank-details">
+                                            Bank Details
+                                        </Link>
+                                    </li>
+                                    <li className="">
+                                        <Link to="/dbBackup/manage-cash-account">
+                                            Manage Cash Account
+                                        </Link>
+                                    </li>
+
 
                                 </ul>
                             </li>

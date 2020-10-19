@@ -11,24 +11,11 @@ use App\Model\Vat;
 use Session;
 use Illuminate\Support\Facades\DB;
 use App\Model\WareHouse\WareHouseDetails;
+use App\Model\CashAccount\CashAccountDetails;
+use App\Model\BankDetails\BankDetails;
 
 class StoreInvoiceController extends Controller
 {
-    public function save_storeinvoice(Request $request)
-    {
-        // $storeinvo = new StoreInvoice();
-        // $storeinvo->invoice_number = ;
-        // $storeinvo->type = $request->type;
-        // $storeinvo->vendor_id = $request->vendor_id;
-        // $storeinvo->ware_id = $request->ware_id;
-        // $storeinvo->posting_by = $request->date;
-        // $storeinvo->type = $request->type;
-        // $storeinvo->type = $request->type;
-        // $storeinvo->type = $request->type;
-        // $storeinvo->type = $request->type;
-
-    }
-
 
     public function save_invoice_transection(Request $request)
     {
@@ -112,6 +99,9 @@ class StoreInvoiceController extends Controller
 
         $vats = Vat::all();
         $warehouses = WareHouseDetails::all();
+        $bankdetails = BankDetails::all();
+        $cashaccount = CashAccountDetails::all();
+
 
         $invotransec = DB::table('invoice_trasections')
             ->leftJoin('inventory_products as dip', 'invoice_trasections.d_id', '=', 'dip.id')
@@ -129,7 +119,9 @@ class StoreInvoiceController extends Controller
             'warehouses' => $warehouses,
             'customers' => $customers,
             'vats' => $vats,
-            'invotransec' => $invotransec
+            'invotransec' => $invotransec,
+            'bankdetails'=>$bankdetails,
+            'cashaccount'=>$cashaccount
         ]);
     }
 
