@@ -3,16 +3,15 @@
 namespace App\Http\Controllers\frontend\api\StoreInvoice;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Model\StoreInvoice\StoreInvoice;
+use App\Model\BankDetails\BankDetails;
+use App\Model\CashAccount\CashAccountDetails;
 use App\Model\InvoiceTrasection\InvoiceTrasection;
+use App\Model\StoreInvoice\StoreInvoice;
 use App\Model\Store\Store;
 use App\Model\Vat;
-use Session;
-use Illuminate\Support\Facades\DB;
 use App\Model\WareHouse\WareHouseDetails;
-use App\Model\CashAccount\CashAccountDetails;
-use App\Model\BankDetails\BankDetails;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StoreInvoiceController extends Controller
 {
@@ -49,8 +48,45 @@ class StoreInvoiceController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => "Invoices Transection Saved Successfully!!"
+            'message' => "Invoices Transection Saved Successfully!!",
         ]);
+    }
+
+    public function save_store_invoice(Request $request)
+    {
+        // return $request->all();
+        // exit();
+
+        $storeinvoice = new StoreInvoice();
+        $storeinvoice->invoice_number = $request->invoice_code;
+        $storeinvoice->type = $request->idx;
+        $storeinvoice->vendor_id = $request->vendor_id;
+        $storeinvoice->ware_id = $request->warehouse_id;
+        $storeinvoice->date = $request->date;
+        $storeinvoice->posting_by = $request->user_id;
+        $storeinvoice->store_id = $request->store_id;
+        // $storeinvoice->gross_amount = 0;
+        $storeinvoice->gross_amount = $request->gross_amount;
+        $storeinvoice->discount_taka = $request->discountTaka;
+        // $storeinvoice->discount_taka = 0;
+        $storeinvoice->discount_percent = $request->final_discount_percent;
+        $storeinvoice->cash_amount = $request->cash_amount;
+        $storeinvoice->bank_account = $request->cashamount_id;
+        $storeinvoice->bank_id = $request->bankdetails_id;
+        $storeinvoice->remarks = $request->remarks;
+        $storeinvoice->save();
+
+        $data['invoice_id'] = $storeinvoice->id;
+        DB::table('invoice_trasections')
+            ->where('publishing_by', "=", $storeinvoice->posting_by)
+            ->where('invoice_id', 0)
+            ->update($data);
+
+        return response()->json([
+            'status' => 200,
+            'message' => "Store Invoices  Saved Successfully!!",
+        ]);
+
     }
 
     public function getallinvoicetransection()
@@ -59,8 +95,8 @@ class StoreInvoiceController extends Controller
             ->leftJoin('inventory_products as dip', 'invoice_trasections.d_id', '=', 'dip.id')
             ->leftJoin('inventory_products as cip', 'invoice_trasections.c_id', '=', 'cip.id')
             ->leftJoin('vats', 'invoice_trasections.vat', 'vats.id')
-            // ->leftJoin('ware_house_details', 'invoice_trasections.ware_id', '=', 'ware_house_details.id')
-            // ->leftJoin('vats', 'ware_house_details.id', '=', 'vats.ware_id')
+        // ->leftJoin('ware_house_details', 'invoice_trasections.ware_id', '=', 'ware_house_details.id')
+        // ->leftJoin('vats', 'ware_house_details.id', '=', 'vats.ware_id')
             ->select('invoice_trasections.*', 'dip.product_name as dp_name', 'vats.vat_name', 'vats.value', 'cip.product_name as cp_name')
             ->get();
 
@@ -68,10 +104,9 @@ class StoreInvoiceController extends Controller
 
         return response()->json([
             'status' => 200,
-            'invotransec' => $invotransec
+            'invotransec' => $invotransec,
         ]);
     }
-
 
     public function fetch_all_data()
     {
@@ -102,14 +137,12 @@ class StoreInvoiceController extends Controller
         $bankdetails = BankDetails::all();
         $cashaccount = CashAccountDetails::all();
 
-
         $invotransec = DB::table('invoice_trasections')
             ->leftJoin('inventory_products as dip', 'invoice_trasections.d_id', '=', 'dip.id')
             ->leftJoin('inventory_products as cip', 'invoice_trasections.c_id', '=', 'cip.id')
             ->leftJoin('vats', 'invoice_trasections.vat', 'vats.id')
             ->select('invoice_trasections.*', 'dip.product_name as dp_name', 'vats.vat_name', 'vats.value', 'cip.product_name as cp_name')
             ->get();
-
 
         return response()->json([
             'status' => 200,
@@ -120,11 +153,10 @@ class StoreInvoiceController extends Controller
             'customers' => $customers,
             'vats' => $vats,
             'invotransec' => $invotransec,
-            'bankdetails'=>$bankdetails,
-            'cashaccount'=>$cashaccount
+            'bankdetails' => $bankdetails,
+            'cashaccount' => $cashaccount,
         ]);
     }
-
 
     public function product_wise_price($id)
     {
@@ -132,11 +164,9 @@ class StoreInvoiceController extends Controller
             ->where('id', $id)
             ->first();
         return response()->json([
-            'productPrice' => $productPrice
+            'productPrice' => $productPrice,
         ]);
     }
-
-
 
     public function get_invoice_number_for_type1()
     {
@@ -154,7 +184,7 @@ class StoreInvoiceController extends Controller
         }
 
         return response()->json([
-            'invoice_number' => $invoice_number
+            'invoice_number' => $invoice_number,
         ]);
     }
 
@@ -174,9 +204,10 @@ class StoreInvoiceController extends Controller
         }
 
         return response()->json([
-            'invoice_number' => $invoice_number
+            'invoice_number' => $invoice_number,
         ]);
     }
+
     public function get_invoice_number_for_type3()
     {
         $invoicnumber = DB::table('store_invoices')
@@ -193,20 +224,15 @@ class StoreInvoiceController extends Controller
         }
 
         return response()->json([
-            'invoice_number' => $invoice_number
+            'invoice_number' => $invoice_number,
         ]);
     }
 
     public function getwarehouse($id)
     {
-        // $store = DB::table('stores')
-        //     ->join('ware_house_details', 'stores.ware_id', 'ware_house_details.id')
-        //     ->select('stores.*')
-        //     ->where('ware_id', $id)
-        //     ->get();
         $store = Store::where('ware_id', $id)->get();
         return response()->json([
-            'store' => $store
+            'store' => $store,
         ]);
     }
 
@@ -226,34 +252,33 @@ class StoreInvoiceController extends Controller
         }
 
         return response()->json([
-            'invoice_number' => $invoice_number
+            'invoice_number' => $invoice_number,
         ]);
     }
 
     public function editinvoicetransection($id)
     {
-        $invoice  = InvoiceTrasection::find($id);
+        $invoice = InvoiceTrasection::find($id);
         return response()->json([
-            'invoice' => $invoice
+            'invoice' => $invoice,
         ]);
     }
 
     public function delete_invoice_transec($id)
     {
-        $invoice  = InvoiceTrasection::find($id);
+        $invoice = InvoiceTrasection::find($id);
         $invoice->delete();
         return response()->json([
-            'message' => 'success'
+            'message' => 'success',
         ]);
     }
-
 
     public function update_invoice_transection(Request $request, $id)
     {
 
         // return $request->all();
-
         // exit();
+
         $invotran = InvoiceTrasection::find($id);
         $invotran->status = 1;
         $invotran->date = $request->date;
@@ -273,7 +298,7 @@ class StoreInvoiceController extends Controller
         return response()->json([
             'status' => 200,
             'products' => $invotransec,
-            'message' => "Invoices Transection  UpdatedSuccessfully!!"
+            'message' => "Invoices Transection  UpdatedSuccessfully!!",
         ]);
     }
 }
