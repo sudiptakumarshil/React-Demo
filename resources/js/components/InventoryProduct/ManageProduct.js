@@ -7,21 +7,34 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeItem from "@material-ui/lab/TreeItem";
 import { data, map } from "jquery";
+import ContentLoader, { Facebook,BulletList  } from 'react-content-loader'
+const MyBulletListLoader = () => <BulletList />
 
 const ManageProduct = props => {
     const [productlist, setProductlist] = useState([]);
+    const [loading, setLoading] = useState([true]);
 
     const fetchallproduct = async () => {
         const res = await axios.get(
             defaultRouteLink + "/api/all-inventproduct"
         );
         setProductlist(res.data.products);
+        setLoading(false)
         // console.log(res);
     };
 
     useEffect(() => {
         fetchallproduct();
     }, []);
+
+    if (loading) {
+        return (
+            <h2 className="text-center mt-3">
+                <i className="fas fa-spinner fa-spin fa-3x"></i>
+                <MyBulletListLoader />
+            </h2>
+        );
+    }
 
     return (
 

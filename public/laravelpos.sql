@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 08, 2020 at 10:49 AM
+-- Generation Time: Oct 21, 2020 at 03:17 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.10
 
@@ -20,6 +20,54 @@ SET time_zone = "+00:00";
 --
 -- Database: `laravelpos`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bank_details`
+--
+
+CREATE TABLE `bank_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `bank_no` int(11) NOT NULL,
+  `bank_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `account_number` int(11) NOT NULL,
+  `branch` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `address` varchar(11) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `account_id` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `bank_details`
+--
+
+INSERT INTO `bank_details` (`id`, `bank_no`, `bank_name`, `account_number`, `branch`, `address`, `account_id`, `created_at`, `updated_at`) VALUES
+(1, 1, 'asia', 1888878, 'gec', 'dhaka', 203, '2020-10-19 01:02:43', '2020-10-19 01:47:30');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cash_account_details`
+--
+
+CREATE TABLE `cash_account_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `cash_no` int(11) NOT NULL,
+  `cash_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remarks` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `account_no` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `cash_account_details`
+--
+
+INSERT INTO `cash_account_details` (`id`, `cash_no`, `cash_name`, `remarks`, `account_no`, `created_at`, `updated_at`) VALUES
+(1, 12, 'taka', 'complete', 192, '2020-10-19 02:28:04', '2020-10-19 03:16:46');
 
 -- --------------------------------------------------------
 
@@ -70,7 +118,8 @@ CREATE TABLE `customers` (
 INSERT INTO `customers` (`id`, `name`, `email`, `address`, `phone`, `remarks`, `accounts_no`, `status`, `type`, `ware_id`, `created_at`, `updated_at`) VALUES
 (1, 'sudipto kumar shil2', 'sudiptoshil@outlook.com', 'chittagong', '01624772008', 'hello', 192, 0, 0, 0, '2020-09-23 00:44:55', '2020-09-23 01:29:40'),
 (2, 'test', 'test@mail.com', 'dhaka', '01746952187', 'hello', 203, 0, 0, 4, '2020-09-30 23:24:48', '2020-09-30 23:24:48'),
-(3, 'hasan', 'hasan@gmail.com', 'dhaka', '01746952187', 'hello', 432, 0, 0, 4, '2020-10-04 00:54:06', '2020-10-04 00:54:06');
+(3, 'hasan', 'hasan@gmail.com', 'dhaka', '01746952187', 'hello', 432, 0, 0, 4, '2020-10-04 00:54:06', '2020-10-04 00:54:06'),
+(4, 'hasan', 'admin@mail.com', 'chittagong', '01746952187', 'ffff', 203, 0, 0, 1, '2020-10-18 22:28:17', '2020-10-18 22:28:17');
 
 -- --------------------------------------------------------
 
@@ -176,7 +225,7 @@ INSERT INTO `inventory_categories` (`id`, `root_id`, `category_name`, `short_nam
 
 CREATE TABLE `inventory_products` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `product_code` int(10) UNSIGNED NOT NULL,
+  `product_code` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
   `product_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `pices_of_carton` int(11) NOT NULL,
   `category_id` int(10) UNSIGNED NOT NULL,
@@ -198,9 +247,12 @@ CREATE TABLE `inventory_products` (
 --
 
 INSERT INTO `inventory_products` (`id`, `product_code`, `product_name`, `pices_of_carton`, `category_id`, `warehouse_id`, `sorting`, `unit`, `opening_stock`, `buy_price`, `cost`, `selling_price`, `price_type`, `product_image`, `created_at`, `updated_at`) VALUES
-(1, 123445, 'acer aspire', 1, 43, 3, 'ere', '1', 12, 123.00, 200.00, 300.00, 2, NULL, '2020-09-29 05:04:22', '2020-09-30 04:27:45'),
-(2, 34225, 'machine learninng', 20, 7, 2, 'array', '1', 10, 23000.00, 2000.00, 30000.00, 1, NULL, '2020-09-29 06:49:19', '2020-09-30 02:33:38'),
-(3, 2345, 'python programming', 20, 12, 3, 'ere', '1', 10, 123.00, 2000.00, 30000.00, 2, NULL, '2020-09-30 03:23:16', '2020-09-30 03:23:16');
+(1, '123445', 'acer aspire', 1, 43, 3, 'ere', '1', 12, 123.00, 200.00, 300.00, 2, NULL, '2020-09-29 05:04:22', '2020-09-30 04:27:45'),
+(2, '34225', 'machine learninng', 20, 7, 2, 'array', '1', 10, 23000.00, 2000.00, 30000.00, 1, NULL, '2020-09-29 06:49:19', '2020-09-30 02:33:38'),
+(3, '2345', 'python programming', 20, 12, 3, 'ere', '1', 10, 123.00, 2000.00, 30000.00, 2, NULL, '2020-09-30 03:23:16', '2020-09-30 03:23:16'),
+(4, '111', 'poteto', 1, 7, 2, '1', 'pcs', 0, 1000.00, 10.00, 12000.00, 2, NULL, '2020-10-21 04:33:31', '2020-10-21 04:33:31'),
+(5, 't4rt5y56y5', 'hp elite book', 1, 11, 1, '2', '2', 2, 2000.00, 200.00, 3000.00, 1, NULL, '2020-10-21 06:05:37', '2020-10-21 06:05:37'),
+(6, 'sls234', 'macbook pro', 20, 456, 1, '10', '10', 12, 1000.00, 200.00, 2000.00, 1, NULL, '2020-10-21 06:10:07', '2020-10-21 06:10:07');
 
 -- --------------------------------------------------------
 
@@ -211,8 +263,8 @@ INSERT INTO `inventory_products` (`id`, `product_code`, `product_name`, `pices_o
 CREATE TABLE `invoice_trasections` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `invoice_id` int(10) UNSIGNED NOT NULL,
-  `d_id` int(10) UNSIGNED DEFAULT NULL,
-  `c_id` int(10) UNSIGNED DEFAULT NULL,
+  `d_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `c_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `party_id` int(10) UNSIGNED NOT NULL COMMENT 'vendor id or customer id',
   `date` date NOT NULL,
   `ware_id` int(10) UNSIGNED NOT NULL,
@@ -220,9 +272,9 @@ CREATE TABLE `invoice_trasections` (
   `store_id` int(10) UNSIGNED NOT NULL,
   `quantity` double(8,2) NOT NULL,
   `price` int(11) NOT NULL,
-  `discount_taka` double(8,2) NOT NULL,
-  `discount_percent` double(8,2) NOT NULL,
-  `vat` int(10) UNSIGNED NOT NULL,
+  `discount_taka` double(8,2) NOT NULL DEFAULT 0.00,
+  `discount_percent` double(8,2) NOT NULL DEFAULT 0.00,
+  `vat` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `publishing_by` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
   `type` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -234,7 +286,7 @@ CREATE TABLE `invoice_trasections` (
 --
 
 INSERT INTO `invoice_trasections` (`id`, `invoice_id`, `d_id`, `c_id`, `party_id`, `date`, `ware_id`, `status`, `store_id`, `quantity`, `price`, `discount_taka`, `discount_percent`, `vat`, `publishing_by`, `type`, `created_at`, `updated_at`) VALUES
-(33, 0, 2, NULL, 5, '2020-10-09', 1, 1, 6, 25.00, 300, 0.00, 0.00, 4, '\"1\"', 1, '2020-10-07 23:37:02', '2020-10-08 00:13:54');
+(1, 1, 2, 0, 5, '2020-10-21', 1, 1, 6, 1.00, 1000, 0.00, 0.00, 0, '1', 1, '2020-10-21 01:35:10', '2020-10-21 04:41:29');
 
 -- --------------------------------------------------------
 
@@ -717,7 +769,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (23, '2020_10_01_070848_create_stores_table', 5),
 (25, '2020_10_01_111954_create_store_invoices_table', 6),
 (26, '2020_10_03_123700_create_invoice_trasections_table', 7),
-(27, '2020_10_05_100421_create_vats_table', 8);
+(27, '2020_10_05_100421_create_vats_table', 8),
+(29, '2020_10_19_062613_create_bank_details_table', 9),
+(30, '2020_10_19_075208_create_cash_account_details_table', 10);
 
 -- --------------------------------------------------------
 
@@ -849,7 +903,7 @@ CREATE TABLE `stores` (
 
 INSERT INTO `stores` (`id`, `store_name`, `remarks`, `ware_id`, `status`, `trash`, `created_at`, `updated_at`) VALUES
 (6, 'mitali enterprice2', 'good practise', 1, 1, 3, '2020-10-07 06:30:35', '2020-10-07 06:30:35'),
-(7, 'ma enterprice', 'bad practise', 2, 1, 3, '2020-10-07 06:31:02', '2020-10-07 22:54:00'),
+(7, 'ma enterprice', 'bad practise', 1, 1, 3, '2020-10-07 06:31:02', '2020-10-10 03:52:47'),
 (8, 'hello world', 'hello world', 1, 1, 3, '2020-10-07 06:31:29', '2020-10-07 06:31:29'),
 (9, 'banoful', 'good', 2, 1, 3, '2020-10-07 06:31:48', '2020-10-07 06:31:48'),
 (10, 'madhubon', 'good', 2, 1, 3, '2020-10-07 06:32:15', '2020-10-07 06:32:15');
@@ -864,21 +918,30 @@ CREATE TABLE `store_invoices` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `invoice_number` int(11) NOT NULL,
   `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `vendor_id` int(10) UNSIGNED NOT NULL,
-  `ware_id` int(10) UNSIGNED NOT NULL,
-  `date` date NOT NULL,
+  `vendor_id` int(10) UNSIGNED DEFAULT NULL,
+  `ware_id` int(10) UNSIGNED DEFAULT NULL,
+  `date` date DEFAULT NULL,
   `posting_by` int(10) UNSIGNED NOT NULL,
-  `store_id` int(10) UNSIGNED NOT NULL,
+  `store_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `gross_amount` double(8,2) NOT NULL,
   `discount_taka` double(8,2) NOT NULL,
   `discount_percent` double(8,2) NOT NULL,
   `cash_amount` double(8,2) NOT NULL,
-  `bank_account` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `bank_id` int(11) NOT NULL,
+  `cash_id` int(10) UNSIGNED NOT NULL,
+  `bank_amount` float NOT NULL DEFAULT 0,
+  `bank_id` int(11) NOT NULL DEFAULT 0,
   `remarks` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `store_invoices`
+--
+
+INSERT INTO `store_invoices` (`id`, `invoice_number`, `type`, `vendor_id`, `ware_id`, `date`, `posting_by`, `store_id`, `gross_amount`, `discount_taka`, `discount_percent`, `cash_amount`, `cash_id`, `bank_amount`, `bank_id`, `remarks`, `created_at`, `updated_at`) VALUES
+(1, 1000, '1', 5, 1, '2020-10-21', 1, 7, 120000.00, 0.00, 20.00, 700.00, 1, 700, 1, 'good day', '2020-10-21 01:39:00', '2020-10-21 01:39:00'),
+(2, 1001, '1', 5, 1, '2020-10-21', 1, 6, 60000.00, 0.00, 0.00, 0.00, 1, 0, 1, 'test', '2020-10-21 04:36:03', '2020-10-21 04:36:03');
 
 -- --------------------------------------------------------
 
@@ -1010,6 +1073,18 @@ INSERT INTO `ware_house_details` (`id`, `name`, `foreign_name`, `wh_keeper`, `lo
 --
 
 --
+-- Indexes for table `bank_details`
+--
+ALTER TABLE `bank_details`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `cash_account_details`
+--
+ALTER TABLE `cash_account_details`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `contacts`
 --
 ALTER TABLE `contacts`
@@ -1112,6 +1187,18 @@ ALTER TABLE `ware_house_details`
 --
 
 --
+-- AUTO_INCREMENT for table `bank_details`
+--
+ALTER TABLE `bank_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `cash_account_details`
+--
+ALTER TABLE `cash_account_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `contacts`
 --
 ALTER TABLE `contacts`
@@ -1121,7 +1208,7 @@ ALTER TABLE `contacts`
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -1139,13 +1226,13 @@ ALTER TABLE `inventory_categories`
 -- AUTO_INCREMENT for table `inventory_products`
 --
 ALTER TABLE `inventory_products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `invoice_trasections`
 --
 ALTER TABLE `invoice_trasections`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `ledger_copy`
@@ -1157,7 +1244,7 @@ ALTER TABLE `ledger_copy`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `setting_copy`

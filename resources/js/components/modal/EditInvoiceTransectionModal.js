@@ -24,6 +24,7 @@ const EditInvoiceTransectionModal = props => {
     const dispatch=useDispatch();
     useEffect(() => {
         setFormData(props.modalData);
+        alldata();
 
         // fetchallinvoicetransection();
         // window.location.reload();
@@ -34,15 +35,15 @@ const EditInvoiceTransectionModal = props => {
 
     // console.log(props.modalData.quantity+","+JSON.stringify(formData));
 
-    // const alldata = async () => {
-    //     const response = await axios.get(defaultRouteLink + "/api/all-data");
-    //     // console.log(response)
-    //     // console.log("test data" + response);
-    //     setWarehouselist(response.data.warehouses);
-    //     setvendorlist(response.data.vendors);
-    //     setstorelist(response.data.stores);
-    //     setproductList(response.data.products);
-    // };
+    const alldata = async () => {
+        const response = await axios.get(defaultRouteLink + "/api/all-data");
+        // console.log(response)
+        // console.log("test data" + response);
+        // setWarehouselist(response.data.warehouses);
+        // setvendorlist(response.data.vendors);
+        // setstorelist(response.data.stores);
+        setproductList(response.data.products);
+    };
 
     // setFormData(oldState => ({
     //     ...oldState,
@@ -66,6 +67,7 @@ const EditInvoiceTransectionModal = props => {
             type:SET_REFRESH_STORETRANSECTION,
             updateinvoiceTransection:res.data.products,
         });
+        props.handleClose();
 
 
 
@@ -177,7 +179,7 @@ const EditInvoiceTransectionModal = props => {
                                                 <div class="card-body">
                                                     <div class="container">
                                                         <div class="row">
-                                                            {/* <div className="col-md-3">
+                                                            <div className="col-md-3">
                                                                 <label className="control-label">
                                                                     Product Name
                                                                 </label>
@@ -195,7 +197,7 @@ const EditInvoiceTransectionModal = props => {
                                                                     </option>
                                                                     {products}
                                                                 </select>
-                                                            </div> */}
+                                                            </div>
 
                                                             <div className="col-md-3">
                                                                 <label className="control-label">

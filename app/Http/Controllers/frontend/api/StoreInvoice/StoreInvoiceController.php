@@ -34,7 +34,7 @@ class StoreInvoiceController extends Controller
         $invotran->ware_id = $request->warehouse_id;
 
         $invotran->status = 1;
-        $invotran->date = $request->date;
+        $invotran->date = date($request->date);
         $invotran->store_id = $request->store_id;
         $invotran->quantity = $request->quantity;
         $invotran->price = $request->price;
@@ -62,14 +62,15 @@ class StoreInvoiceController extends Controller
         $storeinvoice->type = $request->idx;
         $storeinvoice->vendor_id = $request->vendor_id;
         $storeinvoice->ware_id = $request->warehouse_id;
-        $storeinvoice->date = $request->date;
+        $storeinvoice->date = date($request->date);
         $storeinvoice->posting_by = $request->user_id;
         $storeinvoice->store_id = $request->store_id;
         $storeinvoice->gross_amount = $request->gross_amount;
         $storeinvoice->discount_taka = $request->discountTaka;
         $storeinvoice->discount_percent = $request->final_discount_percent;
         $storeinvoice->cash_amount = $request->cash_amount;
-        $storeinvoice->bank_account = $request->cashamount_id;
+        $storeinvoice->cash_id = $request->cashamount_id;
+        $storeinvoice->bank_amount = $request->bank_amount;
         $storeinvoice->bank_id = $request->bankdetails_id;
         $storeinvoice->remarks = $request->remarks;
         $storeinvoice->save();
@@ -134,12 +135,14 @@ class StoreInvoiceController extends Controller
         $warehouses = WareHouseDetails::all();
         $bankdetails = BankDetails::all();
         $cashaccount = CashAccountDetails::all();
+        // $user_id = $_COOKIE['getAccessTokenName'];
 
         $invotransec = DB::table('invoice_trasections')
             ->leftJoin('inventory_products as dip', 'invoice_trasections.d_id', '=', 'dip.id')
             ->leftJoin('inventory_products as cip', 'invoice_trasections.c_id', '=', 'cip.id')
             ->leftJoin('vats', 'invoice_trasections.vat', 'vats.id')
             ->select('invoice_trasections.*', 'dip.product_name as dp_name', 'vats.vat_name', 'vats.value', 'cip.product_name as cp_name')
+        // ->where('publishing_by','=',$user_id)
             ->get();
 
         return response()->json([
@@ -278,8 +281,15 @@ class StoreInvoiceController extends Controller
         // exit();
 
         $invotran = InvoiceTrasection::find($id);
+        if ($request->idx == 1 or $request->idx == 4) {
+            $invotran->d_id = $request->product_id;
+        } elseif ($request->idx == 3 or $request->idx == 2) {
+            $invotran->c_id = $request->product_id;
+        }
+
         $invotran->status = 1;
         $invotran->date = $request->date;
+        $invotran->quantity = $request->quantity;
         $invotran->quantity = $request->quantity;
         $invotran->price = $request->price;
         $invotran->discount_taka = $request->discount_taka;

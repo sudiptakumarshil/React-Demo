@@ -7,12 +7,13 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeItem from "@material-ui/lab/TreeItem";
 import { data, map } from "jquery";
-
+import ContentLoader, { Facebook,BulletList  } from 'react-content-loader'
+const MyBulletListLoader = () => <BulletList />
 const EditProduct = props => {
     const [list, setList] = useState([]);
     // const [id, setid] = useState([]);
     const [warehouselist, setWarehouselist] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [productvalue] = useState([]);
 
     const { pe_id } = useParams();
@@ -164,6 +165,15 @@ const EditProduct = props => {
             warehouse_id: item.id
         }));
     });
+
+    if (loading) {
+        return (
+            <h2 className="text-center mt-3">
+                <i className="fas fa-spinner fa-spin fa-3x"></i>
+                <MyBulletListLoader />
+            </h2>
+        );
+    }
 
     return (
         <div className="col-md-12">

@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import BankDetails from "./BankDetails";
 import { Link } from "react-router-dom";
 import { defaultRouteLink } from "../../common/config";
+import ContentLoader, { Facebook, BulletList } from "react-content-loader";
+const MyBulletListLoader = () => <BulletList />;
 class ManageBankDetails extends Component {
-
-     // state declaration
-     state = {
+    // state declaration
+    state = {
         bankdetails: [],
         loading: true
     };
@@ -13,7 +14,7 @@ class ManageBankDetails extends Component {
     fetchAllBankDetails = async () => {
         const res = await axios.get(defaultRouteLink + "/api/all-bankdetails");
         if (res.data.status === 200) {
-            this.setState({ bankdetails: res.data.bankdetails});
+            this.setState({ bankdetails: res.data.bankdetails });
             this.setState({ loading: false });
         }
         console.log(res);
@@ -22,7 +23,16 @@ class ManageBankDetails extends Component {
     componentDidMount = () => {
         this.fetchAllBankDetails(); // calling  fetchAllBankDetails function
     };
+
     render() {
+        if (this.state.loading) {
+            return (
+                <h2 className="text-center mt-3">
+                    <i className="fas fa-spinner fa-spin fa-3x"></i>
+                    <MyBulletListLoader />
+                </h2>
+            );
+        }
         return (
             <div className="content container-fluid">
                 <div className="row">

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import ModalAccountsLedgerList from "../modal/ModalAccountsLedgerList";
+import ContentLoader, { Facebook, BulletList } from "react-content-loader";
+const MyBulletListLoader = () => <BulletList />;
 class EditCashAccount extends Component {
     // STATE DECLARATION
     // NOTE: DON'T NEED TO ADD CONSTRUCTOR IN REACT NEW VERSION .. YOU CAN USE STATE DIRECTLY ..
@@ -13,7 +15,8 @@ class EditCashAccount extends Component {
             cash_name: "",
             remarks: "",
             accounts_id: "",
-            accounts_no: ""
+            accounts_no: "",
+            loading: true
         };
     }
 
@@ -89,6 +92,14 @@ class EditCashAccount extends Component {
     };
 
     render() {
+        if (this.state.loading) {
+            return (
+                <h2 className="text-center mt-3">
+                    <i className="fas fa-spinner fa-spin fa-3x"></i>
+                    <MyBulletListLoader />
+                </h2>
+            );
+        }
         return (
             <div className="content container-fluid">
                 <div className="row">

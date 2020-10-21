@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { defaultRouteLink } from "../../common/config";
-import CashAccount from "./CashAccount"
+import CashAccount from "./CashAccount";
+import ContentLoader, { Facebook, BulletList } from "react-content-loader";
+const MyBulletListLoader = () => <BulletList />;
 class ManageCashAccount extends Component {
     // state declaration
     state = {
@@ -22,6 +24,14 @@ class ManageCashAccount extends Component {
         this.fetchAllCash(); // calling  fetchAllCash function
     };
     render() {
+        if (this.state.loading) {
+            return (
+                <h2 className="text-center mt-3">
+                    <i className="fas fa-spinner fa-spin fa-3x"></i>
+                    <MyBulletListLoader />
+                </h2>
+            );
+        }
         return (
             <div className="content container-fluid">
                 <div className="row">
@@ -55,7 +65,7 @@ class ManageCashAccount extends Component {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {/* CashAccount.js component */}
+                                        {/* CashAccount.js component */}
                                         <CashAccount
                                             cashAccounts={this.state.cashlist}
                                         />

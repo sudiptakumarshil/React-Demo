@@ -6,6 +6,7 @@ import TreeView from "@material-ui/lab/TreeView";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeItem from "@material-ui/lab/TreeItem";
+
 import { data, map } from "jquery";
 
 const AddProduct = props => {
@@ -16,47 +17,94 @@ const AddProduct = props => {
         product_code: "",
         product_name: "",
         pices_of_carton: "",
-        category_id: "",
+        category_id: 0,
         category_name: "",
-        warehouse_id: "",
+        warehouse_id: 0,
         sorting: "",
         unit: "",
         opening_stock: "",
-        buy_price: "",
-        cost: "",
-        selling_price: "",
-        price_type: "",
-        product_image: ""
+        buy_price: 0,
+        cost: 0,
+        selling_price: 0,
+        price_type: 0,
+        product_image: "",
+        loading: true
     };
     const [formData, setFormData] = useState(data);
 
     const SaveInventProduct = async event => {
         event.preventDefault();
 
-        const res = await axios.post(
-            "/dbBackup/api/save-inventproduct",
-            formData
-        );
+        if (formData.product_code == 0) {
+            Swal.fire("Product Code Cannot Be Empty!!");
+        } else if (formData.product_name == 0) {
+            Swal.fire("Product Name Cannot Be Empty!!");
+        } else if (formData.pices_of_carton == 0) {
+            Swal.fire("Piece Of Carton Cannot Be Empty!!");
+        } else if (formData.category_id == 0) {
+            Swal.fire("Category  Cannot Be Empty!!");
+        } else if (formData.warehouse_id == 0) {
+            Swal.fire("Warehouse Cannot Be Empty!!");
+        } else if (formData.sorting == 0) {
+            Swal.fire("Sorting  Cannot Be Empty!!");
+        } else if (formData.unit == 0) {
+            Swal.fire("Unit  Cannot Be Empty!!");
+        } else if (formData.opening_stock == 0) {
+            Swal.fire("Opening Stock  Cannot Be Empty!!");
+        } else if (formData.buy_price == 0) {
+            Swal.fire("Buy Price  Cannot Be Empty!!");
+        } else if (formData.cost == 0) {
+            Swal.fire("Cost  Cannot Be Empty!!");
+        } else if (formData.selling_price == 0) {
+            Swal.fire("Selling Price Cannot Be Empty!!");
+        } else if (formData.price_type == 0) {
+            Swal.fire("Price Type Cannot Be Empty!!");
+        } else {
+            const res = await axios.post(
+                "/dbBackup/api/save-inventproduct",
+                formData
+            );
+            const data = {
+                product_code: "",
+                product_name: "",
+                pices_of_carton: "",
+                category_id: 0,
+                category_name: "",
+                warehouse_id: 0,
+                sorting: "",
+                unit: "",
+                opening_stock: "",
+                buy_price: 0,
+                cost: 0,
+                selling_price: 0,
+                price_type: 0,
+                product_image: ""
+            };
 
-        try {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                onOpen: toast => {
-                    toast.addEventListener("mouseenter", Swal.stopTimer);
-                    toast.addEventListener("mouseleave", Swal.resumeTimer);
-                }
-            });
+            if (res.data.status === 200) {
+                props.history.push("/dbBackup/manage-product");
+            }
 
-            Toast.fire({
-                icon: "success",
-                title: "Product Saved  Successfully!!"
-            });
-        } catch (error) {
-            console.error(error);
+            try {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    onOpen: toast => {
+                        toast.addEventListener("mouseenter", Swal.stopTimer);
+                        toast.addEventListener("mouseleave", Swal.resumeTimer);
+                    }
+                });
+
+                Toast.fire({
+                    icon: "success",
+                    title: "Product Saved  Successfully!!"
+                });
+            } catch (error) {
+                console.error(error);
+            }
         }
     };
 
@@ -167,7 +215,6 @@ const AddProduct = props => {
                                             placeholder="Product Code"
                                             name="product_code"
                                             onChange={handleInput}
-                                            required
                                         ></input>
                                     </div>
                                 </div>
@@ -183,7 +230,6 @@ const AddProduct = props => {
                                             placeholder="Product Name"
                                             name="product_name"
                                             onChange={handleInput}
-                                            required
                                         ></input>
                                     </div>
                                 </div>
@@ -201,7 +247,6 @@ const AddProduct = props => {
                                             placeholder="Pices of Carton"
                                             name="pices_of_carton"
                                             onChange={handleInput}
-                                            required
                                         ></input>
                                     </div>
                                 </div>
@@ -214,13 +259,13 @@ const AddProduct = props => {
                                     <div className="input-group">
                                         <input
                                             type="text"
+                                            readOnly
                                             className="form-control"
                                             placeholder="Category Name"
                                             name="category_id"
                                             value={formData.category_name}
                                             data-id={formData.category_id}
                                             onChange={handleInput}
-                                            required
                                         ></input>
                                     </div>
                                 </div>
@@ -237,6 +282,9 @@ const AddProduct = props => {
                                             name="warehouse_id"
                                             onChange={handleInput}
                                         >
+                                            <option value="0" selected>
+                                                Choose One{" "}
+                                            </option>
                                             {warhouses}
                                         </select>
                                     </div>
@@ -252,7 +300,6 @@ const AddProduct = props => {
                                             placeholder="Sorting"
                                             name="sorting"
                                             onChange={handleInput}
-                                            required
                                         ></input>
                                     </div>
                                 </div>
@@ -267,7 +314,6 @@ const AddProduct = props => {
                                             placeholder="Unit"
                                             name="unit"
                                             onChange={handleInput}
-                                            required
                                         ></input>
                                     </div>
                                 </div>
@@ -284,7 +330,6 @@ const AddProduct = props => {
                                             placeholder="Opening Stock"
                                             name="opening_stock"
                                             onChange={handleInput}
-                                            required
                                         ></input>
                                     </div>
                                 </div>
@@ -301,7 +346,6 @@ const AddProduct = props => {
                                             placeholder="Buy Price"
                                             name="buy_price"
                                             onChange={handleInput}
-                                            required
                                         ></input>
                                     </div>
                                 </div>
@@ -316,7 +360,6 @@ const AddProduct = props => {
                                             placeholder="Cost"
                                             name="cost"
                                             onChange={handleInput}
-                                            required
                                         ></input>
                                     </div>
                                 </div>
@@ -333,7 +376,6 @@ const AddProduct = props => {
                                             placeholder="Selling Price"
                                             name="selling_price"
                                             onChange={handleInput}
-                                            required
                                         ></input>
                                     </div>
                                 </div>
@@ -349,6 +391,7 @@ const AddProduct = props => {
                                         name="price_type"
                                         onChange={handleInput}
                                     >
+                                        <option value="0">Choose One</option>
                                         <option value="1">
                                             Customize Price
                                         </option>

@@ -39,6 +39,13 @@ import { red } from "@material-ui/core/colors";
 class AddStoreInvoice extends Component {
     constructor(props) {
         super(props);
+        const today = new Date();
+        const date = today.getDate();
+        const month = today.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
+        const year = today.getFullYear();
+
+        // const dateStr = date + "/" + month + "/" + year;
+
         this.state = {
             warehouseList: [],
             invoicetransectionList: [],
@@ -46,24 +53,24 @@ class AddStoreInvoice extends Component {
             toggle: true,
             invoice_code: [],
             remarks: "",
-            warehouse_id: "",
+            warehouse_id: 0,
             vendor_id: "",
             vendorlist: [],
-            date: "",
+            date: year + "-" + month + "-" + date,
             store_id: "",
             storelist: [],
             gross_amount: "",
-            discount_taka: "",
-            discount_percent: "",
+            discount_taka: 0,
+            discount_percent: 0,
             final_discount_percent: "",
-            cash_amount: "",
+            cash_amount: 0,
             bank_account: "",
             bank_id: "",
             customer_id: "",
-            product_id: "",
+            product_id: 0,
             productList: [],
             quantity: "",
-            price: "",
+            price: 0,
             idx: "",
             user_id: "",
             isModalShow: false,
@@ -77,13 +84,15 @@ class AddStoreInvoice extends Component {
             bankdetails_id: "",
             cashamount_id: "",
             // ----------------
-            netAmount: "",
-            totalpriceQuantity: "",
-            totalpercent: "",
-            discountTaka: "",
-            totalVat: "",
-            netPayable: "",
-            vat: ""
+            netAmount: 0,
+            totalpriceQuantity: 0,
+            totalpercent: 0,
+            discountTaka: 0,
+            totalVat: 0,
+            netPayable: 0,
+            vat: 0,
+            bank_amount: 0,
+            totalExchange: 0
 
             //----------------
         };
@@ -93,6 +102,7 @@ class AddStoreInvoice extends Component {
         const idx = this.props.match.params.idx;
         const id = this.props.match.params.id;
         console.log(idx);
+        // console.log(this.state.cash_amount);
 
         this.setState({
             idx: idx
@@ -148,9 +158,38 @@ class AddStoreInvoice extends Component {
     };
 
     handleInput = event => {
-        this.setState({ [event.target.name]: event.target.value });
         this.get_warhousewiseStore();
         this.getProductWisePriceAuto();
+
+        //console.log("cash Amount",{[event.target.cash_amount]: event.target.value});
+        let total_rev =
+            parseFloat(this.state.cash_amount) +
+            parseFloat(this.state.bank_amount);
+        if (event.target.name == "cash_amount") {
+            total_rev =
+                parseFloat(event.target.value) +
+                parseFloat(this.state.bank_amount);
+        }
+        if (event.target.name == "bank_amount") {
+            // console.log("exchange2="+this.state.cash_amount+","+event.target.value+"=t="+total_rev);
+            total_rev =
+                parseFloat(event.target.value) +
+                parseFloat(this.state.cash_amount);
+        }
+
+        console.log(
+            "exchange=" +
+                this.state.netPayable +
+                "," +
+                event.target.value +
+                "=t=" +
+                total_rev
+        );
+        let exchange = this.state.netPayable - total_rev;
+        this.setState({
+            totalExchange: exchange,
+            [event.target.name]: event.target.value
+        });
     };
 
     // save invoice transection .......
@@ -232,21 +271,6 @@ class AddStoreInvoice extends Component {
                 "/dbBackup/api/save-storeinvoice",
                 this.state
             );
-            this.setState({
-                // Invoice_code: "",
-                remarks: "",
-                // warehouse_id: [],
-                // vendor_id: [],
-                date: "",
-                // store_id: [],
-                discount_taka: "",
-                discount_percent: "",
-                cash_amount: "",
-                bank_account: "",
-                // product_id: "",
-                quantity: "",
-                price: ""
-            });
 
             // dispatch({
             //     type:SET_REFRESH_STORETRANSECTION,
@@ -287,17 +311,7 @@ class AddStoreInvoice extends Component {
     saveStoreInvoice = async event => {
         event.preventDefault();
 
-        if (this.state.bankdetails_id == 0) {
-            Swal.fire({
-                title: "Bank  Cannot Be Empty!!",
-                showClass: {
-                    popup: "animate__animated animate__fadeInDown"
-                },
-                hideClass: {
-                    popup: "animate__animated animate__fadeOutUp"
-                }
-            });
-        } else if (this.state.cashamount_id == 0) {
+        if (this.state.cashamount_id == 0) {
             Swal.fire({
                 title: "Cash Account  Cannot Be Empty!!",
                 showClass: {
@@ -608,8 +622,6 @@ class AddStoreInvoice extends Component {
 
             return (
                 <tr>
-
-
                     <td>{index + 1}</td>
 
                     {item.dp_name != null ? (
@@ -626,15 +638,41 @@ class AddStoreInvoice extends Component {
 
                     <td>{item.discount_taka}</td>
                     <td>{item.discount_percent}</td>
-                    <input type="hidden" value={discountpercent = (priceQuantity *item.discount_percent /100)}></input>
-                    <input type="hidden" value={minusdiscountPercent = (priceQuantity - discountpercent)}></input>
-                    <input type="hidden" value={minusManualdiScount = (minusdiscountPercent - item.discount_taka)}></input>
-                    <input type="hidden" value={vatCount = (minusManualdiScount * item.value / 100)}></input>
-                    <input type="hidden" value={TotalAmount = (minusManualdiScount + vatCount)}></input>
+                    <input
+                        type="hidden"
+                        value={
+                            (discountpercent =
+                                (priceQuantity * item.discount_percent) / 100)
+                        }
+                    ></input>
+                    <input
+                        type="hidden"
+                        value={
+                            (minusdiscountPercent =
+                                priceQuantity - discountpercent)
+                        }
+                    ></input>
+                    <input
+                        type="hidden"
+                        value={
+                            (minusManualdiScount =
+                                minusdiscountPercent - item.discount_taka)
+                        }
+                    ></input>
+                    <input
+                        type="hidden"
+                        value={
+                            (vatCount =
+                                (minusManualdiScount * item.value) / 100)
+                        }
+                    ></input>
+                    <input
+                        type="hidden"
+                        value={(TotalAmount = minusManualdiScount + vatCount)}
+                    ></input>
                     <td>{item.vat_name}</td>
                     <td>{vatCount}</td>
                     <td>{TotalAmount}</td>
-
 
                     <td>
                         <button
@@ -846,7 +884,8 @@ class AddStoreInvoice extends Component {
                                                                 Date
                                                             </label>
                                                             <input
-                                                                type="date"
+                                                                type="text"
+                                                                readOnly
                                                                 className="form-control"
                                                                 name="date"
                                                                 value={
@@ -930,24 +969,6 @@ class AddStoreInvoice extends Component {
                                                                     <label className="control-label"></label>
                                                                     <input
                                                                         type="text"
-                                                                        onChange={
-                                                                            this
-                                                                                .handleInput
-                                                                        }
-                                                                        name="quantity"
-                                                                        value={
-                                                                            this
-                                                                                .state
-                                                                                .quantity
-                                                                        }
-                                                                        className="form-control"
-                                                                        placeholder="Quantity"
-                                                                    ></input>
-                                                                </div>
-                                                                <div className="col-md-3">
-                                                                    <label className="control-label"></label>
-                                                                    <input
-                                                                        type="text"
                                                                         name="price"
                                                                         value={
                                                                             this
@@ -962,6 +983,26 @@ class AddStoreInvoice extends Component {
                                                                         placeholder="Price"
                                                                     ></input>
                                                                 </div>
+
+                                                                <div className="col-md-3">
+                                                                    <label className="control-label"></label>
+                                                                    <input
+                                                                        type="text"
+                                                                        onChange={
+                                                                            this
+                                                                                .handleInput
+                                                                        }
+                                                                        name="quantity"
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .quantity
+                                                                        }
+                                                                        className="form-control"
+                                                                        placeholder="Quantity"
+                                                                    ></input>
+                                                                </div>
+
                                                                 <div className="col-md-3">
                                                                     <label className="control-label"></label>
                                                                     <input
@@ -1004,6 +1045,13 @@ class AddStoreInvoice extends Component {
                                                                             One
                                                                             Vat
                                                                         </option>
+                                                                        <option
+                                                                            selected
+                                                                            value="0"
+                                                                        >
+                                                                            Zero
+                                                                            Vat
+                                                                        </option>
                                                                         {allvat}
                                                                     </select>
                                                                 </div>
@@ -1012,6 +1060,11 @@ class AddStoreInvoice extends Component {
                                                                     <input
                                                                         type="text"
                                                                         name="discount_percent"
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .discount_percent
+                                                                        }
                                                                         onChange={
                                                                             this
                                                                                 .handleInput
@@ -1176,10 +1229,6 @@ class AddStoreInvoice extends Component {
                                                                     this.state
                                                                         .netPayable
                                                                 }
-                                                                onChange={
-                                                                    this
-                                                                        .handleInput
-                                                                }
                                                             ></input>
                                                         </div>
                                                         <div className="col-md-4">
@@ -1213,7 +1262,7 @@ class AddStoreInvoice extends Component {
                                                                 Cash Amount
                                                             </label>
                                                             <input
-                                                                type="text"
+                                                                type="number"
                                                                 className="form-control"
                                                                 name="cash_amount"
                                                                 value={
@@ -1255,6 +1304,25 @@ class AddStoreInvoice extends Component {
                                                         </div>
                                                         <div className="col-md-4">
                                                             <label className="control-label">
+                                                                Bank Amount
+                                                            </label>
+                                                            <input
+                                                                type="number"
+                                                                className="form-control"
+                                                                name="bank_amount"
+                                                                value={
+                                                                    this.state
+                                                                        .bank_amount
+                                                                }
+                                                                required
+                                                                onChange={
+                                                                    this
+                                                                        .handleInput
+                                                                }
+                                                            ></input>
+                                                        </div>
+                                                        <div className="col-md-4">
+                                                            <label className="control-label">
                                                                 Remarks
                                                             </label>
                                                             <textarea
@@ -1271,9 +1339,24 @@ class AddStoreInvoice extends Component {
                                                                 }
                                                             ></textarea>
                                                         </div>
-                                                        <button className="btn btn-info">
-                                                            Submit
-                                                        </button>
+
+                                                        <h2>
+                                                            Net Exchange :{" "}
+                                                            {
+                                                                this.state
+                                                                    .totalExchange
+                                                            }
+                                                        </h2>
+                                                        <div className="col-md-4">
+                                                            <button
+                                                                className="btn btn-info"
+                                                                style={{
+                                                                    marginTop: 100
+                                                                }}
+                                                            >
+                                                                Submit
+                                                            </button>
+                                                        </div>
                                                     </form>
                                                 </div>
                                                 <div class="card-footer text-muted"></div>

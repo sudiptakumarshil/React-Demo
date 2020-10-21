@@ -2,27 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bd56c19a-66c0-4db0-be7c-d01ef1072078" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/webServers.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dbBackup.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dbBackup.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/webServers.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/webServers.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/frontend/api/StoreInvoice/StoreInvoiceController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/frontend/api/StoreInvoice/StoreInvoiceController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/actions/authActions.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/actions/authActions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/actions/user_types.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/actions/user_types.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/common/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/common/config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/Header.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Header.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Login.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/components/StoreInvoice/AddStoreInvoice.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/StoreInvoice/AddStoreInvoice.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/components/modal/EditInvoiceTransectionModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/modal/EditInvoiceTransectionModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/reducers/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/reducers/auth.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
+  <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
     <execution>
       <executable />
@@ -166,7 +158,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="WebServerToolWindowFactoryState" value="true" />
     <property name="WebServerToolWindowPanel.toolwindow.highlight.mappings" value="true" />
     <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
     <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
@@ -207,6 +199,7 @@
       <workItem from="1600837749568" duration="75000" />
       <workItem from="1600837858103" duration="204000" />
       <workItem from="1603003098267" duration="20812000" />
+      <workItem from="1603272936629" duration="3434000" />
     </task>
     <servers />
   </component>
@@ -214,10 +207,10 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="392" y="92" key="#Deployment" timestamp="1603013317934">
+    <state x="392" y="92" key="#Deployment" timestamp="1603273405536">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
-    <state x="392" y="92" key="#Deployment/0.0.1600.860@0.0.1600.860" timestamp="1603013317934" />
+    <state x="392" y="92" key="#Deployment/0.0.1600.860@0.0.1600.860" timestamp="1603273405536" />
     <state x="580" y="188" key="FileChooserDialogImpl" timestamp="1600838060848">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
@@ -226,10 +219,10 @@
       <screen x="0" y="0" width="1600" height="860" />
     </state>
     <state x="507" y="258" key="com.intellij.ide.util.TipDialog/0.0.1600.860@0.0.1600.860" timestamp="1600837751515" />
-    <state x="626" y="167" key="ftp.server.browser" timestamp="1603013316175">
+    <state x="626" y="167" key="ftp.server.browser" timestamp="1603273403347">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
-    <state x="626" y="167" key="ftp.server.browser/0.0.1600.860@0.0.1600.860" timestamp="1603013316175" />
+    <state x="626" y="167" key="ftp.server.browser/0.0.1600.860@0.0.1600.860" timestamp="1603273403347" />
     <state x="456" y="195" key="run.anything.popup" timestamp="1603013338433">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
