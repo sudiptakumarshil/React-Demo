@@ -65,10 +65,8 @@ class StoreInvoiceController extends Controller
         $storeinvoice->date = $request->date;
         $storeinvoice->posting_by = $request->user_id;
         $storeinvoice->store_id = $request->store_id;
-        // $storeinvoice->gross_amount = 0;
         $storeinvoice->gross_amount = $request->gross_amount;
         $storeinvoice->discount_taka = $request->discountTaka;
-        // $storeinvoice->discount_taka = 0;
         $storeinvoice->discount_percent = $request->final_discount_percent;
         $storeinvoice->cash_amount = $request->cash_amount;
         $storeinvoice->bank_account = $request->cashamount_id;

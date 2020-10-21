@@ -595,6 +595,11 @@ class AddStoreInvoice extends Component {
         });
 
         let priceQuantity = 0;
+        let discountpercent = 0;
+        let minusdiscountPercent = 0;
+        let minusManualdiScount = 0;
+        let vatCount = 0;
+        let TotalAmount = 0;
 
         // FETCH ALL Invoice transection  DATA... LOOP
         // let invotransec = this.state.invoicetransectionList.map(
@@ -603,6 +608,8 @@ class AddStoreInvoice extends Component {
 
             return (
                 <tr>
+
+
                     <td>{index + 1}</td>
 
                     {item.dp_name != null ? (
@@ -610,14 +617,24 @@ class AddStoreInvoice extends Component {
                     ) : (
                         <td>{item.cp_name}</td>
                     )}
+
                     <td>{item.quantity}</td>
                     <td>{item.price}</td>
-                    <td>{item.price * item.quantity}</td>
+                    <td>{(priceQuantity = item.price * item.quantity)}</td>
+
+                    {/* <input type="hidden" value={priceQuantity}></input> */}
+
                     <td>{item.discount_taka}</td>
                     <td>{item.discount_percent}</td>
+                    <input type="hidden" value={discountpercent = (priceQuantity *item.discount_percent /100)}></input>
+                    <input type="hidden" value={minusdiscountPercent = (priceQuantity - discountpercent)}></input>
+                    <input type="hidden" value={minusManualdiScount = (minusdiscountPercent - item.discount_taka)}></input>
+                    <input type="hidden" value={vatCount = (minusManualdiScount * item.value / 100)}></input>
+                    <input type="hidden" value={TotalAmount = (minusManualdiScount + vatCount)}></input>
                     <td>{item.vat_name}</td>
-                    <td>{this.state.vat}</td>
-                    <td>{this.state.netAmount}</td>
+                    <td>{vatCount}</td>
+                    <td>{TotalAmount}</td>
+
 
                     <td>
                         <button
