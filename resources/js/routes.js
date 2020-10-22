@@ -36,6 +36,7 @@ import EditBankDetails from "./components/BankDetails/BankDetailsEdit";
 import AddCashAccount  from "./components/CashAccountDetails/AddCashAccount";
 import ManageCashAccount  from "./components/CashAccountDetails/ManageCashAccount";
 import EditCashAccount  from "./components/CashAccountDetails/EditCashAccount";
+import ManageStoreInvoice from "./components/StoreInvoice/ManageStoreInvoice";
 import {
     defaultRouteLink,
     getAccessTokenName,
@@ -225,6 +226,13 @@ export const Routes = props => {
                                     defaultRouteLink + "/edit-cashaccount/:id"
                                 }
                                 render={props => <EditCashAccount {...props} />}
+                            />
+                              <Route
+                                exact
+                                path={
+                                    defaultRouteLink + "/manage-store-invoice"
+                                }
+                                component={ManageStoreInvoice}
                             />
 
                         </Header>

@@ -182,12 +182,12 @@ const Header = props => {
                                         </Link>
                                     </li>
                                     <li className="">
-                                        <Link to={`/dbBackup/sale-return/${3}`}>
+                                        <Link to={`/dbBackup/sale-return/${4}`}>
                                             Sale Return
                                         </Link>
                                     </li>
                                     <li className="">
-                                        <Link to={`/dbBackup/sale/${4}`}>
+                                        <Link to={`/dbBackup/sale/${3}`}>
                                             Sale
                                         </Link>
                                     </li>
@@ -199,6 +199,11 @@ const Header = props => {
                                     <li className="">
                                         <Link to="/dbBackup/manage-cash-account">
                                             Manage Cash Account
+                                        </Link>
+                                    </li>
+                                    <li className="">
+                                        <Link to="/dbBackup/manage-store-invoice">
+                                            Manage Store Invoice
                                         </Link>
                                     </li>
 

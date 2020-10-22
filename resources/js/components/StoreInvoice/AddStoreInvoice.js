@@ -35,6 +35,7 @@ import {
 } from "../../common/CookieService";
 import { isEmpty, isFunction } from "lodash";
 import { red } from "@material-ui/core/colors";
+
 // const mapDispatch = {action};
 class AddStoreInvoice extends Component {
     constructor(props) {
@@ -138,8 +139,9 @@ class AddStoreInvoice extends Component {
         }
     };
     // FOR GETTING PRODUCT WISE PRICE  ........
-    getProductWisePriceAuto = async () => {
-        let productid = this.state.product_id;
+    getProductWisePriceAuto = async pid => {
+        let productid = pid;
+        // console.log(productid);
 
         const response = await axios.get(
             defaultRouteLink + "/api/get-product-wise-price/" + productid
@@ -156,10 +158,12 @@ class AddStoreInvoice extends Component {
             });
         }
     };
-
+    priceHandleInput = () => {
+        this.setState({ [event.target.name]: event.target.value });
+        this.getProductWisePriceAuto(event.target.value);
+    };
     handleInput = event => {
         this.get_warhousewiseStore();
-        this.getProductWisePriceAuto();
 
         //console.log("cash Amount",{[event.target.cash_amount]: event.target.value});
         let total_rev =
@@ -196,6 +200,7 @@ class AddStoreInvoice extends Component {
 
     saveinvoiceTransection = async event => {
         event.preventDefault();
+        const idx = this.props.match.params.idx;
         if (this.state.warehouse_id == 0) {
             Swal.fire({
                 title: "WareHouse Cannot Be Empty!!",
@@ -206,7 +211,7 @@ class AddStoreInvoice extends Component {
                     popup: "animate__animated animate__fadeOutUp"
                 }
             });
-        } else if (this.state.vendor_id == 0) {
+        } else if (idx == 1 && this.state.vendor_id == 0) {
             Swal.fire({
                 title: "Vendor  Cannot Be Empty!!",
                 showClass: {
@@ -216,7 +221,50 @@ class AddStoreInvoice extends Component {
                     popup: "animate__animated animate__fadeOutUp"
                 }
             });
-        } else if (this.state.date == 0) {
+        } else if (idx == 2 && this.state.vendor_id == 0) {
+            Swal.fire({
+                title: "Vendor  Cannot Be Empty!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
+                }
+            });
+        }
+        // else if (this.state.vendor_id == 0) {
+        else if (idx == 3 && this.state.customer_id == 0) {
+            Swal.fire({
+                title: "Customer  Cannot Be Empty!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
+                }
+            });
+        } else if (idx == 4 && this.state.customer_id == 0) {
+            Swal.fire({
+                title: "Customer  Cannot Be Empty!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
+                }
+            });
+        }
+        //     Swal.fire({
+        //         title: "Vendor  Cannot Be Empty!!",
+        //         showClass: {
+        //             popup: "animate__animated animate__fadeInDown"
+        //         },
+        //         hideClass: {
+        //             popup: "animate__animated animate__fadeOutUp"
+        //         }
+        //     });
+        // }
+        else if (this.state.date == 0) {
             Swal.fire({
                 title: "Date  Cannot Be Empty!!",
                 showClass: {
@@ -310,10 +358,11 @@ class AddStoreInvoice extends Component {
 
     saveStoreInvoice = async event => {
         event.preventDefault();
+        const idx = this.props.match.params.idx;
 
-        if (this.state.cashamount_id == 0) {
+        if (idx == 1 && this.state.vendor_id == 0) {
             Swal.fire({
-                title: "Cash Account  Cannot Be Empty!!",
+                title: "Vendor  Cannot Be Empty!!",
                 showClass: {
                     popup: "animate__animated animate__fadeInDown"
                 },
@@ -321,9 +370,31 @@ class AddStoreInvoice extends Component {
                     popup: "animate__animated animate__fadeOutUp"
                 }
             });
-        } else if (this.state.vendor_id == 0) {
+        } else if (idx == 2 && this.state.vendor_id == 0) {
             Swal.fire({
                 title: "Vendor  Cannot Be Empty!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
+                }
+            });
+        }
+        // else if (this.state.vendor_id == 0) {
+        else if (idx == 3 && this.state.customer_id == 0) {
+            Swal.fire({
+                title: "Customer  Cannot Be Empty!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
+                }
+            });
+        } else if (idx == 4 && this.state.customer_id == 0) {
+            Swal.fire({
+                title: "Customer  Cannot Be Empty!!",
                 showClass: {
                     popup: "animate__animated animate__fadeInDown"
                 },
@@ -341,6 +412,32 @@ class AddStoreInvoice extends Component {
                     popup: "animate__animated animate__fadeOutUp"
                 }
             });
+        } else if (
+            this.state.bank_amount > 0 &&
+            this.state.bankdetails_id == 0
+        ) {
+            Swal.fire({
+                title: "You have to fillup Bank Account!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
+                }
+            });
+        } else if (
+            this.state.cash_amount > 0 &&
+            this.state.cashamount_id == 0
+        ) {
+            Swal.fire({
+                title: "You have to fillup Cash Account!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
+                }
+            });
         } else if (this.state.date == 0) {
             Swal.fire({
                 title: "Date  Cannot Be Empty!!",
@@ -351,44 +448,98 @@ class AddStoreInvoice extends Component {
                     popup: "animate__animated animate__fadeOutUp"
                 }
             });
+        } else if (this.state.remarks == 0) {
+            Swal.fire({
+                title: "Remarks  Cannot Be Empty!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
+                }
+            });
         } else {
-            const res = await axios.post(
-                "/dbBackup/api/save-store-invoice",
-                this.state
-            );
+            let check = confirm("are you sure ??");
+            if (check) {
+                const res = await axios.post(
+                    "/dbBackup/api/save-store-invoice",
+                    this.state
+                );
+                this.state = {
+                    gross_amount: "",
+                    discount_taka: 0,
+                    discount_percent: 0,
+                    final_discount_percent: "",
+                    cash_amount: 0,
+                    bank_account: "",
+                    bank_id: "",
+                    customer_id: "",
+                    product_id: 0,
+                    bankdetails_id: "",
+                    cashamount_id: "",
+                    netAmount: 0,
+                    totalpriceQuantity: 0,
+                    totalpercent: 0,
+                    discountTaka: 0,
+                    totalVat: 0,
+                    netPayable: 0,
+                    vat: 0,
+                    bank_amount: 0,
+                    totalExchange: 0
+                };
 
-            // SUCCESS MESSAGE USING SWEET ALERT
-            try {
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: "top-end",
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    onOpen: toast => {
-                        toast.addEventListener("mouseenter", Swal.stopTimer);
-                        toast.addEventListener("mouseleave", Swal.resumeTimer);
+                // SUCCESS MESSAGE USING SWEET ALERT
+                try {
+                    if (res.data.status === 200) {
+                        this.props.history.push(
+                            "/dbBackup/manage-store-invoice"
+                        );
                     }
-                });
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        onOpen: toast => {
+                            toast.addEventListener(
+                                "mouseenter",
+                                Swal.stopTimer
+                            );
+                            toast.addEventListener(
+                                "mouseleave",
+                                Swal.resumeTimer
+                            );
+                        }
+                    });
 
-                Toast.fire({
-                    icon: "success",
-                    title: "Store Invoices Created  Successfully!!"
-                });
-            } catch (error) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "Something went wrong!",
-                    footer: "<a href>Why do I have this issue?</a>"
-                });
+                    Toast.fire({
+                        icon: "success",
+                        title: "Store Invoices Created  Successfully!!"
+                    });
+                } catch (error) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Something went wrong!",
+                        footer: "<a href>Why do I have this issue?</a>"
+                    });
+                }
+            } else {
+                return false;
             }
         }
     };
 
     // for getting warehouse ,store ,product , vendor ,customer,vat....
     fetchalldata = async () => {
-        const response = await axios.get(defaultRouteLink + "/api/all-data");
+        const idx = this.props.match.params.idx;
+
+        const response = await axios.get(defaultRouteLink + "/api/all-data", {
+            params: {
+                type: idx
+            }
+        });
 
         if (response.data.status === 200) {
             this.setState({
@@ -458,8 +609,7 @@ class AddStoreInvoice extends Component {
 
     // FOR GETTING AUTO INVOICE NUMBER .............
     getinvoiceNumber = async () => {
-        const idx = this.props.match.params.idx;
-
+    const idx = this.props.match.params.idx;
         if (idx == 1) {
             const response = await axios.get(
                 defaultRouteLink + "/api/get-invoice-number-type-1"
@@ -735,9 +885,9 @@ class AddStoreInvoice extends Component {
         } else if (idx == 2) {
             pagetitle1 = "PURSHASE RETURN";
         } else if (idx == 3) {
-            pagetitle1 = "SALE RETURN";
-        } else {
             pagetitle1 = "SALE";
+        } else {
+            pagetitle1 = "SALE RETURN ";
         }
         if (this.state.loading) {
             return (
@@ -761,19 +911,19 @@ class AddStoreInvoice extends Component {
                     <div className="row">
                         <div className="col-md-12">
                             <h2 className="text-center">Transaction</h2>
-                            <div class="card text-center">
-                                <div class="card-header">{pagetitle1}</div>
+                            <div className="card text-center">
+                                <div className="card-header">{pagetitle1}</div>
                                 <div className="row pt-5">
                                     <div className="col-md-8">
-                                        <div class="card-body">
+                                        <div className="card-body">
                                             <span align="center"></span>
                                             <form
                                                 onSubmit={
                                                     this.saveinvoiceTransection
                                                 }
                                             >
-                                                <div class="container">
-                                                    <div class="row">
+                                                <div className="container">
+                                                    <div className="row">
                                                         <div className="col-md-2">
                                                             <label className="control-label">
                                                                 Invoice Number
@@ -783,7 +933,7 @@ class AddStoreInvoice extends Component {
                                                                 className="form-control"
                                                                 placeholder="Invoice Code"
                                                                 name="invoice_code"
-                                                                disabled
+                                                                readOnly
                                                                 value={
                                                                     this.state
                                                                         .invoice_code
@@ -929,13 +1079,13 @@ class AddStoreInvoice extends Component {
                                                     </div>
                                                 </div>
 
-                                                <div class="card text-center mt-5">
-                                                    <div class="card-header">
+                                                <div className="card text-center mt-5">
+                                                    <div className="card-header">
                                                         Default Store
                                                     </div>
-                                                    <div class="card-body">
-                                                        <div class="container">
-                                                            <div class="row">
+                                                    <div className="card-body">
+                                                        <div className="container">
+                                                            <div className="row">
                                                                 <div className="col-md-3">
                                                                     <label className="control-label"></label>
                                                                     <select
@@ -949,7 +1099,7 @@ class AddStoreInvoice extends Component {
                                                                         }
                                                                         onChange={
                                                                             this
-                                                                                .handleInput
+                                                                                .priceHandleInput
                                                                         }
                                                                     >
                                                                         <option
@@ -1175,7 +1325,6 @@ class AddStoreInvoice extends Component {
                                                             <input
                                                                 type="hidden"
                                                                 className="form-control"
-                                                                required
                                                                 onChange={
                                                                     this
                                                                         .handleInput
@@ -1190,7 +1339,6 @@ class AddStoreInvoice extends Component {
                                                                 type="text"
                                                                 className="form-control"
                                                                 name="final_discount_percent"
-                                                                required
                                                                 onChange={
                                                                     this
                                                                         .handleInput
@@ -1332,7 +1480,6 @@ class AddStoreInvoice extends Component {
                                                                     this.state
                                                                         .remarks
                                                                 }
-                                                                required
                                                                 onChange={
                                                                     this
                                                                         .handleInput

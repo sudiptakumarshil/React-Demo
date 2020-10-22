@@ -105,6 +105,7 @@ const ManageProduct = props => {
                                 );
                             })}
                         </tbody>
+
                     </table>
                 </div>
             </div>
