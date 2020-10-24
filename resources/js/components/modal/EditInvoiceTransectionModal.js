@@ -1,12 +1,12 @@
-import React, {Component, useState, useEffect} from "react";
-import {Button, ButtonToolbar, Modal} from "react-bootstrap";
-import {defaultRouteLink, dispatchEditAction} from "../../common/config";
-import {Link, useParams} from "react-router-dom";
-import ContentLoader, {Facebook, BulletList} from "react-content-loader";
-import {fetchalldata} from "../StoreInvoice/AddStoreInvoice";
+import React, { Component, useState, useEffect } from "react";
+import { Button, ButtonToolbar, Modal } from "react-bootstrap";
+import { defaultRouteLink, dispatchEditAction } from "../../common/config";
+import { Link, useParams } from "react-router-dom";
+import ContentLoader, { Facebook, BulletList } from "react-content-loader";
+import { fetchalldata } from "../StoreInvoice/AddStoreInvoice";
 import AddStoreInvoice from "../StoreInvoice/AddStoreInvoice";
-import {useDispatch, useSelector} from "react-redux";
-import {connect} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { connect } from "react-redux";
 import {
     SET_REFRESH_STORETRANSECTION,
     SET_CURRENT_USER,
@@ -15,14 +15,14 @@ import {
 } from "../../actions/user_types";
 
 // import {defaultRouteLink,dispatchEditAction} from '../common/config';
-const MyBulletListLoader = () => <BulletList/>;
+const MyBulletListLoader = () => <BulletList />;
 
 const EditInvoiceTransectionModal = props => {
     const [warehouselist, setWarehouselist] = useState([]);
     const [vendorlist, setvendorlist] = useState([]);
     const [storelist, setstorelist] = useState([]);
     const [productList, setproductList] = useState([]);
-    const {idx} = useParams();
+    // const { idx } = useParams();
     // const [idx,setIdx] = useState([]);
     const dataObj = {};
     const [formData, setFormData] = useState(dataObj);
@@ -35,13 +35,14 @@ const EditInvoiceTransectionModal = props => {
     useEffect(() => {
         setFormData(props.modalData);
         alldata();
-         i_id = props.modalData.id;
-         // let idx  = props.modalData.idx
+        i_id = props.modalData.id;
+        const idx = props.match.params.idx;
+        // console.log("typeid=",idx);
+        // let idx  = props.modalData.idx
         setFormData(oldState => ({
             ...oldState,
             // i_id: props.modalData.id,
-            idx:idx
-
+            idx: idx
         }));
 
         // console.log("hello",idx)
@@ -54,7 +55,6 @@ const EditInvoiceTransectionModal = props => {
     // const i_id = props.modalData.id;
 
     // console.log(props.modalData.quantity+","+JSON.stringify(formData));
-
 
     const alldata = async () => {
         const response = await axios.get(defaultRouteLink + "/api/all-data");
@@ -74,7 +74,6 @@ const EditInvoiceTransectionModal = props => {
     // }));
 
     const updateinvoiceTransection = async event => {
-
         event.preventDefault();
         const res = await axios.patch(
             `/dbBackup/api/update-transecinvoice/${i_id}`,
@@ -93,13 +92,11 @@ const EditInvoiceTransectionModal = props => {
     };
 
     // FOR GETTING PRODUCT WISE PRICE  ........
-    const getProductWisePriceAuto = async () => {
-
-
+    const getProductWisePriceAuto = async p_id => {
         // console.log(productid);
 
         const response = await axios.get(
-            defaultRouteLink + "/api/get-product-wise-price/" + productid
+            defaultRouteLink + "/api/get-product-wise-price/" + p_id
         );
 
         if (typeof response.data.productPrice.selling_price != "undefined") {
@@ -107,7 +104,6 @@ const EditInvoiceTransectionModal = props => {
                 ...oldState,
                 price: response.data.productPrice.selling_price
             }));
-
         } else {
             setFormData(oldState => ({
                 ...oldState,
@@ -116,15 +112,19 @@ const EditInvoiceTransectionModal = props => {
         }
     };
 
+    const handleProductPrice = event => {
+        const { name, value } = event.target;
+        getProductWisePriceAuto(event.target.value);
+    };
+
     const handleInputs = event => {
-        const {name, value} = event.target;
+        const { name, value } = event.target;
 
         // console.log(event.target.value)
         setFormData(oldState => ({
             ...oldState,
             [name]: value
         }));
-        getProductWisePriceAuto();
 
         /*setFormData(oldState => ({
             ...oldState,
@@ -140,7 +140,7 @@ const EditInvoiceTransectionModal = props => {
 
     // GET ALL WAREHOUSE LIST FROM (ware_house_details) TABLE
 
-    const warhouses = warehouselist.map(function (item, index) {
+    const warhouses = warehouselist.map(function(item, index) {
         return <option value={item.id}> {item.name}</option>;
 
         setFormData(oldState => ({
@@ -151,7 +151,7 @@ const EditInvoiceTransectionModal = props => {
 
     // GET ALL VENDOR LIST
 
-    const vendors = vendorlist.map(function (item, index) {
+    const vendors = vendorlist.map(function(item, index) {
         return <option value={item.id}> {item.name}</option>;
 
         setFormData(oldState => ({
@@ -161,7 +161,7 @@ const EditInvoiceTransectionModal = props => {
     });
     // GET ALL STORE LIST
 
-    const stores = storelist.map(function (item, index) {
+    const stores = storelist.map(function(item, index) {
         return <option value={item.id}> {item.store_name}</option>;
 
         setFormData(oldState => ({
@@ -172,8 +172,13 @@ const EditInvoiceTransectionModal = props => {
 
     // GET ALL PRODUCT LIST
 
-    const products = productList.map(function (item, index) {
-        return <option selected={item_id == item.id} value={item.id}> {item.product_name}</option>;
+    const products = productList.map(function(item, index) {
+        return (
+            <option selected={item_id == item.id} value={item.id}>
+                {" "}
+                {item.product_name}
+            </option>
+        );
 
         setFormData(oldState => ({
             ...oldState,
@@ -181,7 +186,7 @@ const EditInvoiceTransectionModal = props => {
         }));
     });
     if (props.show == true) {
-        <MyBulletListLoader/>;
+        <MyBulletListLoader />;
     }
 
     return (
@@ -195,7 +200,7 @@ const EditInvoiceTransectionModal = props => {
                 backdrop="static"
                 keyboard={false}
                 fade={false}
-                style={{opacity: 1}}
+                style={{ opacity: 1 }}
                 size="lg"
                 onHide={close}
                 // saveModalDetails={saveModalDetails}
@@ -205,7 +210,7 @@ const EditInvoiceTransectionModal = props => {
                 </Modal.Header>
                 <Modal.Body>
                     {productList.length < 0 ? (
-                        <MyBulletListLoader/>
+                        <MyBulletListLoader />
                     ) : (
                         <div className="row">
                             <div className="col-md-12">
@@ -234,7 +239,9 @@ const EditInvoiceTransectionModal = props => {
                                                                     value={
                                                                         formData.product_id
                                                                     }
-                                                                    onChange={handleInputs}
+                                                                    onChange={
+                                                                        handleProductPrice
+                                                                    }
                                                                 >
                                                                     <option value="0">
                                                                         Choose
@@ -292,7 +299,6 @@ const EditInvoiceTransectionModal = props => {
                                                                         //     .modalData
                                                                         //     .price
                                                                         formData.price
-
                                                                     }
                                                                     className="form-control"
                                                                     placeholder="Price"

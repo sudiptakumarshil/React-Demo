@@ -26,11 +26,12 @@ class StoreInvoiceController extends Controller
         $invotran->invoice_id = 0;
         if ($request->idx == 1 or $request->idx == 2) {
             $invotran->d_id = $request->product_id;
-            $invotran->party_id = $request->vendor_id;
+            // $invotran->party_id = $request->vendor_id;
         } elseif ($request->idx == 3 or $request->idx == 4) {
             $invotran->c_id = $request->product_id;
-            $invotran->party_id = $request->customer_id;
+            // $invotran->party_id = $request->customer_id;
         }
+        $invotran->party_id = $request->vendor_id;
         $invotran->ware_id = $request->warehouse_id;
 
         $invotran->status = 1;
@@ -110,6 +111,11 @@ class StoreInvoiceController extends Controller
 
     public function fetch_all_data(Request $request)
     {
+
+        $types = $request->type;
+        // print_r($types);
+
+        // exit();
         $products = DB::table('inventory_products')
             ->join('inventory_categories', 'inventory_products.category_id', 'inventory_categories.id')
             ->join('ware_house_details', 'inventory_products.warehouse_id', 'ware_house_details.id')
@@ -126,10 +132,10 @@ class StoreInvoiceController extends Controller
             ->select('vendors.*', 'ware_house_details.name as wname')
             ->get();
 
-        $customers = DB::table('customers')
-            ->join('ware_house_details', 'customers.ware_id', 'ware_house_details.id')
-            ->select('customers.*', 'ware_house_details.name as wname')
-            ->get();
+        // $customers = DB::table('customers')
+        //     ->join('ware_house_details', 'customers.ware_id', 'ware_house_details.id')
+        //     ->select('customers.*', 'ware_house_details.name as wname')
+        //     ->get();
 
         $vats = Vat::all();
         $warehouses = WareHouseDetails::all();
@@ -143,9 +149,14 @@ class StoreInvoiceController extends Controller
             ->leftJoin('vats', 'invoice_trasections.vat', 'vats.id')
             ->select('invoice_trasections.*', 'dip.product_name as dp_name', 'vats.vat_name', 'vats.value', 'cip.product_name as cp_name')
             ->where('invoice_id', 0)
-            ->where('type', $request->type)
+            ->where('type', $types)
         // ->where('publishing_by','=',$user_id)
             ->get();
+
+        $invoiceParams = DB::table('invoice_parameters')
+            ->where('type', '=', $types)
+            ->first();
+        // $invoiceParams = InvoiceParameter::where('type','=',$request->type)->first();
 
         return response()->json([
             'status' => 200,
@@ -153,11 +164,12 @@ class StoreInvoiceController extends Controller
             'stores' => $stores,
             'vendors' => $vendors,
             'warehouses' => $warehouses,
-            'customers' => $customers,
+            // 'customers' => $customers,
             'vats' => $vats,
             'invotransec' => $invotransec,
             'bankdetails' => $bankdetails,
             'cashaccount' => $cashaccount,
+            'invoiceParams' => $invoiceParams,
         ]);
     }
 
@@ -283,11 +295,11 @@ class StoreInvoiceController extends Controller
         // exit();
 
         $invotran = InvoiceTrasection::find($id);
-//        if ($request->idx == 1 or $request->idx == 4) {
-        $invotran->d_id = $request->product_id;
-//        } elseif ($request->idx == 3 or $request->idx == 2) {
-        //            $invotran->c_id = $request->product_id;
-        //        }
+        if ($request->idx == 1 or $request->idx == 4) {
+            $invotran->d_id = $request->product_id;
+        } elseif ($request->idx == 3 or $request->idx == 2) {
+            $invotran->c_id = $request->product_id;
+        }
         $invotran->status = 1;
         $invotran->date = $request->date;
         $invotran->quantity = $request->quantity;
@@ -317,8 +329,8 @@ class StoreInvoiceController extends Controller
             ->join('vendors', 'store_invoices.vendor_id', 'vendors.id')
             ->join('ware_house_details', 'store_invoices.ware_id', 'ware_house_details.id')
             ->join('stores', 'store_invoices.store_id', 'stores.id')
-            ->join('bank_details', 'store_invoices.bank_id', 'bank_details.id')
-            ->join('cash_account_details', 'store_invoices.cash_id', 'cash_account_details.id')
+            ->leftjoin('bank_details', 'store_invoices.bank_id', 'bank_details.id')
+            ->leftjoin('cash_account_details', 'store_invoices.cash_id', 'cash_account_details.id')
             ->select('store_invoices.*', 'vendors.name as vendor', 'ware_house_details.name as ware_name', 'stores.store_name', 'bank_details.bank_name', 'cash_account_details.cash_name')
             ->get();
 
@@ -327,4 +339,5 @@ class StoreInvoiceController extends Controller
         ]);
 
     }
+
 }

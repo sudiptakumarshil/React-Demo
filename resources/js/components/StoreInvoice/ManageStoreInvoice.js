@@ -33,40 +33,41 @@ function ManageStoreInvoice(props) {
         <div className="col-md-12">
             <div className="row">
                 <div className="col-md-12">
-                    <div style={{ marginTop: 30 }}>
-                        <Link
-                            to={`/dbBackup/new-purshase/${1}`}
-                            type="button"
-                            className="btn btn-danger"
-                            style={{ marginLeft: 15 }}
-                        >
-                            New Purshase
-                        </Link>
-                        <Link
-                            to={`/dbBackup/purshase-return/${2}`}
-                            type="button"
-                            className="btn btn-info"
-                            style={{ marginLeft: 15 }}
-                        >
-                            Purshase Return{" "}
-                        </Link>
-                        <Link
-                            to={`/dbBackup/sale-return/${3}`}
-                            type="button"
-                            className="btn btn-success"
-                            style={{ marginLeft: 15 }}
-                        >
-                            Sale Return{" "}
-                        </Link>
-                        <Link
-                            to={`/dbBackup/sale/${4}`}
-                            type="button"
-                            className="btn btn-warning"
-                            style={{ marginLeft: 15 }}
-                        >
-                            Sale
-                        </Link>
-                    </div>
+                <div style={{ marginTop: 30 }}>
+                                <Link
+                                    to={`/dbBackup/new-purshase/${1}`}
+                                    type="button"
+                                    className="btn btn-danger"
+                                    style={{ marginLeft: 15 }}
+                                >
+                                    New Purshase
+                                </Link>
+                                <Link
+                                    to={`/dbBackup/purshase-return/${2}`}
+                                    type="button"
+                                    className="btn btn-info"
+                                    style={{ marginLeft: 15 }}
+                                >
+                                    Purshase Return{" "}
+                                </Link>
+                                <Link
+                                    to={`/dbBackup/sale-return/${3}`}
+                                    type="button"
+                                    className="btn btn-success"
+                                    style={{ marginLeft: 15 }}
+                                >
+                                    Sale{" "}
+                                </Link>
+                                <Link
+                                    to={`/dbBackup/sale/${4}`}
+                                    type="button"
+                                    className="btn btn-warning"
+                                    style={{ marginLeft: 15 }}
+                                >
+                                    Sale Return
+                                </Link>
+                            </div>
+
                     <table
                         className="table table-bordered"
                         style={{ marginTop: 30 }}
@@ -75,6 +76,7 @@ function ManageStoreInvoice(props) {
                             <tr>
                                 <th>SL</th>
                                 <th>Invoice Number</th>
+                                <th>Type</th>
                                 <th>Vendor Name</th>
                                 <th>WareHouse</th>
                                 <th>Date</th>
@@ -92,10 +94,26 @@ function ManageStoreInvoice(props) {
                         </thead>
                         <tbody>
                             {StoreInvoiceList.map(function(item, index) {
+                                    let type = ""
+                                    if(item.type == 1){
+                                          type = "New Purshase"
+                                    }
+                                    else if(item.type == 2){
+                                         type = "Purshase Return"
+                                    }
+                                    else if(item.type == 3){
+                                         type = "Sale"
+                                    }
+                                    else if(item.type == 4){
+                                         type = "Sale Return"
+                                    }
+
                                 return (
                                     <tr>
                                         <td>{item.id}</td>
                                         <td>{item.invoice_number}</td>
+
+                                        <td>{type}</td>
                                         <td>{item.vendor}</td>
                                         <td>{item.ware_name}</td>
                                         <td>{item.date}</td>

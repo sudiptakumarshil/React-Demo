@@ -70,6 +70,7 @@ class AddStoreInvoice extends Component {
             customer_id: "",
             product_id: 0,
             productList: [],
+            product: "",
             quantity: "",
             price: 0,
             idx: "",
@@ -79,7 +80,7 @@ class AddStoreInvoice extends Component {
             vatList: [],
             bankdetailsList: [],
             cashamountList: [],
-            vat_id: "",
+            vat_id: 0,
             loading: true,
             time: "",
             bankdetails_id: "",
@@ -93,8 +94,8 @@ class AddStoreInvoice extends Component {
             netPayable: 0,
             vat: 0,
             bank_amount: 0,
-            totalExchange: 0
-
+            totalExchange: 0,
+            invoiceParams: ""
             //----------------
         };
     }
@@ -120,8 +121,9 @@ class AddStoreInvoice extends Component {
     }
 
     // FOR GETTING WAREHOUSE WISE STORE
-    get_warhousewiseStore = async () => {
-        let ware_id = this.state.warehouse_id;
+    get_warhousewiseStore = async wid => {
+        let ware_id = wid;
+        // let ware_id = this.state.warehouse_id;
         // console.log(ware_id);
 
         const response = await axios.get(
@@ -150,6 +152,7 @@ class AddStoreInvoice extends Component {
 
         if (typeof response.data.productPrice != "undefined") {
             this.setState({
+                product: response.data.productPrice,
                 price: response.data.productPrice.selling_price
             });
         } else {
@@ -162,9 +165,37 @@ class AddStoreInvoice extends Component {
         this.setState({ [event.target.name]: event.target.value });
         this.getProductWisePriceAuto(event.target.value);
     };
-    handleInput = event => {
-        this.get_warhousewiseStore();
 
+    WarehousehandleInput = event => {
+        this.setState({ [event.target.name]: event.target.value });
+        this.get_warhousewiseStore(event.target.value);
+    };
+
+    //
+
+    discountPercentHandleInput = event => {
+
+       let total_discount =parseFloat((this.state.gross_amount * event.target.value) / 100) + parseFloat(this.state.discountTaka);
+       this.calInvoiceAmt(event.target.name,event.target.value,total_discount);
+    };
+
+    handleDiscountTaka = event => {
+
+        let disountPercentFromGrossAmount =parseFloat((this.state.gross_amount * this.state.final_discount_percent) / 100) + parseFloat(event.target.value);
+        this.calInvoiceAmt(event.target.name,event.target.value,disountPercentFromGrossAmount);
+    };
+
+    calInvoiceAmt=(name,value,discount,vat_amt=0)=>{
+
+
+
+        this.setState({
+            [name]: value,
+            netPayable: this.state.gross_amount - discount,
+         });
+    }
+
+    handleInput = event => {
         //console.log("cash Amount",{[event.target.cash_amount]: event.target.value});
         let total_rev =
             parseFloat(this.state.cash_amount) +
@@ -233,7 +264,7 @@ class AddStoreInvoice extends Component {
             });
         }
         // else if (this.state.vendor_id == 0) {
-        else if (idx == 3 && this.state.customer_id == 0) {
+        else if (idx == 3 && this.state.vendor_id == 0) {
             Swal.fire({
                 title: "Customer  Cannot Be Empty!!",
                 showClass: {
@@ -243,7 +274,7 @@ class AddStoreInvoice extends Component {
                     popup: "animate__animated animate__fadeOutUp"
                 }
             });
-        } else if (idx == 4 && this.state.customer_id == 0) {
+        } else if (idx == 4 && this.state.vendor_id == 0) {
             Swal.fire({
                 title: "Customer  Cannot Be Empty!!",
                 showClass: {
@@ -382,7 +413,7 @@ class AddStoreInvoice extends Component {
             });
         }
         // else if (this.state.vendor_id == 0) {
-        else if (idx == 3 && this.state.customer_id == 0) {
+        else if (idx == 3 && this.state.vendor_id == 0) {
             Swal.fire({
                 title: "Customer  Cannot Be Empty!!",
                 showClass: {
@@ -392,7 +423,7 @@ class AddStoreInvoice extends Component {
                     popup: "animate__animated animate__fadeOutUp"
                 }
             });
-        } else if (idx == 4 && this.state.customer_id == 0) {
+        } else if (idx == 4 && this.state.vendor_id == 0) {
             Swal.fire({
                 title: "Customer  Cannot Be Empty!!",
                 showClass: {
@@ -551,7 +582,8 @@ class AddStoreInvoice extends Component {
                 vatList: response.data.vats,
                 invoicetransectionList: response.data.invotransec,
                 bankdetailsList: response.data.bankdetails,
-                cashamountList: response.data.cashaccount
+                cashamountList: response.data.cashaccount,
+                invoiceParams: response.data.invoiceParams
             });
 
             this.props.updateStoreInvoice(response.data.invotransec);
@@ -609,7 +641,7 @@ class AddStoreInvoice extends Component {
 
     // FOR GETTING AUTO INVOICE NUMBER .............
     getinvoiceNumber = async () => {
-    const idx = this.props.match.params.idx;
+        const idx = this.props.match.params.idx;
         if (idx == 1) {
             const response = await axios.get(
                 defaultRouteLink + "/api/get-invoice-number-type-1"
@@ -746,17 +778,17 @@ class AddStoreInvoice extends Component {
             });
         });
         // FETCH ALL CUSTOMER DATA... LOOP
-        let customers = this.state.customerList.map((item, index) => {
-            return (
-                <option value={item.id} data-tokens="item.name">
-                    {item.name}
-                </option>
-            );
-            this.setState({
-                customer_id: item.id // UPDATE STATE ........
-                // gross_amount:alltoTalQty
-            });
-        });
+        // let customers = this.state.customerList.map((item, index) => {
+        //     return (
+        //         <option value={item.id} data-tokens="item.name">
+        //             {item.name}
+        //         </option>
+        //     );
+        //     this.setState({
+        //         customer_id: item.id // UPDATE STATE ........
+        //         // gross_amount:alltoTalQty
+        //     });
+        // });
 
         let priceQuantity = 0;
         let discountpercent = 0;
@@ -886,7 +918,7 @@ class AddStoreInvoice extends Component {
             pagetitle1 = "PURSHASE RETURN";
         } else if (idx == 3) {
             pagetitle1 = "SALE";
-        } else {
+        } else if (idx == 4) {
             pagetitle1 = "SALE RETURN ";
         }
         if (this.state.loading) {
@@ -910,6 +942,41 @@ class AddStoreInvoice extends Component {
                 <div className="col-md-12">
                     <div className="row">
                         <div className="col-md-12">
+                            <div style={{ marginTop: 30 }}>
+                                <Link
+                                    to={`/dbBackup/new-purshase/${1}`}
+                                    type="button"
+                                    className="btn btn-danger"
+                                    style={{ marginLeft: 15 }}
+                                >
+                                    New Purshase
+                                </Link>
+                                <Link
+                                    to={`/dbBackup/purshase-return/${2}`}
+                                    type="button"
+                                    className="btn btn-info"
+                                    style={{ marginLeft: 15 }}
+                                >
+                                    Purshase Return{" "}
+                                </Link>
+                                <Link
+                                    to={`/dbBackup/sale-return/${3}`}
+                                    type="button"
+                                    className="btn btn-success"
+                                    style={{ marginLeft: 15 }}
+                                >
+                                    Sale{" "}
+                                </Link>
+                                <Link
+                                    to={`/dbBackup/sale/${4}`}
+                                    type="button"
+                                    className="btn btn-warning"
+                                    style={{ marginLeft: 15 }}
+                                >
+                                    Sale Return
+                                </Link>
+                            </div>
+
                             <h2 className="text-center">Transaction</h2>
                             <div className="card text-center">
                                 <div className="card-header">{pagetitle1}</div>
@@ -957,7 +1024,7 @@ class AddStoreInvoice extends Component {
                                                                 name="warehouse_id"
                                                                 onChange={
                                                                     this
-                                                                        .handleInput
+                                                                        .WarehousehandleInput
                                                                 }
                                                                 required
                                                             >
@@ -967,7 +1034,8 @@ class AddStoreInvoice extends Component {
                                                                 {warhouses}
                                                             </select>
                                                         </div>
-                                                        {idx == 1 ? (
+                                                        {idx == 1 ||
+                                                        idx == 2 ? (
                                                             <div className="col-md-2">
                                                                 <label className="control-label">
                                                                     Vendor
@@ -1006,11 +1074,11 @@ class AddStoreInvoice extends Component {
                                                                 <select
                                                                     className="form-control"
                                                                     data-live-search="true"
-                                                                    name="customer_id"
+                                                                    name="vendor_id"
                                                                     value={
                                                                         this
                                                                             .state
-                                                                            .customer_id
+                                                                            .vendor_id
                                                                     }
                                                                     onChange={
                                                                         this
@@ -1024,7 +1092,7 @@ class AddStoreInvoice extends Component {
                                                                         Choose
                                                                         One
                                                                     </option>
-                                                                    {customers}
+                                                                    {vendors}
                                                                 </select>
                                                             </div>
                                                         )}
@@ -1079,165 +1147,368 @@ class AddStoreInvoice extends Component {
                                                     </div>
                                                 </div>
 
-                                                <div className="card text-center mt-5">
-                                                    <div className="card-header">
-                                                        Default Store
-                                                    </div>
-                                                    <div className="card-body">
-                                                        <div className="container">
-                                                            <div className="row">
-                                                                <div className="col-md-3">
-                                                                    <label className="control-label"></label>
-                                                                    <select
-                                                                        className="form-control"
-                                                                        data-live-search="true"
-                                                                        name="product_id"
-                                                                        value={
-                                                                            this
-                                                                                .state
-                                                                                .product_id
-                                                                        }
-                                                                        onChange={
-                                                                            this
-                                                                                .priceHandleInput
-                                                                        }
+                                                {this.state.invoiceParams
+                                                    .discount_method == 1 ? (
+                                                    <div className="card text-center mt-5">
+                                                        <div className="card-header">
+                                                            Default Store
+                                                        </div>
+                                                        <div className="card-body">
+                                                            <div className="container">
+                                                                <div className="row">
+                                                                    <div className="col-md-3">
+                                                                        <label className="control-label"></label>
+                                                                        <select
+                                                                            className="form-control"
+                                                                            data-live-search="true"
+                                                                            name="product_id"
+                                                                            value={
+                                                                                this
+                                                                                    .state
+                                                                                    .product_id
+                                                                            }
+                                                                            onChange={
+                                                                                this
+                                                                                    .priceHandleInput
+                                                                            }
+                                                                        >
+                                                                            <option
+                                                                                selected
+                                                                                value="0"
+                                                                            >
+                                                                                Choose
+                                                                                One
+                                                                            </option>
+                                                                            {
+                                                                                products
+                                                                            }
+                                                                        </select>
+                                                                    </div>
+
+                                                                    {this.state
+                                                                        .product
+                                                                        .price_type ==
+                                                                    2 ? (
+                                                                        <div className="col-md-3">
+                                                                            <label className="control-label"></label>
+                                                                            <input
+                                                                                type="text"
+                                                                                name="price"
+                                                                                readOnly
+                                                                                value={
+                                                                                    this
+                                                                                        .state
+                                                                                        .price
+                                                                                }
+                                                                                onChange={
+                                                                                    this
+                                                                                        .handleInput
+                                                                                }
+                                                                                className="form-control"
+                                                                                placeholder="Price"
+                                                                            ></input>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <div className="col-md-3">
+                                                                            <label className="control-label"></label>
+                                                                            <input
+                                                                                type="text"
+                                                                                name="price"
+                                                                                value={
+                                                                                    this
+                                                                                        .state
+                                                                                        .price
+                                                                                }
+                                                                                onChange={
+                                                                                    this
+                                                                                        .handleInput
+                                                                                }
+                                                                                className="form-control"
+                                                                                placeholder="Price"
+                                                                            ></input>
+                                                                        </div>
+                                                                    )}
+
+                                                                    <div className="col-md-3">
+                                                                        <label className="control-label"></label>
+                                                                        <input
+                                                                            type="text"
+                                                                            onChange={
+                                                                                this
+                                                                                    .handleInput
+                                                                            }
+                                                                            name="quantity"
+                                                                            value={
+                                                                                this
+                                                                                    .state
+                                                                                    .quantity
+                                                                            }
+                                                                            className="form-control"
+                                                                            placeholder="Quantity"
+                                                                        ></input>
+                                                                    </div>
+
+                                                                    <div className="col-md-3">
+                                                                        <label className="control-label"></label>
+                                                                        <input
+                                                                            type="text"
+                                                                            name="discount_taka"
+                                                                            readOnly
+                                                                            value={
+                                                                                this
+                                                                                    .state
+                                                                                    .discount_taka
+                                                                            }
+                                                                            onChange={
+                                                                                this
+                                                                                    .handleInput
+                                                                            }
+                                                                            className="form-control"
+                                                                            placeholder="Discount Taka"
+                                                                        ></input>
+                                                                    </div>
+                                                                    <div className="col-md-3">
+                                                                        <label className="control-label"></label>
+                                                                        <select
+                                                                            className="form-control"
+                                                                            data-live-search="true"
+                                                                            name="vat_id"
+                                                                            disabled
+                                                                            value={
+                                                                                this
+                                                                                    .state
+                                                                                    .vat_id
+                                                                            }
+                                                                            onChange={
+                                                                                this
+                                                                                    .handleInput
+                                                                            }
+                                                                        >
+                                                                            <option
+                                                                                selected
+                                                                                value="0"
+                                                                            >
+                                                                                Zero
+                                                                                Vat
+                                                                            </option>
+                                                                            {
+                                                                                allvat
+                                                                            }
+                                                                        </select>
+                                                                    </div>
+                                                                    <div className="col-md-3">
+                                                                        <label className="control-label"></label>
+                                                                        <input
+                                                                            type="text"
+                                                                            readOnly
+                                                                            name="discount_percent"
+                                                                            value={
+                                                                                this
+                                                                                    .state
+                                                                                    .discount_percent
+                                                                            }
+                                                                            onChange={
+                                                                                this
+                                                                                    .handleInput
+                                                                            }
+                                                                            className="form-control"
+                                                                            placeholder="Discount persent"
+                                                                        ></input>
+                                                                    </div>
+                                                                    <button
+                                                                        type="submit"
+                                                                        class="btn btn-danger "
+                                                                        style={{
+                                                                            marginTop: 80
+                                                                        }}
                                                                     >
-                                                                        <option
-                                                                            selected
-                                                                            value="0"
-                                                                        >
-                                                                            Choose
-                                                                            One
-                                                                        </option>
-                                                                        {
-                                                                            products
-                                                                        }
-                                                                    </select>
+                                                                        Submit
+                                                                    </button>
                                                                 </div>
-
-                                                                <div className="col-md-3">
-                                                                    <label className="control-label"></label>
-                                                                    <input
-                                                                        type="text"
-                                                                        name="price"
-                                                                        value={
-                                                                            this
-                                                                                .state
-                                                                                .price
-                                                                        }
-                                                                        onChange={
-                                                                            this
-                                                                                .handleInput
-                                                                        }
-                                                                        className="form-control"
-                                                                        placeholder="Price"
-                                                                    ></input>
-                                                                </div>
-
-                                                                <div className="col-md-3">
-                                                                    <label className="control-label"></label>
-                                                                    <input
-                                                                        type="text"
-                                                                        onChange={
-                                                                            this
-                                                                                .handleInput
-                                                                        }
-                                                                        name="quantity"
-                                                                        value={
-                                                                            this
-                                                                                .state
-                                                                                .quantity
-                                                                        }
-                                                                        className="form-control"
-                                                                        placeholder="Quantity"
-                                                                    ></input>
-                                                                </div>
-
-                                                                <div className="col-md-3">
-                                                                    <label className="control-label"></label>
-                                                                    <input
-                                                                        type="text"
-                                                                        name="discount_taka"
-                                                                        value={
-                                                                            this
-                                                                                .state
-                                                                                .discount_taka
-                                                                        }
-                                                                        onChange={
-                                                                            this
-                                                                                .handleInput
-                                                                        }
-                                                                        className="form-control"
-                                                                        placeholder="Discount Taka"
-                                                                    ></input>
-                                                                </div>
-                                                                <div className="col-md-3">
-                                                                    <label className="control-label"></label>
-                                                                    <select
-                                                                        className="form-control"
-                                                                        data-live-search="true"
-                                                                        name="vat_id"
-                                                                        value={
-                                                                            this
-                                                                                .state
-                                                                                .vat_id
-                                                                        }
-                                                                        onChange={
-                                                                            this
-                                                                                .handleInput
-                                                                        }
-                                                                    >
-                                                                        <option
-                                                                            selected
-                                                                            value="0"
-                                                                        >
-                                                                            Choose
-                                                                            One
-                                                                            Vat
-                                                                        </option>
-                                                                        <option
-                                                                            selected
-                                                                            value="0"
-                                                                        >
-                                                                            Zero
-                                                                            Vat
-                                                                        </option>
-                                                                        {allvat}
-                                                                    </select>
-                                                                </div>
-                                                                <div className="col-md-3">
-                                                                    <label className="control-label"></label>
-                                                                    <input
-                                                                        type="text"
-                                                                        name="discount_percent"
-                                                                        value={
-                                                                            this
-                                                                                .state
-                                                                                .discount_percent
-                                                                        }
-                                                                        onChange={
-                                                                            this
-                                                                                .handleInput
-                                                                        }
-                                                                        className="form-control"
-                                                                        placeholder="Discount persent"
-                                                                    ></input>
-                                                                </div>
-                                                                <button
-                                                                    type="submit"
-                                                                    class="btn btn-danger "
-                                                                    style={{
-                                                                        marginTop: 80
-                                                                    }}
-                                                                >
-                                                                    Submit
-                                                                </button>
                                                             </div>
                                                         </div>
-                                                    </div>
 
-                                                    <div class="card-footer text-muted"></div>
-                                                </div>
+                                                        <div class="card-footer text-muted"></div>
+                                                    </div>
+                                                ) : (
+                                                    <div className="card text-center mt-5">
+                                                        <div className="card-header">
+                                                            Default Store
+                                                        </div>
+                                                        <div className="card-body">
+                                                            <div className="container">
+                                                                <div className="row">
+                                                                    <div className="col-md-3">
+                                                                        <label className="control-label"></label>
+                                                                        <select
+                                                                            className="form-control"
+                                                                            data-live-search="true"
+                                                                            name="product_id"
+                                                                            value={
+                                                                                this
+                                                                                    .state
+                                                                                    .product_id
+                                                                            }
+                                                                            onChange={
+                                                                                this
+                                                                                    .priceHandleInput
+                                                                            }
+                                                                        >
+                                                                            <option
+                                                                                selected
+                                                                                value="0"
+                                                                            >
+                                                                                Choose
+                                                                                One
+                                                                            </option>
+                                                                            {
+                                                                                products
+                                                                            }
+                                                                        </select>
+                                                                    </div>
+                                                                    {this.state
+                                                                        .product
+                                                                        .price_type ==
+                                                                    2 ? (
+                                                                        <div className="col-md-3">
+                                                                            <label className="control-label"></label>
+                                                                            <input
+                                                                                type="text"
+                                                                                name="price"
+                                                                                readOnly
+                                                                                value={
+                                                                                    this
+                                                                                        .state
+                                                                                        .price
+                                                                                }
+                                                                                onChange={
+                                                                                    this
+                                                                                        .handleInput
+                                                                                }
+                                                                                className="form-control"
+                                                                                placeholder="Price"
+                                                                            ></input>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <div className="col-md-3">
+                                                                            <label className="control-label"></label>
+                                                                            <input
+                                                                                type="text"
+                                                                                name="price"
+                                                                                value={
+                                                                                    this
+                                                                                        .state
+                                                                                        .price
+                                                                                }
+                                                                                onChange={
+                                                                                    this
+                                                                                        .handleInput
+                                                                                }
+                                                                                className="form-control"
+                                                                                placeholder="Price"
+                                                                            ></input>
+                                                                        </div>
+                                                                    )}
+
+                                                                    <div className="col-md-3">
+                                                                        <label className="control-label"></label>
+                                                                        <input
+                                                                            type="text"
+                                                                            onChange={
+                                                                                this
+                                                                                    .handleInput
+                                                                            }
+                                                                            name="quantity"
+                                                                            value={
+                                                                                this
+                                                                                    .state
+                                                                                    .quantity
+                                                                            }
+                                                                            className="form-control"
+                                                                            placeholder="Quantity"
+                                                                        ></input>
+                                                                    </div>
+
+                                                                    <div className="col-md-3">
+                                                                        <label className="control-label"></label>
+                                                                        <input
+                                                                            type="text"
+                                                                            name="discount_taka"
+                                                                            value={
+                                                                                this
+                                                                                    .state
+                                                                                    .discount_taka
+                                                                            }
+                                                                            onChange={
+                                                                                this
+                                                                                    .handleInput
+                                                                            }
+                                                                            className="form-control"
+                                                                            placeholder="Discount Taka"
+                                                                        ></input>
+                                                                    </div>
+                                                                    <div className="col-md-3">
+                                                                        <label className="control-label"></label>
+                                                                        <select
+                                                                            className="form-control"
+                                                                            data-live-search="true"
+                                                                            name="vat_id"
+                                                                            value={
+                                                                                this
+                                                                                    .state
+                                                                                    .vat_id
+                                                                            }
+                                                                            onChange={
+                                                                                this
+                                                                                    .handleInput
+                                                                            }
+                                                                        >
+                                                                            <option
+                                                                                selected
+                                                                                value="0"
+                                                                            >
+                                                                                Zero
+                                                                                Vat
+                                                                            </option>
+                                                                            {
+                                                                                allvat
+                                                                            }
+                                                                        </select>
+                                                                    </div>
+                                                                    <div className="col-md-3">
+                                                                        <label className="control-label"></label>
+                                                                        <input
+                                                                            type="text"
+                                                                            name="discount_percent"
+                                                                            value={
+                                                                                this
+                                                                                    .state
+                                                                                    .discount_percent
+                                                                            }
+                                                                            onChange={
+                                                                                this
+                                                                                    .handleInput
+                                                                            }
+                                                                            className="form-control"
+                                                                            placeholder="Discount persent"
+                                                                        ></input>
+                                                                    </div>
+                                                                    <button
+                                                                        type="submit"
+                                                                        class="btn btn-danger "
+                                                                        style={{
+                                                                            marginTop: 80
+                                                                        }}
+                                                                    >
+                                                                        Submit
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="card-footer text-muted"></div>
+                                                    </div>
+                                                )}
                                             </form>
                                         </div>
 
@@ -1292,218 +1563,504 @@ class AddStoreInvoice extends Component {
                                                                 .saveStoreInvoice
                                                         }
                                                     >
-                                                        <div className="col-md-4">
-                                                            <label className="control-label">
-                                                                Gross Amount
-                                                            </label>
-                                                            <input
-                                                                type="number"
-                                                                readOnly
-                                                                className="form-control"
-                                                                name="gross_amount"
-                                                                value={
-                                                                    this.state
-                                                                        .gross_amount
-                                                                }
-                                                            ></input>
-                                                        </div>
-                                                        <div className="col-md-4">
-                                                            <label className="control-label">
-                                                                Discount Taka
-                                                            </label>
-                                                            <input
-                                                                type="text"
-                                                                readOnly
-                                                                className="form-control"
-                                                                name="discountTaka"
-                                                                value={
-                                                                    this.state
-                                                                        .discountTaka
-                                                                }
-                                                            ></input>
+                                                        {this.state
+                                                            .invoiceParams
+                                                            .discount_method ==
+                                                        1 ? (
+                                                            <div>
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
+                                                                        Gross
+                                                                        Amount
+                                                                    </label>
+                                                                    <input
+                                                                        type="number"
+                                                                        readOnly
+                                                                        className="form-control"
+                                                                        name="gross_amount"
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .gross_amount
+                                                                        }
+                                                                    ></input>
+                                                                </div>
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
+                                                                        Discount
+                                                                        Taka
+                                                                    </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-control"
+                                                                        name="discountTaka"
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .discountTaka
+                                                                        }
+                                                                        onChange={
+                                                                            this
+                                                                                .handleDiscountTaka
+                                                                        }
+                                                                    ></input>
 
-                                                            <input
-                                                                type="hidden"
-                                                                className="form-control"
-                                                                onChange={
-                                                                    this
-                                                                        .handleInput
-                                                                }
-                                                            ></input>
-                                                        </div>
-                                                        <div className="col-md-4">
-                                                            <label className="control-label">
-                                                                Discount Percent
-                                                            </label>
-                                                            <input
-                                                                type="text"
-                                                                className="form-control"
-                                                                name="final_discount_percent"
-                                                                onChange={
-                                                                    this
-                                                                        .handleInput
-                                                                }
-                                                            ></input>
-                                                        </div>
-                                                        <div className="col-md-4">
-                                                            <label className="control-label">
-                                                                Total Vat
-                                                            </label>
-                                                            <input
-                                                                type="text"
-                                                                readOnly
-                                                                className="form-control"
-                                                                required
-                                                                onChange={
-                                                                    this
-                                                                        .handleInput
-                                                                }
-                                                                value={
-                                                                    this.state
-                                                                        .totalVat
-                                                                }
-                                                            ></input>
-                                                        </div>
-                                                        <div className="col-md-4">
-                                                            <label className="control-label">
-                                                                Net Payable
-                                                            </label>
-                                                            <input
-                                                                type="text"
-                                                                readOnly
-                                                                className="form-control"
-                                                                name=""
-                                                                value={
-                                                                    this.state
-                                                                        .netPayable
-                                                                }
-                                                            ></input>
-                                                        </div>
-                                                        <div className="col-md-4">
-                                                            <label className="control-label">
-                                                                Cash Account
-                                                            </label>
-                                                            <select
-                                                                className="form-control"
-                                                                data-live-search="true"
-                                                                name="cashamount_id"
-                                                                value={
-                                                                    this.state
-                                                                        .cashamount_id
-                                                                }
-                                                                onChange={
-                                                                    this
-                                                                        .handleInput
-                                                                }
-                                                            >
-                                                                <option
-                                                                    selected
-                                                                    value="0"
-                                                                >
-                                                                    Choose One
-                                                                </option>
-                                                                {allaccountlist}
-                                                            </select>
-                                                        </div>
-                                                        <div className="col-md-4">
-                                                            <label className="control-label">
-                                                                Cash Amount
-                                                            </label>
-                                                            <input
-                                                                type="number"
-                                                                className="form-control"
-                                                                name="cash_amount"
-                                                                value={
-                                                                    this.state
-                                                                        .cash_amount
-                                                                }
-                                                                required
-                                                                onChange={
-                                                                    this
-                                                                        .handleInput
-                                                                }
-                                                            ></input>
-                                                        </div>
-                                                        <div className="col-md-4">
-                                                            <label className="control-label">
-                                                                Bank Account
-                                                            </label>
-                                                            <select
-                                                                className="form-control"
-                                                                data-live-search="true"
-                                                                name="bankdetails_id"
-                                                                value={
-                                                                    this.state
-                                                                        .bankdetails_id
-                                                                }
-                                                                onChange={
-                                                                    this
-                                                                        .handleInput
-                                                                }
-                                                            >
-                                                                <option
-                                                                    selected
-                                                                    value="0"
-                                                                >
-                                                                    Choose One
-                                                                </option>
-                                                                {allbanklist}
-                                                            </select>
-                                                        </div>
-                                                        <div className="col-md-4">
-                                                            <label className="control-label">
-                                                                Bank Amount
-                                                            </label>
-                                                            <input
-                                                                type="number"
-                                                                className="form-control"
-                                                                name="bank_amount"
-                                                                value={
-                                                                    this.state
-                                                                        .bank_amount
-                                                                }
-                                                                required
-                                                                onChange={
-                                                                    this
-                                                                        .handleInput
-                                                                }
-                                                            ></input>
-                                                        </div>
-                                                        <div className="col-md-4">
-                                                            <label className="control-label">
-                                                                Remarks
-                                                            </label>
-                                                            <textarea
-                                                                className="form-control"
-                                                                name="remarks"
-                                                                value={
-                                                                    this.state
-                                                                        .remarks
-                                                                }
-                                                                onChange={
-                                                                    this
-                                                                        .handleInput
-                                                                }
-                                                            ></textarea>
-                                                        </div>
+                                                                    <input
+                                                                        type="hidden"
+                                                                        className="form-control"
+                                                                        onChange={
+                                                                            this
+                                                                                .handleInput
+                                                                        }
+                                                                    ></input>
+                                                                </div>
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
+                                                                        Discount
+                                                                        Percent
+                                                                    </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-control"
+                                                                        name="final_discount_percent"
+                                                                        value={this.state.final_discount_percent}
+                                                                        onChange={
+                                                                            this
+                                                                                .discountPercentHandleInput
+                                                                        }
+                                                                    ></input>
+                                                                </div>
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
+                                                                        Total
+                                                                        Vat
+                                                                    </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-control"
+                                                                        required
+                                                                        onChange={
+                                                                            this
+                                                                                .handleInput
+                                                                        }
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .totalVat
+                                                                        }
+                                                                    ></input>
+                                                                </div>
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
+                                                                        Net
+                                                                        Payable
+                                                                    </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-control"
+                                                                        name=""
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .netPayable
+                                                                        }
+                                                                    ></input>
+                                                                </div>
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
+                                                                        Cash
+                                                                        Account
+                                                                    </label>
+                                                                    <select
+                                                                        className="form-control"
+                                                                        data-live-search="true"
+                                                                        name="cashamount_id"
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .cashamount_id
+                                                                        }
+                                                                        onChange={
+                                                                            this
+                                                                                .handleInput
+                                                                        }
+                                                                    >
+                                                                        <option
+                                                                            selected
+                                                                            value="0"
+                                                                        >
+                                                                            Choose
+                                                                            One
+                                                                        </option>
+                                                                        {
+                                                                            allaccountlist
+                                                                        }
+                                                                    </select>
+                                                                </div>
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
+                                                                        Cash
+                                                                        Amount
+                                                                    </label>
+                                                                    <input
+                                                                        type="number"
+                                                                        className="form-control"
+                                                                        name="cash_amount"
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .cash_amount
+                                                                        }
+                                                                        required
+                                                                        onChange={
+                                                                            this
+                                                                                .handleInput
+                                                                        }
+                                                                    ></input>
+                                                                </div>
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
+                                                                        Bank
+                                                                        Account
+                                                                    </label>
+                                                                    <select
+                                                                        className="form-control"
+                                                                        data-live-search="true"
+                                                                        name="bankdetails_id"
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .bankdetails_id
+                                                                        }
+                                                                        onChange={
+                                                                            this
+                                                                                .handleInput
+                                                                        }
+                                                                    >
+                                                                        <option
+                                                                            selected
+                                                                            value="0"
+                                                                        >
+                                                                            Choose
+                                                                            One
+                                                                        </option>
+                                                                        {
+                                                                            allbanklist
+                                                                        }
+                                                                    </select>
+                                                                </div>
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
+                                                                        Bank
+                                                                        Amount
+                                                                    </label>
+                                                                    <input
+                                                                        type="number"
+                                                                        className="form-control"
+                                                                        name="bank_amount"
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .bank_amount
+                                                                        }
+                                                                        required
+                                                                        onChange={
+                                                                            this
+                                                                                .handleInput
+                                                                        }
+                                                                    ></input>
+                                                                </div>
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
+                                                                        Remarks
+                                                                    </label>
+                                                                    <textarea
+                                                                        className="form-control"
+                                                                        name="remarks"
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .remarks
+                                                                        }
+                                                                        onChange={
+                                                                            this
+                                                                                .handleInput
+                                                                        }
+                                                                    ></textarea>
+                                                                </div>
 
-                                                        <h2>
-                                                            Net Exchange :{" "}
-                                                            {
-                                                                this.state
-                                                                    .totalExchange
-                                                            }
-                                                        </h2>
-                                                        <div className="col-md-4">
-                                                            <button
-                                                                className="btn btn-info"
-                                                                style={{
-                                                                    marginTop: 100
-                                                                }}
-                                                            >
-                                                                Submit
-                                                            </button>
-                                                        </div>
+                                                                <h2>
+                                                                    Net Exchange
+                                                                    :{" "}
+                                                                    {
+                                                                        this
+                                                                            .state
+                                                                            .totalExchange
+                                                                    }
+                                                                </h2>
+                                                                <div className="col-md-4">
+                                                                    <button
+                                                                        className="btn btn-info"
+                                                                        style={{
+                                                                            marginTop: 100
+                                                                        }}
+                                                                    >
+                                                                        Submit
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            <div>
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
+                                                                        Gross
+                                                                        Amount
+                                                                    </label>
+                                                                    <input
+                                                                        type="number"
+                                                                        readOnly
+                                                                        disabled
+                                                                        className="form-control"
+                                                                        name="gross_amount"
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .gross_amount
+                                                                        }
+                                                                    ></input>
+                                                                </div>
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
+                                                                        Discount
+                                                                        Taka
+                                                                    </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        readOnly
+                                                                        disabled
+                                                                        className="form-control"
+                                                                        name="discountTaka"
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .discountTaka
+                                                                        }
+                                                                    ></input>
+
+                                                                    <input
+                                                                        type="hidden"
+                                                                        className="form-control"
+                                                                        onChange={
+                                                                            this
+                                                                                .handleInput
+                                                                        }
+                                                                    ></input>
+                                                                </div>
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
+                                                                        Discount
+                                                                        Percent
+                                                                    </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        disabled
+                                                                        className="form-control"
+                                                                        name="final_discount_percent"
+                                                                        onChange={
+                                                                            this
+                                                                                .handleInput
+                                                                        }
+                                                                    ></input>
+                                                                </div>
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
+                                                                        Total
+                                                                        Vat
+                                                                    </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        readOnly
+                                                                        disabled
+                                                                        className="form-control"
+                                                                        required
+                                                                        onChange={
+                                                                            this
+                                                                                .handleInput
+                                                                        }
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .totalVat
+                                                                        }
+                                                                    ></input>
+                                                                </div>
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
+                                                                        Net
+                                                                        Payable
+                                                                    </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        readOnly
+                                                                        disabled
+                                                                        className="form-control"
+                                                                        name=""
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .netPayable
+                                                                        }
+                                                                    ></input>
+                                                                </div>
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
+                                                                        Cash
+                                                                        Account
+                                                                    </label>
+                                                                    <select
+                                                                        className="form-control"
+                                                                        data-live-search="true"
+                                                                        disabled
+                                                                        name="cashamount_id"
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .cashamount_id
+                                                                        }
+                                                                        onChange={
+                                                                            this
+                                                                                .handleInput
+                                                                        }
+                                                                    >
+                                                                        <option
+                                                                            selected
+                                                                            value="0"
+                                                                        >
+                                                                            Choose
+                                                                            One
+                                                                        </option>
+                                                                        {
+                                                                            allaccountlist
+                                                                        }
+                                                                    </select>
+                                                                </div>
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
+                                                                        Cash
+                                                                        Amount
+                                                                    </label>
+                                                                    <input
+                                                                        type="number"
+                                                                        className="form-control"
+                                                                        name="cash_amount"
+                                                                        disabled
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .cash_amount
+                                                                        }
+                                                                        required
+                                                                        onChange={
+                                                                            this
+                                                                                .handleInput
+                                                                        }
+                                                                    ></input>
+                                                                </div>
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
+                                                                        Bank
+                                                                        Account
+                                                                    </label>
+                                                                    <select
+                                                                        className="form-control"
+                                                                        data-live-search="true"
+                                                                        disabled
+                                                                        name="bankdetails_id"
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .bankdetails_id
+                                                                        }
+                                                                        onChange={
+                                                                            this
+                                                                                .handleInput
+                                                                        }
+                                                                    >
+                                                                        <option
+                                                                            selected
+                                                                            value="0"
+                                                                        >
+                                                                            Choose
+                                                                            One
+                                                                        </option>
+                                                                        {
+                                                                            allbanklist
+                                                                        }
+                                                                    </select>
+                                                                </div>
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
+                                                                        Bank
+                                                                        Amount
+                                                                    </label>
+                                                                    <input
+                                                                        type="number"
+                                                                        className="form-control"
+                                                                        disabled
+                                                                        name="bank_amount"
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .bank_amount
+                                                                        }
+                                                                        required
+                                                                        onChange={
+                                                                            this
+                                                                                .handleInput
+                                                                        }
+                                                                    ></input>
+                                                                </div>
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
+                                                                        Remarks
+                                                                    </label>
+                                                                    <textarea
+                                                                        disabled
+                                                                        className="form-control"
+                                                                        name="remarks"
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .remarks
+                                                                        }
+                                                                        onChange={
+                                                                            this
+                                                                                .handleInput
+                                                                        }
+                                                                    ></textarea>
+                                                                </div>
+
+                                                                <h2>
+                                                                    Net Exchange
+                                                                    :{" "}
+                                                                    {
+                                                                        this
+                                                                            .state
+                                                                            .totalExchange
+                                                                    }
+                                                                </h2>
+                                                                <div className="col-md-4">
+                                                                    <button
+                                                                        className="btn btn-info"
+                                                                        style={{
+                                                                            marginTop: 100
+                                                                        }}
+                                                                    >
+                                                                        Submit
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        )}
                                                     </form>
                                                 </div>
                                                 <div class="card-footer text-muted"></div>
