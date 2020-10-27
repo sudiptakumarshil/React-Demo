@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 21, 2020 at 03:17 PM
+-- Generation Time: Oct 27, 2020 at 06:21 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.10
 
@@ -215,7 +215,8 @@ INSERT INTO `inventory_categories` (`id`, `root_id`, `category_name`, `short_nam
 (453, 2, 'potato', NULL, 0, 0, 1, NULL, '2020-09-27 05:55:39', '2020-09-27 05:55:39'),
 (454, 10, 'lolipop', NULL, 0, 0, 1, NULL, '2020-09-27 05:56:30', '2020-09-27 05:56:30'),
 (455, 10, 'android2', NULL, 0, 0, 1, NULL, '2020-09-27 06:20:21', '2020-09-27 06:20:21'),
-(456, 452, 'v15', NULL, 0, 0, 1, NULL, '2020-09-27 06:23:53', '2020-09-27 06:23:53');
+(456, 452, 'v15', NULL, 0, 0, 1, NULL, '2020-09-27 06:23:53', '2020-09-27 06:23:53'),
+(457, 7, 'new led', NULL, 0, 0, 1, NULL, '2020-10-23 23:21:30', '2020-10-23 23:21:30');
 
 -- --------------------------------------------------------
 
@@ -257,6 +258,34 @@ INSERT INTO `inventory_products` (`id`, `product_code`, `product_name`, `pices_o
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `invoice_parameters`
+--
+
+CREATE TABLE `invoice_parameters` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `type` tinyint(4) NOT NULL COMMENT 'new purshase =1 ,purshase return = 2, sale return =4 sale = 3',
+  `discount_method` tinyint(4) NOT NULL COMMENT 'invoice wise = 1 product wise = 2',
+  `invoice_start_no` int(11) NOT NULL,
+  `is_due_allow` tinyint(4) NOT NULL COMMENT 'id due allow = 2 or not allow = 3',
+  `ware_id` int(11) NOT NULL,
+  `status` tinyint(4) NOT NULL COMMENT 'active = 2 inactive = 3',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `invoice_parameters`
+--
+
+INSERT INTO `invoice_parameters` (`id`, `type`, `discount_method`, `invoice_start_no`, `is_due_allow`, `ware_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 0, 2, 1, 2, NULL, NULL),
+(2, 2, 1, 0, 2, 1, 2, NULL, NULL),
+(3, 3, 2, 0, 2, 1, 2, NULL, NULL),
+(4, 4, 2, 0, 2, 1, 2, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `invoice_trasections`
 --
 
@@ -276,7 +305,7 @@ CREATE TABLE `invoice_trasections` (
   `discount_percent` double(8,2) NOT NULL DEFAULT 0.00,
   `vat` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `publishing_by` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` int(11) NOT NULL,
+  `type` int(11) NOT NULL COMMENT 'NEW PURSHASE = 1 , PURSHASE RETURN = 2, SALE =3 ,SALE RETURN = 4',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -286,7 +315,19 @@ CREATE TABLE `invoice_trasections` (
 --
 
 INSERT INTO `invoice_trasections` (`id`, `invoice_id`, `d_id`, `c_id`, `party_id`, `date`, `ware_id`, `status`, `store_id`, `quantity`, `price`, `discount_taka`, `discount_percent`, `vat`, `publishing_by`, `type`, `created_at`, `updated_at`) VALUES
-(1, 1, 2, 0, 5, '2020-10-21', 1, 1, 6, 1.00, 1000, 0.00, 0.00, 0, '1', 1, '2020-10-21 01:35:10', '2020-10-21 04:41:29');
+(1, 1, 5, 0, 5, '2020-10-21', 1, 1, 6, 3.00, 2000, 0.00, 0.00, 0, '1', 1, '2020-10-21 01:35:10', '2020-10-22 01:19:42'),
+(3, 3, 0, 5, 4, '2020-10-22', 1, 1, 6, 25.00, 3000, 0.00, 0.00, 0, '1', 3, '2020-10-22 02:36:07', '2020-10-22 02:36:07'),
+(4, 11, 5, 0, 5, '2020-10-22', 2, 1, 6, 2.00, 3000, 0.00, 0.00, 0, '1', 1, '2020-10-22 04:37:30', '2020-10-22 04:37:30'),
+(5, 14, 5, 0, 5, '2020-10-22', 1, 1, 8, 9.00, 3009, 0.00, 0.00, 0, '1', 1, '2020-10-22 07:16:59', '2020-10-22 07:16:59'),
+(6, 14, 0, 5, 4, '2020-10-22', 1, 1, 6, 25.00, 3000, 0.00, 0.00, 0, '1', 3, '2020-10-22 07:58:28', '2020-10-22 07:58:28'),
+(7, 14, 0, 6, 4, '2020-10-22', 1, 1, 6, 6.00, 2000, 0.00, 0.00, 0, '1', 3, '2020-10-22 07:59:53', '2020-10-22 07:59:53'),
+(8, 15, 5, 0, 5, '2020-10-22', 1, 1, 6, 2.00, 3000, 0.00, 0.00, 0, '1', 1, '2020-10-22 08:31:11', '2020-10-22 08:31:11'),
+(9, 15, 5, 0, 5, '2020-10-22', 1, 1, 6, 25.00, 3000, 0.00, 0.00, 0, '1', 2, '2020-10-22 08:43:28', '2020-10-22 08:43:28'),
+(10, 15, 0, 5, 5, '2020-10-22', 1, 1, 6, 2.00, 3000, 0.00, 0.00, 3, '1', 3, '2020-10-22 08:46:29', '2020-10-22 08:46:29'),
+(11, 0, 6, 0, 5, '2020-10-24', 1, 1, 7, 2.00, 2000, 0.00, 0.00, 0, '1', 2, '2020-10-23 23:26:52', '2020-10-23 23:26:52'),
+(12, 0, 0, 6, 5, '2020-10-24', 1, 1, 7, 5.00, 2000, 0.00, 0.00, 3, '1', 3, '2020-10-24 00:01:59', '2020-10-24 00:01:59'),
+(13, 0, 0, 5, 5, '2020-10-24', 1, 1, 6, 2.00, 3000, 0.00, 0.00, 0, '1', 4, '2020-10-24 02:33:11', '2020-10-24 02:33:11'),
+(17, 0, 5, 0, 5, '2020-10-25', 1, 1, 6, 4.00, 3000, 0.00, 0.00, 0, '1', 1, '2020-10-25 02:00:58', '2020-10-25 02:00:58');
 
 -- --------------------------------------------------------
 
@@ -771,7 +812,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (26, '2020_10_03_123700_create_invoice_trasections_table', 7),
 (27, '2020_10_05_100421_create_vats_table', 8),
 (29, '2020_10_19_062613_create_bank_details_table', 9),
-(30, '2020_10_19_075208_create_cash_account_details_table', 10);
+(30, '2020_10_19_075208_create_cash_account_details_table', 10),
+(31, '2020_10_24_062207_create_invoice_parameters_table', 11);
 
 -- --------------------------------------------------------
 
@@ -918,19 +960,19 @@ CREATE TABLE `store_invoices` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `invoice_number` int(11) NOT NULL,
   `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `vendor_id` int(10) UNSIGNED DEFAULT NULL,
-  `ware_id` int(10) UNSIGNED DEFAULT NULL,
+  `vendor_id` int(10) UNSIGNED DEFAULT 0,
+  `ware_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `date` date DEFAULT NULL,
   `posting_by` int(10) UNSIGNED NOT NULL,
   `store_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
-  `gross_amount` double(8,2) NOT NULL,
-  `discount_taka` double(8,2) NOT NULL,
-  `discount_percent` double(8,2) NOT NULL,
-  `cash_amount` double(8,2) NOT NULL,
-  `cash_id` int(10) UNSIGNED NOT NULL,
-  `bank_amount` float NOT NULL DEFAULT 0,
-  `bank_id` int(11) NOT NULL DEFAULT 0,
-  `remarks` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `gross_amount` double(8,2) DEFAULT NULL,
+  `discount_taka` double(8,2) DEFAULT 0.00,
+  `discount_percent` double(8,2) DEFAULT 0.00,
+  `cash_amount` double(8,2) DEFAULT 0.00,
+  `cash_id` int(10) UNSIGNED DEFAULT 0,
+  `bank_amount` float DEFAULT 0,
+  `bank_id` int(11) DEFAULT 0,
+  `remarks` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -941,7 +983,20 @@ CREATE TABLE `store_invoices` (
 
 INSERT INTO `store_invoices` (`id`, `invoice_number`, `type`, `vendor_id`, `ware_id`, `date`, `posting_by`, `store_id`, `gross_amount`, `discount_taka`, `discount_percent`, `cash_amount`, `cash_id`, `bank_amount`, `bank_id`, `remarks`, `created_at`, `updated_at`) VALUES
 (1, 1000, '1', 5, 1, '2020-10-21', 1, 7, 120000.00, 0.00, 20.00, 700.00, 1, 700, 1, 'good day', '2020-10-21 01:39:00', '2020-10-21 01:39:00'),
-(2, 1001, '1', 5, 1, '2020-10-21', 1, 6, 60000.00, 0.00, 0.00, 0.00, 1, 0, 1, 'test', '2020-10-21 04:36:03', '2020-10-21 04:36:03');
+(2, 1001, '1', 5, 1, '2020-10-21', 1, 6, 60000.00, 0.00, 0.00, 0.00, 1, 0, 1, 'test', '2020-10-21 04:36:03', '2020-10-21 04:36:03'),
+(3, 3000, '3', 0, 1, '2020-10-22', 1, 6, 81000.00, 0.00, 20.00, 0.00, 1, 0, 1, 'hhhr', '2020-10-22 02:44:58', '2020-10-22 02:44:58'),
+(4, 3000, '3', 0, 1, '2020-10-22', 1, 6, 81000.00, 0.00, 20.00, 0.00, 1, 0, 1, 'hhhr', '2020-10-22 02:47:43', '2020-10-22 02:47:43'),
+(5, 3000, '3', 0, 1, '2020-10-22', 1, 6, 81000.00, 0.00, 20.00, 0.00, 1, 0, 1, 'hhhr', '2020-10-22 02:48:12', '2020-10-22 02:48:12'),
+(6, 1002, '1', 0, 1, '2020-10-22', 1, 6, 81000.00, 0.00, 10.00, 0.00, 1, 0, 1, 'hello', '2020-10-22 03:17:15', '2020-10-22 03:17:15'),
+(7, 1003, '1', 0, 1, '2020-10-22', 1, 6, 81000.00, 0.00, 20.00, 0.00, 1, 4000, 1, 'done', '2020-10-22 03:33:20', '2020-10-22 03:33:20'),
+(8, 1004, '1', 5, 1, '2020-10-22', 1, 6, 81000.00, 0.00, 20.00, 0.00, 1, 0, 1, '200', '2020-10-22 03:56:32', '2020-10-22 03:56:32'),
+(9, 1005, '1', 5, 1, '2020-10-22', 1, 7, 81000.00, 0.00, 20.00, 0.00, 1, 0, 1, '66', '2020-10-22 03:58:58', '2020-10-22 03:58:58'),
+(10, 1006, '1', NULL, 1, '2020-10-22', 1, 6, 81000.00, 0.00, 200.00, 199.00, 1, 0, NULL, 'done', '2020-10-22 04:08:34', '2020-10-22 04:08:34'),
+(11, 1007, '1', 5, 2, '2020-10-22', 1, 9, 87000.00, 0.00, NULL, 0.00, NULL, 2000, 1, 'done', '2020-10-22 04:50:19', '2020-10-22 04:50:19'),
+(12, 1007, '1', 5, 1, '2020-10-22', 1, 6, 87000.00, 0.00, 20.00, 2000.00, 1, 0, NULL, 'done', '2020-10-22 06:30:37', '2020-10-22 06:30:37'),
+(13, 1008, '1', 5, 2, '2020-10-22', 1, 9, 87000.00, 0.00, NULL, 0.00, NULL, 0, NULL, 'done', '2020-10-22 06:38:51', '2020-10-22 06:38:51'),
+(14, 3001, '3', NULL, 1, '2020-10-22', 1, 6, 87000.00, 0.00, NULL, 0.00, NULL, 0, NULL, 'TES', '2020-10-22 08:02:23', '2020-10-22 08:02:23'),
+(15, 3002, '3', 5, 1, '2020-10-22', 1, 6, 6000.00, 0.00, NULL, 0.00, NULL, 0, NULL, 'done', '2020-10-22 08:46:53', '2020-10-22 08:46:53');
 
 -- --------------------------------------------------------
 
@@ -990,11 +1045,9 @@ CREATE TABLE `vats` (
 --
 
 INSERT INTO `vats` (`id`, `vat_name`, `value`, `ware_id`, `status`, `created_at`, `updated_at`) VALUES
-(3, '20', 20, 5, 1, '2020-10-05 05:09:36', '2020-10-05 05:09:36'),
 (4, '20%', 20, 1, 1, '2020-10-05 07:12:56', '2020-10-05 07:12:56'),
 (5, '30%', 30, 1, 1, '2020-10-05 07:17:07', '2020-10-05 07:17:07'),
-(6, '20%', 20, 3, 1, '2020-10-05 07:19:00', '2020-10-05 07:19:00'),
-(7, '20%', 0, 3, 1, '2020-10-05 07:27:10', '2020-10-05 07:27:10');
+(6, '20%', 20, 3, 1, '2020-10-05 07:19:00', '2020-10-05 07:19:00');
 
 -- --------------------------------------------------------
 
@@ -1115,6 +1168,12 @@ ALTER TABLE `inventory_products`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `invoice_parameters`
+--
+ALTER TABLE `invoice_parameters`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `invoice_trasections`
 --
 ALTER TABLE `invoice_trasections`
@@ -1220,7 +1279,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `inventory_categories`
 --
 ALTER TABLE `inventory_categories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=457;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=458;
 
 --
 -- AUTO_INCREMENT for table `inventory_products`
@@ -1229,10 +1288,16 @@ ALTER TABLE `inventory_products`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT for table `invoice_parameters`
+--
+ALTER TABLE `invoice_parameters`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `invoice_trasections`
 --
 ALTER TABLE `invoice_trasections`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `ledger_copy`
@@ -1244,7 +1309,7 @@ ALTER TABLE `ledger_copy`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `setting_copy`
@@ -1262,7 +1327,7 @@ ALTER TABLE `stores`
 -- AUTO_INCREMENT for table `store_invoices`
 --
 ALTER TABLE `store_invoices`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `users`

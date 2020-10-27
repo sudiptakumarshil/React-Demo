@@ -78,6 +78,7 @@ class AddStoreInvoice extends Component {
             isModalShow: false,
             modalData: {},
             vatList: [],
+            vat_value: 0,
             bankdetailsList: [],
             cashamountList: [],
             vat_id: 0,
@@ -95,7 +96,8 @@ class AddStoreInvoice extends Component {
             vat: 0,
             bank_amount: 0,
             totalExchange: 0,
-            invoiceParams: ""
+            invoiceParams: "",
+            total_discount: 0
             //----------------
         };
     }
@@ -174,26 +176,67 @@ class AddStoreInvoice extends Component {
     //
 
     discountPercentHandleInput = event => {
+        let total_discount =
+            parseFloat((this.state.gross_amount * event.target.value) / 100) +
+            parseFloat(this.state.discountTaka);
+        this.calInvoiceAmt(
+            event.target.name,
+            event.target.value,
+            total_discount
+        );
+        // this.setState({
+        //     total_discount:total_discount
+        // })
+    };
 
-       let total_discount =parseFloat((this.state.gross_amount * event.target.value) / 100) + parseFloat(this.state.discountTaka);
-       this.calInvoiceAmt(event.target.name,event.target.value,total_discount);
+    // for vat calculation  ....................................
+    handleVatInput = event => {
+        let vat_calculate = parseFloat(
+            (this.state.netPayable * event.target.value) / 100
+        );
+        // let netPayablePlusVatAmmount = parseFloat(
+        //     this.state.netPayable + vat_calculate
+        // );
+        // // console.log("Vat Count", vat_calculate);
+        // this.setState({
+        //     totalVat: vat_calculate,
+        //     // netPayable:netPayablePlusVatAmmount
+
+        // });
+
+        // this.setState({
+        //     totalVat: netPayablePlusVatAmmount
+        // });
+        // this.calInvoiceAmt(
+        //     event.target.name,
+        //     event.target.value,
+        //     vat_calculate,
+        //     netPayablePlusVatAmmount
+        // );
     };
 
     handleDiscountTaka = event => {
-
-        let disountPercentFromGrossAmount =parseFloat((this.state.gross_amount * this.state.final_discount_percent) / 100) + parseFloat(event.target.value);
-        this.calInvoiceAmt(event.target.name,event.target.value,disountPercentFromGrossAmount);
+        let disountPercentFromGrossAmount =
+            parseFloat(
+                (this.state.gross_amount * this.state.final_discount_percent) /
+                    100
+            ) + parseFloat(event.target.value);
+        this.calInvoiceAmt(
+            event.target.name,
+            event.target.value,
+            disountPercentFromGrossAmount
+        );
+        this.setState({
+            total_discount: disountPercentFromGrossAmount
+        });
     };
 
-    calInvoiceAmt=(name,value,discount,vat_amt=0)=>{
-
-
-
+    calInvoiceAmt = (name, value, discount, vat_amt = 0) => {
         this.setState({
             [name]: value,
-            netPayable: this.state.gross_amount - discount,
-         });
-    }
+            netPayable: this.state.gross_amount - discount
+        });
+    };
 
     handleInput = event => {
         //console.log("cash Amount",{[event.target.cash_amount]: event.target.value});
@@ -883,7 +926,21 @@ class AddStoreInvoice extends Component {
                 </option>
             );
             this.setState({
-                vat_id: item.id // UPDATE STATE ........
+                vat_id: item.id, // UPDATE STATE ........
+                vat_value: item.value // UPDATE STATE ........
+            });
+        });
+
+        // FETCH ALL VAT VALUE DATA... LOOP
+        let allvatvalue = this.state.vatList.map((item, index) => {
+            return (
+                <option value={item.value} data-tokens="item.name">
+                    {item.vat_name}
+                </option>
+            );
+            this.setState({
+                vat_id: item.id, // UPDATE STATE ........
+                vat_value: item.value // UPDATE STATE ........
             });
         });
         // FETCH ALL BANK ACCOUNT LIST ... LOOP
@@ -1623,13 +1680,34 @@ class AddStoreInvoice extends Component {
                                                                         type="text"
                                                                         className="form-control"
                                                                         name="final_discount_percent"
-                                                                        value={this.state.final_discount_percent}
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .final_discount_percent
+                                                                        }
                                                                         onChange={
                                                                             this
                                                                                 .discountPercentHandleInput
                                                                         }
                                                                     ></input>
                                                                 </div>
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
+                                                                        Total
+                                                                        Discount
+                                                                    </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-control"
+                                                                        name=""
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .total_discount
+                                                                        }
+                                                                    ></input>
+                                                                </div>
+
                                                                 <div className="col-md-4">
                                                                     <label className="control-label">
                                                                         Total
@@ -1652,13 +1730,43 @@ class AddStoreInvoice extends Component {
                                                                 </div>
                                                                 <div className="col-md-4">
                                                                     <label className="control-label">
+                                                                        Vat
+                                                                    </label>
+                                                                    <select
+                                                                        className="form-control"
+                                                                        data-live-search="true"
+                                                                        name="vat_value"
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .vat_value
+                                                                        }
+                                                                        onChange={
+                                                                            this
+                                                                                .handleVatInput
+                                                                        }
+                                                                    >
+                                                                        <option
+                                                                            selected
+                                                                            value="0"
+                                                                        >
+                                                                            Zero
+                                                                            Vat
+                                                                        </option>
+                                                                        {
+                                                                            allvatvalue
+                                                                        }
+                                                                    </select>
+                                                                </div>
+
+                                                                <div className="col-md-4">
+                                                                    <label className="control-label">
                                                                         Net
                                                                         Payable
                                                                     </label>
                                                                     <input
                                                                         type="text"
                                                                         className="form-control"
-                                                                        name=""
                                                                         value={
                                                                             this
                                                                                 .state

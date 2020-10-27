@@ -2,12 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bd56c19a-66c0-4db0-be7c-d01ef1072078" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/webServers.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/webServers.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/frontend/api/StoreInvoice/StoreInvoiceController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/frontend/api/StoreInvoice/StoreInvoiceController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/components/StoreInvoice/AddStoreInvoice.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/StoreInvoice/AddStoreInvoice.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/modal/EditInvoiceTransectionModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/modal/EditInvoiceTransectionModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -201,6 +199,10 @@
       <workItem from="1603003098267" duration="20812000" />
       <workItem from="1603272936629" duration="3434000" />
       <workItem from="1603342890217" duration="18097000" />
+      <workItem from="1603607037800" duration="1862000" />
+      <workItem from="1603609557354" duration="1757000" />
+      <workItem from="1603615413380" duration="173000" />
+      <workItem from="1603615619659" duration="6086000" />
     </task>
     <servers />
   </component>
@@ -208,10 +210,10 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="392" y="92" key="#Deployment" timestamp="1603273405536">
+    <state x="392" y="92" key="#Deployment" timestamp="1603616486259">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
-    <state x="392" y="92" key="#Deployment/0.0.1600.860@0.0.1600.860" timestamp="1603273405536" />
+    <state x="392" y="92" key="#Deployment/0.0.1600.860@0.0.1600.860" timestamp="1603616486259" />
     <state x="580" y="188" key="FileChooserDialogImpl" timestamp="1600838060848">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
@@ -220,10 +222,10 @@
       <screen x="0" y="0" width="1600" height="860" />
     </state>
     <state x="507" y="258" key="com.intellij.ide.util.TipDialog/0.0.1600.860@0.0.1600.860" timestamp="1600837751515" />
-    <state x="626" y="167" key="ftp.server.browser" timestamp="1603273403347">
+    <state x="626" y="167" key="ftp.server.browser" timestamp="1603607207445">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
-    <state x="626" y="167" key="ftp.server.browser/0.0.1600.860@0.0.1600.860" timestamp="1603273403347" />
+    <state x="626" y="167" key="ftp.server.browser/0.0.1600.860@0.0.1600.860" timestamp="1603607207445" />
     <state x="456" y="195" key="run.anything.popup" timestamp="1603013338433">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
