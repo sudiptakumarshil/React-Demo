@@ -12,4 +12,5 @@ class WareHouseDetails extends Model
     {
         return $this->hasMany("App\Model\Store\Store", 'id');
     }
+
 }

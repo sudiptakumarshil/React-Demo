@@ -50,6 +50,7 @@ import {
 } from "./common/CookieService";
 import AddProduct from "./components/InventoryProduct/AddProduct";
 import EditProduct from "./components/InventoryProduct/EditProduct";
+import EditInvoice from "./components/StoreInvoice/EditStoreInvoice"
 
 export const Routes = props => {
     let isLoginExit = getCookieKeyInfo(getAccessTokenName);
@@ -233,6 +234,14 @@ export const Routes = props => {
                                     defaultRouteLink + "/manage-store-invoice"
                                 }
                                 component={ManageStoreInvoice}
+                            />
+
+                            <Route
+                                exact
+                                path={
+                                    defaultRouteLink + "/edit-storeinvoice/:id/:idx"
+                                }
+                                render={props => <EditInvoice {...props} />}
                             />
 
                         </Header>

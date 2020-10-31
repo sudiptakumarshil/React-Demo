@@ -116,6 +116,9 @@ Route::namespace ('frontend')->group(function () {
             // for store invoice .....................
             Route::post('/save-store-invoice', 'StoreInvoiceController@save_store_invoice')->name("save-store-invoice");
             Route::get('/all-storeInvoice', 'StoreInvoiceController@all_store_invoice')->name("all-storeInvoice");
+            Route::get('/edit-storeInvoice/{id}', 'StoreInvoiceController@edit_storeInvoice')->name("edit-storeInvoice");
+            Route::patch('/update-storeInvoice/{id}', 'StoreInvoiceController@update_storeInvoice')->name("update-storeInvoice");
+            Route::post('/search-storeInvoice', 'StoreInvoiceController@search_store_invoice')->name("search-storeInvoice");
 
         });
     });

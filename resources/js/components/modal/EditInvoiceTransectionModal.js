@@ -22,47 +22,20 @@ const EditInvoiceTransectionModal = props => {
     const [vendorlist, setvendorlist] = useState([]);
     const [storelist, setstorelist] = useState([]);
     const [productList, setproductList] = useState([]);
-    // const { idx } = useParams();
-    // const [idx,setIdx] = useState([]);
     const dataObj = {};
     const [formData, setFormData] = useState(dataObj);
-    // console.log("test 5=" + JSON.stringify(props.modalData));
     const dispatch = useDispatch();
     let i_id = props.modalData.id;
     let item_id = props.modalData.d_id;
-    let productid = formData.product_id;
-
-    useEffect(() => {
-        setFormData(props.modalData);
-        alldata();
-        i_id = props.modalData.id;
-        const idx = props.match.params.idx;
-        // console.log("typeid=",idx);
-        // let idx  = props.modalData.idx
-        setFormData(oldState => ({
-            ...oldState,
-            // i_id: props.modalData.id,
-            idx: idx
-        }));
-
-        // console.log("hello",idx)
-
-        // fetchallinvoicetransection();
-        // window.location.reload();
-    }, [props]);
+    // const [product_id, setproduct_id] = useState([0]);
+    // console.log("tester", productid);
 
     //console.log("test fdata55=" + JSON.stringify(formData));
     // const i_id = props.modalData.id;
-
     // console.log(props.modalData.quantity+","+JSON.stringify(formData));
 
     const alldata = async () => {
         const response = await axios.get(defaultRouteLink + "/api/all-data");
-        // console.log(response)
-        // console.log("test data" + response);
-        // setWarehouselist(response.data.warehouses);
-        // setvendorlist(response.data.vendors);
-        // setstorelist(response.data.stores);
         setproductList(response.data.products);
     };
 
@@ -87,8 +60,6 @@ const EditInvoiceTransectionModal = props => {
             updateinvoiceTransection: res.data.products
         });
         props.handleClose();
-
-        // window.location.reload(false);
     };
 
     // FOR GETTING PRODUCT WISE PRICE  ........
@@ -119,8 +90,6 @@ const EditInvoiceTransectionModal = props => {
 
     const handleInputs = event => {
         const { name, value } = event.target;
-
-        // console.log(event.target.value)
         setFormData(oldState => ({
             ...oldState,
             [name]: value
@@ -137,6 +106,17 @@ const EditInvoiceTransectionModal = props => {
             idx: idx
         }));*/
     };
+    useEffect(() => {
+        setFormData(props.modalData);
+        alldata();
+        i_id = props.modalData.id;
+        const idx = props.match.params.idx;
+        setFormData(oldState => ({
+            ...oldState,
+            idx: idx
+        }));
+
+    }, [props]);
 
     // GET ALL WAREHOUSE LIST FROM (ware_house_details) TABLE
 
@@ -179,11 +159,12 @@ const EditInvoiceTransectionModal = props => {
                 {item.product_name}
             </option>
         );
-
+        // console.log(item.id);
         setFormData(oldState => ({
             ...oldState,
-            product_id: item.id
+            product_id:item.id
         }));
+        // setproduct_id(item.id);
     });
     if (props.show == true) {
         <MyBulletListLoader />;
@@ -236,9 +217,9 @@ const EditInvoiceTransectionModal = props => {
                                                                     className="form-control"
                                                                     data-live-search="true"
                                                                     name="product_id"
-                                                                    value={
-                                                                        formData.product_id
-                                                                    }
+                                                                    // value={
+                                                                    //     formData.product_id
+                                                                    // }
                                                                     onChange={
                                                                         handleProductPrice
                                                                     }
@@ -267,22 +248,6 @@ const EditInvoiceTransectionModal = props => {
                                                                     className="form-control"
                                                                     placeholder="Quantity"
                                                                 ></input>
-
-                                                                {/* <input
-                                                                    type="hidden"
-                                                                    onChange={
-                                                                        handleInputs
-                                                                    }
-                                                                    name="i_id"
-                                                                    value={
-                                                                        // props
-                                                                        //     .modalData
-                                                                        //     .id
-                                                                        formData.id
-                                                                    }
-                                                                    className="form-control"
-                                                                    placeholder="Quantity"
-                                                                ></input> */}
                                                             </div>
                                                             <div className="col-md-3">
                                                                 <label className="control-label">

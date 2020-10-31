@@ -5,15 +5,32 @@ namespace App\Http\Controllers\Frontend\Api\WareHouse;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\WareHouse\WareHouseDetails;
-
+use DB;
 class WareHouseController extends Controller
 {
-    public function index()
+    public function index(Request $req)
     {
-        $warehouses = WareHouseDetails::all();
+        $start_page=$req->start_page;
+        $limit=$req->limit;
+
+        $range=0;
+        if($start_page > 1){
+            $range=($start_page * $limit)-1;
+        }
+
+        $warehouses = WareHouseDetails::skip($range)->take($limit)->get();
+        // $warehouses = DB::table('ware_house_details')->paginate(20);
+
+        $count=-1;
+        if($start_page == 1)
+        {
+            $count=WareHouseDetails::count();
+        }
+
         return response()->json([
             'status' => 200,
-            'warehouses' => $warehouses
+            'warehouses' => $warehouses,
+            'count' => $count,
         ]);
     }
 

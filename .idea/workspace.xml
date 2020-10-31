@@ -2,10 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bd56c19a-66c0-4db0-be7c-d01ef1072078" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/webServers.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/webServers.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/frontend/api/StoreInvoice/StoreInvoiceController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/frontend/api/StoreInvoice/StoreInvoiceController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/frontend/api/WareHouse/WareHouseController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/frontend/api/WareHouse/WareHouseController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Model/Store/Store.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Store/Store.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Model/StoreInvoice/StoreInvoice.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/StoreInvoice/StoreInvoice.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Model/Vendor/Vendor.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/Vendor/Vendor.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Model/WareHouse/WareHouseDetails.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Model/WareHouse/WareHouseDetails.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/InventoryProduct/EditProduct.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/InventoryProduct/EditProduct.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/components/StoreInvoice/AddStoreInvoice.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/StoreInvoice/AddStoreInvoice.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/StoreInvoice/ManageStoreInvoice.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/StoreInvoice/ManageStoreInvoice.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/WareHouse/ManageWareHouse.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/WareHouse/ManageWareHouse.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/WareHouse/WarHouse.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/WareHouse/WarHouse.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/modal/EditInvoiceTransectionModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/modal/EditInvoiceTransectionModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,6 +47,13 @@
     </option>
     <expand />
     <select />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -203,6 +226,13 @@
       <workItem from="1603609557354" duration="1757000" />
       <workItem from="1603615413380" duration="173000" />
       <workItem from="1603615619659" duration="6086000" />
+      <workItem from="1603777358700" duration="642000" />
+      <workItem from="1603794866987" duration="9905000" />
+      <workItem from="1603862611539" duration="6410000" />
+      <workItem from="1603882062968" duration="14076000" />
+      <workItem from="1603947065795" duration="1637000" />
+      <workItem from="1603950896467" duration="8365000" />
+      <workItem from="1604129085555" duration="944000" />
     </task>
     <servers />
   </component>
@@ -210,10 +240,10 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="392" y="92" key="#Deployment" timestamp="1603616486259">
+    <state x="392" y="92" key="#Deployment" timestamp="1603951086877">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
-    <state x="392" y="92" key="#Deployment/0.0.1600.860@0.0.1600.860" timestamp="1603616486259" />
+    <state x="392" y="92" key="#Deployment/0.0.1600.860@0.0.1600.860" timestamp="1603951086877" />
     <state x="580" y="188" key="FileChooserDialogImpl" timestamp="1600838060848">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
@@ -222,10 +252,10 @@
       <screen x="0" y="0" width="1600" height="860" />
     </state>
     <state x="507" y="258" key="com.intellij.ide.util.TipDialog/0.0.1600.860@0.0.1600.860" timestamp="1600837751515" />
-    <state x="626" y="167" key="ftp.server.browser" timestamp="1603607207445">
+    <state x="626" y="167" key="ftp.server.browser" timestamp="1603894580279">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
-    <state x="626" y="167" key="ftp.server.browser/0.0.1600.860@0.0.1600.860" timestamp="1603607207445" />
+    <state x="626" y="167" key="ftp.server.browser/0.0.1600.860@0.0.1600.860" timestamp="1603894580279" />
     <state x="456" y="195" key="run.anything.popup" timestamp="1603013338433">
       <screen x="0" y="0" width="1600" height="860" />
     </state>

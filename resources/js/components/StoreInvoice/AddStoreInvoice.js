@@ -97,15 +97,17 @@ class AddStoreInvoice extends Component {
             bank_amount: 0,
             totalExchange: 0,
             invoiceParams: "",
-            total_discount: 0
+            total_discount: 0,
+            editInvoice: []
+
             //----------------
         };
     }
 
     async componentDidMount() {
         const idx = this.props.match.params.idx;
-        const id = this.props.match.params.id;
-        console.log(idx);
+        // const id = this.props.match.params.id;
+        // console.log(idx);
         // console.log(this.state.cash_amount);
 
         this.setState({
@@ -142,6 +144,21 @@ class AddStoreInvoice extends Component {
             });
         }
     };
+
+    // GET  STORE INVOICE ---
+    editStoreInvoice = async () => {
+        const id = props.match.params.id;
+        const res = await axios.get(
+            defaultRouteLink + "/api/edit-storeInvoice/" + id
+        );
+        // const invoice = res.data.editinvoice;
+        this.setState({
+            editInvoice: res.data.editinvoice,
+            idx: res.data.editinvoice.type
+        });
+        // setLoading(false);
+    };
+
     // FOR GETTING PRODUCT WISE PRICE  ........
     getProductWisePriceAuto = async pid => {
         let productid = pid;

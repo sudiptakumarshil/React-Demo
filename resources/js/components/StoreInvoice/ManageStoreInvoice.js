@@ -2,71 +2,293 @@ import React, { Component, useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { defaultRouteLink } from "../../common/config";
 import ContentLoader, { Facebook, BulletList } from "react-content-loader";
+import Pagination from "react-js-pagination";
 const MyBulletListLoader = () => <BulletList />;
 
 function ManageStoreInvoice(props) {
-    const [StoreInvoiceList, setStoreInvoiceList] = useState([]);
-    const [loading, setLoading] = useState([true]);
+    // const [StoreInvoiceList, setStoreInvoiceList] = useState([]);
+    const [warehouseList, setwarehouseList] = useState([]);
+    const [vendorlist, setvendorlist] = useState([]);
+    const [bankdetailsList, setbankdetailsList] = useState([]);
+    const [storelist, setstorelist] = useState([]);
 
-    useEffect(() => {
-        fetchallInvoice();
-    }, []);
+    const data = {
+        invoice_code: 0,
+        store_id: 0,
+        warehouse_id: 0,
+        vendor_id: 0,
+        activePage: 1,
+        total_count: 0,
+        limit: 10,
+        start_page:1,
+        loading: true,
+        StoreInvoiceList: []
+    };
+    const [formData, setFormData] = useState(data);
 
-    // GET ALL STORE INVOICE ---
-    const fetchallInvoice = async () => {
-        const res = await axios.get(defaultRouteLink + "/api/all-storeInvoice");
-        setStoreInvoiceList(res.data.store_invoices);
-        setLoading(false);
-        // console.log(res.data.store_invoices);
+    // FOR GETTING WAREHOUSE WISE STORE
+    const get_warhousewiseStore = async wid => {
+        let ware_id = wid;
+        const response = await axios.get(
+            defaultRouteLink + "/api/get-warehouse/" + ware_id
+        );
+        console.log(response.data.store);
+        if (typeof response.data.store != "undefined") {
+            setstorelist(response.data.store);
+        } else {
+            setstorelist();
+        }
     };
 
-    if (loading) {
-        return (
-            <h2 className="text-center mt-3">
-                <i className="fas fa-spinner fa-spin fa-3x"></i>
-                <MyBulletListLoader />
-            </h2>
+    const WarehousehandleInput = event => {
+        const { name, files, value } = event.target;
+        setFormData(oldState => ({
+            ...oldState,
+            [name]: value
+        }));
+
+        get_warhousewiseStore(event.target.value);
+    };
+
+    const handleInput = event => {
+        const { name, files, value } = event.target;
+        setFormData(oldState => ({
+            ...oldState,
+            [name]: value
+        }));
+    };
+
+    // for getting warehouse ,store ,product , vendor ,customer,vat....
+    const fetchalldata = async () => {
+        const response = await axios.get(defaultRouteLink + "/api/all-data");
+        if (response.data.status === 200) {
+            setwarehouseList(response.data.warehouses),
+                setvendorlist(response.data.vendors),
+                setbankdetailsList(response.data.bankdetails);
+        }
+    };
+    const handlePagination=async(pageNumber)=>{
+
+        formData.start_page=pageNumber;
+        const res = await axios.post(
+            "/dbBackup/api/search-storeInvoice",
+            formData,
+
         );
+        // console.log(pageNumber);
+        if (res.data.count >= 0) {
+            setFormData(oldState => ({
+                ...oldState,
+                StoreInvoiceList: res.data.SearchInvoice,
+                total_count: res.data.count,
+                activePage: pageNumber
+            }));
+        } else {
+            setFormData(oldState => ({
+                ...oldState,
+                StoreInvoiceList: res.data.SearchInvoice,
+                activePage: pageNumber
+            }));
+        }
+
     }
+    const searchData = async (event, pageNumber = 1) => {
+        event.preventDefault();
+        handlePagination(1);
+
+        // if (res.data.status == 200) {
+        // setStoreInvoiceList(res.data.SearchInvoice);
+        // }
+    };
+
+    useEffect(() => {
+        // fetchallInvoice();
+        fetchalldata();
+    }, []);
+
+    // FETCH ALL WAREHOUSE DATA... LOOP
+    let warhouses = warehouseList.map((item, index) => {
+        return (
+            <option value={item.id} data-tokens="item.name">
+                {item.name}
+            </option>
+        );
+        setFormData(oldState => ({
+            ...oldState,
+            warehouse_id: item.id
+        }));
+    });
+    // FETCH ALL VENDOR DATA... LOOP
+    let vendors = vendorlist.map((item, index) => {
+        // if (warhouses.length === 0) return 1;
+
+        return (
+            <option value={item.id} data-tokens="item.name">
+                {" "}
+                {item.name}
+            </option>
+        );
+
+        setFormData(oldState => ({
+            ...oldState,
+            vendor_id: item.id // UPDATE STATE ..
+        }));
+    });
+    // FETCH ALL STORE DATA... LOOP
+    let stores = storelist.map((item, index) => {
+        return (
+            <option value={item.id} data-tokens="item.name">
+                {" "}
+                {item.store_name}
+            </option>
+        );
+
+        setFormData(oldState => ({
+            ...oldState,
+            store_id: parseInt(item.id) // UPDATE STATE ..
+        }));
+    });
 
     return (
         <div className="col-md-12">
             <div className="row">
                 <div className="col-md-12">
-                <div style={{ marginTop: 30 }}>
-                                <Link
-                                    to={`/dbBackup/new-purshase/${1}`}
-                                    type="button"
-                                    className="btn btn-danger"
-                                    style={{ marginLeft: 15 }}
+                    <div style={{ marginTop: 30 }}>
+                        <Link
+                            to={`/dbBackup/new-purshase/${1}`}
+                            type="button"
+                            className="btn btn-danger"
+                            style={{ marginLeft: 15 }}
+                        >
+                            New Purshase
+                        </Link>
+                        <Link
+                            to={`/dbBackup/purshase-return/${2}`}
+                            type="button"
+                            className="btn btn-info"
+                            style={{ marginLeft: 15 }}
+                        >
+                            Purshase Return{" "}
+                        </Link>
+                        <Link
+                            to={`/dbBackup/sale-return/${3}`}
+                            type="button"
+                            className="btn btn-success"
+                            style={{ marginLeft: 15 }}
+                        >
+                            Sale{" "}
+                        </Link>
+                        <Link
+                            to={`/dbBackup/sale/${4}`}
+                            type="button"
+                            className="btn btn-warning"
+                            style={{ marginLeft: 15 }}
+                        >
+                            Sale Return
+                        </Link>
+                    </div>
+
+                    <div className="col-md-12" style={{ marginTop: 30 }}>
+                        <form onSubmit={searchData}>
+                            <div className="row">
+                                <div className="col-md-3">
+                                    <label className="control-label">
+                                        Invoice Number{" "}
+                                    </label>
+                                    <div className="form-group">
+                                        <div className="input-group">
+                                            <input
+                                                type="number"
+                                                className="form-control"
+                                                placeholder="Invoice Number "
+                                                name="invoice_code"
+                                                onChange={handleInput}
+                                            ></input>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-md-3">
+                                    <label className="control-label">
+                                        Warehouse
+                                    </label>
+                                    <div className="form-group">
+                                        <div className="input-group">
+                                            <select
+                                                className="form-control"
+                                                data-live-search="true"
+                                                data-width="fit"
+                                                name="warehouse_id"
+                                                onChange={WarehousehandleInput}
+                                            >
+                                                <option value="0">
+                                                    Choose One
+                                                </option>
+                                                {warhouses}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="col-md-3">
+                                    <label className="control-label">
+                                        Vendor
+                                    </label>
+                                    <div className="form-group">
+                                        <div className="input-group">
+                                            <select
+                                                className="form-control"
+                                                data-live-search="true"
+                                                name="vendor_id"
+                                                onChange={handleInput}
+                                            >
+                                                <option selected value="0">
+                                                    Choose One
+                                                </option>
+                                                {vendors}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="col-md-3">
+                                    <label className="control-label">
+                                        Store
+                                    </label>
+                                    <div className="form-group">
+                                        <div className="input-group">
+                                            <select
+                                                className="form-control"
+                                                // className="selectpicker"
+                                                data-live-search="true"
+                                                // id="exampleFormControlSelect1"
+                                                name="store_id"
+                                                onChange={handleInput}
+                                            >
+                                                <option selected value="0">
+                                                    Choose One
+                                                </option>
+                                                {stores}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    style={{
+                                        marginLeft: 600,
+                                        marginTop: 30,
+                                        marginBottom: 40
+                                    }}
                                 >
-                                    New Purshase
-                                </Link>
-                                <Link
-                                    to={`/dbBackup/purshase-return/${2}`}
-                                    type="button"
-                                    className="btn btn-info"
-                                    style={{ marginLeft: 15 }}
-                                >
-                                    Purshase Return{" "}
-                                </Link>
-                                <Link
-                                    to={`/dbBackup/sale-return/${3}`}
-                                    type="button"
-                                    className="btn btn-success"
-                                    style={{ marginLeft: 15 }}
-                                >
-                                    Sale{" "}
-                                </Link>
-                                <Link
-                                    to={`/dbBackup/sale/${4}`}
-                                    type="button"
-                                    className="btn btn-warning"
-                                    style={{ marginLeft: 15 }}
-                                >
-                                    Sale Return
-                                </Link>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-danger"
+                                    >
+                                        Search
+                                    </button>
+                                </div>
                             </div>
+                        </form>
+                    </div>
 
                     <table
                         className="table table-bordered"
@@ -89,30 +311,29 @@ function ManageStoreInvoice(props) {
                                 <th>Bank Amount</th>
                                 <th>Bank</th>
                                 <th>Remarks</th>
-                                {/* <th>Action</th> */}
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {StoreInvoiceList.map(function(item, index) {
-                                    let type = ""
-                                    if(item.type == 1){
-                                          type = "New Purshase"
-                                    }
-                                    else if(item.type == 2){
-                                         type = "Purshase Return"
-                                    }
-                                    else if(item.type == 3){
-                                         type = "Sale"
-                                    }
-                                    else if(item.type == 4){
-                                         type = "Sale Return"
-                                    }
+                            {formData.StoreInvoiceList.map(function(
+                                item,
+                                index
+                            ) {
+                                let type = "";
+                                if (item.type == 1) {
+                                    type = "New Purshase";
+                                } else if (item.type == 2) {
+                                    type = "Purshase Return";
+                                } else if (item.type == 3) {
+                                    type = "Sale";
+                                } else if (item.type == 4) {
+                                    type = "Sale Return";
+                                }
 
                                 return (
-                                    <tr>
+                                    <tr key={item.id}>
                                         <td>{item.id}</td>
                                         <td>{item.invoice_number}</td>
-
                                         <td>{type}</td>
                                         <td>{item.vendor}</td>
                                         <td>{item.ware_name}</td>
@@ -126,18 +347,28 @@ function ManageStoreInvoice(props) {
                                         <td>{item.bank_amount}</td>
                                         <td>{item.bank_name}</td>
                                         <td>{item.remarks}</td>
-                                        {/* <td>
+                                        <td>
                                             <Link
-                                                to={`/dbBackup/edit-product/${item.id}`}
+                                                to={`/dbBackup/edit-storeinvoice/${item.id}/${item.type}`}
                                                 className="btn btn-primary"
                                                 type="button"
                                             >
                                                 Edit
                                             </Link>
-                                        </td> */}
+                                        </td>
                                     </tr>
                                 );
                             })}
+
+                            <div>
+                                <Pagination
+                                    activePage={formData.activePage}
+                                    pageRangeDisplayed={10}
+                                    itemsCountPerPage={formData.limit}
+                                    totalItemsCount={formData.total_count}
+                                    onChange={handlePagination}
+                                />
+                            </div>
                         </tbody>
                     </table>
                 </div>

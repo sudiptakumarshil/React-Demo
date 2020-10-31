@@ -7,8 +7,8 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeItem from "@material-ui/lab/TreeItem";
 import { data, map } from "jquery";
-import ContentLoader, { Facebook,BulletList  } from 'react-content-loader'
-const MyBulletListLoader = () => <BulletList />
+import ContentLoader, { Facebook, BulletList } from "react-content-loader";
+const MyBulletListLoader = () => <BulletList />;
 const EditProduct = props => {
     const [list, setList] = useState([]);
     // const [id, setid] = useState([]);
@@ -109,7 +109,6 @@ const EditProduct = props => {
         // });
 
         // console.log(products);
-
         // console.log(res.data.product);
     };
 

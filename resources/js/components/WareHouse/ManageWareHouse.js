@@ -3,23 +3,37 @@ import axios from "axios";
 import Warehouse from "./WarHouse";
 import AddWareHouse from "./addWareHouse";
 import { Link, Router } from "react-router-dom";
-
+import Pagination from "react-js-pagination";
 class ManageWareHouse extends Component {
-
     state = {
         warehouses: [],
-        loading: true
+        loading: true,
+        activePage: 1,
+        total_count:0,
+        limit:1,
     };
-    fetchallwarehouse = async () => {
-        const res = await axios.get("/dbBackup/api/all-warehouse");
+    fetchallwarehouse = async (pageNumber = 1) => {
+        console.log(pageNumber);
+        const res = await axios.get(
+            "/dbBackup/api/all-warehouse",
+            {
+                params:{
+                    start_page:pageNumber,
+                    limit:this.state.limit
+                }
+            }
+        );
 
         // if (res.data.status === 200) {
-            this.setState({ warehouses: res.data.warehouses});
-            this.setState({ loading: false });
-        // }
-        // console.log(res);
-    };
 
+        if(res.data.count >=0 ){
+            this.setState({ warehouses: res.data.warehouses,loading: false ,total_count:res.data.count,activePage:pageNumber});
+        }
+        else{
+            this.setState({ warehouses: res.data.warehouses,loading: false,activePage:pageNumber});
+        }
+
+    };
 
     componentDidMount = () => {
         this.fetchallwarehouse();
@@ -69,22 +83,6 @@ class ManageWareHouse extends Component {
                                             <td>Location</td>
                                             <td>Telephone</td>
                                             <td>Sequence</td>
-                                            {/* <td>Province No</td> */}
-                                            {/* <td>Resign Code</td>
-                                                <td>
-                                                    Wh Transfer Interface
-                                                    Account
-                                                </td>
-                                                <td>Item Activity</td>
-                                                <td>Default Cc Code</td>
-                                                <td>Account Name</td>
-                                                <td>Branch</td>
-                                                <td>Pricing Level</td>
-                                                <td>Global Location No</td>
-                                                <td>Longitude</td>
-                                                <td>Latitude</td>
-                                                <td>Address</td>
-                                                <td>Foreign Address</td> */}
                                             <td>Action</td>
                                         </tr>
                                     </thead>
@@ -92,6 +90,17 @@ class ManageWareHouse extends Component {
                                         <Warehouse
                                             warehouse={this.state.warehouses}
                                         />
+                                        <div>
+                                            <Pagination
+                                                activePage={
+                                                    this.state.activePage
+                                                }
+                                                pageRangeDisplayed={10}
+                                                itemsCountPerPage={this.state.limit}
+                                                totalItemsCount={this.state.total_count}
+                                                onChange={this.fetchallwarehouse.bind(this)}
+                                            />
+                                        </div>
                                     </tbody>
                                 </table>
                             </div>
