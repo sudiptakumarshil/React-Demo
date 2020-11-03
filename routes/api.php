@@ -119,6 +119,7 @@ Route::namespace ('frontend')->group(function () {
             Route::get('/edit-storeInvoice/{id}', 'StoreInvoiceController@edit_storeInvoice')->name("edit-storeInvoice");
             Route::patch('/update-storeInvoice/{id}', 'StoreInvoiceController@update_storeInvoice')->name("update-storeInvoice");
             Route::post('/search-storeInvoice', 'StoreInvoiceController@search_store_invoice')->name("search-storeInvoice");
+            Route::get('/delete-invoice/{id}', 'StoreInvoiceController@delete_store_invoice')->name("delete-invoice");
 
         });
     });

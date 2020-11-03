@@ -51,6 +51,7 @@ class AddStoreInvoice extends Component {
             warehouseList: [],
             invoicetransectionList: [],
             customerList: [],
+            invoice_id: 0,
             toggle: true,
             invoice_code: [],
             remarks: "",
@@ -99,7 +100,7 @@ class AddStoreInvoice extends Component {
             invoiceParams: "",
             total_discount: 0,
             editInvoice: []
-
+            // items_id:0
             //----------------
         };
     }
@@ -196,10 +197,12 @@ class AddStoreInvoice extends Component {
         let total_discount =
             parseFloat((this.state.gross_amount * event.target.value) / 100) +
             parseFloat(this.state.discountTaka);
+            let vat_amt=this.state.vat_value;
         this.calInvoiceAmt(
             event.target.name,
             event.target.value,
-            total_discount
+            total_discount,
+            vat_amt,
         );
         // this.setState({
         //     total_discount:total_discount
@@ -208,28 +211,25 @@ class AddStoreInvoice extends Component {
 
     // for vat calculation  ....................................
     handleVatInput = event => {
-        let vat_calculate = parseFloat(
-            (this.state.netPayable * event.target.value) / 100
+
+
+        let disountPercentFromGrossAmount =
+            parseFloat(
+                (this.state.gross_amount * this.state.final_discount_percent) /
+                    100
+            );
+        let total_discount =parseFloat(disountPercentFromGrossAmount) + parseFloat(this.state.discountTaka);
+        let totalamount = this.state.gross_amount - this.state.total_discount;
+        let vat_amt=event.target.value;
+
+        this.calInvoiceAmt(
+            event.target.name,
+            event.target.value,
+            total_discount,
+            vat_amt,
         );
-        // let netPayablePlusVatAmmount = parseFloat(
-        //     this.state.netPayable + vat_calculate
-        // );
-        // // console.log("Vat Count", vat_calculate);
-        // this.setState({
-        //     totalVat: vat_calculate,
-        //     // netPayable:netPayablePlusVatAmmount
 
-        // });
 
-        // this.setState({
-        //     totalVat: netPayablePlusVatAmmount
-        // });
-        // this.calInvoiceAmt(
-        //     event.target.name,
-        //     event.target.value,
-        //     vat_calculate,
-        //     netPayablePlusVatAmmount
-        // );
     };
 
     handleDiscountTaka = event => {
@@ -238,10 +238,12 @@ class AddStoreInvoice extends Component {
                 (this.state.gross_amount * this.state.final_discount_percent) /
                     100
             ) + parseFloat(event.target.value);
+        let vat_amt=this.state.vat_value;
         this.calInvoiceAmt(
             event.target.name,
             event.target.value,
-            disountPercentFromGrossAmount
+            disountPercentFromGrossAmount,
+            vat_amt,
         );
         this.setState({
             total_discount: disountPercentFromGrossAmount
@@ -249,9 +251,15 @@ class AddStoreInvoice extends Component {
     };
 
     calInvoiceAmt = (name, value, discount, vat_amt = 0) => {
+
+        let vat_calculate = parseFloat(
+            ((this.state.gross_amount - discount) * vat_amt) / 100
+        );
+
         this.setState({
             [name]: value,
-            netPayable: this.state.gross_amount - discount
+            netPayable: parseFloat(this.state.gross_amount - discount) + parseFloat(vat_calculate),
+            totalVat:vat_calculate,
         });
     };
 
@@ -411,6 +419,12 @@ class AddStoreInvoice extends Component {
                 this.state
             );
 
+            this.setState({
+                discount_taka: 0,
+                discount_percent: 0,
+                quantity: ""
+            });
+
             // dispatch({
             //     type:SET_REFRESH_STORETRANSECTION,
             //     updateinvoiceTransection:res.data
@@ -539,16 +553,6 @@ class AddStoreInvoice extends Component {
                     popup: "animate__animated animate__fadeOutUp"
                 }
             });
-        } else if (this.state.remarks == 0) {
-            Swal.fire({
-                title: "Remarks  Cannot Be Empty!!",
-                showClass: {
-                    popup: "animate__animated animate__fadeInDown"
-                },
-                hideClass: {
-                    popup: "animate__animated animate__fadeOutUp"
-                }
-            });
         } else {
             let check = confirm("are you sure ??");
             if (check) {
@@ -628,7 +632,8 @@ class AddStoreInvoice extends Component {
 
         const response = await axios.get(defaultRouteLink + "/api/all-data", {
             params: {
-                type: idx
+                type: idx,
+                invoice_id: 0
             }
         });
 
@@ -729,7 +734,7 @@ class AddStoreInvoice extends Component {
         }
     };
 
-    // FOR DELETE INVOICES
+    // FOR DELETE INVOICES TRANSECTION
     delinvoicetransec = async e => {
         const removeId = e.target.getAttribute("data-id");
         const response = await axios.get(
@@ -866,11 +871,12 @@ class AddStoreInvoice extends Component {
                 <tr>
                     <td>{index + 1}</td>
 
-                    {item.dp_name != null ? (
+                    {/* {item.dp_name != null ? (
                         <td>{item.dp_name}</td>
                     ) : (
                         <td>{item.cp_name}</td>
-                    )}
+                    )} */}
+                    <td>{item.product_name}</td>
 
                     <td>{item.quantity}</td>
                     <td>{item.price}</td>
@@ -933,6 +939,10 @@ class AddStoreInvoice extends Component {
                     </td>
                 </tr>
             );
+            this.setState({
+                discountTaka: item.discount_taka,
+                final_discount_percent: item.discount_percent
+            });
         });
 
         // FETCH ALL VAT DATA... LOOP
@@ -955,10 +965,10 @@ class AddStoreInvoice extends Component {
                     {item.vat_name}
                 </option>
             );
-            this.setState({
+           /* this.setState({
                 vat_id: item.id, // UPDATE STATE ........
                 vat_value: item.value // UPDATE STATE ........
-            });
+            });*/
         });
         // FETCH ALL BANK ACCOUNT LIST ... LOOP
         let allbanklist = this.state.bankdetailsList.map((item, index) => {
@@ -1048,6 +1058,14 @@ class AddStoreInvoice extends Component {
                                     style={{ marginLeft: 15 }}
                                 >
                                     Sale Return
+                                </Link>
+                                <Link
+                                    to="/dbBackup/manage-store-invoice"
+                                    type="button"
+                                    className="btn btn-dark"
+                                    style={{ marginLeft: 15 }}
+                                >
+                                    Manage Invoice
                                 </Link>
                             </div>
 
@@ -1358,13 +1376,6 @@ class AddStoreInvoice extends Component {
                                                                                     .handleInput
                                                                             }
                                                                         >
-                                                                            <option
-                                                                                selected
-                                                                                value="0"
-                                                                            >
-                                                                                Zero
-                                                                                Vat
-                                                                            </option>
                                                                             {
                                                                                 allvat
                                                                             }
@@ -1536,14 +1547,7 @@ class AddStoreInvoice extends Component {
                                                                                 this
                                                                                     .handleInput
                                                                             }
-                                                                        >
-                                                                            <option
-                                                                                selected
-                                                                                value="0"
-                                                                            >
-                                                                                Zero
-                                                                                Vat
-                                                                            </option>
+                                                                        >   <option>Select One</option>
                                                                             {
                                                                                 allvat
                                                                             }
@@ -1715,6 +1719,7 @@ class AddStoreInvoice extends Component {
                                                                     </label>
                                                                     <input
                                                                         type="text"
+                                                                        readOnly
                                                                         className="form-control"
                                                                         name=""
                                                                         value={
@@ -1763,13 +1768,6 @@ class AddStoreInvoice extends Component {
                                                                                 .handleVatInput
                                                                         }
                                                                     >
-                                                                        <option
-                                                                            selected
-                                                                            value="0"
-                                                                        >
-                                                                            Zero
-                                                                            Vat
-                                                                        </option>
                                                                         {
                                                                             allvatvalue
                                                                         }
@@ -1783,6 +1781,7 @@ class AddStoreInvoice extends Component {
                                                                     </label>
                                                                     <input
                                                                         type="text"
+                                                                        readOnly
                                                                         className="form-control"
                                                                         value={
                                                                             this
@@ -2045,7 +2044,6 @@ class AddStoreInvoice extends Component {
                                                                     <select
                                                                         className="form-control"
                                                                         data-live-search="true"
-                                                                        disabled
                                                                         name="cashamount_id"
                                                                         value={
                                                                             this
@@ -2078,7 +2076,6 @@ class AddStoreInvoice extends Component {
                                                                         type="number"
                                                                         className="form-control"
                                                                         name="cash_amount"
-                                                                        disabled
                                                                         value={
                                                                             this
                                                                                 .state
@@ -2099,7 +2096,6 @@ class AddStoreInvoice extends Component {
                                                                     <select
                                                                         className="form-control"
                                                                         data-live-search="true"
-                                                                        disabled
                                                                         name="bankdetails_id"
                                                                         value={
                                                                             this
@@ -2131,7 +2127,6 @@ class AddStoreInvoice extends Component {
                                                                     <input
                                                                         type="number"
                                                                         className="form-control"
-                                                                        disabled
                                                                         name="bank_amount"
                                                                         value={
                                                                             this
@@ -2150,7 +2145,6 @@ class AddStoreInvoice extends Component {
                                                                         Remarks
                                                                     </label>
                                                                     <textarea
-                                                                        disabled
                                                                         className="form-control"
                                                                         name="remarks"
                                                                         value={

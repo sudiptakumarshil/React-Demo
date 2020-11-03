@@ -4,7 +4,16 @@ import EditInvoiceTransec from "../modal/EditInvoiceTransectionModal";
 import ContentLoader, { Facebook, BulletList } from "react-content-loader";
 import { useDispatch, useSelector } from "react-redux";
 import { connect } from "react-redux";
-
+import { Typeahead } from "react-bootstrap-typeahead";
+import "react-bootstrap-typeahead/css/Typeahead.css";
+import TextField from "@material-ui/core/TextField";
+import {
+    Form,
+    Button,
+    FormGroup,
+    FormControl,
+    ControlLabel
+} from "react-bootstrap";
 import { compose } from "redux";
 import {
     MemoryRouter,
@@ -56,7 +65,7 @@ class EditStoreInvoice extends Component {
             gross_amount: 0,
             discount_taka: 0,
             discount_percent: 0,
-            final_discount_percent: "",
+            final_discount_percent: 0,
             cash_amount: 0,
             bank_account: "",
             bank_id: 0,
@@ -79,7 +88,6 @@ class EditStoreInvoice extends Component {
             time: "",
             bankdetails_id: 0,
             cashamount_id: "",
-            // ----------------
             netAmount: 0,
             totalpriceQuantity: 0,
             totalpercent: 0,
@@ -91,9 +99,8 @@ class EditStoreInvoice extends Component {
             totalExchange: 0,
             invoiceParams: "",
             total_discount: 0,
-            editInvoice: []
-
-            //----------------
+            editInvoice: [],
+            invoice_id: 0
         };
     }
 
@@ -102,9 +109,12 @@ class EditStoreInvoice extends Component {
         const res = await axios.get(
             defaultRouteLink + "/api/edit-storeInvoice/" + id
         );
+
         const invoice = res.data.editinvoice;
+
         this.setState({
-            discount_taka: invoice.discount_taka,
+            discountTaka: invoice.discount_taka,
+            // discount_percent: invoice.discount_percent,
             final_discount_percent: invoice.discount_percent,
             cash_amount: invoice.cash_amount,
             bank_amount: invoice.bank_amount,
@@ -116,7 +126,11 @@ class EditStoreInvoice extends Component {
             date: invoice.date,
             gross_amount: invoice.gross_amount,
             cashamount_id: invoice.cash_id,
-            bankdetails_id: invoice.bank_id
+            bankdetails_id: invoice.bank_id,
+            store_id: invoice.store_id,
+            storelist: res.data.store,
+            invoice_id: this.props.match.params.id
+            // invoice_id:res.data.invwisetrans.invoice_id
         });
 
         const isLoginExit = getCookieKeyInfo(getAccessTokenName);
@@ -126,8 +140,8 @@ class EditStoreInvoice extends Component {
         // console.log("user id=" + isLoginExit);
         this.fetchalldata();
         // this.invoiceNumbers();
-        this.getinvoiceNumber();
-        this.editStoreInvoice();
+        // this.getinvoiceNumber();
+        // this.editStoreInvoice();
     }
 
     // FOR GETTING WAREHOUSE WISE STORE
@@ -137,6 +151,7 @@ class EditStoreInvoice extends Component {
         const response = await axios.get(
             defaultRouteLink + "/api/get-warehouse/" + ware_id
         );
+
         console.log(response.data.store);
         if (typeof response.data.store != "undefined") {
             this.setState({
@@ -170,9 +185,18 @@ class EditStoreInvoice extends Component {
             });
         }
     };
-    priceHandleInput = () => {
-        this.setState({ [event.target.name]: event.target.value });
-        this.getProductWisePriceAuto(event.target.value);
+    priceHandleInput = e => {
+        // console.log(e[0].id);
+        if (typeof e[0] != "undefined") {
+            this.setState({ product_id: e[0].id });
+        }
+        console.log(e[0]); //true
+        if (typeof e[0] != "undefined") {
+            //var arr=e.isArray(e);
+            //console.log("log"+arr);
+            var id = e[0].id;
+            this.getProductWisePriceAuto(id);
+        }
     };
 
     WarehousehandleInput = event => {
@@ -182,65 +206,137 @@ class EditStoreInvoice extends Component {
 
     //
 
+    // discountPercentHandleInput = event => {
+    //     let total_discount =
+    //         parseFloat((this.state.gross_amount * event.target.value) / 100) +
+    //         parseFloat(this.state.discountTaka);
+    //     this.calInvoiceAmt(
+    //         event.target.name,
+    //         event.target.value,
+    //         total_discount
+    //     );
+    // };
     discountPercentHandleInput = event => {
         let total_discount =
             parseFloat((this.state.gross_amount * event.target.value) / 100) +
             parseFloat(this.state.discountTaka);
+        let vat_amt = this.state.vat_value;
         this.calInvoiceAmt(
             event.target.name,
             event.target.value,
-            total_discount
+            total_discount,
+            vat_amt
         );
+        // this.setState({
+        //     total_discount:total_discount
+        // })
     };
 
     // for vat calculation  ....................................
     handleVatInput = event => {
-        let vat_calculate = parseFloat(
-            (this.state.netPayable * event.target.value) / 100
+        let disountPercentFromGrossAmount = parseFloat(
+            (this.state.gross_amount * this.state.final_discount_percent) / 100
         );
-        // let netPayablePlusVatAmmount = parseFloat(
-        //     this.state.netPayable + vat_calculate
-        // );
-        // // console.log("Vat Count", vat_calculate);
-        // this.setState({
-        //     totalVat: vat_calculate,
-        //     // netPayable:netPayablePlusVatAmmount
+        let total_discount =
+            parseFloat(disountPercentFromGrossAmount) +
+            parseFloat(this.state.discountTaka);
+        let totalamount = this.state.gross_amount - this.state.total_discount;
+        let vat_amt = event.target.value;
 
-        // });
-
-        // this.setState({
-        //     totalVat: netPayablePlusVatAmmount
-        // });
-        // this.calInvoiceAmt(
-        //     event.target.name,
-        //     event.target.value,
-        //     vat_calculate,
-        //     netPayablePlusVatAmmount
-        // );
+        this.calInvoiceAmt(
+            event.target.name,
+            event.target.value,
+            total_discount,
+            vat_amt
+        );
     };
 
+    // handleDiscountTaka = event => {
+    //     let disountPercentFromGrossAmount =
+    //         parseFloat(
+    //             (this.state.gross_amount * this.state.final_discount_percent) /
+    //                 100
+    //         ) + parseFloat(event.target.value);
+    //     this.calInvoiceAmt(
+    //         event.target.name,
+    //         event.target.value,
+    //         disountPercentFromGrossAmount
+    //     );
+    //     this.setState({
+    //         total_discount: disountPercentFromGrossAmount
+    //     });
+    // };
     handleDiscountTaka = event => {
         let disountPercentFromGrossAmount =
             parseFloat(
                 (this.state.gross_amount * this.state.final_discount_percent) /
                     100
             ) + parseFloat(event.target.value);
+        let vat_amt = this.state.vat_value;
         this.calInvoiceAmt(
             event.target.name,
             event.target.value,
-            disountPercentFromGrossAmount
+            disountPercentFromGrossAmount,
+            vat_amt
         );
         this.setState({
             total_discount: disountPercentFromGrossAmount
         });
     };
 
+    // calInvoiceAmt = (name, value, discount, vat_amt = 0) => {
+    //     this.setState({
+    //         [name]: value,
+    //         netPayable: this.state.gross_amount - discount
+    //     });
+    // };
     calInvoiceAmt = (name, value, discount, vat_amt = 0) => {
+        let vat_calculate = parseFloat(
+            ((this.state.gross_amount - discount) * vat_amt) / 100
+        );
+
         this.setState({
             [name]: value,
-            netPayable: this.state.gross_amount - discount
+            netPayable:
+                parseFloat(this.state.gross_amount - discount) +
+                parseFloat(vat_calculate),
+            totalVat: vat_calculate
         });
     };
+
+    // handleInput = event => {
+    //     //console.log("cash Amount",{[event.target.cash_amount]: event.target.value});
+    //     let total_rev =
+    //         parseFloat(this.state.cash_amount) +
+    //         parseFloat(this.state.bank_amount);
+    //     if (event.target.name == "cash_amount") {
+    //         total_rev =
+    //             parseFloat(event.target.value) +
+    //             parseFloat(this.state.bank_amount);
+    //     }
+    //     if (event.target.name == "bank_amount") {
+    //         // console.log("exchange2="+this.state.cash_amount+","+event.target.value+"=t="+total_rev);
+    //         total_rev =
+    //             parseFloat(event.target.value) +
+    //             parseFloat(this.state.cash_amount);
+    //     }
+
+    //     console.log(
+    //         "exchange=" +
+    //             this.state.netPayable +
+    //             "," +
+    //             event.target.value +
+    //             "=t=" +
+    //             total_rev
+    //     );
+    //     let exchange = this.state.netPayable - total_rev;
+    //     this.setState({
+    //         totalExchange: exchange,
+    //         [event.target.name]: event.target.value
+    //     });
+    // };
+
+    // save invoice transection .......
 
     handleInput = event => {
         //console.log("cash Amount",{[event.target.cash_amount]: event.target.value});
@@ -273,8 +369,6 @@ class EditStoreInvoice extends Component {
             [event.target.name]: event.target.value
         });
     };
-
-    // save invoice transection .......
 
     saveinvoiceTransection = async event => {
         event.preventDefault();
@@ -580,10 +674,12 @@ class EditStoreInvoice extends Component {
     // for getting warehouse ,store ,product , vendor ,customer,vat....
     fetchalldata = async () => {
         const idx = this.props.match.params.idx;
-
+        const invoice_id = this.props.match.params.id;
+        // const  invoice_id = this.state.invoice_id;
         const response = await axios.get(defaultRouteLink + "/api/all-data", {
             params: {
-                type: idx
+                type: idx,
+                invoice_id: invoice_id
             }
         });
 
@@ -642,7 +738,7 @@ class EditStoreInvoice extends Component {
                 totalpriceQuantity: priceQuantity,
                 netAmount: netAmount,
                 // gross_amount: grossAmount,
-                discountTaka: discountTaka,
+                // discountTaka: discountTaka,
                 totalVat: totalVat,
                 netPayable: netPayable,
                 vat: vat
@@ -707,6 +803,28 @@ class EditStoreInvoice extends Component {
         // };
     };
 
+    // for react live search ...
+    filterBy = (option, state) => {
+        if (state.selected.length) {
+            return true;
+        }
+        return (
+            option.label.toLowerCase().indexOf(state.text.toLowerCase()) > -1
+        );
+    };
+
+    ToggleButton = ({ isOpen, onClick }) => (
+        <button
+            className="toggle-button"
+            onClick={onClick}
+            onMouseDown={e => {
+                // Prevent input from losing focus.
+                e.preventDefault();
+            }}
+        ></button>
+    );
+
+    // end for live search
     render() {
         // console.log("product lsit="+this.state.data_p_list);
         // FETCH ALL WAREHOUSE DATA... LOOP
@@ -746,7 +864,11 @@ class EditStoreInvoice extends Component {
         // FETCH ALL STORE DATA... LOOP
         let stores = this.state.storelist.map((item, index) => {
             return (
-                <option value={item.id} data-tokens="item.name">
+                <option
+                    value={item.id}
+                    selected={this.state.store_id == item.id}
+                    data-tokens="item.name"
+                >
                     {" "}
                     {item.store_name}
                 </option>
@@ -758,17 +880,17 @@ class EditStoreInvoice extends Component {
         });
         // this.props.addSearchProductList(response.data.product_list);
         // fetch all product data ......
-        let products = this.state.productList.map((item, index) => {
-            return (
-                <option value={item.id} data-tokens="item.product_name">
-                    {item.product_name}
-                </option>
-            );
-            this.setState({
-                product_id: item.id, // UPDATE STATE ........
-                price: item.selling_price
-            });
-        });
+        // let products = this.state.productList.map((item, index) => {
+        //     return (
+        //         <option value={item.id} data-tokens="item.product_name">
+        //             {item.product_name}
+        //         </option>
+        //     );
+        //     this.setState({
+        //         product_id: item.id, // UPDATE STATE ........
+        //         price: item.selling_price
+        //     });
+        // });
 
         let priceQuantity = 0;
         let discountpercent = 0;
@@ -786,12 +908,13 @@ class EditStoreInvoice extends Component {
                 <tr>
                     <td>{index + 1}</td>
 
-                    {item.dp_name != null ? (
+                    {/* {item.dp_name != null ? (
                         <td>{item.dp_name}</td>
                     ) : (
                         <td>{item.cp_name}</td>
-                    )}
+                    )} */}
 
+                    <td>{item.product_name}</td>
                     <td>{item.quantity}</td>
                     <td>{item.price}</td>
                     <td>{(priceQuantity = item.price * item.quantity)}</td>
@@ -977,6 +1100,14 @@ class EditStoreInvoice extends Component {
                                 >
                                     Sale Return
                                 </Link>
+                                <Link
+                                    to="/dbBackup/manage-store-invoice"
+                                    type="button"
+                                    className="btn btn-dark"
+                                    style={{ marginLeft: 15 }}
+                                >
+                                    Manage Invoice
+                                </Link>
                             </div>
 
                             <h2 className="text-center">Transaction</h2>
@@ -1019,7 +1150,7 @@ class EditStoreInvoice extends Component {
                                                                 Warehouse
                                                             </label>
                                                             <select
-                                                                // className="form-control selectpicker"
+                                                                className="form-control"
                                                                 className="form-control"
                                                                 data-live-search="true"
                                                                 data-width="fit"
@@ -1044,8 +1175,6 @@ class EditStoreInvoice extends Component {
                                                                 </label>
                                                                 <select
                                                                     className="form-control"
-                                                                    // id="exampleFormControlSelect1"
-                                                                    // className="selectpicker"
                                                                     data-live-search="true"
                                                                     value={
                                                                         this
@@ -1124,9 +1253,7 @@ class EditStoreInvoice extends Component {
                                                             </label>
                                                             <select
                                                                 className="form-control"
-                                                                // className="selectpicker"
                                                                 data-live-search="true"
-                                                                // id="exampleFormControlSelect1"
                                                                 name="store_id"
                                                                 value={
                                                                     this.state
@@ -1160,10 +1287,10 @@ class EditStoreInvoice extends Component {
                                                                 <div className="row">
                                                                     <div className="col-md-3">
                                                                         <label className="control-label"></label>
-                                                                        <select
-                                                                            className="form-control"
-                                                                            data-live-search="true"
+                                                                        {/* <select
+                                                                            // className="form-control"
                                                                             name="product_id"
+                                                                            className="form-control select2"
                                                                             value={
                                                                                 this
                                                                                     .state
@@ -1174,6 +1301,7 @@ class EditStoreInvoice extends Component {
                                                                                     .priceHandleInput
                                                                             }
                                                                         >
+
                                                                             <option
                                                                                 selected
                                                                                 value="0"
@@ -1183,8 +1311,54 @@ class EditStoreInvoice extends Component {
                                                                             </option>
                                                                             {
                                                                                 products
+                                                                                // TypeaheadExample
                                                                             }
+
                                                                         </select>
+ */}
+                                                                        <Typeahead
+                                                                            id="labelkey-example"
+                                                                            labelKey={products =>
+                                                                                `${products.product_name}`
+                                                                            }
+                                                                            key={product =>
+                                                                                `${product.id}`
+                                                                            }
+                                                                            valueKey={product =>
+                                                                                `${product.id}`
+                                                                            }
+                                                                            isValid={product =>
+                                                                                `${product.id}`
+                                                                            }
+                                                                            options={
+                                                                                this
+                                                                                    .state
+                                                                                    .productList
+                                                                            }
+                                                                            value={
+                                                                                this
+                                                                                    .state
+                                                                                    .product_id
+                                                                            }
+                                                                            name="product_id"
+                                                                            onChange={e =>
+                                                                                this.priceHandleInput(
+                                                                                    e
+                                                                                )
+                                                                            }
+                                                                            placeholder="Select your product"
+                                                                        />
+                                                                        {/* // let products = this.state.productList.map((item, index) => {
+                                                                            //     return (
+                                                                            //         <option value={item.id} data-tokens="item.product_name">
+                                                                            //             {item.product_name}
+                                                                            //         </option>
+                                                                            //     );
+                                                                            //     this.setState({
+                                                                            //         product_id: item.id, // UPDATE STATE ........
+                                                                            //         price: item.selling_price
+                                                                            //     });
+                                                                            // }); */}
                                                                     </div>
 
                                                                     {this.state
@@ -1259,8 +1433,7 @@ class EditStoreInvoice extends Component {
                                                                             value={
                                                                                 this
                                                                                     .state
-                                                                                    .editInvoice
-                                                                                    .disxc
+                                                                                    .discount_taka
                                                                             }
                                                                             onChange={
                                                                                 this
@@ -1287,13 +1460,6 @@ class EditStoreInvoice extends Component {
                                                                                     .handleInput
                                                                             }
                                                                         >
-                                                                            <option
-                                                                                selected
-                                                                                value="0"
-                                                                            >
-                                                                                Zero
-                                                                                Vat
-                                                                            </option>
                                                                             {
                                                                                 allvat
                                                                             }
@@ -1466,13 +1632,6 @@ class EditStoreInvoice extends Component {
                                                                                     .handleInput
                                                                             }
                                                                         >
-                                                                            <option
-                                                                                selected
-                                                                                value="0"
-                                                                            >
-                                                                                Zero
-                                                                                Vat
-                                                                            </option>
                                                                             {
                                                                                 allvat
                                                                             }
@@ -1692,13 +1851,6 @@ class EditStoreInvoice extends Component {
                                                                                 .handleVatInput
                                                                         }
                                                                     >
-                                                                        <option
-                                                                            selected
-                                                                            value="0"
-                                                                        >
-                                                                            Zero
-                                                                            Vat
-                                                                        </option>
                                                                         {
                                                                             allvatvalue
                                                                         }
@@ -1713,6 +1865,7 @@ class EditStoreInvoice extends Component {
                                                                     <input
                                                                         type="text"
                                                                         className="form-control"
+                                                                        readOnly
                                                                         value={
                                                                             this
                                                                                 .state
@@ -1920,6 +2073,11 @@ class EditStoreInvoice extends Component {
                                                                         disabled
                                                                         className="form-control"
                                                                         name="final_discount_percent"
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .final_discount_percent
+                                                                        }
                                                                         onChange={
                                                                             this
                                                                                 .handleInput
@@ -1974,7 +2132,6 @@ class EditStoreInvoice extends Component {
                                                                     <select
                                                                         className="form-control"
                                                                         data-live-search="true"
-                                                                        disabled
                                                                         name="cashamount_id"
                                                                         value={
                                                                             this
@@ -2007,7 +2164,6 @@ class EditStoreInvoice extends Component {
                                                                         type="number"
                                                                         className="form-control"
                                                                         name="cash_amount"
-                                                                        disabled
                                                                         value={
                                                                             this
                                                                                 .state
@@ -2028,7 +2184,6 @@ class EditStoreInvoice extends Component {
                                                                     <select
                                                                         className="form-control"
                                                                         data-live-search="true"
-                                                                        disabled
                                                                         name="bankdetails_id"
                                                                         value={
                                                                             this
@@ -2060,7 +2215,6 @@ class EditStoreInvoice extends Component {
                                                                     <input
                                                                         type="number"
                                                                         className="form-control"
-                                                                        disabled
                                                                         name="bank_amount"
                                                                         value={
                                                                             this
@@ -2079,7 +2233,6 @@ class EditStoreInvoice extends Component {
                                                                         Remarks
                                                                     </label>
                                                                     <textarea
-                                                                        disabled
                                                                         className="form-control"
                                                                         name="remarks"
                                                                         value={

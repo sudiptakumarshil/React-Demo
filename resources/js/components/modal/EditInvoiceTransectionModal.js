@@ -22,29 +22,26 @@ const EditInvoiceTransectionModal = props => {
     const [vendorlist, setvendorlist] = useState([]);
     const [storelist, setstorelist] = useState([]);
     const [productList, setproductList] = useState([]);
+    const [invoiceParams, setinvoiceParams] = useState("");
+    // invoiceParams: response.data.invoiceParams
     const dataObj = {};
     const [formData, setFormData] = useState(dataObj);
     const dispatch = useDispatch();
     let i_id = props.modalData.id;
-    let item_id = props.modalData.d_id;
-    // const [product_id, setproduct_id] = useState([0]);
-    // console.log("tester", productid);
-
-    //console.log("test fdata55=" + JSON.stringify(formData));
-    // const i_id = props.modalData.id;
-    // console.log(props.modalData.quantity+","+JSON.stringify(formData));
+    let item_id = props.modalData.item_id;
+    // let c_id = props.modalData.c_id;
 
     const alldata = async () => {
-        const response = await axios.get(defaultRouteLink + "/api/all-data");
-        setproductList(response.data.products);
-    };
+        const idx = props.match.params.idx;
 
-    // setFormData(oldState => ({
-    //     ...oldState,
-    //     i_id: props.modalData.id,
-    //     price: props.modalData.price,
-    //     quantity: props.modalData.quantity
-    // }));
+        const response = await axios.get(defaultRouteLink + "/api/all-data", {
+            params: {
+                type: idx
+            }
+        });
+        setproductList(response.data.products);
+        setinvoiceParams(response.data.invoiceParams);
+    };
 
     const updateinvoiceTransection = async event => {
         event.preventDefault();
@@ -52,9 +49,7 @@ const EditInvoiceTransectionModal = props => {
             `/dbBackup/api/update-transecinvoice/${i_id}`,
             formData
         );
-
-        // props.action
-        //  console.log("log333="+JSON.stringify(res.data));
+        // for redux    .........  //
         dispatch({
             type: SET_REFRESH_STORETRANSECTION,
             updateinvoiceTransection: res.data.products
@@ -86,6 +81,10 @@ const EditInvoiceTransectionModal = props => {
     const handleProductPrice = event => {
         const { name, value } = event.target;
         getProductWisePriceAuto(event.target.value);
+        setFormData(oldState => ({
+            ...oldState,
+            [name]: value
+        }));
     };
 
     const handleInputs = event => {
@@ -113,42 +112,10 @@ const EditInvoiceTransectionModal = props => {
         const idx = props.match.params.idx;
         setFormData(oldState => ({
             ...oldState,
-            idx: idx
+            idx: idx,
+            product_id: item_id
         }));
-
     }, [props]);
-
-    // GET ALL WAREHOUSE LIST FROM (ware_house_details) TABLE
-
-    const warhouses = warehouselist.map(function(item, index) {
-        return <option value={item.id}> {item.name}</option>;
-
-        setFormData(oldState => ({
-            ...oldState,
-            warehouse_id: item.id
-        }));
-    });
-
-    // GET ALL VENDOR LIST
-
-    const vendors = vendorlist.map(function(item, index) {
-        return <option value={item.id}> {item.name}</option>;
-
-        setFormData(oldState => ({
-            ...oldState,
-            vendor_id: item.id
-        }));
-    });
-    // GET ALL STORE LIST
-
-    const stores = storelist.map(function(item, index) {
-        return <option value={item.id}> {item.store_name}</option>;
-
-        setFormData(oldState => ({
-            ...oldState,
-            store_id: item.id
-        }));
-    });
 
     // GET ALL PRODUCT LIST
 
@@ -159,13 +126,8 @@ const EditInvoiceTransectionModal = props => {
                 {item.product_name}
             </option>
         );
-        // console.log(item.id);
-        setFormData(oldState => ({
-            ...oldState,
-            product_id:item.id
-        }));
-        // setproduct_id(item.id);
     });
+
     if (props.show == true) {
         <MyBulletListLoader />;
     }
@@ -202,122 +164,250 @@ const EditInvoiceTransectionModal = props => {
                                         <form
                                             onSubmit={updateinvoiceTransection}
                                         >
-                                            <div class="card text-center mt-5">
-                                                <div class="card-header">
-                                                    Default Store
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="container">
-                                                        <div class="row">
-                                                            <div className="col-md-3">
-                                                                <label className="control-label">
-                                                                    Product Name
-                                                                </label>
-                                                                <select
-                                                                    className="form-control"
-                                                                    data-live-search="true"
-                                                                    name="product_id"
-                                                                    // value={
-                                                                    //     formData.product_id
-                                                                    // }
-                                                                    onChange={
-                                                                        handleProductPrice
-                                                                    }
+                                            {invoiceParams.discount_method ==
+                                            1 ? (
+                                                <div class="card text-center mt-5">
+                                                    <div class="card-header">
+                                                        Default Store
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="container">
+                                                            <div class="row">
+                                                                <div className="col-md-3">
+                                                                    <label className="control-label">
+                                                                        Product
+                                                                        Name
+                                                                    </label>
+                                                                    <select
+                                                                        className="form-control"
+                                                                        data-live-search="true"
+                                                                        name="product_id"
+                                                                        value={
+                                                                            formData.product_id
+                                                                        }
+                                                                        onChange={
+                                                                            handleProductPrice
+                                                                        }
+                                                                    >
+                                                                        <option value="0">
+                                                                            Choose
+                                                                            One
+                                                                        </option>
+                                                                        {
+                                                                            products
+                                                                        }
+                                                                    </select>
+                                                                </div>
+
+                                                                <div className="col-md-3">
+                                                                    <label className="control-label">
+                                                                        Quantity
+                                                                    </label>
+                                                                    <input
+                                                                        type="number"
+                                                                        onChange={
+                                                                            handleInputs
+                                                                        }
+                                                                        name="quantity"
+                                                                        value={
+                                                                            formData.quantity
+                                                                        }
+                                                                        className="form-control"
+                                                                        placeholder="Quantity"
+                                                                    ></input>
+                                                                </div>
+                                                                <div className="col-md-3">
+                                                                    <label className="control-label">
+                                                                        Price
+                                                                    </label>
+                                                                    <input
+                                                                        type="number"
+                                                                        name="price"
+                                                                        onChange={
+                                                                            handleInputs
+                                                                        }
+                                                                        value={
+                                                                            // props
+                                                                            //     .modalData
+                                                                            //     .price
+                                                                            formData.price
+                                                                        }
+                                                                        className="form-control"
+                                                                        placeholder="Price"
+                                                                    ></input>
+                                                                </div>
+
+                                                                <div className="col-md-3">
+                                                                    <label className="control-label">
+                                                                        Discount
+                                                                        Taka
+                                                                    </label>
+                                                                    <input
+                                                                        type="number"
+                                                                        name="discount_taka"
+                                                                        readOnly
+                                                                        onChange={
+                                                                            handleInputs
+                                                                        }
+                                                                        value={
+                                                                            formData.discount_taka
+                                                                        }
+                                                                        className="form-control"
+                                                                        placeholder="Discount Taka"
+                                                                    ></input>
+                                                                </div>
+                                                                <div className="col-md-3">
+                                                                    <label className="control-label">
+                                                                        Discount
+                                                                        Percent
+                                                                    </label>
+                                                                    <input
+                                                                        type="number"
+                                                                        readOnly
+                                                                        name="discount_percent"
+                                                                        onChange={
+                                                                            handleInputs
+                                                                        }
+                                                                        value={
+                                                                            formData.discount_percent
+                                                                        }
+                                                                        className="form-control"
+                                                                        placeholder="Discount Percent"
+                                                                    ></input>
+                                                                </div>
+                                                                <button
+                                                                    type="submit"
+                                                                    class="btn btn-danger"
                                                                 >
-                                                                    <option value="0">
-                                                                        Choose
-                                                                        One
-                                                                    </option>
-                                                                    {products}
-                                                                </select>
+                                                                    Submit
+                                                                </button>
                                                             </div>
-
-                                                            <div className="col-md-3">
-                                                                <label className="control-label">
-                                                                    Quantity
-                                                                </label>
-                                                                <input
-                                                                    type="number"
-                                                                    onChange={
-                                                                        handleInputs
-                                                                    }
-                                                                    name="quantity"
-                                                                    value={
-                                                                        formData.quantity
-                                                                    }
-                                                                    className="form-control"
-                                                                    placeholder="Quantity"
-                                                                ></input>
-                                                            </div>
-                                                            <div className="col-md-3">
-                                                                <label className="control-label">
-                                                                    Price
-                                                                </label>
-                                                                <input
-                                                                    type="number"
-                                                                    name="price"
-                                                                    onChange={
-                                                                        handleInputs
-                                                                    }
-                                                                    value={
-                                                                        // props
-                                                                        //     .modalData
-                                                                        //     .price
-                                                                        formData.price
-                                                                    }
-                                                                    className="form-control"
-                                                                    placeholder="Price"
-                                                                ></input>
-                                                            </div>
-
-                                                            <div className="col-md-3">
-                                                                <label className="control-label">
-                                                                    Discount
-                                                                    Taka
-                                                                </label>
-                                                                <input
-                                                                    type="number"
-                                                                    name="discount_taka"
-                                                                    onChange={
-                                                                        handleInputs
-                                                                    }
-                                                                    value={
-                                                                        formData.discount_taka
-                                                                    }
-                                                                    className="form-control"
-                                                                    placeholder="Discount Taka"
-                                                                ></input>
-                                                            </div>
-                                                            <div className="col-md-3">
-                                                                <label className="control-label">
-                                                                    Discount
-                                                                    Percent
-                                                                </label>
-                                                                <input
-                                                                    type="number"
-                                                                    name="discount_percent"
-                                                                    onChange={
-                                                                        handleInputs
-                                                                    }
-                                                                    value={
-                                                                        formData.discount_percent
-                                                                    }
-                                                                    className="form-control"
-                                                                    placeholder="Discount Percent"
-                                                                ></input>
-                                                            </div>
-                                                            <button
-                                                                type="submit"
-                                                                class="btn btn-danger"
-                                                            >
-                                                                Submit
-                                                            </button>
                                                         </div>
                                                     </div>
-                                                </div>
 
-                                                <div class="card-footer text-muted"></div>
-                                            </div>
+                                                    <div class="card-footer text-muted"></div>
+                                                </div>
+                                            ) : (
+                                                <div class="card text-center mt-5">
+                                                    <div class="card-header">
+                                                        Default Store
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="container">
+                                                            <div class="row">
+                                                                <div className="col-md-3">
+                                                                    <label className="control-label">
+                                                                        Product
+                                                                        Name
+                                                                    </label>
+                                                                    <select
+                                                                        className="form-control"
+                                                                        data-live-search="true"
+                                                                        name="product_id"
+                                                                        value={
+                                                                            formData.product_id
+                                                                        }
+                                                                        onChange={
+                                                                            handleProductPrice
+                                                                        }
+                                                                    >
+                                                                        <option value="0">
+                                                                            Choose
+                                                                            One
+                                                                        </option>
+                                                                        {
+                                                                            products
+                                                                        }
+                                                                    </select>
+                                                                </div>
+
+                                                                <div className="col-md-3">
+                                                                    <label className="control-label">
+                                                                        Quantity
+                                                                    </label>
+                                                                    <input
+                                                                        type="number"
+                                                                        onChange={
+                                                                            handleInputs
+                                                                        }
+                                                                        name="quantity"
+                                                                        value={
+                                                                            formData.quantity
+                                                                        }
+                                                                        className="form-control"
+                                                                        placeholder="Quantity"
+                                                                    ></input>
+                                                                </div>
+                                                                <div className="col-md-3">
+                                                                    <label className="control-label">
+                                                                        Price
+                                                                    </label>
+                                                                    <input
+                                                                        type="number"
+                                                                        name="price"
+                                                                        onChange={
+                                                                            handleInputs
+                                                                        }
+                                                                        value={
+                                                                            // props
+                                                                            //     .modalData
+                                                                            //     .price
+                                                                            formData.price
+                                                                        }
+                                                                        className="form-control"
+                                                                        placeholder="Price"
+                                                                    ></input>
+                                                                </div>
+
+                                                                <div className="col-md-3">
+                                                                    <label className="control-label">
+                                                                        Discount
+                                                                        Taka
+                                                                    </label>
+                                                                    <input
+                                                                        type="number"
+                                                                        name="discount_taka"
+                                                                        onChange={
+                                                                            handleInputs
+                                                                        }
+                                                                        value={
+                                                                            formData.discount_taka
+                                                                        }
+                                                                        className="form-control"
+                                                                        placeholder="Discount Taka"
+                                                                    ></input>
+                                                                </div>
+                                                                <div className="col-md-3">
+                                                                    <label className="control-label">
+                                                                        Discount
+                                                                        Percent
+                                                                    </label>
+                                                                    <input
+                                                                        type="number"
+                                                                        name="discount_percent"
+                                                                        onChange={
+                                                                            handleInputs
+                                                                        }
+                                                                        value={
+                                                                            formData.discount_percent
+                                                                        }
+                                                                        className="form-control"
+                                                                        placeholder="Discount Percent"
+                                                                    ></input>
+                                                                </div>
+                                                                <button
+                                                                    type="submit"
+                                                                    class="btn btn-danger"
+                                                                >
+                                                                    Submit
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-footer text-muted"></div>
+                                                </div>
+                                            )}
                                         </form>
                                     </div>
 
@@ -331,7 +421,6 @@ const EditInvoiceTransectionModal = props => {
                     <Button variant="secondary" onClick={props.handleClose}>
                         Close
                     </Button>
-                    {/* <Button variant="primary">Understood</Button> */}
                 </Modal.Footer>
             </Modal>
         </>

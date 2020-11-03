@@ -20,7 +20,7 @@ function ManageStoreInvoice(props) {
         activePage: 1,
         total_count: 0,
         limit: 10,
-        start_page:1,
+        start_page: 1,
         loading: true,
         StoreInvoiceList: []
     };
@@ -58,6 +58,8 @@ function ManageStoreInvoice(props) {
         }));
     };
 
+
+
     // for getting warehouse ,store ,product , vendor ,customer,vat....
     const fetchalldata = async () => {
         const response = await axios.get(defaultRouteLink + "/api/all-data");
@@ -67,13 +69,14 @@ function ManageStoreInvoice(props) {
                 setbankdetailsList(response.data.bankdetails);
         }
     };
-    const handlePagination=async(pageNumber)=>{
 
-        formData.start_page=pageNumber;
+
+
+    const handlePagination = async pageNumber => {
+        formData.start_page = pageNumber;
         const res = await axios.post(
             "/dbBackup/api/search-storeInvoice",
-            formData,
-
+            formData
         );
         // console.log(pageNumber);
         if (res.data.count >= 0) {
@@ -90,8 +93,7 @@ function ManageStoreInvoice(props) {
                 activePage: pageNumber
             }));
         }
-
-    }
+    };
     const searchData = async (event, pageNumber = 1) => {
         event.preventDefault();
         handlePagination(1);
@@ -100,10 +102,47 @@ function ManageStoreInvoice(props) {
         // setStoreInvoiceList(res.data.SearchInvoice);
         // }
     };
+    // FOR DELETE INVOICES
+    const  deleteInvoice = async e => {
+        const removeId = e.target.getAttribute("data-id");
+        const response = await axios.get(
+            defaultRouteLink + "/api/delete-invoice/" + removeId
+        );
+        // SUCCESS MESSAGE USING SWEET ALERT
+        try {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                onOpen: toast => {
+                    toast.addEventListener("mouseenter", Swal.stopTimer);
+                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+                }
+            });
+
+            Toast.fire({
+                icon: "success",
+                title: "Invoice  Deleted Successfully!!"
+            });
+        } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Something went wrong!",
+                footer: "<a href>Why do I have this issue?</a>"
+            });
+        }
+        handlePagination();
+        searchData();
+
+    };
 
     useEffect(() => {
         // fetchallInvoice();
         fetchalldata();
+        // deleteInvoice();
     }, []);
 
     // FETCH ALL WAREHOUSE DATA... LOOP
@@ -272,9 +311,40 @@ function ManageStoreInvoice(props) {
                                         </div>
                                     </div>
                                 </div>
+                                <div className="col-md-3">
+                                    <label className="control-label">
+                                        Start Date
+                                    </label>
+                                    <div className="form-group">
+                                        <div className="input-group">
+                                            <input
+                                                type="date"
+                                                name="start_date"
+                                                className="form-control"
+                                                onChange={handleInput}
+                                            ></input>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="col-md-3">
+                                    <label className="control-label">
+                                        End Date
+                                    </label>
+                                    <div className="form-group">
+                                        <div className="input-group">
+                                            <input
+                                                type="date"
+                                                name="end_date"
+                                                className="form-control"
+                                                onChange={handleInput}
+                                            ></input>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div
                                     style={{
-                                        marginLeft: 600,
+                                        // marginLeft: 600,
                                         marginTop: 30,
                                         marginBottom: 40
                                     }}
@@ -355,6 +425,13 @@ function ManageStoreInvoice(props) {
                                             >
                                                 Edit
                                             </Link>
+                                            <button
+                                                onClick={deleteInvoice}
+                                                className="btn btn-danger"
+                                                data-id={item.id}
+                                            >
+                                                Delete
+                                            </button>
                                         </td>
                                     </tr>
                                 );

@@ -23,7 +23,7 @@ class StoreInvoiceController extends Controller
 
         // exit();
         $invotran = new InvoiceTrasection();
-        $invotran->invoice_id = 0;
+        $invotran->invoice_id = $request->invoice_id;
         if ($request->idx == 1 or $request->idx == 2) {
             $invotran->d_id = $request->product_id;
             // $invotran->party_id = $request->vendor_id;
@@ -33,7 +33,7 @@ class StoreInvoiceController extends Controller
         }
         $invotran->party_id = $request->vendor_id;
         $invotran->ware_id = $request->warehouse_id;
-
+        $invotran->item_id = $request->product_id;
         $invotran->status = 1;
         $invotran->date = date($request->date);
         $invotran->store_id = $request->store_id;
@@ -57,7 +57,7 @@ class StoreInvoiceController extends Controller
     {
         // return $request->all();
         // exit();
-
+        $invoice_id = $request->invoice_id;
         $storeinvoice = new StoreInvoice();
         $storeinvoice->invoice_number = $request->invoice_code;
         $storeinvoice->type = $request->idx;
@@ -79,7 +79,7 @@ class StoreInvoiceController extends Controller
         $data['invoice_id'] = $storeinvoice->id;
         DB::table('invoice_trasections')
             ->where('publishing_by', "=", $storeinvoice->posting_by)
-            ->where('invoice_id', 0)
+            ->where('invoice_id', $invoice_id)
             ->update($data);
 
         return response()->json([
@@ -113,6 +113,8 @@ class StoreInvoiceController extends Controller
     {
 
         $types = $request->type;
+        $invoice_id = $request->invoice_id;
+        // print_r($invoice_id = $request->invoice_id);
 
         $products = DB::table('inventory_products')
             ->join('inventory_categories', 'inventory_products.category_id', 'inventory_categories.id')
@@ -130,16 +132,15 @@ class StoreInvoiceController extends Controller
             ->select('vendors.*', 'ware_house_details.name as wname')
             ->get();
 
-        $vats = Vat::all();
+        $vats = Vat::orderBy('id', 'desc')->get();
         $warehouses = WareHouseDetails::all();
         $bankdetails = BankDetails::all();
         $cashaccount = CashAccountDetails::all();
         $invotransec = DB::table('invoice_trasections')
-            ->leftJoin('inventory_products as dip', 'invoice_trasections.d_id', '=', 'dip.id')
-            ->leftJoin('inventory_products as cip', 'invoice_trasections.c_id', '=', 'cip.id')
+            ->Join('inventory_products', 'invoice_trasections.item_id', '=', 'inventory_products.id')
             ->leftJoin('vats', 'invoice_trasections.vat', 'vats.id')
-            ->select('invoice_trasections.*', 'dip.product_name as dp_name', 'vats.vat_name', 'vats.value', 'cip.product_name as cp_name')
-            ->where('invoice_id', 0)
+            ->select('invoice_trasections.*', 'vats.vat_name', 'vats.value', 'inventory_products.product_name')
+            ->where('invoice_id', $invoice_id)
             ->where('type', $types)
         // ->where('publishing_by','=',$user_id)
             ->get();
@@ -234,7 +235,11 @@ class StoreInvoiceController extends Controller
 
     public function getwarehouse($id)
     {
-        $store = Store::where('ware_id', $id)->get();
+        if (!empty($id)) {
+            $store = Store::where('ware_id', $id)->get();
+        } else {
+            $store = Store::all();
+        }
         return response()->json([
             'store' => $store,
         ]);
@@ -280,19 +285,18 @@ class StoreInvoiceController extends Controller
     public function update_invoice_transection(Request $request, $id)
     {
 
-        // return $request->all();
+        // return $request->product_id;
         // exit();
-
+        $invoice_id = $request->invoice_id;
         $invotran = InvoiceTrasection::find($id);
         if ($request->idx == 1 or $request->idx == 2) {
             $invotran->d_id = $request->product_id;
         } elseif ($request->idx == 3 or $request->idx == 4) {
             $invotran->c_id = $request->product_id;
         }
-
+        $invotran->item_id = $request->product_id;
         $invotran->status = 1;
         $invotran->date = $request->date;
-        $invotran->quantity = $request->quantity;
         $invotran->quantity = $request->quantity;
         $invotran->price = $request->price;
         $invotran->discount_taka = $request->discount_taka;
@@ -300,10 +304,11 @@ class StoreInvoiceController extends Controller
         $invotran->save();
 
         $invotransec = DB::table('invoice_trasections')
-            ->leftJoin('inventory_products as dip', 'invoice_trasections.d_id', '=', 'dip.id')
-            ->leftJoin('inventory_products as cip', 'invoice_trasections.c_id', '=', 'cip.id')
+            ->Join('inventory_products', 'invoice_trasections.item_id', '=', 'inventory_products.id')
             ->leftJoin('vats', 'invoice_trasections.vat', 'vats.id')
-            ->select('invoice_trasections.*', 'dip.product_name as dp_name', 'vats.vat_name', 'vats.value', 'cip.product_name as cp_name')
+            ->select('invoice_trasections.*', 'inventory_products.product_name', 'vats.vat_name', 'vats.value')
+            ->where('type', $request->idx)
+            ->where('invoice_id', $invoice_id)
             ->get();
 
         return response()->json([
@@ -334,16 +339,17 @@ class StoreInvoiceController extends Controller
     public function edit_storeInvoice($id)
     {
         $editinvoice = StoreInvoice::find($id);
+        $store = Store::all();
         return response()->json([
             'editinvoice' => $editinvoice,
+            'store' => $store,
+            // 'invwisetrans'=>$invwisetrans
         ], 200);
     }
 
     public function update_storeInvoice(Request $request, $id)
     {
         $storeinvoice = StoreInvoice::find($id);
-        // $storeinvoice->invoice_number = $request->invoice_code;
-        // $storeinvoice->type = $request->idx;
         $storeinvoice->vendor_id = $request->vendor_id;
         $storeinvoice->ware_id = $request->warehouse_id;
         $storeinvoice->date = date($request->date);
@@ -375,6 +381,8 @@ class StoreInvoiceController extends Controller
         $store_id = (int) $request->store_id;
         $start_page = $request->start_page;
         $limit = $request->limit;
+        $start = date($request->start_date);
+        $end = date($request->end_date);
 
         $range = 0;
         if ($start_page > 1) {
@@ -387,7 +395,7 @@ class StoreInvoiceController extends Controller
             ->leftjoin('stores', 'store_invoices.store_id', '=', 'stores.id')
             ->select('store_invoices.*', 'vendors.name as vendor', 'ware_house_details.name as ware_name', 'stores.store_name')
 
-            ->where(function ($filter) use ($vendor_id, $ware_id, $invoice_code, $store_id) {
+            ->where(function ($filter) use ($vendor_id, $ware_id, $invoice_code, $store_id, $start, $end) {
                 if (!empty($invoice_code)) {
                     $filter->where('store_invoices.invoice_number', 'LIKE', "%{$invoice_code}");
                 }
@@ -403,8 +411,12 @@ class StoreInvoiceController extends Controller
                 if (!empty($store_id)) {
                     $filter->where('store_invoices.store_id', $store_id);
                 }
+                if (!empty($start) && !empty($end)) {
+                    // echo "hello world";
+                    $filter->whereBetween('store_invoices.created_at', [$start, $end]);
+                }
 
-            })->skip($range)->take($limit)->get();
+            })->orderBy('id', 'desc')->skip($range)->take($limit)->get();
 
         $count = -1;
         if ($start_page == 1) {
@@ -416,6 +428,18 @@ class StoreInvoiceController extends Controller
             'SearchInvoice' => $SearchInvoice,
             'count' => $count,
         ]);
+    }
+
+    public function delete_store_invoice($id)
+    {
+        $del_invoice = StoreInvoice::find($id);
+        $del_invoice->delete();
+
+        return response()->json([
+            'status' => 200,
+            'del_invoice' => $del_invoice,
+        ]);
+
     }
 
 }
