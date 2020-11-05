@@ -190,7 +190,7 @@ class EditStoreInvoice extends Component {
         if (typeof e[0] != "undefined") {
             this.setState({ product_id: e[0].id });
         }
-        console.log(e[0]); //true
+        // console.log(e[0]); //true
         if (typeof e[0] != "undefined") {
             //var arr=e.isArray(e);
             //console.log("log"+arr);
@@ -1509,7 +1509,7 @@ class EditStoreInvoice extends Component {
                                                                 <div className="row">
                                                                     <div className="col-md-3">
                                                                         <label className="control-label"></label>
-                                                                        <select
+                                                                        {/* <select
                                                                             className="form-control"
                                                                             data-live-search="true"
                                                                             name="product_id"
@@ -1534,6 +1534,40 @@ class EditStoreInvoice extends Component {
                                                                                 products
                                                                             }
                                                                         </select>
+                                                                     */}
+                                                                          <Typeahead
+                                                                            id="labelkey-example"
+                                                                            labelKey={products =>
+                                                                                `${products.product_name}`
+                                                                            }
+                                                                            key={product =>
+                                                                                `${product.id}`
+                                                                            }
+                                                                            valueKey={product =>
+                                                                                `${product.id}`
+                                                                            }
+                                                                            isValid={product =>
+                                                                                `${product.id}`
+                                                                            }
+                                                                            options={
+                                                                                this
+                                                                                    .state
+                                                                                    .productList
+                                                                            }
+                                                                            value={
+                                                                                this
+                                                                                    .state
+                                                                                    .product_id
+                                                                            }
+                                                                            name="product_id"
+                                                                            onChange={e =>
+                                                                                this.priceHandleInput(
+                                                                                    e
+                                                                                )
+                                                                            }
+                                                                            placeholder="Select your product"
+                                                                        />
+
                                                                     </div>
                                                                     {this.state
                                                                         .product

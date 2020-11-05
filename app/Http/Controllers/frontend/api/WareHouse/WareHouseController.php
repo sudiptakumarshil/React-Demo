@@ -35,6 +35,7 @@ class WareHouseController extends Controller
     }
 
 
+
     public function add_warehouse(Request $request)
     {
         $warehouse = WareHouseDetails::Create($request->all());

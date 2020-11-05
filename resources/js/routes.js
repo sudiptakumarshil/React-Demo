@@ -33,10 +33,16 @@ import StoreInvoice from "./components/StoreInvoice/AddStoreInvoice";
 import AddBankDetails from "./components/BankDetails/AddBankDetails";
 import ManageBankDetails from "./components/BankDetails/ManageBankDetails";
 import EditBankDetails from "./components/BankDetails/BankDetailsEdit";
-import AddCashAccount  from "./components/CashAccountDetails/AddCashAccount";
-import ManageCashAccount  from "./components/CashAccountDetails/ManageCashAccount";
-import EditCashAccount  from "./components/CashAccountDetails/EditCashAccount";
+import AddCashAccount from "./components/CashAccountDetails/AddCashAccount";
+import ManageCashAccount from "./components/CashAccountDetails/ManageCashAccount";
+import EditCashAccount from "./components/CashAccountDetails/EditCashAccount";
 import ManageStoreInvoice from "./components/StoreInvoice/ManageStoreInvoice";
+import ManageInvoiceParams from "./components/InvoiceParams/manageParams";
+import EditParams from "./components/InvoiceParams/editParams";
+import QuickPurshase from "./components/StoreInvoice/QuickPurshase";
+import ProductUnit from "./components/ProductUnit/ProductUnit";
+
+
 import {
     defaultRouteLink,
     getAccessTokenName,
@@ -50,7 +56,7 @@ import {
 } from "./common/CookieService";
 import AddProduct from "./components/InventoryProduct/AddProduct";
 import EditProduct from "./components/InventoryProduct/EditProduct";
-import EditInvoice from "./components/StoreInvoice/EditStoreInvoice"
+import EditInvoice from "./components/StoreInvoice/EditStoreInvoice";
 
 export const Routes = props => {
     let isLoginExit = getCookieKeyInfo(getAccessTokenName);
@@ -196,6 +202,11 @@ export const Routes = props => {
                             />
                             <Route
                                 exact
+                                path={defaultRouteLink + "/quick-purshase/:idx"}
+                                render={props => <QuickPurshase {...props} />}
+                            />
+                            <Route
+                                exact
                                 path={defaultRouteLink + "/add-bank-details"}
                                 component={AddBankDetails}
                             />
@@ -221,29 +232,45 @@ export const Routes = props => {
                                 path={defaultRouteLink + "/manage-cash-account"}
                                 component={ManageCashAccount}
                             />
-                              <Route
+                            <Route
                                 exact
                                 path={
                                     defaultRouteLink + "/edit-cashaccount/:id"
                                 }
                                 render={props => <EditCashAccount {...props} />}
                             />
-                              <Route
+                            <Route
                                 exact
                                 path={
                                     defaultRouteLink + "/manage-store-invoice"
                                 }
                                 component={ManageStoreInvoice}
                             />
-
                             <Route
                                 exact
                                 path={
-                                    defaultRouteLink + "/edit-storeinvoice/:id/:idx"
+                                    defaultRouteLink +
+                                    "/edit-storeinvoice/:id/:idx"
                                 }
                                 render={props => <EditInvoice {...props} />}
                             />
-
+                            <Route
+                                exact
+                                path={
+                                    defaultRouteLink + "/manage-invoiceparams"
+                                }
+                                component={ManageInvoiceParams}
+                            />
+                            <Route
+                                exact
+                                path={defaultRouteLink + "/edit-params/:id"}
+                                render={props => <EditParams {...props} />}
+                            />
+                            <Route
+                                exact
+                                path={defaultRouteLink + "/manage-unit"}
+                                render={ProductUnit}
+                            />
                         </Header>
                     ) : (
                         <Route component={NotFound} />

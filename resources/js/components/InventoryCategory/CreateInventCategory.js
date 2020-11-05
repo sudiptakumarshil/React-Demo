@@ -20,12 +20,17 @@ const CreateInventCategory = props => {
     const [root_name, setRoot_name] = useState([]);
     const [id, setid] = useState([]);
     const [status, setStatus] = useState([]);
+    const [category_code, setCategory_code] = useState([]);
     const [isBtnSave, setIsBtnSave] = useState(false);
 
     const handleInput = event => {
-        if (event.target.name == "invent_category")
+        if (event.target.name == "invent_category") {
             setInvent_category(event.target.value);
-        else setStatus(event.target.value);
+
+        } else {
+            // setStatus(event.target.value);
+            setCategory_code(event.target.value);
+        }
     };
 
     // SAVE FORM DATA METHOD  ....
@@ -36,7 +41,8 @@ const CreateInventCategory = props => {
             status: status,
             root_id: root_id,
             category_name: category_name,
-            invent_category: invent_category
+            invent_category: invent_category,
+            category_code:category_code
         };
 
         const res = await axios.post("/dbBackup/api/save-inventcategory", data);
@@ -99,16 +105,10 @@ const CreateInventCategory = props => {
         const res = await axios.get(
             defaultRouteLink + "/api/all-inventcategory"
         );
-        // if (res.data.status === 200) {
         setList(res.data.list);
         setLoading(false);
-
-        //this.setState({ list: res.data.list });
-        //this.setState({ loading: false });
-        // }
-        // console.log(res);
     };
-    // fetchTreeItemData(event, data) {}
+
     useEffect(() => {
         fetchallinventCategory();
     }, []);
@@ -198,9 +198,20 @@ const CreateInventCategory = props => {
                                             onChange={handleInput}
                                         ></input>
                                     </div>
+                                    <br />
+                                    <div className="input-group">
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Category Code"
+                                            name="category_code"
+                                            value={category_code}
+                                            onChange={handleInput}
+                                        ></input>
+                                    </div>
                                 </div>
 
-                                <div className="mt-4">
+                                {/* <div className="mt-4">
                                     <select
                                         name="status"
                                         onChange={handleInput}
@@ -211,7 +222,7 @@ const CreateInventCategory = props => {
                                         </option>
                                         <option value="0">Inactive</option>
                                     </select>
-                                </div>
+                                </div> */}
 
                                 <div className="mt-4 text-center">
                                     {isBtnSave ? (

@@ -7,8 +7,8 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeItem from "@material-ui/lab/TreeItem";
 import { data, map } from "jquery";
-import ContentLoader, { Facebook,BulletList  } from 'react-content-loader'
-const MyBulletListLoader = () => <BulletList />
+import ContentLoader, { Facebook, BulletList } from "react-content-loader";
+const MyBulletListLoader = () => <BulletList />;
 
 const ManageProduct = props => {
     const [productlist, setProductlist] = useState([]);
@@ -19,7 +19,7 @@ const ManageProduct = props => {
             defaultRouteLink + "/api/all-inventproduct"
         );
         setProductlist(res.data.products);
-        setLoading(false)
+        setLoading(false);
         // console.log(res);
     };
 
@@ -37,7 +37,6 @@ const ManageProduct = props => {
     }
 
     return (
-
         <div className="col-md-12">
             <div className="row">
                 <div className="col-md-12">
@@ -56,6 +55,7 @@ const ManageProduct = props => {
                                 <th>Product Code</th>
                                 <th>Product Name</th>
                                 <th>Pices Of Carton</th>
+                                <th>Category AutoCode</th>
                                 <th>Category Name</th>
                                 <th>Warehouse Name</th>
                                 <th>Sorting</th>
@@ -78,6 +78,7 @@ const ManageProduct = props => {
                                         <td>{item.product_code}</td>
                                         <td>{item.product_name}</td>
                                         <td>{item.pices_of_carton}</td>
+                                        <td>{item.category_autocode}</td>
                                         <td>{item.category_name}</td>
                                         <td>{item.name}</td>
                                         <td>{item.sorting}</td>
@@ -105,7 +106,6 @@ const ManageProduct = props => {
                                 );
                             })}
                         </tbody>
-
                     </table>
                 </div>
             </div>

@@ -4,6 +4,9 @@ import EditInvoiceTransec from "../modal/EditInvoiceTransectionModal";
 import ContentLoader, { Facebook, BulletList } from "react-content-loader";
 import { useDispatch, useSelector } from "react-redux";
 import { connect } from "react-redux";
+import { Typeahead } from "react-bootstrap-typeahead";
+import "react-bootstrap-typeahead/css/Typeahead.css";
+import TextField from "@material-ui/core/TextField";
 
 import { compose } from "redux";
 import {
@@ -99,7 +102,8 @@ class AddStoreInvoice extends Component {
             totalExchange: 0,
             invoiceParams: "",
             total_discount: 0,
-            editInvoice: []
+            editInvoice: [],
+            delloading: false
             // items_id:0
             //----------------
         };
@@ -181,9 +185,22 @@ class AddStoreInvoice extends Component {
             });
         }
     };
-    priceHandleInput = () => {
-        this.setState({ [event.target.name]: event.target.value });
-        this.getProductWisePriceAuto(event.target.value);
+    // priceHandleInput = () => {
+    //     this.setState({ [event.target.name]: event.target.value });
+    //     this.getProductWisePriceAuto(event.target.value);
+    // };
+    priceHandleInput = e => {
+        // console.log(e[0].id);
+        if (typeof e[0] != "undefined") {
+            this.setState({ product_id: e[0].id });
+        }
+        // console.log(e[0]); //true
+        if (typeof e[0] != "undefined") {
+            //var arr=e.isArray(e);
+            //console.log("log"+arr);
+            var id = e[0].id;
+            this.getProductWisePriceAuto(id);
+        }
     };
 
     WarehousehandleInput = event => {
@@ -197,12 +214,12 @@ class AddStoreInvoice extends Component {
         let total_discount =
             parseFloat((this.state.gross_amount * event.target.value) / 100) +
             parseFloat(this.state.discountTaka);
-            let vat_amt=this.state.vat_value;
+        let vat_amt = this.state.vat_value;
         this.calInvoiceAmt(
             event.target.name,
             event.target.value,
             total_discount,
-            vat_amt,
+            vat_amt
         );
         // this.setState({
         //     total_discount:total_discount
@@ -211,25 +228,21 @@ class AddStoreInvoice extends Component {
 
     // for vat calculation  ....................................
     handleVatInput = event => {
-
-
-        let disountPercentFromGrossAmount =
-            parseFloat(
-                (this.state.gross_amount * this.state.final_discount_percent) /
-                    100
-            );
-        let total_discount =parseFloat(disountPercentFromGrossAmount) + parseFloat(this.state.discountTaka);
+        let disountPercentFromGrossAmount = parseFloat(
+            (this.state.gross_amount * this.state.final_discount_percent) / 100
+        );
+        let total_discount =
+            parseFloat(disountPercentFromGrossAmount) +
+            parseFloat(this.state.discountTaka);
         let totalamount = this.state.gross_amount - this.state.total_discount;
-        let vat_amt=event.target.value;
+        let vat_amt = event.target.value;
 
         this.calInvoiceAmt(
             event.target.name,
             event.target.value,
             total_discount,
-            vat_amt,
+            vat_amt
         );
-
-
     };
 
     handleDiscountTaka = event => {
@@ -238,12 +251,12 @@ class AddStoreInvoice extends Component {
                 (this.state.gross_amount * this.state.final_discount_percent) /
                     100
             ) + parseFloat(event.target.value);
-        let vat_amt=this.state.vat_value;
+        let vat_amt = this.state.vat_value;
         this.calInvoiceAmt(
             event.target.name,
             event.target.value,
             disountPercentFromGrossAmount,
-            vat_amt,
+            vat_amt
         );
         this.setState({
             total_discount: disountPercentFromGrossAmount
@@ -251,15 +264,16 @@ class AddStoreInvoice extends Component {
     };
 
     calInvoiceAmt = (name, value, discount, vat_amt = 0) => {
-
         let vat_calculate = parseFloat(
             ((this.state.gross_amount - discount) * vat_amt) / 100
         );
 
         this.setState({
             [name]: value,
-            netPayable: parseFloat(this.state.gross_amount - discount) + parseFloat(vat_calculate),
-            totalVat:vat_calculate,
+            netPayable:
+                parseFloat(this.state.gross_amount - discount) +
+                parseFloat(vat_calculate),
+            totalVat: vat_calculate
         });
     };
 
@@ -584,12 +598,8 @@ class AddStoreInvoice extends Component {
                 };
 
                 // SUCCESS MESSAGE USING SWEET ALERT
-                try {
-                    if (res.data.status === 200) {
-                        this.props.history.push(
-                            "/dbBackup/manage-store-invoice"
-                        );
-                    }
+                if (res.data.status === 200) {
+                    this.props.history.push("/dbBackup/manage-store-invoice");
                     const Toast = Swal.mixin({
                         toast: true,
                         position: "top-end",
@@ -611,13 +621,6 @@ class AddStoreInvoice extends Component {
                     Toast.fire({
                         icon: "success",
                         title: "Store Invoices Created  Successfully!!"
-                    });
-                } catch (error) {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: "Something went wrong!",
-                        footer: "<a href>Why do I have this issue?</a>"
                     });
                 }
             } else {
@@ -736,38 +739,23 @@ class AddStoreInvoice extends Component {
 
     // FOR DELETE INVOICES TRANSECTION
     delinvoicetransec = async e => {
-        const removeId = e.target.getAttribute("data-id");
-        const response = await axios.get(
-            defaultRouteLink + "/api/delete-invoice-transec/" + removeId
-        );
-        // SUCCESS MESSAGE USING SWEET ALERT
-        try {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                onOpen: toast => {
-                    toast.addEventListener("mouseenter", Swal.stopTimer);
-                    toast.addEventListener("mouseleave", Swal.resumeTimer);
-                }
-            });
+        this.setState({
+            delloading: true
+        });
 
-            Toast.fire({
-                icon: "success",
-                title: "Invoice Transection Deleted Successfully!!"
+        let delcheck = confirm("Are you Sure to Delete It?");
+        if (delcheck) {
+            const removeId = e.target.getAttribute("data-id");
+            const response = await axios.get(
+                defaultRouteLink + "/api/delete-invoice-transec/" + removeId
+            );
+            this.setState({
+                delloading: false
             });
-        } catch (error) {
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Something went wrong!",
-                footer: "<a href>Why do I have this issue?</a>"
-            });
+            this.fetchalldata();
+        } else {
+            return false;
         }
-
-        this.fetchalldata();
     };
     handleModalClose = () => {
         this.setState({
@@ -965,7 +953,7 @@ class AddStoreInvoice extends Component {
                     {item.vat_name}
                 </option>
             );
-           /* this.setState({
+            /* this.setState({
                 vat_id: item.id, // UPDATE STATE ........
                 vat_value: item.value // UPDATE STATE ........
             });*/
@@ -1010,6 +998,14 @@ class AddStoreInvoice extends Component {
                 <h2 className="text-center mt-3">
                     <i className="fas fa-spinner fa-spin fa-3x"></i>
                     <MyBulletListLoader />
+                </h2>
+            );
+        }
+        if (this.state.delloading) {
+            return (
+                <h2 className="text-center mt-3">
+                    <i className="fas fa-spinner fa-spin fa-3x"></i>
+                    {/* <MyBulletListLoader /> */}
                 </h2>
             );
         }
@@ -1058,6 +1054,14 @@ class AddStoreInvoice extends Component {
                                     style={{ marginLeft: 15 }}
                                 >
                                     Sale Return
+                                </Link>
+                                <Link
+                                    to={`/dbBackup/quick-purshase/${5}`}
+                                    type="button"
+                                    className="btn btn-primary"
+                                    style={{ marginLeft: 15 }}
+                                >
+                                    Quick Purshase
                                 </Link>
                                 <Link
                                     to="/dbBackup/manage-store-invoice"
@@ -1250,7 +1254,7 @@ class AddStoreInvoice extends Component {
                                                                 <div className="row">
                                                                     <div className="col-md-3">
                                                                         <label className="control-label"></label>
-                                                                        <select
+                                                                        {/* <select
                                                                             className="form-control"
                                                                             data-live-search="true"
                                                                             name="product_id"
@@ -1275,6 +1279,39 @@ class AddStoreInvoice extends Component {
                                                                                 products
                                                                             }
                                                                         </select>
+                                                                    */}
+                                                                        <Typeahead
+                                                                            id="labelkey-example"
+                                                                            labelKey={products =>
+                                                                                `${products.product_name}`
+                                                                            }
+                                                                            key={product =>
+                                                                                `${product.id}`
+                                                                            }
+                                                                            valueKey={product =>
+                                                                                `${product.id}`
+                                                                            }
+                                                                            isValid={product =>
+                                                                                `${product.id}`
+                                                                            }
+                                                                            options={
+                                                                                this
+                                                                                    .state
+                                                                                    .productList
+                                                                            }
+                                                                            value={
+                                                                                this
+                                                                                    .state
+                                                                                    .product_id
+                                                                            }
+                                                                            name="product_id"
+                                                                            onChange={e =>
+                                                                                this.priceHandleInput(
+                                                                                    e
+                                                                                )
+                                                                            }
+                                                                            placeholder="Select your product"
+                                                                        />
                                                                     </div>
 
                                                                     {this.state
@@ -1425,7 +1462,7 @@ class AddStoreInvoice extends Component {
                                                                 <div className="row">
                                                                     <div className="col-md-3">
                                                                         <label className="control-label"></label>
-                                                                        <select
+                                                                        {/* <select
                                                                             className="form-control"
                                                                             data-live-search="true"
                                                                             name="product_id"
@@ -1450,6 +1487,39 @@ class AddStoreInvoice extends Component {
                                                                                 products
                                                                             }
                                                                         </select>
+                                                                     */}
+                                                                        <Typeahead
+                                                                            id="labelkey-example"
+                                                                            labelKey={products =>
+                                                                                `${products.product_name}`
+                                                                            }
+                                                                            key={product =>
+                                                                                `${product.id}`
+                                                                            }
+                                                                            valueKey={product =>
+                                                                                `${product.id}`
+                                                                            }
+                                                                            isValid={product =>
+                                                                                `${product.id}`
+                                                                            }
+                                                                            options={
+                                                                                this
+                                                                                    .state
+                                                                                    .productList
+                                                                            }
+                                                                            value={
+                                                                                this
+                                                                                    .state
+                                                                                    .product_id
+                                                                            }
+                                                                            name="product_id"
+                                                                            onChange={e =>
+                                                                                this.priceHandleInput(
+                                                                                    e
+                                                                                )
+                                                                            }
+                                                                            placeholder="Select your product"
+                                                                        />
                                                                     </div>
                                                                     {this.state
                                                                         .product
@@ -1547,7 +1617,12 @@ class AddStoreInvoice extends Component {
                                                                                 this
                                                                                     .handleInput
                                                                             }
-                                                                        >   <option>Select One</option>
+                                                                        >
+                                                                            {" "}
+                                                                            <option>
+                                                                                Select
+                                                                                One
+                                                                            </option>
                                                                             {
                                                                                 allvat
                                                                             }

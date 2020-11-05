@@ -11,6 +11,7 @@ function ManageStoreInvoice(props) {
     const [vendorlist, setvendorlist] = useState([]);
     const [bankdetailsList, setbankdetailsList] = useState([]);
     const [storelist, setstorelist] = useState([]);
+    const [loading, setloading] = useState([]);
 
     const data = {
         invoice_code: 0,
@@ -21,7 +22,6 @@ function ManageStoreInvoice(props) {
         total_count: 0,
         limit: 10,
         start_page: 1,
-        loading: true,
         StoreInvoiceList: []
     };
     const [formData, setFormData] = useState(data);
@@ -58,19 +58,16 @@ function ManageStoreInvoice(props) {
         }));
     };
 
-
-
     // for getting warehouse ,store ,product , vendor ,customer,vat....
     const fetchalldata = async () => {
         const response = await axios.get(defaultRouteLink + "/api/all-data");
         if (response.data.status === 200) {
             setwarehouseList(response.data.warehouses),
-                setvendorlist(response.data.vendors),
-                setbankdetailsList(response.data.bankdetails);
+            setvendorlist(response.data.vendors),
+            setbankdetailsList(response.data.bankdetails);
+            setloading(false);
         }
     };
-
-
 
     const handlePagination = async pageNumber => {
         formData.start_page = pageNumber;
@@ -103,7 +100,7 @@ function ManageStoreInvoice(props) {
         // }
     };
     // FOR DELETE INVOICES
-    const  deleteInvoice = async e => {
+    const deleteInvoice = async e => {
         const removeId = e.target.getAttribute("data-id");
         const response = await axios.get(
             defaultRouteLink + "/api/delete-invoice/" + removeId
@@ -136,7 +133,6 @@ function ManageStoreInvoice(props) {
         }
         handlePagination();
         searchData();
-
     };
 
     useEffect(() => {
@@ -187,6 +183,15 @@ function ManageStoreInvoice(props) {
             store_id: parseInt(item.id) // UPDATE STATE ..
         }));
     });
+
+    if (loading) {
+        return (
+            <h2 className="text-center mt-3">
+                <i className="fas fa-spinner fa-spin fa-3x"></i>
+                <MyBulletListLoader />
+            </h2>
+        );
+    }
 
     return (
         <div className="col-md-12">

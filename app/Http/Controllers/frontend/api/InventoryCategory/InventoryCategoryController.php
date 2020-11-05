@@ -65,6 +65,7 @@ class InventoryCategoryController extends Controller
             $ara["text"] = $val->category_name;
             $ara["head_title"] = 0;
             $ara["name"] = $val->category_name;
+            $ara["category_code"] = $val->category_code;
             $ara["invent_category"] ="";
             if(!empty($val->root_id))
                 $ara["root_category"] = $val->subcategory->category_name;
@@ -101,18 +102,14 @@ class InventoryCategoryController extends Controller
         $category  = new InventoryCategory();
         $category->root_id = $request->root_id;
         $category->category_name = $request->invent_category;
-        // $category->status = $request->status;
+        $category->category_code = $request->category_code;
         $category->save();
         return response()->json([
             'status'=>200,
             'message'=>'Category Saved Successfully!!'
         ]);
-
-
-
-
-
     }
+
 
     public function update_category(Request $request,$id)
     {

@@ -28,7 +28,9 @@ const AddProduct = props => {
         selling_price: 0,
         price_type: 0,
         product_image: "",
-        loading: true
+        loading: true,
+        category_autocode: 0,
+        category_code: 0
     };
     const [formData, setFormData] = useState(data);
 
@@ -39,22 +41,14 @@ const AddProduct = props => {
             Swal.fire("Product Code Cannot Be Empty!!");
         } else if (formData.product_name == 0) {
             Swal.fire("Product Name Cannot Be Empty!!");
-        } else if (formData.pices_of_carton == 0) {
-            Swal.fire("Piece Of Carton Cannot Be Empty!!");
         } else if (formData.category_id == 0) {
             Swal.fire("Category  Cannot Be Empty!!");
         } else if (formData.warehouse_id == 0) {
             Swal.fire("Warehouse Cannot Be Empty!!");
-        } else if (formData.sorting == 0) {
-            Swal.fire("Sorting  Cannot Be Empty!!");
         } else if (formData.unit == 0) {
             Swal.fire("Unit  Cannot Be Empty!!");
-        } else if (formData.opening_stock == 0) {
-            Swal.fire("Opening Stock  Cannot Be Empty!!");
         } else if (formData.buy_price == 0) {
             Swal.fire("Buy Price  Cannot Be Empty!!");
-        } else if (formData.cost == 0) {
-            Swal.fire("Cost  Cannot Be Empty!!");
         } else if (formData.selling_price == 0) {
             Swal.fire("Selling Price Cannot Be Empty!!");
         } else if (formData.price_type == 0) {
@@ -78,6 +72,7 @@ const AddProduct = props => {
                 cost: 0,
                 selling_price: 0,
                 price_type: 0,
+                reorder_level:0,
                 product_image: ""
             };
 
@@ -117,13 +112,19 @@ const AddProduct = props => {
         setList(res.data.list);
         setLoading(false);
     };
+    // const getCategoryCode = async ()=>{
+    //     const res = await axios.get(
+    //         defaultRouteLink + "/api/all-inventcategory"
+    //     );
+
+    //     setList(res.data.list);
+    //     setLoading(false);
+    // }
 
     //  GET ALL WAREHOUSE ...
 
     const fetchallwarehouse = async () => {
-        const response = await axios.get(
-            defaultRouteLink + "/api/all-warehouse"
-        );
+        const response = await axios.get(defaultRouteLink + "/api/all-data");
 
         setWarehouselist(response.data.warehouses);
         console.log(response.data.warehouses);
@@ -131,15 +132,12 @@ const AddProduct = props => {
     };
 
     const handleInput = event => {
-        //this.setState({ [event.target.name]: event.target.value });
-        //console.log(event.target.value);
         const { name, files, value } = event.target;
         setFormData(oldState => ({
             ...oldState,
             [name]: value
             // [files]: value
         }));
-        // setFormData(oldState => ({ ...oldState, [name]: files }));
     };
 
     useEffect(() => {
@@ -168,7 +166,8 @@ const AddProduct = props => {
                 setFormData(oldState => ({
                     ...oldState,
                     category_id: item.id,
-                    category_name: item.name
+                    category_name: item.name,
+                    category_code: item.category_code
                 }));
                 // setInvent_category(item.name);
                 // setRoot_name(item.root_category);
@@ -313,6 +312,20 @@ const AddProduct = props => {
                                             className="form-control"
                                             placeholder="Unit"
                                             name="unit"
+                                            onChange={handleInput}
+                                        ></input>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-md-4">
+                                <label className="control-label">Reorder Level</label>
+                                <div className="form-group">
+                                    <div className="input-group">
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Unit"
+                                            name="reorder_level"
                                             onChange={handleInput}
                                         ></input>
                                     </div>

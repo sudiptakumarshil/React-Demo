@@ -36,7 +36,7 @@ class CreateVendor extends Component {
 
     fetchallwarehouse = async () => {
         const response = await axios.get(
-            defaultRouteLink + "/api/all-warehouse"
+            defaultRouteLink + "/api/all-data"
         );
         console.log(response);
 

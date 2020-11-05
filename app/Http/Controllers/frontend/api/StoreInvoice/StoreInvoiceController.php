@@ -233,6 +233,26 @@ class StoreInvoiceController extends Controller
         ]);
     }
 
+    public function get_invoice_number_for_type5()
+    {
+        $invoicnumber = DB::table('store_invoices')
+            ->join('users', 'store_invoices.ware_id', 'users.ware_id')
+            ->select('store_invoices.*')
+            ->where('type', 5)
+            ->orderBy('id', "desc")
+            ->first();
+
+        if (!empty($invoicnumber)) {
+            $invoice_number = $invoicnumber->invoice_number + 1;
+        } else {
+            $invoice_number = 5000;
+        }
+
+        return response()->json([
+            'invoice_number' => $invoice_number,
+        ]);
+    }
+
     public function getwarehouse($id)
     {
         if (!empty($id)) {
@@ -240,6 +260,7 @@ class StoreInvoiceController extends Controller
         } else {
             $store = Store::all();
         }
+
         return response()->json([
             'store' => $store,
         ]);
@@ -278,6 +299,7 @@ class StoreInvoiceController extends Controller
         $invoice = InvoiceTrasection::find($id);
         $invoice->delete();
         return response()->json([
+            'status' => 200,
             'message' => 'success',
         ]);
     }

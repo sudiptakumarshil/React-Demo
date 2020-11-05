@@ -7,6 +7,8 @@ import { fetchalldata } from "../StoreInvoice/AddStoreInvoice";
 import AddStoreInvoice from "../StoreInvoice/AddStoreInvoice";
 import { useDispatch, useSelector } from "react-redux";
 import { connect } from "react-redux";
+import { Typeahead } from "react-bootstrap-typeahead";
+import "react-bootstrap-typeahead/css/Typeahead.css";
 import {
     SET_REFRESH_STORETRANSECTION,
     SET_CURRENT_USER,
@@ -78,13 +80,36 @@ const EditInvoiceTransectionModal = props => {
         }
     };
 
-    const handleProductPrice = event => {
-        const { name, value } = event.target;
-        getProductWisePriceAuto(event.target.value);
-        setFormData(oldState => ({
-            ...oldState,
-            [name]: value
-        }));
+    const handleProductPrice = e => {
+        // const { name, value } = event.target;
+        // getProductWisePriceAuto(event.target.value);
+        // setFormData(oldState => ({
+        //     ...oldState,
+        //     [name]: value
+        // }));
+
+        // if (typeof e[0] != "undefined") {
+        //     this.setState({ product_id: e[0].id });
+        // }
+        // console.log(e[0]); //true
+         if (typeof e[0] != "undefined") {
+            setFormData(oldState => ({
+                ...oldState,
+                product_id: e[0].id
+            }));
+        }
+
+        if (typeof e[0] != "undefined") {
+            var id = e[0].id;
+            getProductWisePriceAuto(id);
+
+        }
+
+        // if(item_id == id){
+        //     selected
+        // }
+
+
     };
 
     const handleInputs = event => {
@@ -114,8 +139,11 @@ const EditInvoiceTransectionModal = props => {
             ...oldState,
             idx: idx,
             product_id: item_id
+
         }));
+
     }, [props]);
+
 
     // GET ALL PRODUCT LIST
 
@@ -178,7 +206,7 @@ const EditInvoiceTransectionModal = props => {
                                                                         Product
                                                                         Name
                                                                     </label>
-                                                                    <select
+                                                                    {/* <select
                                                                         className="form-control"
                                                                         data-live-search="true"
                                                                         name="product_id"
@@ -197,6 +225,40 @@ const EditInvoiceTransectionModal = props => {
                                                                             products
                                                                         }
                                                                     </select>
+                                                                */}
+                                                                            <Typeahead
+                                                                            id="labelkey-example"
+                                                                            labelKey={products =>
+                                                                                `${products.product_name}`
+                                                                            }
+                                                                            key={product =>
+                                                                                `${product.id}`
+                                                                            }
+
+                                                                            selected={formData.product_id}
+                                                                            // selected={formData.product_id}
+                                                                            isValid={product =>
+                                                                                `${product.id}`
+                                                                            }
+
+                                                                            options={
+                                                                                productList
+                                                                            }
+                                                                            value={
+                                                                                formData.product_id
+                                                                            }
+
+                                                                            name="product_id"
+                                                                            onChange={e =>
+                                                                                handleProductPrice(
+                                                                                    e
+                                                                                )
+                                                                            }
+                                                                            placeholder="Select your product"
+                                                                        />
+
+
+
                                                                 </div>
 
                                                                 <div className="col-md-3">
@@ -300,7 +362,7 @@ const EditInvoiceTransectionModal = props => {
                                                                         Product
                                                                         Name
                                                                     </label>
-                                                                    <select
+                                                                    {/* <select
                                                                         className="form-control"
                                                                         data-live-search="true"
                                                                         name="product_id"
@@ -319,6 +381,36 @@ const EditInvoiceTransectionModal = props => {
                                                                             products
                                                                         }
                                                                     </select>
+                                                                */}
+                                                                         <Typeahead
+                                                                            id="labelkey-example"
+                                                                            labelKey={products =>
+                                                                                `${products.product_name}`
+                                                                            }
+                                                                            key={product =>
+                                                                                `${product.id}`
+                                                                            }
+                                                                        //    selected={formData.product_id}
+
+                                                                            valueKey={formData.product_id}
+                                                                            isValid={product =>
+                                                                                `${product.id}`
+                                                                            }
+                                                                            options={
+                                                                                productList
+                                                                            }
+                                                                            value={
+                                                                                formData.product_id
+                                                                            }
+                                                                            name="product_id"
+                                                                            onChange={e =>
+                                                                                handleProductPrice(
+                                                                                    e
+                                                                                )
+                                                                            }
+                                                                            placeholder="Select your product"
+                                                                        />
+
                                                                 </div>
 
                                                                 <div className="col-md-3">

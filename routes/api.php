@@ -110,8 +110,10 @@ Route::namespace ('frontend')->group(function () {
             Route::get('/get-invoice-number-type-2', 'StoreInvoiceController@get_invoice_number_for_type2');
             Route::get('/get-invoice-number-type-3', 'StoreInvoiceController@get_invoice_number_for_type3');
             Route::get('/get-invoice-number-type-4', 'StoreInvoiceController@get_invoice_number_for_type4');
+            Route::get('/get-invoice-number-type-5', 'StoreInvoiceController@get_invoice_number_for_type5');
             Route::get('/get-warehouse/{id}', 'StoreInvoiceController@getwarehouse');
             Route::get('/get-product-wise-price/{id}', 'StoreInvoiceController@product_wise_price');
+            Route::get('/get-productCode', 'InvoiceParamsController@get_productCode');
 
             // for store invoice .....................
             Route::post('/save-store-invoice', 'StoreInvoiceController@save_store_invoice')->name("save-store-invoice");
@@ -148,3 +150,27 @@ Route::namespace ('frontend')->group(function () {
         });
     });
 });
+
+Route::namespace ('frontend')->group(function () {
+    Route::namespace ('api')->group(function () {
+        Route::namespace ('StoreInvoice')->group(function () {
+            Route::get('/all-params', 'InvoiceParamsController@index')->name("all-params");
+            Route::get('/edit-params/{id}', 'InvoiceParamsController@edit_params')->name("edit-params");
+            Route::patch('/update-params/{id}', 'InvoiceParamsController@update_params')->name("update-params");
+
+        });
+    });
+});
+
+Route::namespace ('frontend')->group(function () {
+    Route::namespace ('api')->group(function () {
+        Route::namespace ('Unit')->group(function () {
+            Route::get('/all-unit', 'UnitController@index')->name("all-unit");
+            Route::get('/edit-unit/{id}', 'UnitController@edit_unit')->name("edit-unit");
+            Route::patch('/update-unit/{id}', 'UnitController@update_unit')->name("update-unit");
+        });
+    });
+});
+
+
+
