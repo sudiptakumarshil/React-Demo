@@ -8,6 +8,7 @@ use App\Model\CashAccount\CashAccountDetails;
 use App\Model\InvoiceTrasection\InvoiceTrasection;
 use App\Model\StoreInvoice\StoreInvoice;
 use App\Model\Store\Store;
+use App\Model\Unit\Unit;
 use App\Model\Vat;
 use App\Model\WareHouse\WareHouseDetails;
 use Illuminate\Http\Request;
@@ -136,12 +137,14 @@ class StoreInvoiceController extends Controller
         $warehouses = WareHouseDetails::all();
         $bankdetails = BankDetails::all();
         $cashaccount = CashAccountDetails::all();
+        $unitlist = Unit::all();
         $invotransec = DB::table('invoice_trasections')
             ->Join('inventory_products', 'invoice_trasections.item_id', '=', 'inventory_products.id')
             ->leftJoin('vats', 'invoice_trasections.vat', 'vats.id')
             ->select('invoice_trasections.*', 'vats.vat_name', 'vats.value', 'inventory_products.product_name')
             ->where('invoice_id', $invoice_id)
             ->where('type', $types)
+            ->where('trash', 1)
         // ->where('publishing_by','=',$user_id)
             ->get();
 
@@ -160,6 +163,7 @@ class StoreInvoiceController extends Controller
             'bankdetails' => $bankdetails,
             'cashaccount' => $cashaccount,
             'invoiceParams' => $invoiceParams,
+            'unitlist' => $unitlist,
         ]);
     }
 
@@ -168,8 +172,22 @@ class StoreInvoiceController extends Controller
         $productPrice = DB::table('inventory_products')
             ->where('id', $id)
             ->first();
+
+        $closing_stock = DB::select(DB::raw("SELECT item_id, sum(d_qty) as d_qty,sum(d_qty) as c_qty,sum(d_qty-c_qty) as closing from (
+
+            SELECT d_id as item_id, sum(quantity) as d_qty,0 c_qty FROM `invoice_trasections` WHERE d_id='$id'
+                UNION
+
+            SELECT c_id as item_id, 0 d_qty,sum(quantity) as c_qty FROM `invoice_trasections` WHERE c_id='$id'
+
+                 ) as t WHERE item_id is not null GROUP by item_id"));
+
+        // print_r($closing_stock);
+        // exit();
+
         return response()->json([
             'productPrice' => $productPrice,
+            'closing_stock' => $closing_stock,
         ]);
     }
 
@@ -297,7 +315,8 @@ class StoreInvoiceController extends Controller
     public function delete_invoice_transec($id)
     {
         $invoice = InvoiceTrasection::find($id);
-        $invoice->delete();
+        $invoice->trash = 2;
+        $invoice->save();
         return response()->json([
             'status' => 200,
             'message' => 'success',
@@ -331,6 +350,7 @@ class StoreInvoiceController extends Controller
             ->select('invoice_trasections.*', 'inventory_products.product_name', 'vats.vat_name', 'vats.value')
             ->where('type', $request->idx)
             ->where('invoice_id', $invoice_id)
+            ->where('trash', 1)
             ->get();
 
         return response()->json([

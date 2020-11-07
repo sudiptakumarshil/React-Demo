@@ -13,6 +13,8 @@ const AddProduct = props => {
     const [list, setList] = useState([]);
     const [warehouselist, setWarehouselist] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [unitlist, setunitlist] = useState([]);
+
     const data = {
         product_code: "",
         product_name: "",
@@ -21,7 +23,6 @@ const AddProduct = props => {
         category_name: "",
         warehouse_id: 0,
         sorting: "",
-        unit: "",
         opening_stock: "",
         buy_price: 0,
         cost: 0,
@@ -30,7 +31,8 @@ const AddProduct = props => {
         product_image: "",
         loading: true,
         category_autocode: 0,
-        category_code: 0
+        category_code: 0,
+        unit_id: 0
     };
     const [formData, setFormData] = useState(data);
 
@@ -45,7 +47,7 @@ const AddProduct = props => {
             Swal.fire("Category  Cannot Be Empty!!");
         } else if (formData.warehouse_id == 0) {
             Swal.fire("Warehouse Cannot Be Empty!!");
-        } else if (formData.unit == 0) {
+        } else if (formData.unit_id == 0) {
             Swal.fire("Unit  Cannot Be Empty!!");
         } else if (formData.buy_price == 0) {
             Swal.fire("Buy Price  Cannot Be Empty!!");
@@ -72,7 +74,7 @@ const AddProduct = props => {
                 cost: 0,
                 selling_price: 0,
                 price_type: 0,
-                reorder_level:0,
+                reorder_level: 0,
                 product_image: ""
             };
 
@@ -125,9 +127,9 @@ const AddProduct = props => {
 
     const fetchallwarehouse = async () => {
         const response = await axios.get(defaultRouteLink + "/api/all-data");
-
         setWarehouselist(response.data.warehouses);
         console.log(response.data.warehouses);
+        setunitlist(response.data.unitlist);
         setLoading(false);
     };
 
@@ -189,6 +191,14 @@ const AddProduct = props => {
         setFormData(oldState => ({
             ...oldState,
             warehouse_id: item.id
+        }));
+    });
+
+    const unitlists = unitlist.map(function(item, index) {
+        return <option value={item.id}> {item.unit_name}</option>;
+        setFormData(oldState => ({
+            ...oldState,
+            unit_id: item.id
         }));
     });
 
@@ -289,6 +299,7 @@ const AddProduct = props => {
                                     </div>
                                 </div>
                             </div>
+
                             <div className="col-md-4">
                                 <label className="control-label">Sorting</label>
                                 <div className="form-group">
@@ -307,18 +318,24 @@ const AddProduct = props => {
                                 <label className="control-label">Unit</label>
                                 <div className="form-group">
                                     <div className="input-group">
-                                        <input
-                                            type="text"
+                                        <select
                                             className="form-control"
-                                            placeholder="Unit"
-                                            name="unit"
+                                            id="exampleFormControlSelect1"
+                                            name="unit_id"
                                             onChange={handleInput}
-                                        ></input>
+                                        >
+                                            <option value="0" selected>
+                                                Choose One{" "}
+                                            </option>
+                                            {unitlists}
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                             <div className="col-md-4">
-                                <label className="control-label">Reorder Level</label>
+                                <label className="control-label">
+                                    Reorder Level
+                                </label>
                                 <div className="form-group">
                                     <div className="input-group">
                                         <input

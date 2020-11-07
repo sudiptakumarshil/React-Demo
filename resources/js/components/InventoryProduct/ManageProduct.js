@@ -61,6 +61,7 @@ const ManageProduct = props => {
                                 <th>Sorting</th>
                                 <th>Unit</th>
                                 <th>Opening Stock</th>
+                                <th>Reorder level</th>
                                 <th>Buy Price</th>
                                 <th>Cost</th>
                                 <th>Selling Price</th>
@@ -82,8 +83,9 @@ const ManageProduct = props => {
                                         <td>{item.category_name}</td>
                                         <td>{item.name}</td>
                                         <td>{item.sorting}</td>
-                                        <td>{item.unit}</td>
+                                        <td>{item.unit_name}</td>
                                         <td>{item.opening_stock}</td>
+                                        <td>{item.reorder_level}</td>
                                         <td>{item.buy_price}</td>
                                         <td>{item.cost}</td>
                                         <td>{item.selling_price}</td>

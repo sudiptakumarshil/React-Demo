@@ -75,7 +75,7 @@ class AddStoreInvoice extends Component {
             product_id: 0,
             productList: [],
             product: "",
-            quantity: "",
+            quantity: 1,
             price: 0,
             idx: "",
             user_id: "",
@@ -103,7 +103,9 @@ class AddStoreInvoice extends Component {
             invoiceParams: "",
             total_discount: 0,
             editInvoice: [],
-            delloading: false
+            delloading: false,
+            barcode: 1,
+            closingStock: 0
             // items_id:0
             //----------------
         };
@@ -174,14 +176,19 @@ class AddStoreInvoice extends Component {
         );
         // console.log(response.data.productPrice);
 
-        if (typeof response.data.productPrice != "undefined") {
+        if (
+            typeof response.data.productPrice != "undefined" &&
+            typeof response.data.closing_stock[0].closing != "undefined"
+        ) {
             this.setState({
                 product: response.data.productPrice,
-                price: response.data.productPrice.selling_price
+                price: response.data.productPrice.selling_price,
+                closingStock: response.data.closing_stock[0].closing
             });
         } else {
             this.setState({
-                price: ""
+                price: 0,
+                closingStock: 0
             });
         }
     };
@@ -189,6 +196,83 @@ class AddStoreInvoice extends Component {
     //     this.setState({ [event.target.name]: event.target.value });
     //     this.getProductWisePriceAuto(event.target.value);
     // };
+
+    QuickPurshaseInvoiceTransec = async event => {
+        // event.preventDefault();
+        const idx = this.props.match.params.idx;
+
+        const res = await axios.post(
+            "/dbBackup/api/save-storeinvoice",
+            this.state
+        );
+
+        this.setState({
+            discount_taka: 0,
+            discount_percent: 0,
+            quantity: 1
+        });
+
+        // dispatch({
+        //     type:SET_REFRESH_STORETRANSECTION,
+        //     updateinvoiceTransection:res.data
+        // });
+
+        this.fetchalldata();
+
+        // SUCCESS MESSAGE USING SWEET ALERT
+        try {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                onOpen: toast => {
+                    toast.addEventListener("mouseenter", Swal.stopTimer);
+                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+                }
+            });
+
+            Toast.fire({
+                icon: "success",
+                title: "Store Created  Successfully!!"
+            });
+        } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Something went wrong!",
+                footer: "<a href>Why do I have this issue?</a>"
+            });
+        }
+    };
+
+    handleProductName = async event => {
+        let pro_code = event.target.value;
+
+        const res = await axios.get(
+            defaultRouteLink + "/api/get-productCode/",
+            {
+                params: {
+                    product_code: pro_code
+                }
+            }
+        );
+        if (res.data.status == 200) {
+            this.setState({
+                price: res.data.productCode.selling_price,
+                product_id: res.data.productCode.id,
+                store_id: 1,
+                warehouse_id: 1,
+                vendor_id: 1,
+                quantity: 1
+            });
+            this.QuickPurshaseInvoiceTransec();
+        }
+
+        console.log(res.data.productCode.selling_price);
+    };
+
     priceHandleInput = e => {
         // console.log(e[0].id);
         if (typeof e[0] != "undefined") {
@@ -243,6 +327,22 @@ class AddStoreInvoice extends Component {
             total_discount,
             vat_amt
         );
+    };
+
+    handleBarcode = event => {
+        let barcodeid = event.target.value;
+        console.log(barcodeid);
+        if (barcodeid == "0") {
+            console.log("state");
+            this.setState({
+                barcode: 1
+            });
+        } else {
+            this.setState({
+                barcode: 0
+            });
+        }
+        // this.searchInput.current.focus();
     };
 
     handleDiscountTaka = event => {
@@ -310,10 +410,10 @@ class AddStoreInvoice extends Component {
     };
 
     // save invoice transection .......
-
     saveinvoiceTransection = async event => {
         event.preventDefault();
         const idx = this.props.match.params.idx;
+
         if (this.state.warehouse_id == 0) {
             Swal.fire({
                 title: "WareHouse Cannot Be Empty!!",
@@ -427,6 +527,21 @@ class AddStoreInvoice extends Component {
                     popup: "animate__animated animate__fadeOutUp"
                 }
             });
+        } else if (idx == 2 || idx == 3) {
+            if (
+                parseFloat(this.state.closingStock) <
+                parseFloat(this.state.quantity)
+            ) {
+                Swal.fire({
+                    title: "Quantity  Cannot Be Greater than closingStock!!",
+                    showClass: {
+                        popup: "animate__animated animate__fadeInDown"
+                    },
+                    hideClass: {
+                        popup: "animate__animated animate__fadeOutUp"
+                    }
+                });
+            }
         } else {
             const res = await axios.post(
                 "/dbBackup/api/save-storeinvoice",
@@ -436,7 +551,7 @@ class AddStoreInvoice extends Component {
             this.setState({
                 discount_taka: 0,
                 discount_percent: 0,
-                quantity: ""
+                quantity: 1
             });
 
             // dispatch({
@@ -1252,8 +1367,89 @@ class AddStoreInvoice extends Component {
                                                         <div className="card-body">
                                                             <div className="container">
                                                                 <div className="row">
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        name="barcode"
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .barcode
+                                                                        }
+                                                                        onChange={
+                                                                            this
+                                                                                .handleBarcode
+                                                                        }
+                                                                        checked={
+                                                                            this
+                                                                                .state
+                                                                                .barcode
+                                                                        }
+                                                                    />
+                                                                    {""}
+                                                                    BarCode
                                                                     <div className="col-md-3">
-                                                                        <label className="control-label"></label>
+                                                                        {this
+                                                                            .state
+                                                                            .barcode ==
+                                                                        1 ? (
+                                                                            <div className="form-group">
+                                                                                <label className="control-label"></label>
+
+                                                                                <input
+                                                                                    type="text"
+                                                                                    name="product_name"
+                                                                                    ref={
+                                                                                        this
+                                                                                            .searchInput
+                                                                                    }
+                                                                                    className="form-control"
+                                                                                    onKeyUp={
+                                                                                        this
+                                                                                            .handleProductName
+                                                                                    }
+                                                                                ></input>
+                                                                            </div>
+                                                                        ) : (
+                                                                            <div className="">
+                                                                                <label className="control-label"></label>
+
+                                                                                <Typeahead
+                                                                                    id="labelkey-example"
+                                                                                    labelKey={products =>
+                                                                                        `${products.product_name}`
+                                                                                    }
+                                                                                    // key={product =>
+                                                                                    //     `${product.id}`
+                                                                                    // }
+                                                                                    // valueKey={product =>
+                                                                                    //     `${product.id}`
+                                                                                    // }
+                                                                                    // isValid={product =>
+                                                                                    //     `${product.id}`
+                                                                                    // }
+                                                                                    // ref={inputEl =>
+                                                                                    //     (this.searchInput = inputEl)
+                                                                                    // }
+                                                                                    options={
+                                                                                        this
+                                                                                            .state
+                                                                                            .productList
+                                                                                    }
+                                                                                    value={
+                                                                                        this
+                                                                                            .state
+                                                                                            .product_id
+                                                                                    }
+                                                                                    name="product_id"
+                                                                                    onChange={e =>
+                                                                                        this.priceHandleInput(
+                                                                                            e
+                                                                                        )
+                                                                                    }
+                                                                                    placeholder="Select your product"
+                                                                                />
+                                                                            </div>
+                                                                        )}
                                                                         {/* <select
                                                                             className="form-control"
                                                                             data-live-search="true"
@@ -1280,7 +1476,7 @@ class AddStoreInvoice extends Component {
                                                                             }
                                                                         </select>
                                                                     */}
-                                                                        <Typeahead
+                                                                        {/* <Typeahead
                                                                             id="labelkey-example"
                                                                             labelKey={products =>
                                                                                 `${products.product_name}`
@@ -1311,9 +1507,8 @@ class AddStoreInvoice extends Component {
                                                                                 )
                                                                             }
                                                                             placeholder="Select your product"
-                                                                        />
+                                                                        /> */}
                                                                     </div>
-
                                                                     {this.state
                                                                         .product
                                                                         .price_type ==
@@ -1357,7 +1552,24 @@ class AddStoreInvoice extends Component {
                                                                             ></input>
                                                                         </div>
                                                                     )}
-
+                                                                    <div className="col-md-3">
+                                                                        <label className="control-label"></label>
+                                                                        <input
+                                                                            type="text"
+                                                                            readOnly
+                                                                            value={
+                                                                                this
+                                                                                    .state
+                                                                                    .closingStock
+                                                                            }
+                                                                            // onChange={
+                                                                            //     this
+                                                                            //         .handleInput
+                                                                            // }
+                                                                            className="form-control"
+                                                                            placeholder="Closing Stock"
+                                                                        ></input>
+                                                                    </div>
                                                                     <div className="col-md-3">
                                                                         <label className="control-label"></label>
                                                                         <input
@@ -1376,7 +1588,6 @@ class AddStoreInvoice extends Component {
                                                                             placeholder="Quantity"
                                                                         ></input>
                                                                     </div>
-
                                                                     <div className="col-md-3">
                                                                         <label className="control-label"></label>
                                                                         <input
@@ -1493,15 +1704,15 @@ class AddStoreInvoice extends Component {
                                                                             labelKey={products =>
                                                                                 `${products.product_name}`
                                                                             }
-                                                                            key={product =>
-                                                                                `${product.id}`
-                                                                            }
-                                                                            valueKey={product =>
-                                                                                `${product.id}`
-                                                                            }
-                                                                            isValid={product =>
-                                                                                `${product.id}`
-                                                                            }
+                                                                            // key={product =>
+                                                                            //     `${product.id}`
+                                                                            // }
+                                                                            // valueKey={product =>
+                                                                            //     `${product.id}`
+                                                                            // }
+                                                                            // isValid={product =>
+                                                                            //     `${product.id}`
+                                                                            // }
                                                                             options={
                                                                                 this
                                                                                     .state
@@ -1564,6 +1775,24 @@ class AddStoreInvoice extends Component {
                                                                             ></input>
                                                                         </div>
                                                                     )}
+                                                                    <div className="col-md-3">
+                                                                        <label className="control-label"></label>
+                                                                        <input
+                                                                            type="text"
+                                                                            readOnly
+                                                                            value={
+                                                                                this
+                                                                                    .state
+                                                                                    .closingStock
+                                                                            }
+                                                                            // onChange={
+                                                                            //     this
+                                                                            //         .handleInput
+                                                                            // }
+                                                                            className="form-control"
+                                                                            placeholder="Closing Stock"
+                                                                        ></input>
+                                                                    </div>
 
                                                                     <div className="col-md-3">
                                                                         <label className="control-label"></label>

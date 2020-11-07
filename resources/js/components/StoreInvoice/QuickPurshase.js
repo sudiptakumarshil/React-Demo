@@ -47,7 +47,6 @@ class QuickPurshase extends Component {
         const date = today.getDate();
         const month = today.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
         const year = today.getFullYear();
-
         // const dateStr = date + "/" + month + "/" + year;
 
         this.state = {
@@ -130,6 +129,8 @@ class QuickPurshase extends Component {
         this.getinvoiceNumber();
         this.get_warhousewiseStore();
     }
+
+
 
     // FOR GETTING WAREHOUSE WISE STORE
     get_warhousewiseStore = async wid => {
@@ -248,8 +249,8 @@ class QuickPurshase extends Component {
     handleBarcode = event => {
         let barcodeid = event.target.value;
         console.log(barcodeid);
-        if (barcodeid == '0') {
-            console.log("state")
+        if (barcodeid == "0") {
+            console.log("state");
             this.setState({
                 barcode: 1
             });
@@ -379,31 +380,25 @@ class QuickPurshase extends Component {
     handleProductName = async event => {
         let pro_code = event.target.value;
 
-
-            const res = await axios.get(
-                defaultRouteLink + "/api/get-productCode/",
-                {
-                    params: {
-                        product_code: pro_code
-                    }
+        const res = await axios.get(
+            defaultRouteLink + "/api/get-productCode/",
+            {
+                params: {
+                    product_code: pro_code
                 }
-            );
-            if (res.data.status == 200) {
-                this.setState({
-                    price: res.data.productCode.selling_price,
-                    product_id: res.data.productCode.id,
-                    store_id: 1,
-                    warehouse_id: 1,
-                    vendor_id: 1,
-                    quantity: 1
-                });
-                this.saveinvoiceTransection();
             }
-
-
-
-
-
+        );
+        if (res.data.status == 200) {
+            this.setState({
+                price: res.data.productCode.selling_price,
+                product_id: res.data.productCode.id,
+                store_id: 1,
+                warehouse_id: 1,
+                vendor_id: 1,
+                quantity: 1
+            });
+            this.saveinvoiceTransection();
+        }
 
         console.log(res.data.productCode.selling_price);
     };
@@ -1172,12 +1167,21 @@ class QuickPurshase extends Component {
                                                                     <input
                                                                         type="checkbox"
                                                                         name="barcode"
-                                                                        value={this.state.barcode}
+                                                                        value={
+                                                                            this
+                                                                                .state
+                                                                                .barcode
+                                                                        }
+
                                                                         onChange={
                                                                             this
                                                                                 .handleBarcode
                                                                         }
-                                                                        checked={this.state.barcode}
+                                                                        checked={
+                                                                            this
+                                                                                .state
+                                                                                .barcode
+                                                                        }
                                                                     />
                                                                     {""}
                                                                     BarCode
@@ -1190,8 +1194,8 @@ class QuickPurshase extends Component {
                                                                             <input
                                                                                 type="text"
                                                                                 name="product_name"
+                                                                                autoFocus={this.state.autoFocus}
                                                                                 className="form-control"
-
                                                                                 onKeyUp={
                                                                                     this
                                                                                         .handleProductName

@@ -41,7 +41,8 @@ import ManageInvoiceParams from "./components/InvoiceParams/manageParams";
 import EditParams from "./components/InvoiceParams/editParams";
 import QuickPurshase from "./components/StoreInvoice/QuickPurshase";
 import ProductUnit from "./components/ProductUnit/ProductUnit";
-
+import AddUnit from "./components/productUnit/AddProductUnit";
+import EditUnit from "./components/productUnit/EditProductUnit";
 
 import {
     defaultRouteLink,
@@ -269,7 +270,17 @@ export const Routes = props => {
                             <Route
                                 exact
                                 path={defaultRouteLink + "/manage-unit"}
-                                render={ProductUnit}
+                                component={ProductUnit}
+                            />
+                            <Route
+                                exact
+                                path={defaultRouteLink + "/add-unit"}
+                                component={AddUnit}
+                            />
+                                 <Route
+                                exact
+                                path={defaultRouteLink + "/edit-unit/:id"}
+                                render={props => <EditUnit {...props} />}
                             />
                         </Header>
                     ) : (

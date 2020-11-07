@@ -10,13 +10,13 @@ use Illuminate\Support\Facades\DB;
 
 class InventoryProductController extends Controller
 {
-
     public function index()
     {
         $products = DB::table('inventory_products')
             ->join('inventory_categories', 'inventory_products.category_id', 'inventory_categories.id')
             ->join('ware_house_details', 'inventory_products.warehouse_id', 'ware_house_details.id')
-            ->select('inventory_products.*', 'inventory_categories.category_name', 'ware_house_details.name')
+            ->join('units', 'inventory_products.unit_id', 'units.id')
+            ->select('inventory_products.*', 'inventory_categories.category_name', 'ware_house_details.name', 'units.unit_name')
             ->get();
 
         return response()->json([
@@ -68,20 +68,14 @@ class InventoryProductController extends Controller
             ->orderBy('id', "desc")
             ->first();
 
-        if (!empty($productCode)) {
-              $cate_code = $productCode->category_autocode + 1;
+        if (isset($productCode)) {
+            $cate_code = $productCode->category_autocode + 1;
         } else {
-              $cate_code = $categoryCode->category_code;
+            $cate_code = $categoryCode->category_code;
         }
 
-        // print_r($cate_code);
-
-        // if(!empty($categoryCode)){
-        //     $cat_code  = $categoryCode->category_autocode +1;
-        // } else {
-
-        //     // $cat_code  = $categoryCode->category_code;
-        // }
+        print_r($cate_code);
+        exit();
 
         $product = new InventoryProduct();
         $product->category_id = $request->category_id;
@@ -92,7 +86,7 @@ class InventoryProductController extends Controller
         $product->category_autocode = $cate_code;
         $product->sorting = $request->sorting;
         $product->reorder_level = $request->reorder_level;
-        $product->unit = $request->unit;
+        $product->unit_id = $request->unit_id;
         $product->opening_stock = $request->opening_stock;
         $product->buy_price = $request->buy_price;
         $product->cost = $request->cost;
@@ -110,7 +104,6 @@ class InventoryProductController extends Controller
     public function edit_product($id)
     {
         $product = InventoryProduct::find($id);
-
         return response()->json([
             'status' => 200,
             'product' => $product,

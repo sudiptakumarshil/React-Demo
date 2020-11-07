@@ -75,7 +75,7 @@ return [
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
             'prefix_indexes' => true,
-            'strict' => true,
+            'strict' => false,
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
@@ -86,7 +86,7 @@ return [
                 'use_single_transaction',
                 'timeout' => 60 * 5, // 5 minute timeout
                 //'exclude_tables' => ['table1', 'table2'],
-               // 'add_extra_option' => '--optionname=optionvalue', 
+               // 'add_extra_option' => '--optionname=optionvalue',
              ]*/
         ],
         'mysql2' => [
@@ -113,7 +113,7 @@ return [
                 'use_single_transaction',
                 'timeout' => 60 * 5, // 5 minute timeout
                 //'exclude_tables' => ['table1', 'table2'],
-               // 'add_extra_option' => '--optionname=optionvalue', 
+               // 'add_extra_option' => '--optionname=optionvalue',
              ]*/
         ],
         'mysql3' => [
@@ -140,7 +140,7 @@ return [
                 'use_single_transaction',
                 'timeout' => 60 * 5, // 5 minute timeout
                 //'exclude_tables' => ['table1', 'table2'],
-               // 'add_extra_option' => '--optionname=optionvalue', 
+               // 'add_extra_option' => '--optionname=optionvalue',
              ]*/
         ],
         'mysql4' => [
@@ -167,7 +167,7 @@ return [
                 'use_single_transaction',
                 'timeout' => 60 * 5, // 5 minute timeout
                 //'exclude_tables' => ['table1', 'table2'],
-               // 'add_extra_option' => '--optionname=optionvalue', 
+               // 'add_extra_option' => '--optionname=optionvalue',
              ]*/
         ],
         'mysql5' => [
@@ -194,7 +194,7 @@ return [
                 'use_single_transaction',
                 'timeout' => 60 * 5, // 5 minute timeout
                 //'exclude_tables' => ['table1', 'table2'],
-               // 'add_extra_option' => '--optionname=optionvalue', 
+               // 'add_extra_option' => '--optionname=optionvalue',
              ]*/
         ],
         'mysql6' => [
@@ -221,7 +221,7 @@ return [
                 'use_single_transaction',
                 'timeout' => 60 * 5, // 5 minute timeout
                 //'exclude_tables' => ['table1', 'table2'],
-               // 'add_extra_option' => '--optionname=optionvalue', 
+               // 'add_extra_option' => '--optionname=optionvalue',
              ]*/
         ],
         'pgsql' => [

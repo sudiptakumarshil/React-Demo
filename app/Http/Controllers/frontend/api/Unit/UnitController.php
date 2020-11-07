@@ -4,6 +4,7 @@ namespace App\Http\Controllers\frontend\api\Unit;
 
 use App\Http\Controllers\Controller;
 use App\Model\Unit\Unit;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Request;
 
 class UnitController extends Controller
@@ -19,9 +20,20 @@ class UnitController extends Controller
 
     public function add_unit(Request $request)
     {
+        $unitcode = DB::table('units')
+            ->orderBy('id', 'desc')
+            ->first();
+
+        if (!empty($unitcode->unit_code)) {
+            $unitCodes = $unitcode->unit_code + 1;
+
+        } else {
+            $unitCodes = 100;
+        }
+
         $unit = new Unit();
         $unit->unit_name = $request->unit_name;
-        $unit->unit_code = $request->unit_code;
+        $unit->unit_code = $unitCodes;
         $unit->status = $request->status;
         $unit->save();
         return response()->json([
@@ -53,5 +65,4 @@ class UnitController extends Controller
         ]);
     }
 
-    
 }

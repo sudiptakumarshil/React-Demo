@@ -26,7 +26,17 @@ const EditInvoiceTransectionModal = props => {
     const [productList, setproductList] = useState([]);
     const [invoiceParams, setinvoiceParams] = useState("");
     // invoiceParams: response.data.invoiceParams
-    const dataObj = {};
+    const dataObj = {
+        product_id: 0,
+        quantity: 1,
+        price: 0,
+        idx: "",
+        isModalShow: false,
+        modalData: {},
+        closingStock: 0,
+        discount_taka: 0,
+        discount_percent: 0
+    };
     const [formData, setFormData] = useState(dataObj);
     const dispatch = useDispatch();
     let i_id = props.modalData.id;
@@ -47,16 +57,29 @@ const EditInvoiceTransectionModal = props => {
 
     const updateinvoiceTransection = async event => {
         event.preventDefault();
-        const res = await axios.patch(
-            `/dbBackup/api/update-transecinvoice/${i_id}`,
-            formData
-        );
-        // for redux    .........  //
-        dispatch({
-            type: SET_REFRESH_STORETRANSECTION,
-            updateinvoiceTransection: res.data.products
-        });
-        props.handleClose();
+
+        if (parseFloat(formData.closingStock) < parseFloat(formData.quantity)) {
+            Swal.fire({
+                title: "Quantity  Cannot Be Greater than closingStock!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
+                }
+            });
+        } else {
+            const res = await axios.patch(
+                `/dbBackup/api/update-transecinvoice/${i_id}`,
+                formData
+            );
+            // for redux    .........  //
+            dispatch({
+                type: SET_REFRESH_STORETRANSECTION,
+                updateinvoiceTransection: res.data.products
+            });
+            props.handleClose();
+        }
     };
 
     // FOR GETTING PRODUCT WISE PRICE  ........
@@ -67,15 +90,20 @@ const EditInvoiceTransectionModal = props => {
             defaultRouteLink + "/api/get-product-wise-price/" + p_id
         );
 
-        if (typeof response.data.productPrice.selling_price != "undefined") {
+        if (
+            typeof response.data.productPrice.selling_price != "undefined" &&
+            typeof response.data.closing_stock[0].closing != "undefined"
+        ) {
             setFormData(oldState => ({
                 ...oldState,
-                price: response.data.productPrice.selling_price
+                price: response.data.productPrice.selling_price,
+                closingStock: response.data.closing_stock[0].closing
             }));
         } else {
             setFormData(oldState => ({
                 ...oldState,
-                price: 0
+                price: 0,
+                closingStock: 0
             }));
         }
     };
@@ -92,7 +120,7 @@ const EditInvoiceTransectionModal = props => {
         //     this.setState({ product_id: e[0].id });
         // }
         // console.log(e[0]); //true
-         if (typeof e[0] != "undefined") {
+        if (typeof e[0] != "undefined") {
             setFormData(oldState => ({
                 ...oldState,
                 product_id: e[0].id
@@ -102,14 +130,7 @@ const EditInvoiceTransectionModal = props => {
         if (typeof e[0] != "undefined") {
             var id = e[0].id;
             getProductWisePriceAuto(id);
-
         }
-
-        // if(item_id == id){
-        //     selected
-        // }
-
-
     };
 
     const handleInputs = event => {
@@ -139,11 +160,8 @@ const EditInvoiceTransectionModal = props => {
             ...oldState,
             idx: idx,
             product_id: item_id
-
         }));
-
     }, [props]);
-
 
     // GET ALL PRODUCT LIST
 
@@ -226,39 +244,35 @@ const EditInvoiceTransectionModal = props => {
                                                                         }
                                                                     </select>
                                                                 */}
-                                                                            <Typeahead
-                                                                            id="labelkey-example"
-                                                                            labelKey={products =>
-                                                                                `${products.product_name}`
-                                                                            }
-                                                                            key={product =>
-                                                                                `${product.id}`
-                                                                            }
-
-                                                                            selected={formData.product_id}
-                                                                            // selected={formData.product_id}
-                                                                            isValid={product =>
-                                                                                `${product.id}`
-                                                                            }
-
-                                                                            options={
-                                                                                productList
-                                                                            }
-                                                                            value={
-                                                                                formData.product_id
-                                                                            }
-
-                                                                            name="product_id"
-                                                                            onChange={e =>
-                                                                                handleProductPrice(
-                                                                                    e
-                                                                                )
-                                                                            }
-                                                                            placeholder="Select your product"
-                                                                        />
-
-
-
+                                                                    <Typeahead
+                                                                        id="labelkey-example"
+                                                                        labelKey={products =>
+                                                                            `${products.product_name}`
+                                                                        }
+                                                                        // key={product =>
+                                                                        //     `${product.id}`
+                                                                        // }
+                                                                        // selected={
+                                                                        //     formData.product_id
+                                                                        // }
+                                                                        // // selected={formData.product_id}
+                                                                        // isValid={product =>
+                                                                        //     `${product.id}`
+                                                                        // }
+                                                                        options={
+                                                                            productList
+                                                                        }
+                                                                        value={
+                                                                            formData.product_id
+                                                                        }
+                                                                        name="product_id"
+                                                                        onChange={e =>
+                                                                            handleProductPrice(
+                                                                                e
+                                                                            )
+                                                                        }
+                                                                        placeholder="Select your product"
+                                                                    />
                                                                 </div>
 
                                                                 <div className="col-md-3">
@@ -296,6 +310,22 @@ const EditInvoiceTransectionModal = props => {
                                                                         }
                                                                         className="form-control"
                                                                         placeholder="Price"
+                                                                    ></input>
+                                                                </div>
+                                                                <div className="col-md-3">
+                                                                    <label className="control-label"></label>
+                                                                    <input
+                                                                        type="text"
+                                                                        readOnly
+                                                                        value={
+                                                                            formData.closingStock
+                                                                        }
+                                                                        // onChange={
+                                                                        //     this
+                                                                        //         .handleInput
+                                                                        // }
+                                                                        className="form-control"
+                                                                        placeholder="Closing Stock"
                                                                     ></input>
                                                                 </div>
 
@@ -382,35 +412,36 @@ const EditInvoiceTransectionModal = props => {
                                                                         }
                                                                     </select>
                                                                 */}
-                                                                         <Typeahead
-                                                                            id="labelkey-example"
-                                                                            labelKey={products =>
-                                                                                `${products.product_name}`
-                                                                            }
-                                                                            key={product =>
-                                                                                `${product.id}`
-                                                                            }
+                                                                    <Typeahead
+                                                                        id="labelkey-example"
+                                                                        labelKey={products =>
+                                                                            `${products.product_name}`
+                                                                        }
+                                                                        key={product =>
+                                                                            `${product.id}`
+                                                                        }
                                                                         //    selected={formData.product_id}
 
-                                                                            valueKey={formData.product_id}
-                                                                            isValid={product =>
-                                                                                `${product.id}`
-                                                                            }
-                                                                            options={
-                                                                                productList
-                                                                            }
-                                                                            value={
-                                                                                formData.product_id
-                                                                            }
-                                                                            name="product_id"
-                                                                            onChange={e =>
-                                                                                handleProductPrice(
-                                                                                    e
-                                                                                )
-                                                                            }
-                                                                            placeholder="Select your product"
-                                                                        />
-
+                                                                        valueKey={
+                                                                            formData.product_id
+                                                                        }
+                                                                        isValid={product =>
+                                                                            `${product.id}`
+                                                                        }
+                                                                        options={
+                                                                            productList
+                                                                        }
+                                                                        value={
+                                                                            formData.product_id
+                                                                        }
+                                                                        name="product_id"
+                                                                        onChange={e =>
+                                                                            handleProductPrice(
+                                                                                e
+                                                                            )
+                                                                        }
+                                                                        placeholder="Select your product"
+                                                                    />
                                                                 </div>
 
                                                                 <div className="col-md-3">

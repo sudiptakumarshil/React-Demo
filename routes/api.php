@@ -168,6 +168,7 @@ Route::namespace ('frontend')->group(function () {
             Route::get('/all-unit', 'UnitController@index')->name("all-unit");
             Route::get('/edit-unit/{id}', 'UnitController@edit_unit')->name("edit-unit");
             Route::patch('/update-unit/{id}', 'UnitController@update_unit')->name("update-unit");
+            Route::post('/add-unit', 'UnitController@add_unit')->name("add-unit");
         });
     });
 });
