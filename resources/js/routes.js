@@ -43,7 +43,14 @@ import QuickPurshase from "./components/StoreInvoice/QuickPurshase";
 import ProductUnit from "./components/ProductUnit/ProductUnit";
 import AddUnit from "./components/productUnit/AddProductUnit";
 import EditUnit from "./components/productUnit/EditProductUnit";
-
+import AddAccountInput from "./components/AccountsInput/addAccountsInput";
+import ManageAccountInput from "./components/AccountsInput/ManageAccountInput";
+import EditAccountInput from "./components/AccountsInput/EditAccountsInput";
+import ManageCostCenter from "./components/CostCenter/ManageCostCenter";
+import AddCostCenter from "./components/CostCenter/AddCostCenter";
+import EditCostCenter from "./components/CostCenter/EditCostCenter";
+import PaymentVoucher from "./components/PaymentVoucher/PaymentVoucher";
+import Issue from "./components/StoreInvoice/IssueStoreInvoice";
 import {
     defaultRouteLink,
     getAccessTokenName,
@@ -208,6 +215,11 @@ export const Routes = props => {
                             />
                             <Route
                                 exact
+                                path={defaultRouteLink + "/issue/:idx"}
+                                render={props => <Issue {...props} />}
+                            />
+                            <Route
+                                exact
                                 path={defaultRouteLink + "/add-bank-details"}
                                 component={AddBankDetails}
                             />
@@ -277,11 +289,57 @@ export const Routes = props => {
                                 path={defaultRouteLink + "/add-unit"}
                                 component={AddUnit}
                             />
-                                 <Route
+                            <Route
                                 exact
                                 path={defaultRouteLink + "/edit-unit/:id"}
                                 render={props => <EditUnit {...props} />}
                             />
+                            <Route
+                                exact
+                                path={defaultRouteLink + "/add-account-input"}
+                                component={AddAccountInput}
+                            />
+                            <Route
+                                exact
+                                path={
+                                    defaultRouteLink + "/manage-account-input"
+                                }
+                                component={ManageAccountInput}
+                            />
+                            <Route
+                                exact
+                                path={
+                                    defaultRouteLink + "/edit-account-input/:id"
+                                }
+                                render={props => (
+                                    <EditAccountInput {...props} />
+                                )}
+                            />
+                            <Route
+                                exact
+                                path={defaultRouteLink + "/manage-costcenter"}
+                                component={ManageCostCenter}
+                            />
+                            <Route
+                                exact
+                                path={defaultRouteLink + "/add-costcenter"}
+                                component={AddCostCenter}
+                            />
+                            <Route
+                                exact
+                                path={
+                                    defaultRouteLink + "/edit-costcenter/:id"
+                                }
+                                render={props => (
+                                    <EditCostCenter {...props} />
+                                )}
+                            />
+                             <Route
+                                exact
+                                path={defaultRouteLink + "/paymentvaucher"}
+                                component={PaymentVoucher}
+                            />
+
                         </Header>
                     ) : (
                         <Route component={NotFound} />

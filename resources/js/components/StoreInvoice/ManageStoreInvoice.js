@@ -63,8 +63,8 @@ function ManageStoreInvoice(props) {
         const response = await axios.get(defaultRouteLink + "/api/all-data");
         if (response.data.status === 200) {
             setwarehouseList(response.data.warehouses),
-            setvendorlist(response.data.vendors),
-            setbankdetailsList(response.data.bankdetails);
+                setvendorlist(response.data.vendors),
+                setbankdetailsList(response.data.bankdetails);
             setloading(false);
         }
     };
@@ -229,6 +229,14 @@ function ManageStoreInvoice(props) {
                             style={{ marginLeft: 15 }}
                         >
                             Sale Return
+                        </Link>
+                        <Link
+                            to={`/dbBackup/issue/${6}`}
+                            type="button"
+                            className="btn btn-outline-secondary"
+                            style={{ marginLeft: 15 }}
+                        >
+                            Issue
                         </Link>
                     </div>
 

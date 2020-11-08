@@ -527,32 +527,43 @@ class AddStoreInvoice extends Component {
                     popup: "animate__animated animate__fadeOutUp"
                 }
             });
-        } else if (idx == 2 || idx == 3) {
-            if (
-                parseFloat(this.state.closingStock) <
-                parseFloat(this.state.quantity)
-            ) {
-                Swal.fire({
-                    title: "Quantity  Cannot Be Greater than closingStock!!",
-                    showClass: {
-                        popup: "animate__animated animate__fadeInDown"
-                    },
-                    hideClass: {
-                        popup: "animate__animated animate__fadeOutUp"
-                    }
-                });
-            }
+        } else if (
+            idx == 2 &&
+            parseInt(this.state.closingStock) < parseInt(this.state.quantity)
+        ) {
+            Swal.fire({
+                title: "Quantity  Cannot Be Greater than closingStock!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
+                }
+            });
+        } else if (
+            idx == 3 &&
+            parseInt(this.state.closingStock) < parseInt(this.state.quantity)
+        ) {
+            Swal.fire({
+                title: "Quantity  Cannot Be Greater than closingStock!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
+                }
+            });
         } else {
             const res = await axios.post(
                 "/dbBackup/api/save-storeinvoice",
                 this.state
             );
 
-            this.setState({
-                discount_taka: 0,
-                discount_percent: 0,
-                quantity: 1
-            });
+            // this.setState({
+            //     discount_taka: 0,
+            //     discount_percent: 0,
+            //     quantity: 1
+            // });
 
             // dispatch({
             //     type:SET_REFRESH_STORETRANSECTION,
@@ -1177,6 +1188,13 @@ class AddStoreInvoice extends Component {
                                     style={{ marginLeft: 15 }}
                                 >
                                     Quick Purshase
+                                </Link>
+                                <Link to={`/dbBackup/issue/${6}`}
+                                type="button"
+                                className="btn btn-outline-secondary"
+                                style={{ marginLeft: 15 }}
+                                >
+                                    Issue
                                 </Link>
                                 <Link
                                     to="/dbBackup/manage-store-invoice"

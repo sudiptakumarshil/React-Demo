@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 27, 2020 at 06:21 AM
+-- Generation Time: Nov 08, 2020 at 03:03 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.10
 
@@ -20,6 +20,29 @@ SET time_zone = "+00:00";
 --
 -- Database: `laravelpos`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `accounts_inputs`
+--
+
+CREATE TABLE `accounts_inputs` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `input_type` tinyint(4) NOT NULL COMMENT 'Posting Type =1 Doc Type=2',
+  `module_list` int(11) NOT NULL,
+  `status` tinyint(4) DEFAULT 1 COMMENT 'active=1 inactive=2',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `accounts_inputs`
+--
+
+INSERT INTO `accounts_inputs` (`id`, `name`, `input_type`, `module_list`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'sample1', 2, 0, 1, '2020-11-08 00:50:58', '2020-11-08 01:16:30');
 
 -- --------------------------------------------------------
 
@@ -93,6 +116,31 @@ INSERT INTO `contacts` (`id`, `title`, `description`, `created_at`, `updated_at`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `cost_centers`
+--
+
+CREATE TABLE `cost_centers` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `code` int(11) NOT NULL,
+  `ware_id` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'active=1 inactive=2',
+  `trash` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'delete=2 ',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `cost_centers`
+--
+
+INSERT INTO `cost_centers` (`id`, `name`, `code`, `ware_id`, `status`, `trash`, `created_at`, `updated_at`) VALUES
+(1, 'gazi2', 200, 1, 1, 1, '2020-11-08 02:05:42', '2020-11-08 02:24:01'),
+(2, 'asia', 201, 1, 1, 1, '2020-11-08 02:07:10', '2020-11-08 02:07:10');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `customers`
 --
 
@@ -119,7 +167,8 @@ INSERT INTO `customers` (`id`, `name`, `email`, `address`, `phone`, `remarks`, `
 (1, 'sudipto kumar shil2', 'sudiptoshil@outlook.com', 'chittagong', '01624772008', 'hello', 192, 0, 0, 0, '2020-09-23 00:44:55', '2020-09-23 01:29:40'),
 (2, 'test', 'test@mail.com', 'dhaka', '01746952187', 'hello', 203, 0, 0, 4, '2020-09-30 23:24:48', '2020-09-30 23:24:48'),
 (3, 'hasan', 'hasan@gmail.com', 'dhaka', '01746952187', 'hello', 432, 0, 0, 4, '2020-10-04 00:54:06', '2020-10-04 00:54:06'),
-(4, 'hasan', 'admin@mail.com', 'chittagong', '01746952187', 'ffff', 203, 0, 0, 1, '2020-10-18 22:28:17', '2020-10-18 22:28:17');
+(4, 'hasan', 'admin@mail.com', 'chittagong', '01746952187', 'ffff', 203, 0, 0, 1, '2020-10-18 22:28:17', '2020-10-18 22:28:17'),
+(5, 'hello', 'admin@mail.com', 'ctg', '44', 'ee', 192, 0, 0, 1, '2020-10-29 07:03:53', '2020-10-29 07:03:53');
 
 -- --------------------------------------------------------
 
@@ -146,6 +195,7 @@ CREATE TABLE `inventory_categories` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `root_id` int(11) UNSIGNED DEFAULT NULL,
   `category_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `category_code` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `short_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `home_page` int(11) DEFAULT 0,
   `ware_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
@@ -159,64 +209,67 @@ CREATE TABLE `inventory_categories` (
 -- Dumping data for table `inventory_categories`
 --
 
-INSERT INTO `inventory_categories` (`id`, `root_id`, `category_name`, `short_name`, `home_page`, `ware_id`, `status`, `category_image`, `created_at`, `updated_at`) VALUES
-(1, 0, 'Category', 'pc', 1, 0, 1, 'public/category_image/81YUHsnzj1L._AC_SL1500_.jpg', '2020-07-01 23:15:15', '2020-07-22 02:28:10'),
-(2, 1, 'Desktop Component', 'dc', 1, 0, 1, 'public/category_image/open.jpg', '2020-07-01 23:15:15', '2020-07-23 06:08:41'),
-(3, 2, 'UPS', 'ups', 1, 0, 1, 'public/category_image/open.jpg', '2020-07-01 23:15:15', '2020-07-01 23:15:15'),
-(4, 3, 'windows os', 'win', 1, 0, 1, 'public/category_image/download (4).jpg', '2020-07-01 23:47:01', '2020-07-01 23:47:01'),
-(5, 1, 'Monitor', 'mon', 1, 0, 1, 'public/category_image/tft-led-wide-screen-smart-tv-icon-127253013.jpg', '2020-07-02 00:34:26', '2020-08-18 00:51:04'),
-(6, 5, 'hp monitor', 'hp', 1, 0, 1, 'public/category_image/download (4).jpg', '2020-07-02 01:25:36', '2020-07-02 01:25:36'),
-(7, 5, 'LG monitor', 'lg', 1, 0, 1, 'public/category_image/04-macbook-pro-2019.webp', '2020-07-02 01:29:58', '2020-07-02 01:29:58'),
-(8, 1, 'bike', 'bk', 1, 0, 0, 'public/category_image/logo.png', '2020-07-04 00:38:50', '2020-07-25 01:01:23'),
-(9, 8, 'motor bike', 'mtbk', 1, 0, 1, 'public/category_image/logo.png', '2020-07-04 00:39:43', '2020-07-04 00:39:43'),
-(10, 1, 'Mobilee', 'mob', 1, 0, 0, 'category_image/61wumn0iZSL._SY445_.jpg', '2020-07-12 00:06:13', '2020-07-25 01:02:23'),
-(11, 10, 'Android', 'and', 1, 0, 1, 'category_image/61wumn0iZSL._SY445_.jpg', '2020-07-12 00:08:54', '2020-07-12 00:08:54'),
-(12, 1, 'Router', 'roo', 1, 0, 0, 'public/category_image/A3002RU-V2_wr_01.jpg', '2020-07-13 05:09:37', '2020-07-25 01:03:01'),
-(13, 1, 't-shirt', 'tch', 1, 0, 0, 'public/category_image/open.jpg', '2020-07-15 00:34:45', '2020-07-25 01:02:35'),
-(14, 13, 'cotton', 'co', 1, 0, 1, 'public/category_image/download.png', '2020-07-15 00:42:14', '2020-07-15 00:42:14'),
-(15, 5, 'Acer Monitor', 'acer-monitor', 1, 0, 1, 'public/category_image/Acer.jpg', '2020-07-15 00:44:44', '2020-07-23 06:09:05'),
-(16, 5, 'AOC Monitor', 'aoc', 1, 0, 1, 'public/category_image/images.jpg', '2020-07-15 01:00:11', '2020-07-23 06:09:39'),
-(17, 5, 'Dell Monitor', 'dell', 1, 0, 1, 'public/category_image/download.jpg', '2020-07-15 03:17:33', '2020-07-23 06:10:20'),
-(18, 5, 'Hp Monitor2345', 'hp', 1, 0, 1, 'public/category_image/techland-HP V194-1044x966.jpg', '2020-07-15 03:20:11', '2020-09-27 05:08:46'),
-(19, 5, 'Asus Monitor', 'asus', 1, 0, 1, 'public/category_image/ASUS VX24AH-500x500.jpg', '2020-07-15 03:29:34', '2020-07-23 06:10:44'),
-(20, 5, 'Viewsonic Monitor', 'viewsonic', 1, 0, 1, 'public/category_image/images (1).jpg', '2020-07-15 03:31:32', '2020-07-23 06:11:14'),
-(21, 5, 'Samsung Monitor', 'samsung', 1, 0, 1, 'public/category_image/5044701ld.jpg', '2020-07-15 03:32:05', '2020-07-23 06:11:25'),
-(22, 5, 'Philips Monitor', 'philips', 1, 0, 1, 'public/category_image/philips-monitor-led-21-5-224e5qhsb-vga-hdmi-mhl-castleit-1312-23-castleIT@12.jpg', '2020-07-15 03:32:54', '2020-07-23 06:11:38'),
-(28, 11, 'Android 10', 'a10', 1, 0, 1, 'public/category_image/61wumn0iZSL._SY445_.jpg', '2020-07-18 04:01:33', '2020-07-18 04:01:33'),
-(29, 1, 'Hard Disk Drive', 'hard-disk', 1, 0, 0, 'public/category_image/seagate-12tb-hard-drive.jpg', '2020-07-18 05:58:18', '2020-09-01 23:59:15'),
-(30, 1, 'Component', 'component', 1, 0, 1, 'public/category_image/115605719-computer-components-laptop-ssd-icons-motherboard-cpu-internet-cables-icons-wifi-router-computer-moni.jpg', '2020-07-18 22:59:08', '2020-07-23 06:11:57'),
-(31, 30, 'SSD', 'SSD', 1, 0, 1, 'public/category_image/storage-u.2_ssd_form_factors_mobile.png', '2020-07-18 23:10:48', '2020-07-18 23:10:48'),
-(38, 30, 'Hard Disk Drive', 'Hard Disk', 1, 0, 1, 'public/category_image/414Rj6OWa+L._SX466_.jpg', '2020-07-22 01:09:25', '2020-07-22 01:09:25'),
-(39, 38, 'Western digital', 'western-digital', 1, 0, 1, 'public/category_image/414Rj6OWa+L._SX466_.jpg', '2020-07-22 01:13:30', '2020-08-23 23:02:06'),
-(40, 38, 'Seagate', 'seagate', 1, 0, 1, 'public/category_image/414Rj6OWa+L._SX466_.jpg', '2020-07-22 01:13:57', '2020-08-23 23:02:18'),
-(41, 38, 'Toshiba', 'toshiba', 1, 0, 1, 'public/category_image/414Rj6OWa+L._SX466_.jpg', '2020-07-22 01:15:22', '2020-08-23 23:02:37'),
-(42, 1, 'Storage', 'Storage', 1, 0, 1, 'public/category_image/unnamed.jpg', '2020-07-22 02:24:19', '2020-07-22 02:24:19'),
-(43, 42, 'External HDD', 'External HDD', 1, 0, 1, 'public/category_image/unnamed.jpg', '2020-07-22 02:25:06', '2020-07-22 02:25:06'),
-(44, 2, 'Mainboard', 'Mainboard', 1, 0, 1, 'public/category_image/36944c14-aee0-4291-9ce6-89a51e347132.jpg', '2020-07-22 02:51:03', '2020-07-22 02:51:03'),
-(45, 30, 'Processor', 'processor', 1, 0, 1, 'public/category_image/17533122-cpu-processor-chip-on-white-isolated.jpg', '2020-08-04 02:29:16', '2020-08-04 02:29:16'),
-(46, 2, 'Graphics Card', 'graphics-card', 1, 0, 1, 'public/category_image/img_3455.jpg', '2020-08-05 23:22:31', '2020-08-05 23:22:31'),
-(47, 2, 'Power Supply', 'power-supply', 1, 0, 1, 'public/category_image/images.jpg', '2020-08-07 23:10:51', '2020-08-07 23:10:51'),
-(48, 2, 'Optical Device', 'optical-device', 1, 0, 1, 'public/category_image/dvd-rom.jpg', '2020-08-08 03:55:55', '2020-08-08 03:55:55'),
-(49, 2, 'Casing Fan', 'casing-fan', 1, 0, 1, 'public/category_image/COOLER-MASTER-12CM-CASING-FAN.jpg', '2020-08-08 04:56:04', '2020-08-08 04:56:04'),
-(50, 2, 'Casing', 'casing', 1, 0, 1, 'public/category_image/thunderbolt-battle-field-gaming-casing.jpg', '2020-08-11 00:06:52', '2020-08-11 00:06:52'),
-(51, 2, 'Keyboard', 'keyboard', 1, 0, 1, 'public/category_image/a.jpg.png', '2020-08-17 03:41:37', '2020-08-17 03:41:37'),
-(52, 2, 'Mouse', 'mouse', 1, 0, 1, 'public/category_image/421-4212127_computer-mouse-drawing-easy-hd-png-download.png', '2020-08-18 03:23:43', '2020-08-18 03:23:43'),
-(53, 10, 'bettry', NULL, 0, 0, 1, NULL, NULL, NULL),
-(54, 8, 'apache', NULL, 0, 0, 1, NULL, '2020-09-24 00:30:52', '2020-09-24 00:30:52'),
-(55, 1, 'laptop', NULL, 0, 0, 1, NULL, '2020-09-24 00:34:09', '2020-09-24 00:34:09'),
-(56, 10, 'nokia', NULL, 0, 0, 1, NULL, '2020-09-24 00:53:50', '2020-09-24 00:53:50'),
-(57, 56, 'lumia', NULL, 0, 0, 1, NULL, '2020-09-24 00:54:50', '2020-09-24 00:54:50'),
-(447, 2, 'Test 1', NULL, 0, 0, 1, NULL, '2020-09-24 09:45:05', '2020-09-24 09:45:05'),
-(448, 42, 'S1', NULL, 0, 0, 1, NULL, '2020-09-24 09:45:50', '2020-09-24 09:45:50'),
-(449, 43, 'HDD-1', NULL, 0, 0, 1, NULL, '2020-09-24 09:46:11', '2020-09-24 09:46:11'),
-(450, 5, 'hp monitors', NULL, 0, 0, 1, NULL, '2020-09-27 04:24:14', '2020-09-27 04:24:14'),
-(451, 5, 'LG monitor567', NULL, 0, 0, 1, NULL, '2020-09-27 04:35:10', '2020-09-27 05:51:23'),
-(452, 8, 'bajaj', NULL, 0, 0, 1, NULL, '2020-09-27 05:32:06', '2020-09-27 05:32:06'),
-(453, 2, 'potato', NULL, 0, 0, 1, NULL, '2020-09-27 05:55:39', '2020-09-27 05:55:39'),
-(454, 10, 'lolipop', NULL, 0, 0, 1, NULL, '2020-09-27 05:56:30', '2020-09-27 05:56:30'),
-(455, 10, 'android2', NULL, 0, 0, 1, NULL, '2020-09-27 06:20:21', '2020-09-27 06:20:21'),
-(456, 452, 'v15', NULL, 0, 0, 1, NULL, '2020-09-27 06:23:53', '2020-09-27 06:23:53'),
-(457, 7, 'new led', NULL, 0, 0, 1, NULL, '2020-10-23 23:21:30', '2020-10-23 23:21:30');
+INSERT INTO `inventory_categories` (`id`, `root_id`, `category_name`, `category_code`, `short_name`, `home_page`, `ware_id`, `status`, `category_image`, `created_at`, `updated_at`) VALUES
+(1, 0, 'Category', '', 'pc', 1, 0, 1, 'public/category_image/81YUHsnzj1L._AC_SL1500_.jpg', '2020-07-01 23:15:15', '2020-07-22 02:28:10'),
+(2, 1, 'Desktop Component', '', 'dc', 1, 0, 1, 'public/category_image/open.jpg', '2020-07-01 23:15:15', '2020-07-23 06:08:41'),
+(3, 2, 'UPS', '', 'ups', 1, 0, 1, 'public/category_image/open.jpg', '2020-07-01 23:15:15', '2020-07-01 23:15:15'),
+(4, 3, 'windows os', '', 'win', 1, 0, 1, 'public/category_image/download (4).jpg', '2020-07-01 23:47:01', '2020-07-01 23:47:01'),
+(5, 1, 'Monitor', '', 'mon', 1, 0, 1, 'public/category_image/tft-led-wide-screen-smart-tv-icon-127253013.jpg', '2020-07-02 00:34:26', '2020-08-18 00:51:04'),
+(6, 5, 'hp monitor', '', 'hp', 1, 0, 1, 'public/category_image/download (4).jpg', '2020-07-02 01:25:36', '2020-07-02 01:25:36'),
+(7, 5, 'LG monitor', '', 'lg', 1, 0, 1, 'public/category_image/04-macbook-pro-2019.webp', '2020-07-02 01:29:58', '2020-07-02 01:29:58'),
+(8, 1, 'bike', '', 'bk', 1, 0, 0, 'public/category_image/logo.png', '2020-07-04 00:38:50', '2020-07-25 01:01:23'),
+(9, 8, 'motor bikes', '', 'mtbk', 1, 0, 1, 'public/category_image/logo.png', '2020-07-04 00:39:43', '2020-11-03 03:09:08'),
+(10, 1, 'Mobilee', '', 'mob', 1, 0, 0, 'category_image/61wumn0iZSL._SY445_.jpg', '2020-07-12 00:06:13', '2020-07-25 01:02:23'),
+(11, 10, 'Android', '', 'and', 1, 0, 1, 'category_image/61wumn0iZSL._SY445_.jpg', '2020-07-12 00:08:54', '2020-07-12 00:08:54'),
+(12, 1, 'Router', '', 'roo', 1, 0, 0, 'public/category_image/A3002RU-V2_wr_01.jpg', '2020-07-13 05:09:37', '2020-07-25 01:03:01'),
+(13, 1, 't-shirt', '', 'tch', 1, 0, 0, 'public/category_image/open.jpg', '2020-07-15 00:34:45', '2020-07-25 01:02:35'),
+(14, 13, 'cotton', '', 'co', 1, 0, 1, 'public/category_image/download.png', '2020-07-15 00:42:14', '2020-07-15 00:42:14'),
+(15, 5, 'Acer Monitor', '', 'acer-monitor', 1, 0, 1, 'public/category_image/Acer.jpg', '2020-07-15 00:44:44', '2020-07-23 06:09:05'),
+(16, 5, 'AOC Monitor', '234', 'aoc', 1, 0, 1, 'public/category_image/images.jpg', '2020-07-15 01:00:11', '2020-07-23 06:09:39'),
+(17, 5, 'Dell Monitor', '', 'dell', 1, 0, 1, 'public/category_image/download.jpg', '2020-07-15 03:17:33', '2020-07-23 06:10:20'),
+(18, 5, 'Hp Monitor2345', '', 'hp', 1, 0, 1, 'public/category_image/techland-HP V194-1044x966.jpg', '2020-07-15 03:20:11', '2020-09-27 05:08:46'),
+(19, 5, 'Asus Monitor', '', 'asus', 1, 0, 1, 'public/category_image/ASUS VX24AH-500x500.jpg', '2020-07-15 03:29:34', '2020-07-23 06:10:44'),
+(20, 5, 'Viewsonic Monitor', '', 'viewsonic', 1, 0, 1, 'public/category_image/images (1).jpg', '2020-07-15 03:31:32', '2020-07-23 06:11:14'),
+(21, 5, 'Samsung Monitor', '', 'samsung', 1, 0, 1, 'public/category_image/5044701ld.jpg', '2020-07-15 03:32:05', '2020-07-23 06:11:25'),
+(22, 5, 'Philips Monitor', '', 'philips', 1, 0, 1, 'public/category_image/philips-monitor-led-21-5-224e5qhsb-vga-hdmi-mhl-castleit-1312-23-castleIT@12.jpg', '2020-07-15 03:32:54', '2020-07-23 06:11:38'),
+(28, 11, 'Android 10', '', 'a10', 1, 0, 1, 'public/category_image/61wumn0iZSL._SY445_.jpg', '2020-07-18 04:01:33', '2020-07-18 04:01:33'),
+(29, 1, 'Hard Disk Drive', '', 'hard-disk', 1, 0, 0, 'public/category_image/seagate-12tb-hard-drive.jpg', '2020-07-18 05:58:18', '2020-09-01 23:59:15'),
+(30, 1, 'Component', '', 'component', 1, 0, 1, 'public/category_image/115605719-computer-components-laptop-ssd-icons-motherboard-cpu-internet-cables-icons-wifi-router-computer-moni.jpg', '2020-07-18 22:59:08', '2020-07-23 06:11:57'),
+(31, 30, 'SSD', '', 'SSD', 1, 0, 1, 'public/category_image/storage-u.2_ssd_form_factors_mobile.png', '2020-07-18 23:10:48', '2020-07-18 23:10:48'),
+(38, 30, 'Hard Disk Drive', '', 'Hard Disk', 1, 0, 1, 'public/category_image/414Rj6OWa+L._SX466_.jpg', '2020-07-22 01:09:25', '2020-07-22 01:09:25'),
+(39, 38, 'Western digital', '', 'western-digital', 1, 0, 1, 'public/category_image/414Rj6OWa+L._SX466_.jpg', '2020-07-22 01:13:30', '2020-08-23 23:02:06'),
+(40, 38, 'Seagate', '', 'seagate', 1, 0, 1, 'public/category_image/414Rj6OWa+L._SX466_.jpg', '2020-07-22 01:13:57', '2020-08-23 23:02:18'),
+(41, 38, 'Toshiba', '', 'toshiba', 1, 0, 1, 'public/category_image/414Rj6OWa+L._SX466_.jpg', '2020-07-22 01:15:22', '2020-08-23 23:02:37'),
+(42, 1, 'Storage', '', 'Storage', 1, 0, 1, 'public/category_image/unnamed.jpg', '2020-07-22 02:24:19', '2020-07-22 02:24:19'),
+(43, 42, 'External HDD', '', 'External HDD', 1, 0, 1, 'public/category_image/unnamed.jpg', '2020-07-22 02:25:06', '2020-07-22 02:25:06'),
+(44, 2, 'Mainboard', '', 'Mainboard', 1, 0, 1, 'public/category_image/36944c14-aee0-4291-9ce6-89a51e347132.jpg', '2020-07-22 02:51:03', '2020-07-22 02:51:03'),
+(45, 30, 'Processor', '', 'processor', 1, 0, 1, 'public/category_image/17533122-cpu-processor-chip-on-white-isolated.jpg', '2020-08-04 02:29:16', '2020-08-04 02:29:16'),
+(46, 2, 'Graphics Card', '', 'graphics-card', 1, 0, 1, 'public/category_image/img_3455.jpg', '2020-08-05 23:22:31', '2020-08-05 23:22:31'),
+(47, 2, 'Power Supply', '', 'power-supply', 1, 0, 1, 'public/category_image/images.jpg', '2020-08-07 23:10:51', '2020-08-07 23:10:51'),
+(48, 2, 'Optical Device', '', 'optical-device', 1, 0, 1, 'public/category_image/dvd-rom.jpg', '2020-08-08 03:55:55', '2020-08-08 03:55:55'),
+(49, 2, 'Casing Fan', '', 'casing-fan', 1, 0, 1, 'public/category_image/COOLER-MASTER-12CM-CASING-FAN.jpg', '2020-08-08 04:56:04', '2020-08-08 04:56:04'),
+(50, 2, 'Casing', '', 'casing', 1, 0, 1, 'public/category_image/thunderbolt-battle-field-gaming-casing.jpg', '2020-08-11 00:06:52', '2020-08-11 00:06:52'),
+(51, 2, 'Keyboard', '', 'keyboard', 1, 0, 1, 'public/category_image/a.jpg.png', '2020-08-17 03:41:37', '2020-08-17 03:41:37'),
+(52, 2, 'Mouse', '', 'mouse', 1, 0, 1, 'public/category_image/421-4212127_computer-mouse-drawing-easy-hd-png-download.png', '2020-08-18 03:23:43', '2020-08-18 03:23:43'),
+(53, 10, 'bettry', '', NULL, 0, 0, 1, NULL, NULL, NULL),
+(54, 8, 'apache', '', NULL, 0, 0, 1, NULL, '2020-09-24 00:30:52', '2020-09-24 00:30:52'),
+(55, 1, 'laptop', '', NULL, 0, 0, 1, NULL, '2020-09-24 00:34:09', '2020-09-24 00:34:09'),
+(56, 10, 'nokia', '', NULL, 0, 0, 1, NULL, '2020-09-24 00:53:50', '2020-09-24 00:53:50'),
+(57, 56, 'lumia', '', NULL, 0, 0, 1, NULL, '2020-09-24 00:54:50', '2020-09-24 00:54:50'),
+(447, 2, 'Test 1', '', NULL, 0, 0, 1, NULL, '2020-09-24 09:45:05', '2020-09-24 09:45:05'),
+(448, 42, 'S1', '', NULL, 0, 0, 1, NULL, '2020-09-24 09:45:50', '2020-09-24 09:45:50'),
+(449, 43, 'HDD-1', '', NULL, 0, 0, 1, NULL, '2020-09-24 09:46:11', '2020-09-24 09:46:11'),
+(450, 5, 'hp monitors', '', NULL, 0, 0, 1, NULL, '2020-09-27 04:24:14', '2020-09-27 04:24:14'),
+(451, 5, 'LG monitor567', '', NULL, 0, 0, 1, NULL, '2020-09-27 04:35:10', '2020-09-27 05:51:23'),
+(452, 8, 'bajaj', '', NULL, 0, 0, 1, NULL, '2020-09-27 05:32:06', '2020-09-27 05:32:06'),
+(453, 2, 'potato', '', NULL, 0, 0, 1, NULL, '2020-09-27 05:55:39', '2020-09-27 05:55:39'),
+(454, 10, 'lolipop', '', NULL, 0, 0, 1, NULL, '2020-09-27 05:56:30', '2020-09-27 05:56:30'),
+(455, 10, 'android2', '', NULL, 0, 0, 1, NULL, '2020-09-27 06:20:21', '2020-09-27 06:20:21'),
+(456, 452, 'v15', '', NULL, 0, 0, 1, NULL, '2020-09-27 06:23:53', '2020-09-27 06:23:53'),
+(457, 7, 'new led', '', NULL, 0, 0, 1, NULL, '2020-10-23 23:21:30', '2020-10-23 23:21:30'),
+(458, 1, 'bike', '', NULL, 0, 0, 1, NULL, '2020-11-03 03:08:38', '2020-11-03 03:08:38'),
+(459, 5, 'hp monitor', 'S123', NULL, 0, 0, 1, NULL, '2020-11-05 00:24:27', '2020-11-05 00:24:27'),
+(460, 5, 'PHP', '456', NULL, 0, 0, 1, NULL, '2020-11-05 00:25:46', '2020-11-05 00:25:46');
 
 -- --------------------------------------------------------
 
@@ -228,15 +281,17 @@ CREATE TABLE `inventory_products` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `product_code` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
   `product_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pices_of_carton` int(11) NOT NULL,
+  `pices_of_carton` int(11) NOT NULL DEFAULT 0,
   `category_id` int(10) UNSIGNED NOT NULL,
   `warehouse_id` int(10) UNSIGNED NOT NULL,
-  `sorting` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `unit` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `opening_stock` int(10) UNSIGNED NOT NULL,
+  `sorting` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
+  `reorder_level` int(11) NOT NULL,
+  `category_autocode` int(11) NOT NULL,
+  `unit_id` int(255) UNSIGNED NOT NULL,
+  `opening_stock` int(10) UNSIGNED DEFAULT NULL,
   `buy_price` double(8,2) NOT NULL,
   `cost` double(8,2) NOT NULL,
-  `selling_price` double(8,2) NOT NULL,
+  `selling_price` double(8,2) NOT NULL DEFAULT 0.00,
   `price_type` tinyint(4) NOT NULL COMMENT ' Customize Price = 1 Fixed Price =2',
   `product_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -247,13 +302,23 @@ CREATE TABLE `inventory_products` (
 -- Dumping data for table `inventory_products`
 --
 
-INSERT INTO `inventory_products` (`id`, `product_code`, `product_name`, `pices_of_carton`, `category_id`, `warehouse_id`, `sorting`, `unit`, `opening_stock`, `buy_price`, `cost`, `selling_price`, `price_type`, `product_image`, `created_at`, `updated_at`) VALUES
-(1, '123445', 'acer aspire', 1, 43, 3, 'ere', '1', 12, 123.00, 200.00, 300.00, 2, NULL, '2020-09-29 05:04:22', '2020-09-30 04:27:45'),
-(2, '34225', 'machine learninng', 20, 7, 2, 'array', '1', 10, 23000.00, 2000.00, 30000.00, 1, NULL, '2020-09-29 06:49:19', '2020-09-30 02:33:38'),
-(3, '2345', 'python programming', 20, 12, 3, 'ere', '1', 10, 123.00, 2000.00, 30000.00, 2, NULL, '2020-09-30 03:23:16', '2020-09-30 03:23:16'),
-(4, '111', 'poteto', 1, 7, 2, '1', 'pcs', 0, 1000.00, 10.00, 12000.00, 2, NULL, '2020-10-21 04:33:31', '2020-10-21 04:33:31'),
-(5, 't4rt5y56y5', 'hp elite book', 1, 11, 1, '2', '2', 2, 2000.00, 200.00, 3000.00, 1, NULL, '2020-10-21 06:05:37', '2020-10-21 06:05:37'),
-(6, 'sls234', 'macbook pro', 20, 456, 1, '10', '10', 12, 1000.00, 200.00, 2000.00, 1, NULL, '2020-10-21 06:10:07', '2020-10-21 06:10:07');
+INSERT INTO `inventory_products` (`id`, `product_code`, `product_name`, `pices_of_carton`, `category_id`, `warehouse_id`, `sorting`, `reorder_level`, `category_autocode`, `unit_id`, `opening_stock`, `buy_price`, `cost`, `selling_price`, `price_type`, `product_image`, `created_at`, `updated_at`) VALUES
+(1, '123445', 'acer aspire', 1, 43, 3, 'ere', 0, 0, 1, 12, 123.00, 200.00, 300.00, 2, NULL, '2020-09-29 05:04:22', '2020-09-30 04:27:45'),
+(2, '34225', 'machine learninng', 20, 7, 2, 'array', 0, 0, 1, 10, 23000.00, 2000.00, 30000.00, 1, NULL, '2020-09-29 06:49:19', '2020-09-30 02:33:38'),
+(3, '2345', 'python programming', 20, 12, 3, 'ere', 0, 0, 1, 10, 123.00, 2000.00, 30000.00, 2, NULL, '2020-09-30 03:23:16', '2020-09-30 03:23:16'),
+(4, '111', 'poteto', 1, 7, 2, '1', 0, 0, 0, 0, 1000.00, 10.00, 12000.00, 2, NULL, '2020-10-21 04:33:31', '2020-10-21 04:33:31'),
+(5, 't4rt5y56y5', 'hp elite book', 1, 11, 1, '2', 0, 0, 2, 2, 2000.00, 200.00, 3000.00, 1, NULL, '2020-10-21 06:05:37', '2020-10-21 06:05:37'),
+(6, 'sls234', 'macbook pro', 20, 460, 1, '10', 0, 456, 10, 12, 1000.00, 200.00, 2000.00, 1, NULL, '2020-10-21 06:10:07', '2020-10-21 06:10:07'),
+(7, '2345', 'php cli', 123, 460, 1, '23', 0, 457, 1, 12, 1000.00, 1000.00, 300.00, 1, NULL, '2020-11-05 03:46:41', '2020-11-05 03:46:41'),
+(8, '7647447', 'php 01', 1, 460, 1, '1', 0, 457, 1, 1, 100.00, 5.00, 200.00, 2, NULL, '2020-11-05 04:13:28', '2020-11-05 04:13:28'),
+(9, '2345', 'poteto-001', 1, 460, 1, '2', 23, 457, 1, 12, 1000.00, 200.00, 300.00, 1, NULL, '2020-11-05 04:34:20', '2020-11-05 04:34:20'),
+(10, '345', 'honda', 1, 460, 1, '23', 23, 457, 1, 10, 123.00, 200.00, 300.00, 1, NULL, '2020-11-05 04:35:37', '2020-11-05 04:35:37'),
+(11, '0989', 'pulser', 1, 460, 1, '1', 23, 457, 1, 12, 123.00, 200.00, 300.00, 2, NULL, '2020-11-05 04:39:39', '2020-11-05 04:39:39'),
+(12, '3456', 'php laravel', 1, 460, 1, '1', 1, 457, 1, NULL, 123.00, 200.00, 300.00, 1, NULL, '2020-11-05 04:43:01', '2020-11-05 04:43:01'),
+(13, '123445', 'hp elite book3', 1, 460, 1, '1', 23, 457, 1, 3, 444.00, 200.00, 300.00, 2, NULL, '2020-11-05 04:46:20', '2020-11-05 04:46:20'),
+(14, '456', 'python programming23', 20, 460, 1, '1', 1, 456, 2, 10, 123.00, 200.00, 300.00, 1, NULL, '2020-11-05 04:48:22', '2020-11-05 04:48:22'),
+(15, '34225', 'acer aspire34', 20, 460, 1, '2', 1, 457, 1, 12, 1000.00, 200.00, 300.00, 2, NULL, '2020-11-05 08:08:47', '2020-11-05 08:08:47'),
+(16, '2345', 'hp elite book', 1, 460, 2, 'ere', 23, 457, 1, 10, 23000.00, 200.00, 30000.00, 1, NULL, '2020-11-05 08:22:20', '2020-11-05 08:22:20');
 
 -- --------------------------------------------------------
 
@@ -263,7 +328,7 @@ INSERT INTO `inventory_products` (`id`, `product_code`, `product_name`, `pices_o
 
 CREATE TABLE `invoice_parameters` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `type` tinyint(4) NOT NULL COMMENT 'new purshase =1 ,purshase return = 2, sale return =4 sale = 3',
+  `type` tinyint(4) NOT NULL COMMENT 'new purshase =1 ,purshase return = 2, sale return =4 sale = 3\r\nquick Purshase =5\r\nissue = 6\r\n',
   `discount_method` tinyint(4) NOT NULL COMMENT 'invoice wise = 1 product wise = 2',
   `invoice_start_no` int(11) NOT NULL,
   `is_due_allow` tinyint(4) NOT NULL COMMENT 'id due allow = 2 or not allow = 3',
@@ -278,10 +343,12 @@ CREATE TABLE `invoice_parameters` (
 --
 
 INSERT INTO `invoice_parameters` (`id`, `type`, `discount_method`, `invoice_start_no`, `is_due_allow`, `ware_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 0, 2, 1, 2, NULL, NULL),
+(1, 1, 2, 0, 2, 1, 2, NULL, '2020-11-08 04:09:27'),
 (2, 2, 1, 0, 2, 1, 2, NULL, NULL),
 (3, 3, 2, 0, 2, 1, 2, NULL, NULL),
-(4, 4, 2, 0, 2, 1, 2, NULL, NULL);
+(4, 4, 2, 0, 2, 1, 2, NULL, NULL),
+(5, 5, 1, 0, 0, 0, 0, NULL, NULL),
+(6, 6, 2, 0, 0, 0, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -294,18 +361,20 @@ CREATE TABLE `invoice_trasections` (
   `invoice_id` int(10) UNSIGNED NOT NULL,
   `d_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `c_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `item_id` int(10) UNSIGNED NOT NULL,
   `party_id` int(10) UNSIGNED NOT NULL COMMENT 'vendor id or customer id',
   `date` date NOT NULL,
   `ware_id` int(10) UNSIGNED NOT NULL,
   `status` tinyint(4) NOT NULL,
   `store_id` int(10) UNSIGNED NOT NULL,
-  `quantity` double(8,2) NOT NULL,
+  `quantity` int(11) NOT NULL,
   `price` int(11) NOT NULL,
   `discount_taka` double(8,2) NOT NULL DEFAULT 0.00,
   `discount_percent` double(8,2) NOT NULL DEFAULT 0.00,
   `vat` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `publishing_by` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` int(11) NOT NULL COMMENT 'NEW PURSHASE = 1 , PURSHASE RETURN = 2, SALE =3 ,SALE RETURN = 4',
+  `type` int(11) NOT NULL COMMENT 'NEW PURSHASE = 1 , PURSHASE RETURN = 2, SALE =3 ,SALE RETURN = 4\r\nissue =6',
+  `trash` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'delete = 2',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -314,20 +383,30 @@ CREATE TABLE `invoice_trasections` (
 -- Dumping data for table `invoice_trasections`
 --
 
-INSERT INTO `invoice_trasections` (`id`, `invoice_id`, `d_id`, `c_id`, `party_id`, `date`, `ware_id`, `status`, `store_id`, `quantity`, `price`, `discount_taka`, `discount_percent`, `vat`, `publishing_by`, `type`, `created_at`, `updated_at`) VALUES
-(1, 1, 5, 0, 5, '2020-10-21', 1, 1, 6, 3.00, 2000, 0.00, 0.00, 0, '1', 1, '2020-10-21 01:35:10', '2020-10-22 01:19:42'),
-(3, 3, 0, 5, 4, '2020-10-22', 1, 1, 6, 25.00, 3000, 0.00, 0.00, 0, '1', 3, '2020-10-22 02:36:07', '2020-10-22 02:36:07'),
-(4, 11, 5, 0, 5, '2020-10-22', 2, 1, 6, 2.00, 3000, 0.00, 0.00, 0, '1', 1, '2020-10-22 04:37:30', '2020-10-22 04:37:30'),
-(5, 14, 5, 0, 5, '2020-10-22', 1, 1, 8, 9.00, 3009, 0.00, 0.00, 0, '1', 1, '2020-10-22 07:16:59', '2020-10-22 07:16:59'),
-(6, 14, 0, 5, 4, '2020-10-22', 1, 1, 6, 25.00, 3000, 0.00, 0.00, 0, '1', 3, '2020-10-22 07:58:28', '2020-10-22 07:58:28'),
-(7, 14, 0, 6, 4, '2020-10-22', 1, 1, 6, 6.00, 2000, 0.00, 0.00, 0, '1', 3, '2020-10-22 07:59:53', '2020-10-22 07:59:53'),
-(8, 15, 5, 0, 5, '2020-10-22', 1, 1, 6, 2.00, 3000, 0.00, 0.00, 0, '1', 1, '2020-10-22 08:31:11', '2020-10-22 08:31:11'),
-(9, 15, 5, 0, 5, '2020-10-22', 1, 1, 6, 25.00, 3000, 0.00, 0.00, 0, '1', 2, '2020-10-22 08:43:28', '2020-10-22 08:43:28'),
-(10, 15, 0, 5, 5, '2020-10-22', 1, 1, 6, 2.00, 3000, 0.00, 0.00, 3, '1', 3, '2020-10-22 08:46:29', '2020-10-22 08:46:29'),
-(11, 0, 6, 0, 5, '2020-10-24', 1, 1, 7, 2.00, 2000, 0.00, 0.00, 0, '1', 2, '2020-10-23 23:26:52', '2020-10-23 23:26:52'),
-(12, 0, 0, 6, 5, '2020-10-24', 1, 1, 7, 5.00, 2000, 0.00, 0.00, 3, '1', 3, '2020-10-24 00:01:59', '2020-10-24 00:01:59'),
-(13, 0, 0, 5, 5, '2020-10-24', 1, 1, 6, 2.00, 3000, 0.00, 0.00, 0, '1', 4, '2020-10-24 02:33:11', '2020-10-24 02:33:11'),
-(17, 0, 5, 0, 5, '2020-10-25', 1, 1, 6, 4.00, 3000, 0.00, 0.00, 0, '1', 1, '2020-10-25 02:00:58', '2020-10-25 02:00:58');
+INSERT INTO `invoice_trasections` (`id`, `invoice_id`, `d_id`, `c_id`, `item_id`, `party_id`, `date`, `ware_id`, `status`, `store_id`, `quantity`, `price`, `discount_taka`, `discount_percent`, `vat`, `publishing_by`, `type`, `trash`, `created_at`, `updated_at`) VALUES
+(1, 1, 3, 0, 3, 1, '2020-11-08', 1, 1, 1, 1, 30000, 0.00, 0.00, 0, '1', 1, 2, '2020-11-07 22:44:13', '2020-11-08 04:10:34'),
+(2, 1, 3, 0, 3, 1, '2020-11-08', 1, 1, 1, 1, 30000, 0.00, 0.00, 0, '1', 1, 2, '2020-11-07 22:44:13', '2020-11-08 04:10:38'),
+(3, 1, 5, 0, 5, 1, '2020-11-08', 1, 1, 6, 1, 30000, 0.00, 0.00, 0, '1', 1, 2, '2020-11-07 22:44:43', '2020-11-08 04:10:41'),
+(4, 1, 0, 5, 5, 1, '2020-11-08', 1, 1, 6, 1, 3000, 2.00, 0.00, 8, '1', 3, 1, '2020-11-07 22:51:26', '2020-11-07 22:51:26'),
+(5, 1, 5, 0, 5, 1, '2020-11-08', 1, 1, 6, 10, 3000, 0.00, 0.00, 0, '1', 1, 2, '2020-11-07 22:59:55', '2020-11-08 04:10:43'),
+(6, 1, 5, 0, 5, 1, '2020-11-08', 1, 1, 6, 5, 3000, 0.00, 0.00, 0, '1', 2, 1, '2020-11-07 23:00:31', '2020-11-07 23:00:31'),
+(7, 1, 0, 5, 5, 1, '2020-11-08', 1, 1, 6, 1, 3000, 20.00, 0.00, 0, '1', 3, 1, '2020-11-07 23:02:19', '2020-11-07 23:02:19'),
+(8, 1, 0, 5, 5, 1, '2020-11-08', 1, 1, 6, 5, 3000, 0.00, 0.00, 8, '1', 3, 1, '2020-11-07 23:03:56', '2020-11-07 23:03:56'),
+(9, 1, 5, 0, 5, 1, '2020-11-08', 1, 1, 6, 5, 3000, 0.00, 0.00, 0, '1', 2, 1, '2020-11-07 23:10:38', '2020-11-07 23:10:38'),
+(10, 1, 5, 0, 5, 1, '2020-11-08', 1, 1, 6, 1, 3000, 0.00, 0.00, 8, '1', 1, 2, '2020-11-08 04:10:31', '2020-11-08 04:10:46'),
+(11, 1, 6, 0, 6, 1, '2020-11-08', 1, 1, 6, 1, 3000, 0.00, 0.00, 8, '1', 1, 1, '2020-11-08 04:10:59', '2020-11-08 04:10:59'),
+(12, 1, 7, 0, 7, 1, '2020-11-08', 1, 1, 6, 4, 3000, 0.00, 0.00, 8, '1', 1, 1, '2020-11-08 04:11:12', '2020-11-08 04:11:12'),
+(13, 2, 0, 6, 6, 1, '2020-11-08', 2, 1, 9, 1, 2000, 0.00, 0.00, 5, '1', 3, 1, '2020-11-08 04:12:32', '2020-11-08 04:12:32'),
+(14, 2, 0, 0, 5, 1, '2020-11-08', 1, 1, 6, 1, 3000, 0.00, 0.00, 8, '1', 6, 2, '2020-11-08 05:11:07', '2020-11-08 05:35:09'),
+(15, 2, 0, 5, 5, 1, '2020-11-08', 1, 1, 6, 1, 3000, 0.00, 0.00, 8, '1', 6, 1, '2020-11-08 05:35:23', '2020-11-08 05:35:23'),
+(16, 2, 0, 1, 1, 1, '2020-11-08', 1, 1, 1, 1, 300, 0.00, 0.00, 8, '1', 6, 1, '2020-11-08 05:36:07', '2020-11-08 05:36:07'),
+(17, 2, 0, 1, 1, 1, '2020-11-08', 1, 1, 1, 3, 300, 0.00, 0.00, 0, '1', 6, 1, '2020-11-08 05:56:36', '2020-11-08 07:05:02'),
+(18, 2, 5, 0, 5, 1, '2020-11-08', 1, 1, 6, 1, 3000, 0.00, 0.00, 8, '1', 1, 1, '2020-11-08 07:05:42', '2020-11-08 07:05:42'),
+(19, 2, 5, 0, 5, 1, '2020-11-08', 1, 1, 6, 1, 3000, 0.00, 0.00, 0, '1', 2, 1, '2020-11-08 07:06:13', '2020-11-08 07:06:13'),
+(20, 3, 0, 1, 1, 1, '2020-11-08', 1, 1, 1, 1, 300, 0.00, 0.00, 0, '1', 6, 1, '2020-11-08 07:39:21', '2020-11-08 07:39:21'),
+(21, 4, 0, 5, 5, 1, '2020-11-08', 1, 1, 6, 1, 3000, 0.00, 0.00, 0, '1', 6, 1, '2020-11-08 07:42:01', '2020-11-08 07:42:01'),
+(22, 5, 0, 5, 5, 1, '2020-11-08', 1, 1, 6, 1, 3000, 0.00, 0.00, 0, '1', 6, 1, '2020-11-08 07:49:41', '2020-11-08 07:49:41'),
+(23, 5, 0, 6, 6, 1, '2020-11-08', 1, 1, 6, 1, 2000, 0.00, 0.00, 0, '1', 6, 1, '2020-11-08 07:49:55', '2020-11-08 07:49:55');
 
 -- --------------------------------------------------------
 
@@ -813,7 +892,34 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (27, '2020_10_05_100421_create_vats_table', 8),
 (29, '2020_10_19_062613_create_bank_details_table', 9),
 (30, '2020_10_19_075208_create_cash_account_details_table', 10),
-(31, '2020_10_24_062207_create_invoice_parameters_table', 11);
+(31, '2020_10_24_062207_create_invoice_parameters_table', 11),
+(32, '2020_11_05_105500_create_units_table', 12),
+(33, '2020_11_08_053910_create_module_lists_table', 13),
+(34, '2020_11_08_054727_create_accounts_inputs_table', 14),
+(35, '2020_11_08_055722_create_cost_centers_table', 15);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `module_lists`
+--
+
+CREATE TABLE `module_lists` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'active=1,inactive=2',
+  `trash` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'delete=2',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `module_lists`
+--
+
+INSERT INTO `module_lists` (`id`, `name`, `status`, `trash`, `created_at`, `updated_at`) VALUES
+(1, 'inventory', 1, 1, NULL, NULL),
+(2, 'sample2', 1, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -961,7 +1067,7 @@ CREATE TABLE `store_invoices` (
   `invoice_number` int(11) NOT NULL,
   `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `vendor_id` int(10) UNSIGNED DEFAULT 0,
-  `ware_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `ware_id` int(10) UNSIGNED DEFAULT 0,
   `date` date DEFAULT NULL,
   `posting_by` int(10) UNSIGNED NOT NULL,
   `store_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
@@ -973,6 +1079,7 @@ CREATE TABLE `store_invoices` (
   `bank_amount` float DEFAULT 0,
   `bank_id` int(11) DEFAULT 0,
   `remarks` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `total_quantity` int(11) DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -981,22 +1088,32 @@ CREATE TABLE `store_invoices` (
 -- Dumping data for table `store_invoices`
 --
 
-INSERT INTO `store_invoices` (`id`, `invoice_number`, `type`, `vendor_id`, `ware_id`, `date`, `posting_by`, `store_id`, `gross_amount`, `discount_taka`, `discount_percent`, `cash_amount`, `cash_id`, `bank_amount`, `bank_id`, `remarks`, `created_at`, `updated_at`) VALUES
-(1, 1000, '1', 5, 1, '2020-10-21', 1, 7, 120000.00, 0.00, 20.00, 700.00, 1, 700, 1, 'good day', '2020-10-21 01:39:00', '2020-10-21 01:39:00'),
-(2, 1001, '1', 5, 1, '2020-10-21', 1, 6, 60000.00, 0.00, 0.00, 0.00, 1, 0, 1, 'test', '2020-10-21 04:36:03', '2020-10-21 04:36:03'),
-(3, 3000, '3', 0, 1, '2020-10-22', 1, 6, 81000.00, 0.00, 20.00, 0.00, 1, 0, 1, 'hhhr', '2020-10-22 02:44:58', '2020-10-22 02:44:58'),
-(4, 3000, '3', 0, 1, '2020-10-22', 1, 6, 81000.00, 0.00, 20.00, 0.00, 1, 0, 1, 'hhhr', '2020-10-22 02:47:43', '2020-10-22 02:47:43'),
-(5, 3000, '3', 0, 1, '2020-10-22', 1, 6, 81000.00, 0.00, 20.00, 0.00, 1, 0, 1, 'hhhr', '2020-10-22 02:48:12', '2020-10-22 02:48:12'),
-(6, 1002, '1', 0, 1, '2020-10-22', 1, 6, 81000.00, 0.00, 10.00, 0.00, 1, 0, 1, 'hello', '2020-10-22 03:17:15', '2020-10-22 03:17:15'),
-(7, 1003, '1', 0, 1, '2020-10-22', 1, 6, 81000.00, 0.00, 20.00, 0.00, 1, 4000, 1, 'done', '2020-10-22 03:33:20', '2020-10-22 03:33:20'),
-(8, 1004, '1', 5, 1, '2020-10-22', 1, 6, 81000.00, 0.00, 20.00, 0.00, 1, 0, 1, '200', '2020-10-22 03:56:32', '2020-10-22 03:56:32'),
-(9, 1005, '1', 5, 1, '2020-10-22', 1, 7, 81000.00, 0.00, 20.00, 0.00, 1, 0, 1, '66', '2020-10-22 03:58:58', '2020-10-22 03:58:58'),
-(10, 1006, '1', NULL, 1, '2020-10-22', 1, 6, 81000.00, 0.00, 200.00, 199.00, 1, 0, NULL, 'done', '2020-10-22 04:08:34', '2020-10-22 04:08:34'),
-(11, 1007, '1', 5, 2, '2020-10-22', 1, 9, 87000.00, 0.00, NULL, 0.00, NULL, 2000, 1, 'done', '2020-10-22 04:50:19', '2020-10-22 04:50:19'),
-(12, 1007, '1', 5, 1, '2020-10-22', 1, 6, 87000.00, 0.00, 20.00, 2000.00, 1, 0, NULL, 'done', '2020-10-22 06:30:37', '2020-10-22 06:30:37'),
-(13, 1008, '1', 5, 2, '2020-10-22', 1, 9, 87000.00, 0.00, NULL, 0.00, NULL, 0, NULL, 'done', '2020-10-22 06:38:51', '2020-10-22 06:38:51'),
-(14, 3001, '3', NULL, 1, '2020-10-22', 1, 6, 87000.00, 0.00, NULL, 0.00, NULL, 0, NULL, 'TES', '2020-10-22 08:02:23', '2020-10-22 08:02:23'),
-(15, 3002, '3', 5, 1, '2020-10-22', 1, 6, 6000.00, 0.00, NULL, 0.00, NULL, 0, NULL, 'done', '2020-10-22 08:46:53', '2020-10-22 08:46:53');
+INSERT INTO `store_invoices` (`id`, `invoice_number`, `type`, `vendor_id`, `ware_id`, `date`, `posting_by`, `store_id`, `gross_amount`, `discount_taka`, `discount_percent`, `cash_amount`, `cash_id`, `bank_amount`, `bank_id`, `remarks`, `total_quantity`, `created_at`, `updated_at`) VALUES
+(5, 6000, '6', 1, 1, '2020-11-08', 1, 6, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, NULL, 0, '2020-11-08 07:50:14', '2020-11-08 07:50:14');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `units`
+--
+
+CREATE TABLE `units` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `unit_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `unit_code` int(11) NOT NULL,
+  `status` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `units`
+--
+
+INSERT INTO `units` (`id`, `unit_name`, `unit_code`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'item', 100, 1, '2020-11-07 01:27:31', '2020-11-07 01:27:31'),
+(2, 'kg', 101, 1, '2020-11-07 01:27:45', '2020-11-07 01:27:45'),
+(3, 'amount', 102, 1, '2020-11-07 01:28:06', '2020-11-07 01:28:06');
 
 -- --------------------------------------------------------
 
@@ -1045,9 +1162,9 @@ CREATE TABLE `vats` (
 --
 
 INSERT INTO `vats` (`id`, `vat_name`, `value`, `ware_id`, `status`, `created_at`, `updated_at`) VALUES
-(4, '20%', 20, 1, 1, '2020-10-05 07:12:56', '2020-10-05 07:12:56'),
 (5, '30%', 30, 1, 1, '2020-10-05 07:17:07', '2020-10-05 07:17:07'),
-(6, '20%', 20, 3, 1, '2020-10-05 07:19:00', '2020-10-05 07:19:00');
+(6, '20%', 20, 3, 1, '2020-10-05 07:19:00', '2020-10-05 07:19:00'),
+(8, 'zero vat', 0, 0, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1075,12 +1192,8 @@ CREATE TABLE `vendors` (
 --
 
 INSERT INTO `vendors` (`id`, `name`, `email`, `address`, `phone`, `remarks`, `accounts_no`, `status`, `type`, `ware_id`, `created_at`, `updated_at`) VALUES
-(1, 'sudipto kumar shil2', 'sudiptoshil@outlook.com', 'chittagong', '01624772008', 'hello', 192, 0, 0, 0, '2020-09-22 07:24:57', '2020-09-22 23:38:55'),
-(2, 'vendor', 'vendor@mial.com', 'ctg', '01746952187', 'good', 225, 0, 0, 0, '2020-09-22 08:03:17', '2020-09-22 08:06:40'),
-(3, 'customer', 'customer@mail.com', 'chittagong', '01746952187', 'best', 192, 0, 0, 0, '2020-09-23 00:42:15', '2020-09-23 00:42:15'),
-(4, 'ayman sadiq', 'ayman@gmail.com', 'dhaka', '01624772008', 'best', 225, 0, 0, 5, '2020-09-30 23:17:12', '2020-09-30 23:17:12'),
-(5, 'vendor2', 'vendor@mial.com', 'chittagong', '01624772008', 'hello', 203, 0, 0, 2, '2020-10-04 00:52:42', '2020-10-04 00:52:42'),
-(6, 'super123', 'admin@mail.com', 'ctg', '01746952187', 'hello', 432, 0, 0, 4, '2020-10-04 00:53:34', '2020-10-04 00:53:34');
+(1, 'vendor2', 'vendor@mail.com', 'ctg', '0199922', 'vendor', 12, 0, 0, 1, NULL, NULL),
+(2, 'hasan', 'hasan@gmail.com', 'dhaka', '07665', 'vendor', 192, 0, 0, 1, '2020-11-04 23:26:16', '2020-11-04 23:26:16');
 
 -- --------------------------------------------------------
 
@@ -1126,6 +1239,12 @@ INSERT INTO `ware_house_details` (`id`, `name`, `foreign_name`, `wh_keeper`, `lo
 --
 
 --
+-- Indexes for table `accounts_inputs`
+--
+ALTER TABLE `accounts_inputs`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `bank_details`
 --
 ALTER TABLE `bank_details`
@@ -1141,6 +1260,12 @@ ALTER TABLE `cash_account_details`
 -- Indexes for table `contacts`
 --
 ALTER TABLE `contacts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `cost_centers`
+--
+ALTER TABLE `cost_centers`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1192,6 +1317,12 @@ ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `module_lists`
+--
+ALTER TABLE `module_lists`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `password_resets`
 --
 ALTER TABLE `password_resets`
@@ -1214,6 +1345,12 @@ ALTER TABLE `stores`
 -- Indexes for table `store_invoices`
 --
 ALTER TABLE `store_invoices`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `units`
+--
+ALTER TABLE `units`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1246,6 +1383,12 @@ ALTER TABLE `ware_house_details`
 --
 
 --
+-- AUTO_INCREMENT for table `accounts_inputs`
+--
+ALTER TABLE `accounts_inputs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `bank_details`
 --
 ALTER TABLE `bank_details`
@@ -1264,10 +1407,16 @@ ALTER TABLE `contacts`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `cost_centers`
+--
+ALTER TABLE `cost_centers`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -1279,25 +1428,25 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `inventory_categories`
 --
 ALTER TABLE `inventory_categories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=458;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=461;
 
 --
 -- AUTO_INCREMENT for table `inventory_products`
 --
 ALTER TABLE `inventory_products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `invoice_parameters`
 --
 ALTER TABLE `invoice_parameters`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `invoice_trasections`
 --
 ALTER TABLE `invoice_trasections`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `ledger_copy`
@@ -1309,7 +1458,13 @@ ALTER TABLE `ledger_copy`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+
+--
+-- AUTO_INCREMENT for table `module_lists`
+--
+ALTER TABLE `module_lists`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `setting_copy`
@@ -1327,7 +1482,13 @@ ALTER TABLE `stores`
 -- AUTO_INCREMENT for table `store_invoices`
 --
 ALTER TABLE `store_invoices`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `units`
+--
+ALTER TABLE `units`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -1339,13 +1500,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `vats`
 --
 ALTER TABLE `vats`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `vendors`
 --
 ALTER TABLE `vendors`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `ware_house_details`

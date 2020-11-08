@@ -202,6 +202,14 @@ const Header = props => {
                                             Quick Purshase
                                         </Link>
                                     </li>
+
+                                    <li className="">
+                                        <Link
+                                            to={`/dbBackup/issue/${6}`}
+                                        >
+                                            Issue
+                                        </Link>
+                                    </li>
                                     <li className="">
                                         <Link to="/dbBackup/manage-bank-details">
                                             Bank Details
@@ -229,6 +237,26 @@ const Header = props => {
                                             Manage Unit
                                         </Link>
                                     </li>
+
+                                    <li className="">
+                                        <Link to="/dbBackup/manage-account-input">
+                                            Manage Account Input
+                                        </Link>
+                                    </li>
+
+                                    <li className="">
+                                        <Link to="/dbBackup/manage-costcenter">
+                                            Manage Cost Center
+                                        </Link>
+                                    </li>
+
+                                    <li className="">
+                                        <Link to="/dbBackup/paymentvaucher">
+                                           Payment Vaucher
+                                        </Link>
+                                    </li>
+
+
                                 </ul>
                             </li>
                         </ul>

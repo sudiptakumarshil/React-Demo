@@ -111,6 +111,7 @@ Route::namespace ('frontend')->group(function () {
             Route::get('/get-invoice-number-type-3', 'StoreInvoiceController@get_invoice_number_for_type3');
             Route::get('/get-invoice-number-type-4', 'StoreInvoiceController@get_invoice_number_for_type4');
             Route::get('/get-invoice-number-type-5', 'StoreInvoiceController@get_invoice_number_for_type5');
+            Route::get('/get-invoice-number-type-6', 'StoreInvoiceController@get_invoice_number_for_type6');
             Route::get('/get-warehouse/{id}', 'StoreInvoiceController@getwarehouse');
             Route::get('/get-product-wise-price/{id}', 'StoreInvoiceController@product_wise_price');
             Route::get('/get-productCode', 'InvoiceParamsController@get_productCode');
@@ -173,5 +174,26 @@ Route::namespace ('frontend')->group(function () {
     });
 });
 
+Route::namespace ('frontend')->group(function () {
+    Route::namespace ('api')->group(function () {
+        Route::namespace ('AccountsInput')->group(function () {
+            Route::get('/all-input', 'AccountsInputController@index')->name("all-input");
+            Route::get('/edit-input/{id}', 'AccountsInputController@edit_input')->name("edit-input");
+            Route::patch('/update-input/{id}', 'AccountsInputController@Update_input')->name("update-input");
+            Route::post('/add-input', 'AccountsInputController@add_input')->name("add-input");
+            Route::get('/all-module', 'AccountsInputController@all_module')->name("all-module");
 
+        });
+    });
+});
 
+Route::namespace ('frontend')->group(function () {
+    Route::namespace ('api')->group(function () {
+        Route::namespace ('CostCenter')->group(function () {
+            Route::get('/all-costcenter', 'CostCenterController@index')->name("all-costcenter");
+            Route::get('/edit-costcenter/{id}', 'CostCenterController@edit_cost')->name("edit-costcenter");
+            Route::patch('/update-costcenter/{id}', 'CostCenterController@update_cost')->name("update-costcenter");
+            Route::post('/add-costcenter', 'CostCenterController@add_cost')->name("add-costcenter");
+        });
+    });
+});

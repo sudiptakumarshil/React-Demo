@@ -26,6 +26,7 @@ const EditInvoiceTransectionModal = props => {
     const [productList, setproductList] = useState([]);
     const [invoiceParams, setinvoiceParams] = useState("");
     // invoiceParams: response.data.invoiceParams
+    const { idx } = useParams();
     const dataObj = {
         product_id: 0,
         quantity: 1,
@@ -58,7 +59,34 @@ const EditInvoiceTransectionModal = props => {
     const updateinvoiceTransection = async event => {
         event.preventDefault();
 
-        if (parseFloat(formData.closingStock) < parseFloat(formData.quantity)) {
+        // if (parseFloat(formData.closingStock) < parseFloat(formData.quantity)) {
+        //     Swal.fire({
+        //         title: "Quantity  Cannot Be Greater than closingStock!!",
+        //         showClass: {
+        //             popup: "animate__animated animate__fadeInDown"
+        //         },
+        //         hideClass: {
+        //             popup: "animate__animated animate__fadeOutUp"
+        //         }
+        //     });
+        // }
+        if (
+            idx == 2 &&
+            parseInt(formData.closingStock) < parseInt(formData.quantity)
+        ) {
+            Swal.fire({
+                title: "Quantity  Cannot Be Greater than closingStock!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
+                }
+            });
+        } else if (
+            idx == 3 &&
+            parseInt(formData.closingStock) < parseInt(formData.quantity)
+        ) {
             Swal.fire({
                 title: "Quantity  Cannot Be Greater than closingStock!!",
                 showClass: {

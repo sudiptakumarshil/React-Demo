@@ -200,7 +200,9 @@ class CreateCustomer extends Component {
                                                 onChange={this.handleInput}
                                                 required
                                             >
-                                                <option value="0" selected>Choose One</option>
+                                                <option value="0" selected>
+                                                    Choose One
+                                                </option>
 
                                                 {warhouses}
                                             </select>

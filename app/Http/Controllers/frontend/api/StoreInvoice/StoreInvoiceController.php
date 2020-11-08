@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\frontend\api\StoreInvoice;
 
 use App\Http\Controllers\Controller;
+use App\Model\AccountsInput\AccountsInput;
 use App\Model\BankDetails\BankDetails;
 use App\Model\CashAccount\CashAccountDetails;
+use App\Model\CostCenter\CostCenter;
 use App\Model\InvoiceTrasection\InvoiceTrasection;
 use App\Model\StoreInvoice\StoreInvoice;
 use App\Model\Store\Store;
@@ -21,14 +23,13 @@ class StoreInvoiceController extends Controller
     {
 
         // return $request->all();
-
         // exit();
         $invotran = new InvoiceTrasection();
         $invotran->invoice_id = $request->invoice_id;
         if ($request->idx == 1 or $request->idx == 2) {
             $invotran->d_id = $request->product_id;
             // $invotran->party_id = $request->vendor_id;
-        } elseif ($request->idx == 3 or $request->idx == 4) {
+        } elseif ($request->idx == 3 or $request->idx == 4 or $request->idx == 6) {
             $invotran->c_id = $request->product_id;
             // $invotran->party_id = $request->customer_id;
         }
@@ -75,6 +76,7 @@ class StoreInvoiceController extends Controller
         $storeinvoice->bank_amount = $request->bank_amount;
         $storeinvoice->bank_id = $request->bankdetails_id;
         $storeinvoice->remarks = $request->remarks;
+        $storeinvoice->total_quantity = $request->Totalquantity;
         $storeinvoice->save();
 
         $data['invoice_id'] = $storeinvoice->id;
@@ -137,7 +139,13 @@ class StoreInvoiceController extends Controller
         $warehouses = WareHouseDetails::all();
         $bankdetails = BankDetails::all();
         $cashaccount = CashAccountDetails::all();
+        $costcenter = CostCenter::all();
         $unitlist = Unit::all();
+        #AccountsInput for posting type ...
+        $postingType = AccountsInput::where('input_type', 1)->get();
+        #AccountsInput for doctype type ...
+        $docType = AccountsInput::where('input_type', 2)->get();
+
         $invotransec = DB::table('invoice_trasections')
             ->Join('inventory_products', 'invoice_trasections.item_id', '=', 'inventory_products.id')
             ->leftJoin('vats', 'invoice_trasections.vat', 'vats.id')
@@ -164,6 +172,9 @@ class StoreInvoiceController extends Controller
             'cashaccount' => $cashaccount,
             'invoiceParams' => $invoiceParams,
             'unitlist' => $unitlist,
+            'costcenter' => $costcenter,
+            'postingType' => $postingType,
+            'docType' => $docType,
         ]);
     }
 
@@ -264,6 +275,25 @@ class StoreInvoiceController extends Controller
             $invoice_number = $invoicnumber->invoice_number + 1;
         } else {
             $invoice_number = 5000;
+        }
+
+        return response()->json([
+            'invoice_number' => $invoice_number,
+        ]);
+    }
+    public function get_invoice_number_for_type6()
+    {
+        $invoicnumber = DB::table('store_invoices')
+            ->join('users', 'store_invoices.ware_id', 'users.ware_id')
+            ->select('store_invoices.*')
+            ->where('type', 6)
+            ->orderBy('id', "desc")
+            ->first();
+
+        if (!empty($invoicnumber)) {
+            $invoice_number = $invoicnumber->invoice_number + 1;
+        } else {
+            $invoice_number = 6000;
         }
 
         return response()->json([
