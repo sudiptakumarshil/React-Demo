@@ -51,6 +51,7 @@ import AddCostCenter from "./components/CostCenter/AddCostCenter";
 import EditCostCenter from "./components/CostCenter/EditCostCenter";
 import PaymentVoucher from "./components/PaymentVoucher/PaymentVoucher";
 import Issue from "./components/StoreInvoice/IssueStoreInvoice";
+import StockReport from "./components/StockReports/StockReport"
 import {
     defaultRouteLink,
     getAccessTokenName,
@@ -65,6 +66,7 @@ import {
 import AddProduct from "./components/InventoryProduct/AddProduct";
 import EditProduct from "./components/InventoryProduct/EditProduct";
 import EditInvoice from "./components/StoreInvoice/EditStoreInvoice";
+import EditIssueInvoice from "./components/StoreInvoice/EditissueInvoice";
 
 export const Routes = props => {
     let isLoginExit = getCookieKeyInfo(getAccessTokenName);
@@ -218,6 +220,12 @@ export const Routes = props => {
                                 path={defaultRouteLink + "/issue/:idx"}
                                 render={props => <Issue {...props} />}
                             />
+                            {/* <Link to={`/dbBackup/issue-return/${7}`} */}
+                            <Route
+                                exact
+                                path={defaultRouteLink + "/issue-return/:idx"}
+                                render={props => <Issue {...props} />}
+                            />
                             <Route
                                 exact
                                 path={defaultRouteLink + "/add-bank-details"}
@@ -266,6 +274,14 @@ export const Routes = props => {
                                     "/edit-storeinvoice/:id/:idx"
                                 }
                                 render={props => <EditInvoice {...props} />}
+                            />
+                            <Route
+                                exact
+                                path={
+                                    defaultRouteLink +
+                                    "/edit-issuestoreinvoice/:id/:idx"
+                                }
+                                render={props => <EditIssueInvoice {...props} />}
                             />
                             <Route
                                 exact
@@ -338,6 +354,14 @@ export const Routes = props => {
                                 exact
                                 path={defaultRouteLink + "/paymentvaucher"}
                                 component={PaymentVoucher}
+                            />
+
+                            <Route
+                                exact
+                                path={
+                                    defaultRouteLink + "/stock-report"
+                                }
+                                component={StockReport}
                             />
 
                         </Header>

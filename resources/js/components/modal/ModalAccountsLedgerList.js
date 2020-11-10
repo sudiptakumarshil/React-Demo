@@ -28,6 +28,9 @@ const ModalAccountsLedgerList=(props)=> {
         if(show && ledgers.length <= 0){
             fetchalllledger_copy();
         }
+        $(document).ready(function() {
+            $('#example').DataTable();
+        } );
     },[show,ledgers])
 
         return (
@@ -101,7 +104,6 @@ const ModalAccountsLedgerList=(props)=> {
                         <Button variant="secondary" onClick={handleClose}>
                             Close
                         </Button>
-                        <Button variant="primary">Understood</Button>
                     </Modal.Footer>
                 </Modal>
             </>

@@ -215,7 +215,7 @@ function ManageStoreInvoice(props) {
                             Purshase Return{" "}
                         </Link>
                         <Link
-                            to={`/dbBackup/sale-return/${3}`}
+                            to={`/dbBackup/sale/${3}`}
                             type="button"
                             className="btn btn-success"
                             style={{ marginLeft: 15 }}
@@ -223,7 +223,7 @@ function ManageStoreInvoice(props) {
                             Sale{" "}
                         </Link>
                         <Link
-                            to={`/dbBackup/sale/${4}`}
+                            to={`/dbBackup/sale-return/${4}`}
                             type="button"
                             className="btn btn-warning"
                             style={{ marginLeft: 15 }}
@@ -237,6 +237,14 @@ function ManageStoreInvoice(props) {
                             style={{ marginLeft: 15 }}
                         >
                             Issue
+                        </Link>
+                        <Link
+                            to={`/dbBackup/issue-return/${7}`}
+                            type="button"
+                            className="btn btn-outline-primary"
+                            style={{ marginLeft: 15 }}
+                        >
+                            Issue Return
                         </Link>
                     </div>
 
@@ -355,6 +363,40 @@ function ManageStoreInvoice(props) {
                                         </div>
                                     </div>
                                 </div>
+                                <div className="col-md-3">
+                                    <label className="control-label">
+                                        Type
+                                    </label>
+                                    <div className="form-group">
+                                        <div className="input-group">
+                                            <select
+                                                className="form-control"
+                                                data-live-search="true"
+                                                name="type"
+                                                onChange={handleInput}
+                                            >
+                                                <option selected value="1">
+                                                    New Purshase
+                                                </option>
+                                                <option selected value="2">
+                                                    Purshase Return
+                                                </option>
+                                                <option selected value="3">
+                                                    Sale
+                                                </option>
+                                                <option selected value="4">
+                                                    Sale Return
+                                                </option>
+                                                <option selected value="6">
+                                                    Issue
+                                                </option>
+                                                <option selected value="7">
+                                                    Issue Return
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div
                                     style={{
                                         // marginLeft: 600,
@@ -411,6 +453,10 @@ function ManageStoreInvoice(props) {
                                     type = "Sale";
                                 } else if (item.type == 4) {
                                     type = "Sale Return";
+                                } else if (item.type == 6) {
+                                    type = "Issue";
+                                } else if (item.type == 7) {
+                                    type = "Issue Return ";
                                 }
 
                                 return (
@@ -431,13 +477,31 @@ function ManageStoreInvoice(props) {
                                         <td>{item.bank_name}</td>
                                         <td>{item.remarks}</td>
                                         <td>
-                                            <Link
+                                            {item.type == 6 ||
+                                            item.type == 7 ? (
+                                                <Link
+                                                    to={`/dbBackup/edit-issuestoreinvoice/${item.id}/${item.type}`}
+                                                    className="btn btn-primary"
+                                                    type="button"
+                                                >
+                                                    Edit
+                                                </Link>
+                                            ) : (
+                                                <Link
+                                                    to={`/dbBackup/edit-storeinvoice/${item.id}/${item.type}`}
+                                                    className="btn btn-primary"
+                                                    type="button"
+                                                >
+                                                    Edit
+                                                </Link>
+                                            )}
+                                            {/* <Link
                                                 to={`/dbBackup/edit-storeinvoice/${item.id}/${item.type}`}
                                                 className="btn btn-primary"
                                                 type="button"
                                             >
                                                 Edit
-                                            </Link>
+                                            </Link> */}
                                             <button
                                                 onClick={deleteInvoice}
                                                 className="btn btn-danger"

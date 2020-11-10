@@ -25,6 +25,7 @@ const EditInvoiceTransectionModal = props => {
     const [storelist, setstorelist] = useState([]);
     const [productList, setproductList] = useState([]);
     const [invoiceParams, setinvoiceParams] = useState("");
+    const [selected, setSelected] = useState([]);
     // invoiceParams: response.data.invoiceParams
     const { idx } = useParams();
     const dataObj = {
@@ -46,14 +47,16 @@ const EditInvoiceTransectionModal = props => {
 
     const alldata = async () => {
         const idx = props.match.params.idx;
-
         const response = await axios.get(defaultRouteLink + "/api/all-data", {
             params: {
                 type: idx
             }
         });
+
         setproductList(response.data.products);
         setinvoiceParams(response.data.invoiceParams);
+
+
     };
 
     const updateinvoiceTransection = async event => {
@@ -137,6 +140,9 @@ const EditInvoiceTransectionModal = props => {
     };
 
     const handleProductPrice = e => {
+
+        console.log("onchange="+JSON.stringify(e));
+
         // const { name, value } = event.target;
         // getProductWisePriceAuto(event.target.value);
         // setFormData(oldState => ({
@@ -181,7 +187,20 @@ const EditInvoiceTransectionModal = props => {
     };
     useEffect(() => {
         setFormData(props.modalData);
-        alldata();
+
+         alldata().then(() => {
+
+            var isExist=productList.find(item => item.id == item_id);
+            var list=[];
+            list.push(isExist);
+            var data_set=JSON.stringify(list);
+            console.log("test="+[data_set]);
+            setSelected(isExist ? [isExist] :[]);
+
+          });
+
+
+
         i_id = props.modalData.id;
         const idx = props.match.params.idx;
         setFormData(oldState => ({
@@ -277,28 +296,17 @@ const EditInvoiceTransectionModal = props => {
                                                                         labelKey={products =>
                                                                             `${products.product_name}`
                                                                         }
-                                                                        // key={product =>
-                                                                        //     `${product.id}`
-                                                                        // }
-                                                                        // selected={
-                                                                        //     formData.product_id
-                                                                        // }
-                                                                        // // selected={formData.product_id}
-                                                                        // isValid={product =>
-                                                                        //     `${product.id}`
-                                                                        // }
-                                                                        options={
-                                                                            productList
-                                                                        }
-                                                                        value={
-                                                                            formData.product_id
-                                                                        }
                                                                         name="product_id"
                                                                         onChange={e =>
                                                                             handleProductPrice(
                                                                                 e
                                                                             )
                                                                         }
+                                                                        selected={selected}
+                                                                        options={
+                                                                            productList
+                                                                        }
+
                                                                         placeholder="Select your product"
                                                                     />
                                                                 </div>
@@ -468,6 +476,7 @@ const EditInvoiceTransectionModal = props => {
                                                                                 e
                                                                             )
                                                                         }
+                                                                        selected={selected}
                                                                         placeholder="Select your product"
                                                                     />
                                                                 </div>

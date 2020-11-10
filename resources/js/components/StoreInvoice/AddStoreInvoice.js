@@ -880,7 +880,12 @@ class AddStoreInvoice extends Component {
             });
             this.fetchalldata();
         } else {
+            this.setState({
+                delloading: false
+            });
+
             return false;
+
         }
     };
     handleModalClose = () => {
@@ -1166,7 +1171,7 @@ class AddStoreInvoice extends Component {
                                     Purshase Return{" "}
                                 </Link>
                                 <Link
-                                    to={`/dbBackup/sale-return/${3}`}
+                                    to={`/dbBackup/sale/${3}`}
                                     type="button"
                                     className="btn btn-success"
                                     style={{ marginLeft: 15 }}
@@ -1174,7 +1179,7 @@ class AddStoreInvoice extends Component {
                                     Sale{" "}
                                 </Link>
                                 <Link
-                                    to={`/dbBackup/sale/${4}`}
+                                    to={`/dbBackup/sale-return/${4}`}
                                     type="button"
                                     className="btn btn-warning"
                                     style={{ marginLeft: 15 }}
@@ -1196,6 +1201,15 @@ class AddStoreInvoice extends Component {
                                 >
                                     Issue
                                 </Link>
+
+                                <Link to={`/dbBackup/issue-return/${7}`}
+                                type="button"
+                                className="btn btn-outline-info"
+                                style={{ marginLeft: 15 }}
+                                >
+                                    Issue Return
+                                </Link>
+
                                 <Link
                                     to="/dbBackup/manage-store-invoice"
                                     type="button"

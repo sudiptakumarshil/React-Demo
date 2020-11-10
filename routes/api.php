@@ -50,6 +50,7 @@ Route::namespace ('frontend')->group(function () {
 Route::namespace ('Accounts')->group(function () {
 
     Route::get('/all-ledger', 'LedgerController@index')->name('all-ledger');
+    Route::get('/all-setting', 'LedgerController@all_setting')->name('all-setting');
 });
 
 //for customer mnagement....
@@ -112,6 +113,7 @@ Route::namespace ('frontend')->group(function () {
             Route::get('/get-invoice-number-type-4', 'StoreInvoiceController@get_invoice_number_for_type4');
             Route::get('/get-invoice-number-type-5', 'StoreInvoiceController@get_invoice_number_for_type5');
             Route::get('/get-invoice-number-type-6', 'StoreInvoiceController@get_invoice_number_for_type6');
+            Route::get('/get-invoice-number-type-7', 'StoreInvoiceController@get_invoice_number_for_type7');
             Route::get('/get-warehouse/{id}', 'StoreInvoiceController@getwarehouse');
             Route::get('/get-product-wise-price/{id}', 'StoreInvoiceController@product_wise_price');
             Route::get('/get-productCode', 'InvoiceParamsController@get_productCode');
@@ -120,6 +122,7 @@ Route::namespace ('frontend')->group(function () {
             Route::post('/save-store-invoice', 'StoreInvoiceController@save_store_invoice')->name("save-store-invoice");
             Route::get('/all-storeInvoice', 'StoreInvoiceController@all_store_invoice')->name("all-storeInvoice");
             Route::get('/edit-storeInvoice/{id}', 'StoreInvoiceController@edit_storeInvoice')->name("edit-storeInvoice");
+            Route::get('/edit-issuestoreInvoice/{id}', 'StoreInvoiceController@edit_issuestoreInvoice')->name("edit-issuestoreInvoice");
             Route::patch('/update-storeInvoice/{id}', 'StoreInvoiceController@update_storeInvoice')->name("update-storeInvoice");
             Route::post('/search-storeInvoice', 'StoreInvoiceController@search_store_invoice')->name("search-storeInvoice");
             Route::get('/delete-invoice/{id}', 'StoreInvoiceController@delete_store_invoice')->name("delete-invoice");
@@ -194,6 +197,14 @@ Route::namespace ('frontend')->group(function () {
             Route::get('/edit-costcenter/{id}', 'CostCenterController@edit_cost')->name("edit-costcenter");
             Route::patch('/update-costcenter/{id}', 'CostCenterController@update_cost')->name("update-costcenter");
             Route::post('/add-costcenter', 'CostCenterController@add_cost')->name("add-costcenter");
+        });
+    });
+});
+Route::namespace ('frontend')->group(function () {
+    Route::namespace ('api')->group(function () {
+        Route::namespace ('StockReport')->group(function () {
+            Route::get('/all-category', 'StockReportController@get_category')->name("all-category");
+            Route::post('/stock-report', 'StockReportController@stock_reports')->name("stock-report");
         });
     });
 });

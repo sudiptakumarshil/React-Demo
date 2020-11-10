@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 08, 2020 at 03:03 PM
+-- Generation Time: Nov 10, 2020 at 01:40 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.10
 
@@ -42,7 +42,8 @@ CREATE TABLE `accounts_inputs` (
 --
 
 INSERT INTO `accounts_inputs` (`id`, `name`, `input_type`, `module_list`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'sample1', 2, 0, 1, '2020-11-08 00:50:58', '2020-11-08 01:16:30');
+(1, 'sample1', 2, 0, 1, '2020-11-08 00:50:58', '2020-11-08 01:16:30'),
+(2, 'sample2', 1, 0, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -328,7 +329,7 @@ INSERT INTO `inventory_products` (`id`, `product_code`, `product_name`, `pices_o
 
 CREATE TABLE `invoice_parameters` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `type` tinyint(4) NOT NULL COMMENT 'new purshase =1 ,purshase return = 2, sale return =4 sale = 3\r\nquick Purshase =5\r\nissue = 6\r\n',
+  `type` tinyint(4) NOT NULL COMMENT 'new purshase =1 ,purshase return = 2, sale return =4 sale = 3\r\nquick Purshase =5\r\nissue = 6\r\nissue return =7',
   `discount_method` tinyint(4) NOT NULL COMMENT 'invoice wise = 1 product wise = 2',
   `invoice_start_no` int(11) NOT NULL,
   `is_due_allow` tinyint(4) NOT NULL COMMENT 'id due allow = 2 or not allow = 3',
@@ -348,7 +349,8 @@ INSERT INTO `invoice_parameters` (`id`, `type`, `discount_method`, `invoice_star
 (3, 3, 2, 0, 2, 1, 2, NULL, NULL),
 (4, 4, 2, 0, 2, 1, 2, NULL, NULL),
 (5, 5, 1, 0, 0, 0, 0, NULL, NULL),
-(6, 6, 2, 0, 0, 0, 0, NULL, NULL);
+(6, 6, 2, 0, 0, 0, 0, NULL, NULL),
+(7, 7, 1, 0, 0, 1, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -369,11 +371,11 @@ CREATE TABLE `invoice_trasections` (
   `store_id` int(10) UNSIGNED NOT NULL,
   `quantity` int(11) NOT NULL,
   `price` int(11) NOT NULL,
-  `discount_taka` double(8,2) NOT NULL DEFAULT 0.00,
-  `discount_percent` double(8,2) NOT NULL DEFAULT 0.00,
+  `discount_taka` double(8,2) DEFAULT 0.00,
+  `discount_percent` double(8,2) DEFAULT 0.00,
   `vat` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `publishing_by` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` int(11) NOT NULL COMMENT 'NEW PURSHASE = 1 , PURSHASE RETURN = 2, SALE =3 ,SALE RETURN = 4\r\nissue =6',
+  `type` int(11) NOT NULL COMMENT 'NEW PURSHASE = 1 , PURSHASE RETURN = 2, SALE =3 ,SALE RETURN = 4\r\nissue =6\r\nissue Return =7',
   `trash` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'delete = 2',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -384,37 +386,29 @@ CREATE TABLE `invoice_trasections` (
 --
 
 INSERT INTO `invoice_trasections` (`id`, `invoice_id`, `d_id`, `c_id`, `item_id`, `party_id`, `date`, `ware_id`, `status`, `store_id`, `quantity`, `price`, `discount_taka`, `discount_percent`, `vat`, `publishing_by`, `type`, `trash`, `created_at`, `updated_at`) VALUES
-(1, 1, 3, 0, 3, 1, '2020-11-08', 1, 1, 1, 1, 30000, 0.00, 0.00, 0, '1', 1, 2, '2020-11-07 22:44:13', '2020-11-08 04:10:34'),
-(2, 1, 3, 0, 3, 1, '2020-11-08', 1, 1, 1, 1, 30000, 0.00, 0.00, 0, '1', 1, 2, '2020-11-07 22:44:13', '2020-11-08 04:10:38'),
-(3, 1, 5, 0, 5, 1, '2020-11-08', 1, 1, 6, 1, 30000, 0.00, 0.00, 0, '1', 1, 2, '2020-11-07 22:44:43', '2020-11-08 04:10:41'),
-(4, 1, 0, 5, 5, 1, '2020-11-08', 1, 1, 6, 1, 3000, 2.00, 0.00, 8, '1', 3, 1, '2020-11-07 22:51:26', '2020-11-07 22:51:26'),
-(5, 1, 5, 0, 5, 1, '2020-11-08', 1, 1, 6, 10, 3000, 0.00, 0.00, 0, '1', 1, 2, '2020-11-07 22:59:55', '2020-11-08 04:10:43'),
-(6, 1, 5, 0, 5, 1, '2020-11-08', 1, 1, 6, 5, 3000, 0.00, 0.00, 0, '1', 2, 1, '2020-11-07 23:00:31', '2020-11-07 23:00:31'),
-(7, 1, 0, 5, 5, 1, '2020-11-08', 1, 1, 6, 1, 3000, 20.00, 0.00, 0, '1', 3, 1, '2020-11-07 23:02:19', '2020-11-07 23:02:19'),
-(8, 1, 0, 5, 5, 1, '2020-11-08', 1, 1, 6, 5, 3000, 0.00, 0.00, 8, '1', 3, 1, '2020-11-07 23:03:56', '2020-11-07 23:03:56'),
-(9, 1, 5, 0, 5, 1, '2020-11-08', 1, 1, 6, 5, 3000, 0.00, 0.00, 0, '1', 2, 1, '2020-11-07 23:10:38', '2020-11-07 23:10:38'),
-(10, 1, 5, 0, 5, 1, '2020-11-08', 1, 1, 6, 1, 3000, 0.00, 0.00, 8, '1', 1, 2, '2020-11-08 04:10:31', '2020-11-08 04:10:46'),
-(11, 1, 6, 0, 6, 1, '2020-11-08', 1, 1, 6, 1, 3000, 0.00, 0.00, 8, '1', 1, 1, '2020-11-08 04:10:59', '2020-11-08 04:10:59'),
-(12, 1, 7, 0, 7, 1, '2020-11-08', 1, 1, 6, 4, 3000, 0.00, 0.00, 8, '1', 1, 1, '2020-11-08 04:11:12', '2020-11-08 04:11:12'),
-(13, 2, 0, 6, 6, 1, '2020-11-08', 2, 1, 9, 1, 2000, 0.00, 0.00, 5, '1', 3, 1, '2020-11-08 04:12:32', '2020-11-08 04:12:32'),
-(14, 2, 0, 0, 5, 1, '2020-11-08', 1, 1, 6, 1, 3000, 0.00, 0.00, 8, '1', 6, 2, '2020-11-08 05:11:07', '2020-11-08 05:35:09'),
-(15, 2, 0, 5, 5, 1, '2020-11-08', 1, 1, 6, 1, 3000, 0.00, 0.00, 8, '1', 6, 1, '2020-11-08 05:35:23', '2020-11-08 05:35:23'),
-(16, 2, 0, 1, 1, 1, '2020-11-08', 1, 1, 1, 1, 300, 0.00, 0.00, 8, '1', 6, 1, '2020-11-08 05:36:07', '2020-11-08 05:36:07'),
-(17, 2, 0, 1, 1, 1, '2020-11-08', 1, 1, 1, 3, 300, 0.00, 0.00, 0, '1', 6, 1, '2020-11-08 05:56:36', '2020-11-08 07:05:02'),
-(18, 2, 5, 0, 5, 1, '2020-11-08', 1, 1, 6, 1, 3000, 0.00, 0.00, 8, '1', 1, 1, '2020-11-08 07:05:42', '2020-11-08 07:05:42'),
-(19, 2, 5, 0, 5, 1, '2020-11-08', 1, 1, 6, 1, 3000, 0.00, 0.00, 0, '1', 2, 1, '2020-11-08 07:06:13', '2020-11-08 07:06:13'),
-(20, 3, 0, 1, 1, 1, '2020-11-08', 1, 1, 1, 1, 300, 0.00, 0.00, 0, '1', 6, 1, '2020-11-08 07:39:21', '2020-11-08 07:39:21'),
-(21, 4, 0, 5, 5, 1, '2020-11-08', 1, 1, 6, 1, 3000, 0.00, 0.00, 0, '1', 6, 1, '2020-11-08 07:42:01', '2020-11-08 07:42:01'),
-(22, 5, 0, 5, 5, 1, '2020-11-08', 1, 1, 6, 1, 3000, 0.00, 0.00, 0, '1', 6, 1, '2020-11-08 07:49:41', '2020-11-08 07:49:41'),
-(23, 5, 0, 6, 6, 1, '2020-11-08', 1, 1, 6, 1, 2000, 0.00, 0.00, 0, '1', 6, 1, '2020-11-08 07:49:55', '2020-11-08 07:49:55');
+(1, 1, 0, 0, 5, 1, '2020-11-09', 1, 1, 6, 1, 0, 0.00, 0.00, 0, '1', 6, 1, '2020-11-09 01:59:47', '2020-11-09 01:59:47'),
+(2, 1, 5, 0, 5, 1, '2020-11-09', 1, 1, 6, 1, 3000, 0.00, 0.00, 8, '1', 1, 2, '2020-11-09 02:00:59', '2020-11-09 02:01:26'),
+(3, 1, 5, 0, 5, 1, '2020-11-09', 1, 1, 6, 1, 3000, 0.00, 0.00, 8, '1', 1, 2, '2020-11-09 02:01:12', '2020-11-09 02:01:23'),
+(4, 1, 6, 0, 6, 1, '2020-11-09', 1, 1, 6, 15, 2000, 0.00, 0.00, 8, '1', 1, 1, '2020-11-09 02:01:36', '2020-11-09 02:02:37'),
+(5, 2, 0, 6, 6, 1, '2020-11-09', 1, 1, 6, 5, 2000, 0.00, 0.00, 0, '1', 6, 1, '2020-11-09 02:03:03', '2020-11-09 02:03:03'),
+(6, 2, 0, 6, 6, 1, '2020-11-09', 1, 1, 7, 4, 2000, 0.00, 0.00, 0, '1', 6, 1, '2020-11-09 02:03:50', '2020-11-09 02:03:50'),
+(7, 3, 0, 6, 6, 1, '2020-11-09', 1, 1, 7, 3, 2000, 0.00, 0.00, 0, '1', 6, 2, '2020-11-09 02:04:27', '2020-11-09 02:04:34'),
+(8, 3, 0, 6, 6, 1, '2020-11-09', 1, 1, 7, 2, 2000, 0.00, 0.00, 0, '1', 6, 1, '2020-11-09 02:05:00', '2020-11-09 02:06:17'),
+(9, 4, 0, 5, 5, 1, '2020-11-09', 1, 1, 6, 1, 3000, 0.00, 0.00, 0, '1', 6, 1, '2020-11-09 02:19:11', '2020-11-09 02:19:11'),
+(11, 4, 5, 0, 5, 1, '2020-11-09', 1, 1, 6, 1, 3000, 0.00, 0.00, 0, '1', 7, 1, '2020-11-09 03:17:19', '2020-11-09 03:17:19'),
+(12, 4, 5, 0, 5, 1, '2020-11-09', 1, 1, 6, 1, 3000, 0.00, 0.00, 0, '1', 7, 1, '2020-11-09 03:19:39', '2020-11-09 03:19:39'),
+(13, 4, 5, 0, 5, 1, '2020-11-09', 1, 1, 6, 2, 3000, 0.00, 0.00, 0, '1', 7, 1, '2020-11-09 03:36:50', '2020-11-09 03:36:50'),
+(14, 0, 6, 0, 6, 1, '2020-11-10', 1, 1, 6, 1, 2000, 0.00, 0.00, 8, '1', 1, 1, '2020-11-10 00:39:57', '2020-11-10 00:39:57'),
+(15, 0, 8, 0, 8, 1, '2020-11-10', 1, 1, 7, 17, 5, 0.00, 0.00, 0, '1', 1, 2, '2020-11-10 02:09:33', '2020-11-10 02:23:40'),
+(16, 0, 12, 0, 12, 1, '2020-11-10', 1, 1, 6, 2, 2000, 0.00, 0.00, 0, '1', 1, 1, '2020-11-10 02:27:20', '2020-11-10 02:27:20');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ledger_copy`
+-- Table structure for table `ledgers`
 --
 
-CREATE TABLE `ledger_copy` (
+CREATE TABLE `ledgers` (
   `id` int(20) NOT NULL,
   `parent_head_id` int(5) NOT NULL,
   `ledger_title` varchar(50) CHARACTER SET utf8 NOT NULL,
@@ -431,10 +425,10 @@ CREATE TABLE `ledger_copy` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `ledger_copy`
+-- Dumping data for table `ledgers`
 --
 
-INSERT INTO `ledger_copy` (`id`, `parent_head_id`, `ledger_title`, `opening_balance`, `date`, `remarks`, `by`, `type`, `ware`, `accounts_id`, `status`, `foreign_name`, `trash`) VALUES
+INSERT INTO `ledgers` (`id`, `parent_head_id`, `ledger_title`, `opening_balance`, `date`, `remarks`, `by`, `type`, `ware`, `accounts_id`, `status`, `foreign_name`, `trash`) VALUES
 (192, 13, 'Cash', '0', '2016-03-22', 'null', 'admin', 1, 0, '10000406051', 1, '', 0),
 (203, 172, 'PURCHASE DICOUNT', '0', '1970-01-01', '', '5', 2, 0, '400032', 1, '', 0),
 (204, 87, 'product_issue', '0', '2016-03-03', '', '5', 2, 0, '40000701', 1, '', 0),
@@ -936,10 +930,10 @@ CREATE TABLE `password_resets` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `setting_copy`
+-- Table structure for table `settings`
 --
 
-CREATE TABLE `setting_copy` (
+CREATE TABLE `settings` (
   `id` int(20) NOT NULL,
   `head` varchar(20) NOT NULL,
   `type` varchar(20) NOT NULL,
@@ -954,10 +948,10 @@ CREATE TABLE `setting_copy` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `setting_copy`
+-- Dumping data for table `settings`
 --
 
-INSERT INTO `setting_copy` (`id`, `head`, `type`, `name`, `foreign_name`, `ware`, `by`, `note`, `accounts_id`, `status`, `trash`) VALUES
+INSERT INTO `settings` (`id`, `head`, `type`, `name`, `foreign_name`, `ware`, `by`, `note`, `accounts_id`, `status`, `trash`) VALUES
 (1, '0', '1', 'Assets', '', 0, 0, '1', 1000, 1, 0),
 (2, '0', '1', 'Liablities', '', 0, 0, '2', 2000, 1, 0),
 (3, '0', '1', 'Expense', '', 0, 0, '3', 3000, 1, 0),
@@ -1089,7 +1083,10 @@ CREATE TABLE `store_invoices` (
 --
 
 INSERT INTO `store_invoices` (`id`, `invoice_number`, `type`, `vendor_id`, `ware_id`, `date`, `posting_by`, `store_id`, `gross_amount`, `discount_taka`, `discount_percent`, `cash_amount`, `cash_id`, `bank_amount`, `bank_id`, `remarks`, `total_quantity`, `created_at`, `updated_at`) VALUES
-(5, 6000, '6', 1, 1, '2020-11-08', 1, 6, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, NULL, 0, '2020-11-08 07:50:14', '2020-11-08 07:50:14');
+(1, 1000, '1', 1, 1, '2020-11-09', 1, 6, 30000.00, 0.00, NULL, 0.00, NULL, 0, NULL, NULL, NULL, '2020-11-09 02:01:44', '2020-11-09 02:01:44'),
+(2, 6000, '6', 1, 1, '2020-11-09', 1, 7, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, NULL, 0, '2020-11-09 02:03:58', '2020-11-09 02:03:58'),
+(3, 6001, '6', 1, 1, '2020-11-09', 1, 7, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, NULL, 0, '2020-11-09 02:05:04', '2020-11-09 02:05:04'),
+(4, 7000, '7', 2, 2, '2020-11-09', 1, 9, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, NULL, 0, '2020-11-09 03:20:09', '2020-11-09 03:37:38');
 
 -- --------------------------------------------------------
 
@@ -1305,9 +1302,9 @@ ALTER TABLE `invoice_trasections`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `ledger_copy`
+-- Indexes for table `ledgers`
 --
-ALTER TABLE `ledger_copy`
+ALTER TABLE `ledgers`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1329,9 +1326,9 @@ ALTER TABLE `password_resets`
   ADD KEY `password_resets_email_index` (`email`);
 
 --
--- Indexes for table `setting_copy`
+-- Indexes for table `settings`
 --
-ALTER TABLE `setting_copy`
+ALTER TABLE `settings`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id` (`id`);
 
@@ -1386,7 +1383,7 @@ ALTER TABLE `ware_house_details`
 -- AUTO_INCREMENT for table `accounts_inputs`
 --
 ALTER TABLE `accounts_inputs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `bank_details`
@@ -1440,18 +1437,18 @@ ALTER TABLE `inventory_products`
 -- AUTO_INCREMENT for table `invoice_parameters`
 --
 ALTER TABLE `invoice_parameters`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `invoice_trasections`
 --
 ALTER TABLE `invoice_trasections`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
--- AUTO_INCREMENT for table `ledger_copy`
+-- AUTO_INCREMENT for table `ledgers`
 --
-ALTER TABLE `ledger_copy`
+ALTER TABLE `ledgers`
   MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1230;
 
 --
@@ -1467,9 +1464,9 @@ ALTER TABLE `module_lists`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `setting_copy`
+-- AUTO_INCREMENT for table `settings`
 --
-ALTER TABLE `setting_copy`
+ALTER TABLE `settings`
   MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=498;
 
 --
@@ -1482,7 +1479,7 @@ ALTER TABLE `stores`
 -- AUTO_INCREMENT for table `store_invoices`
 --
 ALTER TABLE `store_invoices`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `units`

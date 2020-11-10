@@ -106,7 +106,7 @@ class IssueStoreInvoice extends Component {
             delloading: false,
             barcode: 1,
             closingStock: 0,
-            Totalquantity:0,
+            Totalquantity: 0
             // items_id:0
             //----------------
         };
@@ -309,9 +309,6 @@ class IssueStoreInvoice extends Component {
         // this.searchInput.current.focus();
     };
 
-
-
-
     handleInput = event => {
         this.setState({
             [event.target.name]: event.target.value
@@ -346,6 +343,33 @@ class IssueStoreInvoice extends Component {
         } else if (idx == 2 && this.state.vendor_id == 0) {
             Swal.fire({
                 title: "Vendor  Cannot Be Empty!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
+                }
+            });
+        } else if (
+            idx == 6 &&
+            parseInt(this.state.closingStock) < parseInt(this.state.quantity)
+        ) {
+            Swal.fire({
+                title: "Quantity  Cannot Be Greater than closingStock!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
+                }
+            });
+        }
+        else if (
+            idx == 7 &&
+            parseInt(this.state.closingStock) < parseInt(this.state.quantity)
+        ) {
+            Swal.fire({
+                title: "Quantity  Cannot Be Greater than closingStock!!",
                 showClass: {
                     popup: "animate__animated animate__fadeInDown"
                 },
@@ -426,7 +450,7 @@ class IssueStoreInvoice extends Component {
                     popup: "animate__animated animate__fadeOutUp"
                 }
             });
-        }  else if (
+        } else if (
             idx == 2 &&
             parseInt(this.state.closingStock) < parseInt(this.state.quantity)
         ) {
@@ -556,7 +580,7 @@ class IssueStoreInvoice extends Component {
                     popup: "animate__animated animate__fadeOutUp"
                 }
             });
-        }  else {
+        } else {
             let check = confirm("are you sure ??");
             if (check) {
                 const res = await axios.post(
@@ -564,7 +588,7 @@ class IssueStoreInvoice extends Component {
                     this.state
                 );
                 this.state = {
-                    Totalquantity:0,
+                    Totalquantity: 0
                 };
 
                 // SUCCESS MESSAGE USING SWEET ALERT
@@ -640,6 +664,11 @@ class IssueStoreInvoice extends Component {
         if (idx == 6) {
             const response = await axios.get(
                 defaultRouteLink + "/api/get-invoice-number-type-6"
+            );
+            this.setState({ invoice_code: response.data.invoice_number });
+        } else if (idx == 7) {
+            const response = await axios.get(
+                defaultRouteLink + "/api/get-invoice-number-type-7"
             );
             this.setState({ invoice_code: response.data.invoice_number });
         }
@@ -751,14 +780,8 @@ class IssueStoreInvoice extends Component {
         //     });
         // });
 
-        let priceQuantity = 0;
-        let discountpercent = 0;
-        let minusdiscountPercent = 0;
-        let minusManualdiScount = 0;
-        let vatCount = 0;
-        let TotalAmount = 0;
         let TotalQuantity = 0;
-        let allQuantity =0;
+        let allQuantity = 0;
         let qty;
 
         // FETCH ALL Invoice transection  DATA... LOOP
@@ -771,7 +794,10 @@ class IssueStoreInvoice extends Component {
                     <td>{item.product_name}</td>
                     <td>{item.quantity}</td>
                     <input type="hidden" value={(qty = item.quantity)}></input>
-                    <input type="hidden" value={(allQuantity = TotalQuantity += qty)}></input>
+                    <input
+                        type="hidden"
+                        value={(allQuantity = TotalQuantity += qty)}
+                    ></input>
 
                     <td>
                         <button
@@ -791,7 +817,7 @@ class IssueStoreInvoice extends Component {
                 </tr>
             );
             this.setState({
-                Totalquantity:allQuantity
+                Totalquantity: allQuantity
             });
         });
 
@@ -848,6 +874,8 @@ class IssueStoreInvoice extends Component {
         let pagetitle1 = "";
         if (idx == 6) {
             pagetitle1 = "ISSUE";
+        } else if (idx == 7) {
+            pagetitle1 = "ISSUE RETURN";
         }
         if (this.state.loading) {
             return (
@@ -926,6 +954,14 @@ class IssueStoreInvoice extends Component {
                                     style={{ marginLeft: 15 }}
                                 >
                                     Issue
+                                </Link>
+                                <Link
+                                    to={`/dbBackup/issue-return/${7}`}
+                                    type="button"
+                                    className="btn btn-outline-primary"
+                                    style={{ marginLeft: 15 }}
+                                >
+                                    Issue Return
                                 </Link>
                                 <Link
                                     to="/dbBackup/manage-store-invoice"
@@ -1472,9 +1508,21 @@ class IssueStoreInvoice extends Component {
                                                         <tr>
                                                             <td></td>
                                                             <td></td>
-                                                            <td>Total Quantity = {TotalQuantity}</td>
-                                                            <td><button className="btn btn-primary" onClick={this.saveStoreInvoice}>Submit</button></td>
-
+                                                            <td>
+                                                                Total Quantity ={" "}
+                                                                {TotalQuantity}
+                                                            </td>
+                                                            <td>
+                                                                <button
+                                                                    className="btn btn-primary"
+                                                                    onClick={
+                                                                        this
+                                                                            .saveStoreInvoice
+                                                                    }
+                                                                >
+                                                                    Submit
+                                                                </button>
+                                                            </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>

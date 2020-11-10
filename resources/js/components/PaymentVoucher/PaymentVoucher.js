@@ -4,6 +4,7 @@ import { defaultRouteLink } from "../../common/config";
 import ContentLoader, { Facebook, BulletList } from "react-content-loader";
 import "../css/style_frontend.css";
 import ModalAccountsLedgerList from "../modal/ModalAccountsLedgerList";
+import ModalSetting from "../modal/ModalSetting";
 function AddPaymentVoucher(props) {
     const [loading, setLoading] = useState(true);
     const [warhouseList, setwarhouseList] = useState([]);
@@ -20,7 +21,11 @@ function AddPaymentVoucher(props) {
         cashAccount_id: 0,
         costcenter_id: 0,
         postingType_id: 0,
-        docType_id: 0
+        docType_id: 0,
+        accounts_no: "",
+        accounts_id: "",
+        setting_name: "",
+        setting_id: ""
     };
 
     const [formData, setFormData] = useState(data);
@@ -80,6 +85,23 @@ function AddPaymentVoucher(props) {
             docType_id: item.id
         }));
     });
+    const handleAccountsid = object => {
+        //console.log("accId="+object.id);
+        setFormData(oldState => ({
+            ...oldState,
+            accounts_no: object.ledger_title,
+            accounts_id: object.id
+        }));
+    };
+
+    const handleSettingsid = object => {
+        //console.log("accId="+object.id);
+        setFormData(oldState => ({
+            ...oldState,
+            setting_name: object.name,
+            setting_id: object.id
+        }));
+    };
 
     useEffect(() => {
         fetchalldata();
@@ -287,12 +309,12 @@ function AddPaymentVoucher(props) {
                             </div>
 
                             <div className="col-md-4">
-                                <label className="control-label">Stand By</label>
+                                <label className="control-label">
+                                    Stand By
+                                </label>
                                 <div className="form-group">
                                     <div className="input-group">
-                                        <input
-                                            type="checkbox"
-                                        ></input>
+                                        <input type="checkbox"></input>
                                     </div>
                                 </div>
                             </div>
@@ -332,7 +354,39 @@ function AddPaymentVoucher(props) {
                                         <th>Action</th>
                                     </tr>
                                 </thead>
-                                <tbody></tbody>
+                                <tbody>
+                                    <td></td>
+                                    <td>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Accounts No"
+                                            name="accounts_no"
+                                            required
+                                            value={formData.accounts_no}
+                                            data-id={formData.accounts_id}
+                                            onChange={handleInput}
+                                        />
+                                        <ModalAccountsLedgerList
+                                            handleAccountsid={handleAccountsid}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Setting No"
+                                            name="setting_no"
+                                            required
+                                            value={formData.setting_name}
+                                            data-id={formData.setting_id}
+                                            onChange={handleInput}
+                                        />
+                                        <ModalSetting
+                                            handleSettingsid={handleSettingsid}
+                                        />
+                                    </td>
+                                </tbody>
                             </table>
                         </div>
 

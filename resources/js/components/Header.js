@@ -255,8 +255,11 @@ const Header = props => {
                                            Payment Vaucher
                                         </Link>
                                     </li>
-
-
+                                    <li className="">
+                                        <Link to="/dbBackup/stock-report">
+                                           Stock Report
+                                        </Link>
+                                    </li>
                                 </ul>
                             </li>
                         </ul>

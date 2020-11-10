@@ -41,7 +41,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="{{ asset('public/assets/js/jquery-3.2.1.min.js') }}"></script>
 
-
     {{--
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
@@ -260,7 +259,13 @@
 $('.selectpicker').selectpicker({
      noneResultsText: 'I found no results'
 });
+
+$(document).ready(function() {
+    $('#example').DataTable();
+} );
         </script>
+
+
 
 </body>
 

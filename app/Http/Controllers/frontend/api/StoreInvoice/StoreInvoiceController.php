@@ -26,7 +26,7 @@ class StoreInvoiceController extends Controller
         // exit();
         $invotran = new InvoiceTrasection();
         $invotran->invoice_id = $request->invoice_id;
-        if ($request->idx == 1 or $request->idx == 2) {
+        if ($request->idx == 1 or $request->idx == 2 or $request->idx == 7) {
             $invotran->d_id = $request->product_id;
             // $invotran->party_id = $request->vendor_id;
         } elseif ($request->idx == 3 or $request->idx == 4 or $request->idx == 6) {
@@ -301,6 +301,26 @@ class StoreInvoiceController extends Controller
         ]);
     }
 
+    public function get_invoice_number_for_type7()
+    {
+        $invoicnumber = DB::table('store_invoices')
+            ->join('users', 'store_invoices.ware_id', 'users.ware_id')
+            ->select('store_invoices.*')
+            ->where('type', 7)
+            ->orderBy('id', "desc")
+            ->first();
+
+        if (!empty($invoicnumber)) {
+            $invoice_number = $invoicnumber->invoice_number + 1;
+        } else {
+            $invoice_number = 7000;
+        }
+
+        return response()->json([
+            'invoice_number' => $invoice_number,
+        ]);
+    }
+
     public function getwarehouse($id)
     {
         if (!empty($id)) {
@@ -360,10 +380,17 @@ class StoreInvoiceController extends Controller
         // exit();
         $invoice_id = $request->invoice_id;
         $invotran = InvoiceTrasection::find($id);
-        if ($request->idx == 1 or $request->idx == 2) {
+        // if ($request->idx == 1 or $request->idx == 2) {
+        //     $invotran->d_id = $request->product_id;
+        // } elseif ($request->idx == 3 or $request->idx == 4) {
+        //     $invotran->c_id = $request->product_id;
+        // }
+        if ($request->idx == 1 or $request->idx == 2 or $request->idx == 7) {
             $invotran->d_id = $request->product_id;
-        } elseif ($request->idx == 3 or $request->idx == 4) {
+            // $invotran->party_id = $request->vendor_id;
+        } elseif ($request->idx == 3 or $request->idx == 4 or $request->idx == 6) {
             $invotran->c_id = $request->product_id;
+            // $invotran->party_id = $request->customer_id;
         }
         $invotran->item_id = $request->product_id;
         $invotran->status = 1;
@@ -419,6 +446,17 @@ class StoreInvoiceController extends Controller
         ], 200);
     }
 
+    public function edit_issuestoreInvoice($id)
+    {
+        $editinvoice = StoreInvoice::find($id);
+        $store = Store::all();
+        return response()->json([
+            'editinvoice' => $editinvoice,
+            'store' => $store,
+            // 'invwisetrans'=>$invwisetrans
+        ], 200);
+    }
+
     public function update_storeInvoice(Request $request, $id)
     {
         $storeinvoice = StoreInvoice::find($id);
@@ -455,6 +493,7 @@ class StoreInvoiceController extends Controller
         $limit = $request->limit;
         $start = date($request->start_date);
         $end = date($request->end_date);
+        $type = $request->type;
 
         $range = 0;
         if ($start_page > 1) {
@@ -467,7 +506,7 @@ class StoreInvoiceController extends Controller
             ->leftjoin('stores', 'store_invoices.store_id', '=', 'stores.id')
             ->select('store_invoices.*', 'vendors.name as vendor', 'ware_house_details.name as ware_name', 'stores.store_name')
 
-            ->where(function ($filter) use ($vendor_id, $ware_id, $invoice_code, $store_id, $start, $end) {
+            ->where(function ($filter) use ($vendor_id, $ware_id, $invoice_code, $store_id, $start, $end, $type) {
                 if (!empty($invoice_code)) {
                     $filter->where('store_invoices.invoice_number', 'LIKE', "%{$invoice_code}");
                 }
@@ -486,6 +525,10 @@ class StoreInvoiceController extends Controller
                 if (!empty($start) && !empty($end)) {
                     // echo "hello world";
                     $filter->whereBetween('store_invoices.created_at', [$start, $end]);
+                }
+
+                if (!empty($type)) {
+                    $filter->where('store_invoices.type', $type);
                 }
 
             })->orderBy('id', 'desc')->skip($range)->take($limit)->get();
