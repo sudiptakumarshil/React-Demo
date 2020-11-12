@@ -51,6 +51,7 @@ Route::namespace ('Accounts')->group(function () {
 
     Route::get('/all-ledger', 'LedgerController@index')->name('all-ledger');
     Route::get('/all-setting', 'LedgerController@all_setting')->name('all-setting');
+    Route::get('/filter-accounts', 'LedgerController@filter_accounts')->name('filter-accounts');
 });
 
 //for customer mnagement....

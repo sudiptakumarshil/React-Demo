@@ -50,7 +50,7 @@ const ModalAccountsLedgerList=(props)=> {
                     style={{ opacity: 1 }}
                 >
                     <Modal.Header closeButton>
-                        <Modal.Title>Modal title</Modal.Title>
+                        <Modal.Title></Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div className="col-12" style={{maxHeight:'300px',overflow:"auto"}}>
@@ -63,15 +63,8 @@ const ModalAccountsLedgerList=(props)=> {
                                         className="table table-striped table-bordered nowrap table_witdh">
                                         <thead>
                                             <tr>
-                                                <th>First name</th>
-                                                <th>Last name</th>
-                                                <th>Position</th>
-                                                <th>Office</th>
-                                                <th>Age</th>
-                                                <th>Start date</th>
-                                                <th>Salary</th>
-                                                <th>Extn.</th>
-                                                <th>E-mail</th>
+                                                <th>SL</th>
+                                                <th>Title</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -82,13 +75,6 @@ const ModalAccountsLedgerList=(props)=> {
                                                         <tr onClick={()=>handleModalWithValue(ledger)}>
                                                             <td>{ledger.id}</td>
                                                             <td>{ledger.ledger_title}</td>
-                                                            <td>System Architect</td>
-                                                            <td>Edinburgh</td>
-                                                            <td>61</td>
-                                                            <td>2011/04/25</td>
-                                                            <td>$320,800</td>
-                                                            <td>5421</td>
-                                                            <td>t.nixon@datatables.net</td>
                                                         </tr>
                                                     )
                                                 })

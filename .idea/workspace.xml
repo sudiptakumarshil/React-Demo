@@ -2,13 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bd56c19a-66c0-4db0-be7c-d01ef1072078" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/webServers.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/webServers.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Accounts/LedgerController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Accounts/LedgerController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/Header.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Header.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/StoreInvoice/AddStoreInvoice.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/StoreInvoice/AddStoreInvoice.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/StoreInvoice/EditStoreInvoice.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/StoreInvoice/EditStoreInvoice.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/modal/EditInvoiceTransectionModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/modal/EditInvoiceTransectionModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/PaymentVoucher/PaymentVoucher.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/PaymentVoucher/PaymentVoucher.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/StoreInvoice/IssueStoreInvoice.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/StoreInvoice/IssueStoreInvoice.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/modal/ModalAccountsLedgerList.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/modal/ModalAccountsLedgerList.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -223,6 +223,7 @@
       <workItem from="1604129085555" duration="1543000" />
       <workItem from="1604382395795" duration="6400000" />
       <workItem from="1604478611085" duration="807000" />
+      <workItem from="1605082279398" duration="3205000" />
     </task>
     <servers />
   </component>
@@ -230,10 +231,10 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="392" y="92" key="#Deployment" timestamp="1604478694031">
+    <state x="392" y="92" key="#Deployment" timestamp="1605082345055">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
-    <state x="392" y="92" key="#Deployment/0.0.1600.860@0.0.1600.860" timestamp="1604478694031" />
+    <state x="392" y="92" key="#Deployment/0.0.1600.860@0.0.1600.860" timestamp="1605082345055" />
     <state x="580" y="188" key="FileChooserDialogImpl" timestamp="1600838060848">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
@@ -242,10 +243,10 @@
       <screen x="0" y="0" width="1600" height="860" />
     </state>
     <state x="507" y="258" key="com.intellij.ide.util.TipDialog/0.0.1600.860@0.0.1600.860" timestamp="1600837751515" />
-    <state x="626" y="167" key="ftp.server.browser" timestamp="1603894580279">
+    <state x="626" y="167" key="ftp.server.browser" timestamp="1605082343187">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
-    <state x="626" y="167" key="ftp.server.browser/0.0.1600.860@0.0.1600.860" timestamp="1603894580279" />
+    <state x="626" y="167" key="ftp.server.browser/0.0.1600.860@0.0.1600.860" timestamp="1605082343187" />
     <state x="456" y="195" key="run.anything.popup" timestamp="1603013338433">
       <screen x="0" y="0" width="1600" height="860" />
     </state>

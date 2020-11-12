@@ -2,8 +2,8 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="a80652d5-40a4-49a4-84a1-977bf49b29f6" name="gadgetoy" url="http://kurebd.com">
-        <fileTransfer host="kurebd.com" port="21" rootFolder="/public_html/history">
+      <webServer id="a80652d5-40a4-49a4-84a1-977bf49b29f6" name="gadgetoy" url="http://tecn.gov.bd">
+        <fileTransfer host="tecn.gov.bd" port="21" rootFolder="/public_html/library">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>

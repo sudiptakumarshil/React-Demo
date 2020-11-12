@@ -5,6 +5,7 @@ import ContentLoader, { Facebook, BulletList } from "react-content-loader";
 import "../css/style_frontend.css";
 import ModalAccountsLedgerList from "../modal/ModalAccountsLedgerList";
 import ModalSetting from "../modal/ModalSetting";
+import { Typeahead } from "react-bootstrap-typeahead";
 function AddPaymentVoucher(props) {
     const [loading, setLoading] = useState(true);
     const [warhouseList, setwarhouseList] = useState([]);
@@ -12,7 +13,9 @@ function AddPaymentVoucher(props) {
     const [costcenterList, setcostcenterList] = useState([]);
     const [docType, setdocType] = useState([]);
     const [postingType, setpostingType] = useState([]);
-
+    const [AccountsList, setAccountsList] = useState([]);
+    const [ledgers, setLedgers] = useState([]);
+    const [Setting, setSetting] = useState([]);
     const data = {
         name: "",
         ware_id: 0,
@@ -29,12 +32,53 @@ function AddPaymentVoucher(props) {
     };
 
     const [formData, setFormData] = useState(data);
+
     const handleInput = event => {
         const { name, files, value } = event.target;
         setFormData(oldState => ({
             ...oldState,
             [name]: value
         }));
+    };
+
+    const filter_accountId = async value => {
+        const res = await axios.get("/dbBackup/api/filter-accounts", {
+            params: {
+                filterdata: value
+            }
+        });
+        setAccountsList(res.data.result);
+    };
+
+    const fetchalllledger_copy = async () => {
+        const res = await axios.get(defaultRouteLink + "/api/all-ledger");
+        if (res.data.status === 200) {
+            setLedgers(res.data.ledgers);
+        }
+    };
+    const fetch_All_Setting = async () => {
+        const res = await axios.get(defaultRouteLink + "/api/all-setting");
+        if (res.data.status === 200) {
+            setSetting(res.data.setting);
+        }
+    };
+
+    const handleModalWithValue = obj => {
+        setShow(false);
+        props.handleAccountsid(obj);
+    };
+
+    const handleAccountInput = event => {
+        const { name, value } = event.target;
+
+        if (typeof value != "undefined") {
+            setFormData(oldState => ({
+                ...oldState,
+                [name]: value
+            }));
+        }
+
+        // filter_accountId(value);
     };
 
     const fetchalldata = async () => {
@@ -78,6 +122,7 @@ function AddPaymentVoucher(props) {
             postingType_id: item.id
         }));
     });
+
     const doctype = docType.map(function(item, index) {
         return <option value={item.id}> {item.name}</option>;
         setFormData(oldState => ({
@@ -85,6 +130,14 @@ function AddPaymentVoucher(props) {
             docType_id: item.id
         }));
     });
+    const acclist = AccountsList.map(function(item, index) {
+        return <li value={item.id}> {item.ledger_title}</li>;
+        // setFormData(oldState => ({
+        //     ...oldState,
+        //     docType_id: item.id
+        // }));
+    });
+
     const handleAccountsid = object => {
         //console.log("accId="+object.id);
         setFormData(oldState => ({
@@ -105,6 +158,8 @@ function AddPaymentVoucher(props) {
 
     useEffect(() => {
         fetchalldata();
+        fetchalllledger_copy();
+        fetch_All_Setting();
     }, []);
 
     return (
@@ -357,7 +412,7 @@ function AddPaymentVoucher(props) {
                                 <tbody>
                                     <td></td>
                                     <td>
-                                        <input
+                                        {/* <input
                                             type="text"
                                             className="form-control"
                                             placeholder="Accounts No"
@@ -366,13 +421,32 @@ function AddPaymentVoucher(props) {
                                             value={formData.accounts_no}
                                             data-id={formData.accounts_id}
                                             onChange={handleInput}
+                                        /> */}
+                                        <Typeahead
+                                            id="labelkey-example"
+                                            labelKey={ledgers =>
+                                                `${ledgers.ledger_title}`
+                                            }
+                                            
+                                            options={ledgers}
+                                            value={formData.accounts_no}
+                                            data-id={formData.accounts_id}
+                                            name="accounts_no"
+                                            // onChange={event=>handleAccountInput(event)}
+                                            onChange={handleAccountsid}
+                                            placeholder="Select your product"
                                         />
+
+                                        {}
+                                        {/* <ul>
+                                            {acclist}
+                                        </ul> */}
                                         <ModalAccountsLedgerList
                                             handleAccountsid={handleAccountsid}
                                         />
                                     </td>
                                     <td>
-                                        <input
+                                        {/* <input
                                             type="text"
                                             className="form-control"
                                             placeholder="Setting No"
@@ -380,8 +454,23 @@ function AddPaymentVoucher(props) {
                                             required
                                             value={formData.setting_name}
                                             data-id={formData.setting_id}
+                                            // onChange={handleInput}
                                             onChange={handleInput}
+                                        /> */}
+                                        <Typeahead
+                                            id="labelkey-example"
+                                            labelKey={Setting =>
+                                                `${Setting.name}`
+                                            }
+                                            options={Setting}
+                                            value={formData.setting_name}
+                                            data-id={formData.setting_id}
+                                            name="setting_no"
+                                            // onChange={event=>handleAccountInput(event)}
+                                            onChange={handleSettingsid}
+                                            placeholder="Select your product"
                                         />
+
                                         <ModalSetting
                                             handleSettingsid={handleSettingsid}
                                         />

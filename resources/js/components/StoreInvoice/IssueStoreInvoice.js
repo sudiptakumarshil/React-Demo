@@ -363,8 +363,7 @@ class IssueStoreInvoice extends Component {
                     popup: "animate__animated animate__fadeOutUp"
                 }
             });
-        }
-        else if (
+        } else if (
             idx == 7 &&
             parseInt(this.state.closingStock) < parseInt(this.state.quantity)
         ) {
@@ -1512,6 +1511,7 @@ class IssueStoreInvoice extends Component {
                                                                 Total Quantity ={" "}
                                                                 {TotalQuantity}
                                                             </td>
+
                                                             <td>
                                                                 <button
                                                                     className="btn btn-primary"
