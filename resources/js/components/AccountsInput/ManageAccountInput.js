@@ -2,6 +2,7 @@ import React, { Component, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { defaultRouteLink } from "../../common/config";
 import ContentLoader, { Facebook, BulletList } from "react-content-loader";
+const MyBulletListLoader = () => <BulletList />;
 function ManageAccountInput(props) {
     const [InputList, setInputList] = useState([]);
     const [loading, setLoading] = useState([true]);
@@ -15,6 +16,15 @@ function ManageAccountInput(props) {
     useEffect(() => {
         fetchAllInput();
     }, []);
+
+    if (loading) {
+        return (
+            <h2 className="text-center mt-3">
+                <i className="fas fa-spinner fa-spin fa-3x"></i>
+                <MyBulletListLoader />
+            </h2>
+        );
+    }
     return (
         <div className="col-md-12">
             <div className="row">

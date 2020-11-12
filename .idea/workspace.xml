@@ -2,14 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bd56c19a-66c0-4db0-be7c-d01ef1072078" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/webServers.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/webServers.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dbBackup.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dbBackup.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Accounts/LedgerController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Accounts/LedgerController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/PaymentVoucher/PaymentVoucher.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/PaymentVoucher/PaymentVoucher.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/StoreInvoice/IssueStoreInvoice.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/StoreInvoice/IssueStoreInvoice.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/modal/ModalAccountsLedgerList.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/modal/ModalAccountsLedgerList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,7 +92,6 @@
       <path value="$PROJECT_DIR$/vendor/webmozart/assert" />
       <path value="$PROJECT_DIR$/vendor/symfony/service-contracts" />
       <path value="$PROJECT_DIR$/vendor/symfony/mime" />
-      <path value="$PROJECT_DIR$/vendor/scrivo/highlight.php" />
       <path value="$PROJECT_DIR$/vendor/symfony/finder" />
       <path value="$PROJECT_DIR$/vendor/symfony/string" />
       <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
@@ -105,7 +99,6 @@
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php72" />
       <path value="$PROJECT_DIR$/vendor/symfony/process" />
       <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher-contracts" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php70" />
       <path value="$PROJECT_DIR$/vendor/fzaninotto/faker" />
       <path value="$PROJECT_DIR$/vendor/symfony/http-kernel" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php73" />
@@ -153,8 +146,8 @@
       <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-docblock" />
       <path value="$PROJECT_DIR$/vendor/composer" />
       <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-common" />
-      <path value="$PROJECT_DIR$/vendor/paragonie/random_compat" />
       <path value="$PROJECT_DIR$/vendor/filp/whoops" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client-contracts" />
     </include_path>
   </component>
   <component name="ProjectId" id="1ho66mfc9NQ8tKWCblCJM7ikGCA" />
@@ -224,6 +217,7 @@
       <workItem from="1604382395795" duration="6400000" />
       <workItem from="1604478611085" duration="807000" />
       <workItem from="1605082279398" duration="3205000" />
+      <workItem from="1605160855481" duration="3611000" />
     </task>
     <servers />
   </component>
@@ -231,10 +225,10 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="392" y="92" key="#Deployment" timestamp="1605082345055">
+    <state x="392" y="92" key="#Deployment" timestamp="1605160906901">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
-    <state x="392" y="92" key="#Deployment/0.0.1600.860@0.0.1600.860" timestamp="1605082345055" />
+    <state x="392" y="92" key="#Deployment/0.0.1600.860@0.0.1600.860" timestamp="1605160906901" />
     <state x="580" y="188" key="FileChooserDialogImpl" timestamp="1600838060848">
       <screen x="0" y="0" width="1600" height="860" />
     </state>

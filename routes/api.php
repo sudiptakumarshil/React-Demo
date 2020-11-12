@@ -209,3 +209,12 @@ Route::namespace ('frontend')->group(function () {
         });
     });
 });
+
+Route::namespace ('frontend')->group(function () {
+    Route::namespace ('api')->group(function () {
+        Route::namespace ('PaymentVoucher')->group(function () {
+            Route::post('/save-paymentvoucher', 'PaymentVoucherController@save_payment_voucher')->name("save-paymentvoucher");
+        });
+    });
+});
+

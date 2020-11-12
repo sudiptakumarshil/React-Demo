@@ -16,19 +16,30 @@ function AddPaymentVoucher(props) {
     const [AccountsList, setAccountsList] = useState([]);
     const [ledgers, setLedgers] = useState([]);
     const [Setting, setSetting] = useState([]);
+    const [bankList, setbankList] = useState([]);
+
     const data = {
         name: "",
         ware_id: 0,
         status: 1,
         trash: 1,
-        cashAccount_id: 0,
+        cashAccount_id: "",
         costcenter_id: 0,
         postingType_id: 0,
         docType_id: 0,
         accounts_no: "",
         accounts_id: "",
         setting_name: "",
-        setting_id: ""
+        setting_id: "",
+        bank_id: 0,
+        invoice_type: 2,
+        ammount:0,
+        date:"",
+        cheque_number:"",
+        cheque_date:"",
+        remarks:"",
+        description:""
+
     };
 
     const [formData, setFormData] = useState(data);
@@ -41,14 +52,14 @@ function AddPaymentVoucher(props) {
         }));
     };
 
-    const filter_accountId = async value => {
-        const res = await axios.get("/dbBackup/api/filter-accounts", {
-            params: {
-                filterdata: value
-            }
-        });
-        setAccountsList(res.data.result);
-    };
+    // const filter_accountId = async value => {
+    //     const res = await axios.get("/dbBackup/api/filter-accounts", {
+    //         params: {
+    //             filterdata: value
+    //         }
+    //     });
+    //     setAccountsList(res.data.result);
+    // };
 
     const fetchalllledger_copy = async () => {
         const res = await axios.get(defaultRouteLink + "/api/all-ledger");
@@ -86,10 +97,12 @@ function AddPaymentVoucher(props) {
         setwarhouseList(res.data.warehouses);
         setcashList(res.data.cashaccount);
         setcostcenterList(res.data.costcenter);
+        setbankList(res.data.bankdetails);
         setdocType(res.data.docType);
         setpostingType(res.data.postingType);
         setLoading(false);
     };
+
 
     const warehouse = warhouseList.map(function(item, index) {
         return <option value={item.id}> {item.name}</option>;
@@ -100,10 +113,17 @@ function AddPaymentVoucher(props) {
     });
 
     const cashDetails = cashList.map(function(item, index) {
-        return <option value={item.id}> {item.cash_name}</option>;
+        return <option value={item.account_no}> {item.cash_name}</option>;
         setFormData(oldState => ({
             ...oldState,
-            cashAccount_id: item.id
+            cashAccount_id: item.account_no
+        }));
+    });
+    const bankDetails = bankList.map(function(item, index) {
+        return <option value={item.account_id}> {item.bank_name}</option>;
+        setFormData(oldState => ({
+            ...oldState,
+            bank_id: item.account_id
         }));
     });
 
@@ -156,6 +176,82 @@ function AddPaymentVoucher(props) {
         }));
     };
 
+    const SavePaymentVoucher = async event =>{
+        event.preventDefault();
+        if(formData.ware_id ==0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'WareHouse Cannot Empty!',
+                footer: 'Please Enter A Value'
+              })
+        }
+         else if(formData.invoice_type ==1 && formData.bank_id ==0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Bank Cannot be Empty!',
+                footer: 'Please Enter A Value'
+              })
+        }
+         else if(formData.invoice_type ==2 && formData.cashAccount_id ==0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Cash  Cannot be Empty!',
+                footer: 'Please Enter A Value'
+              })
+        }
+        else if(formData.date ==0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Date Cannot Empty!',
+                footer: 'Please Enter A Value'
+              })
+        }
+        else if(formData.description ==0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Descripton Cannot Empty!',
+                footer: 'Please Enter A Value'
+              })
+        }
+        else if(formData.costcenter_id ==0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Cost Center Cannot be Empty!',
+                footer: 'Please Enter A Value'
+              })
+        }
+        else if(formData.postingType_id ==0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'WareHouse Cannnot Empty!',
+                footer: 'Please Enter A Value'
+              })
+        }
+        else if(formData.postingType_id ==0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'WareHouse Cannnot Empty!',
+                footer: 'Please Enter A Value'
+              })
+        }
+       else {
+
+        const res = await axios.post(defaultRouteLink+
+            "/api/save-paymentvoucher",
+            formData
+        );
+       }
+
+    }
+
     useEffect(() => {
         fetchalldata();
         fetchalllledger_copy();
@@ -167,7 +263,7 @@ function AddPaymentVoucher(props) {
             <div className="row">
                 <div className="col-md-12">
                     <h2>Payment Voucher</h2>
-                    <form>
+                    <form onSubmit={SavePaymentVoucher}>
                         <div className="row pt-3">
                             <div className="col-md-3">
                                 <label className="control-label">
@@ -190,27 +286,52 @@ function AddPaymentVoucher(props) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-md-3">
-                                <label className="control-label">
-                                    Cash Account
-                                </label>
-                                <div className="form-group">
-                                    <div className="input-group">
-                                        <select
-                                            className="form-control"
-                                            id="exampleFormControlSelect1"
-                                            name="cashAccount_id"
-                                            onChange={handleInput}
-                                            required
-                                        >
-                                            <option selected>
-                                                Choose one{" "}
-                                            </option>
-                                            {cashDetails}
-                                        </select>
+                            {formData.invoice_type == 1 ? (
+                                <div className="col-md-3">
+                                    <label className="control-label">
+                                        Bank Account
+                                    </label>
+                                    <div className="form-group">
+                                        <div className="input-group">
+                                            <select
+                                                className="form-control"
+                                                id="exampleFormControlSelect1"
+                                                name="bank_id"
+                                                onChange={handleInput}
+                                                required
+                                            >
+                                                <option selected>
+                                                    Choose one{" "}
+                                                </option>
+                                                {bankDetails}
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            ) : (
+                                <div className="col-md-3">
+                                    <label className="control-label">
+                                        Cash Account
+                                    </label>
+                                    <div className="form-group">
+                                        <div className="input-group">
+                                            <select
+                                                className="form-control"
+                                                id="exampleFormControlSelect1"
+                                                name="cashAccount_id"
+                                                onChange={handleInput}
+                                                required
+                                            >
+                                                <option selected>
+                                                    Choose one{" "}
+                                                </option>
+                                                {cashDetails}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             <div className="col-md-3">
                                 <label className="control-label">
                                     Account Type{" "}
@@ -219,13 +340,15 @@ function AddPaymentVoucher(props) {
                                     <div className="input-group">
                                         <input
                                             type="radio"
-                                            name="account_type"
+                                            name="invoice_type"
+                                            value="2"
                                             onChange={handleInput}
                                         ></input>
                                         Cash
                                         <input
                                             type="radio"
-                                            name="account_type"
+                                            name="invoice_type"
+                                            value="1"
                                             onChange={handleInput}
                                         ></input>
                                         Bank
@@ -239,6 +362,7 @@ function AddPaymentVoucher(props) {
                                     <div className="input-group">
                                         <input
                                             type="date"
+                                            name="date"
                                             className="form-control"
                                             onChange={handleInput}
                                         ></input>
@@ -250,7 +374,8 @@ function AddPaymentVoucher(props) {
                                 <div className="form-group">
                                     <div className="input-group">
                                         <input
-                                            type="text"
+                                            type="number"
+                                            value={formData.ammount}
                                             readOnly
                                             className="form-control"
                                             onChange={handleInput}
@@ -267,10 +392,12 @@ function AddPaymentVoucher(props) {
                                         <textarea
                                             className="form-control"
                                             onChange={handleInput}
+                                            name="description"
                                         ></textarea>
                                     </div>
                                 </div>
                             </div>
+
 
                             <div className="col-md-3">
                                 <label className="control-label">
@@ -281,7 +408,7 @@ function AddPaymentVoucher(props) {
                                         <select
                                             className="form-control"
                                             id="exampleFormControlSelect1"
-                                            name="status"
+                                            name="cost_center_id"
                                             onChange={handleInput}
                                             required
                                         >
@@ -300,6 +427,7 @@ function AddPaymentVoucher(props) {
                                     <div className="input-group">
                                         <input
                                             type="text"
+
                                             className="form-control"
                                             onChange={handleInput}
                                         ></input>
@@ -316,7 +444,7 @@ function AddPaymentVoucher(props) {
                                         <select
                                             className="form-control"
                                             id="exampleFormControlSelect1"
-                                            name="status"
+                                            name="posting_type_id"
                                             onChange={handleInput}
                                             required
                                         >
@@ -328,6 +456,7 @@ function AddPaymentVoucher(props) {
                                     </div>
                                 </div>
                             </div>
+
                             <div className="col-md-3">
                                 <label className="control-label">
                                     Doc Type
@@ -337,7 +466,7 @@ function AddPaymentVoucher(props) {
                                         <select
                                             className="form-control"
                                             id="exampleFormControlSelect1"
-                                            name="status"
+                                            name=""
                                             onChange={handleInput}
                                             required
                                         >
@@ -349,6 +478,7 @@ function AddPaymentVoucher(props) {
                                     </div>
                                 </div>
                             </div>
+
 
                             <div className="col-md-3">
                                 <label className="control-label">Doc NO</label>
@@ -363,6 +493,7 @@ function AddPaymentVoucher(props) {
                                 </div>
                             </div>
 
+
                             <div className="col-md-4">
                                 <label className="control-label">
                                     Stand By
@@ -373,6 +504,42 @@ function AddPaymentVoucher(props) {
                                     </div>
                                 </div>
                             </div>
+                            {formData.invoice_type == 1 ? (
+                                <>
+                                    <div className="col-md-4">
+                                        <label className="control-label">
+                                            Cheque Number{" "}
+                                        </label>
+                                        <div className="form-group">
+                                            <div className="input-group">
+                                                <input
+                                                    type="text"
+                                                    name="cheque_number"
+                                                    className="form-control"
+                                                    onChange={handleInput}
+                                                ></input>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-4">
+                                        <label className="control-label">
+                                            Cheque Date{" "}
+                                        </label>
+                                        <div className="form-group">
+                                            <div className="input-group">
+                                                <input
+                                                    type="date"
+                                                    name="cheque_date"
+                                                    className="form-control"
+                                                    onChange={handleInput}
+                                                ></input>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
+                            ) : (
+                                <td></td>
+                            )}
                             {/* <div className="col-md-4">
                                 <label className="control-label">Status</label>
                                 <div className="form-group">
@@ -403,7 +570,6 @@ function AddPaymentVoucher(props) {
                                         <th>SL</th>
                                         <th>Account No</th>
                                         <th>Detail Account </th>
-                                        <th>Name</th>
                                         <th>Description</th>
                                         <th>Amount</th>
                                         <th>Action</th>
@@ -412,52 +578,18 @@ function AddPaymentVoucher(props) {
                                 <tbody>
                                     <td></td>
                                     <td>
-                                        {/* <input
+                                        <input
                                             type="text"
                                             className="form-control"
                                             placeholder="Accounts No"
-                                            name="accounts_no"
-                                            required
-                                            value={formData.accounts_no}
-                                            data-id={formData.accounts_id}
-                                            onChange={handleInput}
-                                        /> */}
-                                        <Typeahead
-                                            id="labelkey-example"
-                                            labelKey={ledgers =>
-                                                `${ledgers.ledger_title}`
-                                            }
-                                            
-                                            options={ledgers}
-                                            value={formData.accounts_no}
-                                            data-id={formData.accounts_id}
-                                            name="accounts_no"
-                                            // onChange={event=>handleAccountInput(event)}
-                                            onChange={handleAccountsid}
-                                            placeholder="Select your product"
-                                        />
-
-                                        {}
-                                        {/* <ul>
-                                            {acclist}
-                                        </ul> */}
-                                        <ModalAccountsLedgerList
-                                            handleAccountsid={handleAccountsid}
-                                        />
-                                    </td>
-                                    <td>
-                                        {/* <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="Setting No"
-                                            name="setting_no"
+                                            name="setting_id"
                                             required
                                             value={formData.setting_name}
                                             data-id={formData.setting_id}
-                                            // onChange={handleInput}
                                             onChange={handleInput}
-                                        /> */}
-                                        <Typeahead
+                                        />
+
+                                        {/* <Typeahead
                                             id="labelkey-example"
                                             labelKey={Setting =>
                                                 `${Setting.name}`
@@ -467,12 +599,64 @@ function AddPaymentVoucher(props) {
                                             data-id={formData.setting_id}
                                             name="setting_no"
                                             // onChange={event=>handleAccountInput(event)}
-                                            onChange={handleSettingsid}
+                                            onChange={event=>handleInput(event)}
                                             placeholder="Select your product"
-                                        />
+                                        /> */}
+                                        {}
+                                        {/* <ul>
+                                            {acclist}
+                                        </ul> */}
 
                                         <ModalSetting
                                             handleSettingsid={handleSettingsid}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Setting No"
+                                            name="accounts_id"
+                                            required
+                                            value={formData.accounts_no}
+                                            data-id={formData.accounts_id}
+                                            // onChange={handleInput}
+                                            onChange={handleInput}
+                                        />
+                                        {/* <Typeahead
+                                            id="labelkey-example"
+                                            labelKey={ledgers =>
+                                                `${ledgers.ledger_title}`
+                                            }
+                                            options={ledgers}
+                                            value={formData.accounts_no}
+                                            data-id={formData.accounts_id}
+                                            name="accounts_no"
+                                            // onChange={event=>handleAccountInput(event)}
+                                            onChange={handleInput}
+                                            placeholder="Select your product"
+                                        /> */}
+                                        <ModalAccountsLedgerList
+                                            handleAccountsid={handleAccountsid}
+                                        />
+                                    </td>
+                                    <td>
+                                         <textarea
+                                            className="form-control"
+                                            placeholder="description"
+                                            name="remarks"
+                                            required
+                                            onChange={handleInput}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            placeholder="Ammount"
+                                            name="ammount"
+                                            required
+                                            onChange={handleInput}
                                         />
                                     </td>
                                 </tbody>

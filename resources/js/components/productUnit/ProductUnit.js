@@ -8,6 +8,8 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeItem from "@material-ui/lab/TreeItem";
 import { data, map } from "jquery";
 import ContentLoader, { Facebook, BulletList } from "react-content-loader";
+const MyBulletListLoader = () => <BulletList />;
+
 const ProductUnit = props => {
     const [productUnitList, setproductUnitList] = useState([]);
     const [loading, setLoading] = useState([true]);
@@ -22,14 +24,14 @@ const ProductUnit = props => {
         fetchAllUnit();
     }, []);
 
-    // if (loading) {
-    //     return (
-    //         <h2 className="text-center mt-3">
-    //             <i className="fas fa-spinner fa-spin fa-3x"></i>
-    //             <MyBulletListLoader />
-    //         </h2>
-    //     );
-    // }
+    if (loading) {
+        return (
+            <h2 className="text-center mt-3">
+                <i className="fas fa-spinner fa-spin fa-3x"></i>
+                <MyBulletListLoader />
+            </h2>
+        );
+    }
 
     return (
         <div className="col-md-12">

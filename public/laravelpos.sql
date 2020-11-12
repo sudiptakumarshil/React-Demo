@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 10, 2020 at 01:40 PM
+-- Generation Time: Nov 12, 2020 at 02:08 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.10
 
@@ -324,6 +324,70 @@ INSERT INTO `inventory_products` (`id`, `product_code`, `product_name`, `pices_o
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `invoice_account_details`
+--
+
+CREATE TABLE `invoice_account_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `ware_id` int(11) NOT NULL,
+  `invoice_type` int(11) NOT NULL COMMENT 'cash =2 cash=1 ',
+  `voucher_no` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `date` date NOT NULL,
+  `ammount` int(11) NOT NULL,
+  `description` int(11) NOT NULL,
+  `cost_center_id` int(11) NOT NULL,
+  `posting_type_id` int(11) NOT NULL,
+  `ref_no` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `doc_no` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `trash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1' COMMENT 'delete=2',
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1' COMMENT 'active=1,inactive=2',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `invoice_account_details`
+--
+
+INSERT INTO `invoice_account_details` (`id`, `ware_id`, `invoice_type`, `voucher_no`, `date`, `ammount`, `description`, `cost_center_id`, `posting_type_id`, `ref_no`, `doc_no`, `trash`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, '0', '2020-11-11', 2000, 0, 1, 2, '0', '0', '1', '1', '2020-11-12 06:14:47', '2020-11-12 06:14:47'),
+(2, 1, 1, '0', '2020-11-12', 2000, 0, 1, 2, '0', '0', '1', '1', '2020-11-12 06:39:48', '2020-11-12 06:39:48');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `invoice_account_transec_details`
+--
+
+CREATE TABLE `invoice_account_transec_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `debit_id` int(10) UNSIGNED NOT NULL,
+  `credit_id` int(10) UNSIGNED NOT NULL,
+  `group_account_code` int(11) NOT NULL,
+  `invoice_acc_details_id` int(10) UNSIGNED NOT NULL,
+  `date` date NOT NULL,
+  `ware_id` int(10) UNSIGNED NOT NULL,
+  `remarks` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ammount` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `cost_center_id` int(11) NOT NULL,
+  `cheque_number` int(11) NOT NULL,
+  `cheque_date` int(11) NOT NULL,
+  `trash` int(11) NOT NULL DEFAULT 1 COMMENT 'delete=2',
+  `status` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'active=1,inactive=2',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `invoice_account_transec_details`
+--
+
+INSERT INTO `invoice_account_transec_details` (`id`, `debit_id`, `credit_id`, `group_account_code`, `invoice_acc_details_id`, `date`, `ware_id`, `remarks`, `ammount`, `cost_center_id`, `cheque_number`, `cheque_date`, `trash`, `status`, `created_at`, `updated_at`) VALUES
+(1, 192, 203, 0, 2, '2020-11-12', 1, 'ok done', '2000', 1, 2008, 2020, 1, 1, '2020-11-12 06:39:48', '2020-11-12 06:39:48');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `invoice_parameters`
 --
 
@@ -400,7 +464,10 @@ INSERT INTO `invoice_trasections` (`id`, `invoice_id`, `d_id`, `c_id`, `item_id`
 (13, 4, 5, 0, 5, 1, '2020-11-09', 1, 1, 6, 2, 3000, 0.00, 0.00, 0, '1', 7, 1, '2020-11-09 03:36:50', '2020-11-09 03:36:50'),
 (14, 0, 6, 0, 6, 1, '2020-11-10', 1, 1, 6, 1, 2000, 0.00, 0.00, 8, '1', 1, 1, '2020-11-10 00:39:57', '2020-11-10 00:39:57'),
 (15, 0, 8, 0, 8, 1, '2020-11-10', 1, 1, 7, 17, 5, 0.00, 0.00, 0, '1', 1, 2, '2020-11-10 02:09:33', '2020-11-10 02:23:40'),
-(16, 0, 12, 0, 12, 1, '2020-11-10', 1, 1, 6, 2, 2000, 0.00, 0.00, 0, '1', 1, 1, '2020-11-10 02:27:20', '2020-11-10 02:27:20');
+(16, 0, 12, 0, 12, 1, '2020-11-10', 1, 1, 6, 2, 2000, 0.00, 0.00, 0, '1', 1, 1, '2020-11-10 02:27:20', '2020-11-10 02:27:20'),
+(17, 0, 1, 0, 1, 1, '2020-11-11', 1, 1, 1, 1, 300, 0.00, 0.00, 0, '1', 7, 2, '2020-11-11 00:55:27', '2020-11-11 01:01:58'),
+(18, 0, 1, 0, 1, 1, '2020-11-11', 1, 1, 1, 1, 300, 0.00, 0.00, 0, '1', 7, 2, '2020-11-11 01:02:11', '2020-11-11 01:05:32'),
+(19, 0, 0, 0, 1, 1, '2020-11-12', 1, 1, 1, 1, 300, 0.00, 0.00, 0, '1', 5, 1, '2020-11-11 23:48:17', '2020-11-11 23:48:17');
 
 -- --------------------------------------------------------
 
@@ -890,7 +957,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (32, '2020_11_05_105500_create_units_table', 12),
 (33, '2020_11_08_053910_create_module_lists_table', 13),
 (34, '2020_11_08_054727_create_accounts_inputs_table', 14),
-(35, '2020_11_08_055722_create_cost_centers_table', 15);
+(35, '2020_11_08_055722_create_cost_centers_table', 15),
+(36, '2020_11_12_092051_create_invoice_account_details_table', 16),
+(37, '2020_11_12_092332_create_invoice_account_transec_details_table', 16);
 
 -- --------------------------------------------------------
 
@@ -1084,9 +1153,7 @@ CREATE TABLE `store_invoices` (
 
 INSERT INTO `store_invoices` (`id`, `invoice_number`, `type`, `vendor_id`, `ware_id`, `date`, `posting_by`, `store_id`, `gross_amount`, `discount_taka`, `discount_percent`, `cash_amount`, `cash_id`, `bank_amount`, `bank_id`, `remarks`, `total_quantity`, `created_at`, `updated_at`) VALUES
 (1, 1000, '1', 1, 1, '2020-11-09', 1, 6, 30000.00, 0.00, NULL, 0.00, NULL, 0, NULL, NULL, NULL, '2020-11-09 02:01:44', '2020-11-09 02:01:44'),
-(2, 6000, '6', 1, 1, '2020-11-09', 1, 7, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, NULL, 0, '2020-11-09 02:03:58', '2020-11-09 02:03:58'),
-(3, 6001, '6', 1, 1, '2020-11-09', 1, 7, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, NULL, 0, '2020-11-09 02:05:04', '2020-11-09 02:05:04'),
-(4, 7000, '7', 2, 2, '2020-11-09', 1, 9, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, NULL, 0, '2020-11-09 03:20:09', '2020-11-09 03:37:38');
+(3, 6001, '6', 1, 1, '2020-11-09', 1, 7, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, NULL, 0, '2020-11-09 02:05:04', '2020-11-09 02:05:04');
 
 -- --------------------------------------------------------
 
@@ -1190,7 +1257,8 @@ CREATE TABLE `vendors` (
 
 INSERT INTO `vendors` (`id`, `name`, `email`, `address`, `phone`, `remarks`, `accounts_no`, `status`, `type`, `ware_id`, `created_at`, `updated_at`) VALUES
 (1, 'vendor2', 'vendor@mail.com', 'ctg', '0199922', 'vendor', 12, 0, 0, 1, NULL, NULL),
-(2, 'hasan', 'hasan@gmail.com', 'dhaka', '07665', 'vendor', 192, 0, 0, 1, '2020-11-04 23:26:16', '2020-11-04 23:26:16');
+(2, 'hasan', 'hasan@gmail.com', 'dhaka', '07665', 'vendor', 192, 0, 0, 1, '2020-11-04 23:26:16', '2020-11-04 23:26:16'),
+(3, 'hello', 'hello@mail.com', 'ctg', '01773', 'best', 192, 0, 0, 1, '2020-11-12 01:03:38', '2020-11-12 01:03:38');
 
 -- --------------------------------------------------------
 
@@ -1287,6 +1355,18 @@ ALTER TABLE `inventory_categories`
 -- Indexes for table `inventory_products`
 --
 ALTER TABLE `inventory_products`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `invoice_account_details`
+--
+ALTER TABLE `invoice_account_details`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `invoice_account_transec_details`
+--
+ALTER TABLE `invoice_account_transec_details`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1434,6 +1514,18 @@ ALTER TABLE `inventory_products`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
+-- AUTO_INCREMENT for table `invoice_account_details`
+--
+ALTER TABLE `invoice_account_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `invoice_account_transec_details`
+--
+ALTER TABLE `invoice_account_transec_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `invoice_parameters`
 --
 ALTER TABLE `invoice_parameters`
@@ -1443,7 +1535,7 @@ ALTER TABLE `invoice_parameters`
 -- AUTO_INCREMENT for table `invoice_trasections`
 --
 ALTER TABLE `invoice_trasections`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `ledgers`
@@ -1455,7 +1547,7 @@ ALTER TABLE `ledgers`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `module_lists`
@@ -1503,7 +1595,7 @@ ALTER TABLE `vats`
 -- AUTO_INCREMENT for table `vendors`
 --
 ALTER TABLE `vendors`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `ware_house_details`

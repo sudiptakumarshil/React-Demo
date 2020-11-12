@@ -104,7 +104,7 @@ const Header = props => {
                     <div id="sidebar-menu" className="sidebar-menu">
                         <ul>
                             <li>
-                                <a href="">
+                                <a href="http://localhost/dbBackup/admin_dashboard">
                                     <i className="icofont-speed-meter"></i>{" "}
                                     Dashboard
                                 </a>
