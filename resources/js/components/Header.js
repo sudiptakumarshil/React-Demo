@@ -18,6 +18,60 @@ import Dashboard from "./Dashboard";
 import Swal from "sweetalert2";
 
 const Header = props => {
+    const [menuList, setMenuList] = useState([]);
+    const [submenuList, setsubmenuList] = useState([]);
+    const [loading, setLoading] = useState([]);
+    const [submenu, setsubmenu] = useState([]);
+
+    const data = {
+        submenu: []
+    };
+    const [formData, setformData] = useState(data);
+
+    const fetchAllmenu = async () => {
+        const res = await axios.get(defaultRouteLink + "/api/get-menu-submenu");
+        // console.log(res.data.submenu);
+        setMenuList(res.data.list.list);
+        setLoading(false);
+    };
+
+    // {menuList.map(function(item, index) {
+    //     if(typeof item.isChecked == 'undefined')
+    //         item.isChecked=false;
+    //     return (
+
+    //             <tr>
+    //                 <td>{item.id}</td>
+    //                 <td>
+    //                     <input
+    //                         type="checkbox"
+    //                         key={item.id}
+    //                         onClick={handleAllChecked}
+    //                         value={item.id}
+    //                         checked={item.isChecked}
+    //                     />
+    //                     {item.name}
+    //                 </td>
+    //                 <td>
+    //                     <div className="row">
+    //                         {item.sub_menu.map(sub => {
+    //                             //if(typeof sub.isChecked != 'undefined' && sub.isChecked)
+    //                              console.log("test5="+sub.isChecked+","+""+sub.id+"-"+sub.name);
+
+    //                             return (<CheckBoxRole handleCheckChieldElement={handleCheckChieldElement}  {...sub} />)
+    //                         }
+    //                             )
+    //                     }
+    //                     </div>
+    //                 </td>
+    //             </tr>
+
+    //     );
+    // })}
+    useEffect(() => {
+        fetchAllmenu();
+    }, []);
+
     return (
         <div className="main-wrapper slide-nav">
             <div className="header">
@@ -109,10 +163,73 @@ const Header = props => {
                                     Dashboard
                                 </a>
                             </li>
+
+                            {menuList.map(function(item, index) {
+                                return (
+                                    <li className="submenu">
+                                        <a href="#">
+                                            <i className="icofont-list"></i>
+                                            <span>{item.name}</span>
+                                            <span className="menu-arrow">
+                                                <i className="icofont-simple-right"></i>
+                                            </span>
+                                        </a>
+
+                                        <ul
+                                            className="list-unstyled"
+                                            // style={{ display: "none" }}
+                                        >
+                                            {item.sub_menu.map(sub => {
+                                                return (
+                                                    <li className="">
+                                                        <Link
+                                                            to={
+                                                                defaultRouteLink + `/${sub.link_id}`
+
+                                                            }
+                                                        >
+                                                            {sub.name}
+                                                        </Link>
+                                                    </li>
+                                                );
+                                            })}
+                                        </ul>
+                                    </li>
+                                );
+                            })}
+                            {/*
                             <li className="submenu">
                                 <a href="#">
                                     <i className="icofont-list"></i>
-                                    <span>Ware House </span>
+                                    <span>Setup</span>
+                                    <span className="menu-arrow">
+                                        <i className="icofont-simple-right"></i>
+                                    </span>
+                                </a>
+                                <ul
+                                    className="list-unstyled"
+                                    style={{ display: "none" }}
+                                >
+                                    <li className="">
+                                        <Link to="/dbBackup/manage-invoiceparams">
+                                            Manage Invoice Params
+                                        </Link>
+                                    </li>
+
+                                    <li className="">
+                                        <Link to="/dbBackup/manage-role">
+                                            Role Management
+                                        </Link>
+                                    </li>
+                                </ul>
+                            </li>
+ */}
+
+                            {/*
+                            <li className="submenu">
+                                <a href="#">
+                                    <i className="icofont-list"></i>
+                                    <span>Input</span>
                                     <span className="menu-arrow">
                                         <i className="icofont-simple-right"></i>
                                     </span>
@@ -126,20 +243,6 @@ const Header = props => {
                                             Manage WareHouse
                                         </Link>
                                     </li>
-                                </ul>
-                            </li>
-                            <li className="submenu">
-                                <a href="#">
-                                    <i className="icofont-list"></i>
-                                    <span>Settings</span>
-                                    <span className="menu-arrow">
-                                        <i className="icofont-simple-right"></i>
-                                    </span>
-                                </a>
-                                <ul
-                                    className="list-unstyled"
-                                    style={{ display: "none" }}
-                                >
                                     <li className="">
                                         <Link to="/dbBackup/manage-vendor">
                                             Manage All Vendor
@@ -161,16 +264,56 @@ const Header = props => {
                                             Manage Inventory Product
                                         </Link>
                                     </li>
+
                                     <li className="">
                                         <Link to="/dbBackup/manage-store">
                                             Manage Store
                                         </Link>
                                     </li>
-                                    {/* <li className="">
-                                        <Link to="/dbBackup/store-invoice">
-                                            Store Invoice
+
+                                    <li className="">
+                                        <Link to={`/dbBackup/issue/${6}`}>
+                                            Issue
                                         </Link>
-                                    </li> */}
+                                    </li>
+                                    <li className="">
+                                        <Link to="/dbBackup/manage-bank-details">
+                                            Bank Details
+                                        </Link>
+                                    </li>
+
+                                    <li className="">
+                                        <Link to="/dbBackup/manage-store-invoice">
+                                            Manage Store Invoice
+                                        </Link>
+                                    </li>
+
+                                    <li className="">
+                                        <Link to="/dbBackup/manage-unit">
+                                            Manage Unit
+                                        </Link>
+                                    </li>
+
+                                    <li className="">
+                                        <Link to="/dbBackup/manage-account-input">
+                                            Manage Account Input
+                                        </Link>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li className="submenu">
+                                <a href="#">
+                                    <i className="icofont-list"></i>
+                                    <span>Transection</span>
+                                    <span className="menu-arrow">
+                                        <i className="icofont-simple-right"></i>
+                                    </span>
+                                </a>
+                                <ul
+                                    className="list-unstyled"
+                                    style={{ display: "none" }}
+                                >
                                     <li className="">
                                         <Link
                                             to={`/dbBackup/new-purshase/${1}`}
@@ -204,43 +347,8 @@ const Header = props => {
                                     </li>
 
                                     <li className="">
-                                        <Link
-                                            to={`/dbBackup/issue/${6}`}
-                                        >
-                                            Issue
-                                        </Link>
-                                    </li>
-                                    <li className="">
-                                        <Link to="/dbBackup/manage-bank-details">
-                                            Bank Details
-                                        </Link>
-                                    </li>
-                                    <li className="">
                                         <Link to="/dbBackup/manage-cash-account">
                                             Manage Cash Account
-                                        </Link>
-                                    </li>
-                                    <li className="">
-                                        <Link to="/dbBackup/manage-store-invoice">
-                                            Manage Store Invoice
-                                        </Link>
-                                    </li>
-
-                                    <li className="">
-                                        <Link to="/dbBackup/manage-invoiceparams">
-                                            Manage Invoice Params
-                                        </Link>
-                                    </li>
-
-                                    <li className="">
-                                        <Link to="/dbBackup/manage-unit">
-                                            Manage Unit
-                                        </Link>
-                                    </li>
-
-                                    <li className="">
-                                        <Link to="/dbBackup/manage-account-input">
-                                            Manage Account Input
                                         </Link>
                                     </li>
 
@@ -252,16 +360,32 @@ const Header = props => {
 
                                     <li className="">
                                         <Link to="/dbBackup/paymentvaucher">
-                                           Payment Vaucher
-                                        </Link>
-                                    </li>
-                                    <li className="">
-                                        <Link to="/dbBackup/stock-report">
-                                           Stock Report
+                                            Payment Vaucher
                                         </Link>
                                     </li>
                                 </ul>
                             </li>
+
+                            <li className="submenu">
+                                <a href="#">
+                                    <i className="icofont-list"></i>
+                                    <span>Report</span>
+                                    <span className="menu-arrow">
+                                        <i className="icofont-simple-right"></i>
+                                    </span>
+                                </a>
+                                <ul
+                                    className="list-unstyled"
+                                    style={{ display: "none" }}
+                                >
+                                    <li className="">
+                                        <Link to="/dbBackup/stock-report">
+                                            Stock Report
+                                        </Link>
+                                    </li>
+                                </ul>
+                            </li>
+                         */}
                         </ul>
                     </div>
                 </div>

@@ -218,7 +218,7 @@ class EditissueInvoice extends Component {
         const idx = this.props.match.params.idx;
 
         const res = await axios.post(
-            "/dbBackup/api/save-storeinvoice",
+            defaultRouteLink + "/api/save-storeinvoice",
             this.state
         );
 
@@ -546,8 +546,7 @@ class EditissueInvoice extends Component {
                     popup: "animate__animated animate__fadeOutUp"
                 }
             });
-        }
-        else if (
+        } else if (
             idx == 6 &&
             parseInt(this.state.closingStock) < parseInt(this.state.quantity)
         ) {
@@ -560,8 +559,7 @@ class EditissueInvoice extends Component {
                     popup: "animate__animated animate__fadeOutUp"
                 }
             });
-        }
-        else if (
+        } else if (
             idx == 7 &&
             parseInt(this.state.closingStock) < parseInt(this.state.quantity)
         ) {
@@ -574,10 +572,9 @@ class EditissueInvoice extends Component {
                     popup: "animate__animated animate__fadeOutUp"
                 }
             });
-        }
-        else {
+        } else {
             const res = await axios.post(
-                "/dbBackup/api/save-storeinvoice",
+                defaultRouteLink + "/api/save-storeinvoice",
                 this.state
             );
 
@@ -677,13 +674,15 @@ class EditissueInvoice extends Component {
                 const id = this.props.match.params.id;
 
                 const res = await axios.patch(
-                    `/dbBackup/api/update-storeInvoice/${id}`,
+                    defaultRouteLink + `/api/update-storeInvoice/${id}`,
                     this.state
                 );
 
                 // SUCCESS MESSAGE USING SWEET ALERT
                 if (res.data.status === 200) {
-                    this.props.history.push("/dbBackup/manage-store-invoice");
+                    this.props.history.push(
+                        defaultRouteLink + "/manage-store-invoice"
+                    );
                     const Toast = Swal.mixin({
                         toast: true,
                         position: "top-end",
@@ -1003,7 +1002,7 @@ class EditissueInvoice extends Component {
                         <div className="col-md-12">
                             <div style={{ marginTop: 30 }}>
                                 <Link
-                                    to={`/dbBackup/new-purshase/${1}`}
+                                    to={defaultRouteLink + `/new-purshase/${1}`}
                                     type="button"
                                     className="btn btn-danger"
                                     style={{ marginLeft: 15 }}
@@ -1011,7 +1010,10 @@ class EditissueInvoice extends Component {
                                     New Purshase
                                 </Link>
                                 <Link
-                                    to={`/dbBackup/purshase-return/${2}`}
+                                    to={
+                                        defaultRouteLink +
+                                        `/purshase-return/${2}`
+                                    }
                                     type="button"
                                     className="btn btn-info"
                                     style={{ marginLeft: 15 }}
@@ -1019,7 +1021,7 @@ class EditissueInvoice extends Component {
                                     Purshase Return{" "}
                                 </Link>
                                 <Link
-                                    to={`/dbBackup/sale-return/${3}`}
+                                    to={defaultRouteLink + `/sale-return/${3}`}
                                     type="button"
                                     className="btn btn-success"
                                     style={{ marginLeft: 15 }}
@@ -1027,7 +1029,7 @@ class EditissueInvoice extends Component {
                                     Sale{" "}
                                 </Link>
                                 <Link
-                                    to={`/dbBackup/sale/${4}`}
+                                    to={defaultRouteLink + `/sale/${4}`}
                                     type="button"
                                     className="btn btn-warning"
                                     style={{ marginLeft: 15 }}
@@ -1035,7 +1037,10 @@ class EditissueInvoice extends Component {
                                     Sale Return
                                 </Link>
                                 <Link
-                                    to="/dbBackup/manage-store-invoice"
+                                    to={
+                                        defaultRouteLink +
+                                        `/manage-store-invoice`
+                                    }
                                     type="button"
                                     className="btn btn-dark"
                                     style={{ marginLeft: 15 }}

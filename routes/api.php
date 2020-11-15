@@ -218,3 +218,11 @@ Route::namespace ('frontend')->group(function () {
     });
 });
 
+// for role management
+Route::namespace ('frontend')->group(function () {
+    Route::namespace ('api')->group(function () {
+
+        Route::get('/get-menu-submenu', 'MenuSubmenuSettingController@get_menu_submenu')->name("get-menu-submenu");
+        Route::post('/save-menu', 'MenuSubmenuSettingController@save_menu')->name("save-menu");
+    });
+});

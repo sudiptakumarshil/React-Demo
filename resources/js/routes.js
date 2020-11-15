@@ -52,6 +52,7 @@ import EditCostCenter from "./components/CostCenter/EditCostCenter";
 import PaymentVoucher from "./components/PaymentVoucher/PaymentVoucher";
 import Issue from "./components/StoreInvoice/IssueStoreInvoice";
 import StockReport from "./components/StockReports/StockReport"
+import ManageRole from "./components/RoleManagement/ManageRole"
 import {
     defaultRouteLink,
     getAccessTokenName,
@@ -362,6 +363,14 @@ export const Routes = props => {
                                     defaultRouteLink + "/stock-report"
                                 }
                                 component={StockReport}
+                            />
+
+                            <Route
+                                exact
+                                path={
+                                    defaultRouteLink + "/manage-role"
+                                }
+                                component={ManageRole}
                             />
 
                         </Header>

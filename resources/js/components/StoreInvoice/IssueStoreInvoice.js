@@ -203,7 +203,7 @@ class IssueStoreInvoice extends Component {
         const idx = this.props.match.params.idx;
 
         const res = await axios.post(
-            "/dbBackup/api/save-storeinvoice",
+            defaultRouteLink + "/api/save-storeinvoice",
             this.state
         );
 
@@ -477,7 +477,7 @@ class IssueStoreInvoice extends Component {
             });
         } else {
             const res = await axios.post(
-                "/dbBackup/api/save-storeinvoice",
+                defaultRouteLink + "/api/save-storeinvoice",
                 this.state
             );
 
@@ -583,7 +583,7 @@ class IssueStoreInvoice extends Component {
             let check = confirm("are you sure ??");
             if (check) {
                 const res = await axios.post(
-                    "/dbBackup/api/save-store-invoice",
+                    defaultRouteLink + "/api/save-store-invoice",
                     this.state
                 );
                 this.state = {
@@ -592,7 +592,9 @@ class IssueStoreInvoice extends Component {
 
                 // SUCCESS MESSAGE USING SWEET ALERT
                 if (res.data.status === 200) {
-                    this.props.history.push("/dbBackup/manage-store-invoice");
+                    this.props.history.push(
+                        defaultRouteLink + "/manage-store-invoice"
+                    );
                     const Toast = Swal.mixin({
                         toast: true,
                         position: "top-end",
@@ -907,7 +909,10 @@ class IssueStoreInvoice extends Component {
                         <div className="col-md-12">
                             <div style={{ marginTop: 30 }}>
                                 <Link
-                                    to={`/dbBackup/new-purshase/${1}`}
+                                    to={
+                                        defaultRouteLink +
+                                        `/new-purshase/${1}`
+                                    }
                                     type="button"
                                     className="btn btn-danger"
                                     style={{ marginLeft: 15 }}
@@ -915,7 +920,10 @@ class IssueStoreInvoice extends Component {
                                     New Purshase
                                 </Link>
                                 <Link
-                                    to={`/dbBackup/purshase-return/${2}`}
+                                    to={
+                                        defaultRouteLink +
+                                        `/purshase-return/${2}`
+                                    }
                                     type="button"
                                     className="btn btn-info"
                                     style={{ marginLeft: 15 }}
@@ -923,7 +931,7 @@ class IssueStoreInvoice extends Component {
                                     Purshase Return{" "}
                                 </Link>
                                 <Link
-                                    to={`/dbBackup/sale-return/${3}`}
+                                    to={defaultRouteLink + `/sale-return/${3}`}
                                     type="button"
                                     className="btn btn-success"
                                     style={{ marginLeft: 15 }}
@@ -931,7 +939,7 @@ class IssueStoreInvoice extends Component {
                                     Sale{" "}
                                 </Link>
                                 <Link
-                                    to={`/dbBackup/sale/${4}`}
+                                    to={defaultRouteLink + `/sale/${4}`}
                                     type="button"
                                     className="btn btn-warning"
                                     style={{ marginLeft: 15 }}
@@ -939,7 +947,10 @@ class IssueStoreInvoice extends Component {
                                     Sale Return
                                 </Link>
                                 <Link
-                                    to={`/dbBackup/quick-purshase/${5}`}
+                                    to={
+                                        defaultRouteLink +
+                                        `/quick-purshase/${5}`
+                                    }
                                     type="button"
                                     className="btn btn-primary"
                                     style={{ marginLeft: 15 }}
@@ -947,7 +958,7 @@ class IssueStoreInvoice extends Component {
                                     Quick Purshase
                                 </Link>
                                 <Link
-                                    to={`/dbBackup/issue/${6}`}
+                                    to={defaultRouteLink + `/issue/${6}`}
                                     type="button"
                                     className="btn btn-outline-secondary"
                                     style={{ marginLeft: 15 }}
@@ -955,7 +966,7 @@ class IssueStoreInvoice extends Component {
                                     Issue
                                 </Link>
                                 <Link
-                                    to={`/dbBackup/issue-return/${7}`}
+                                    to={defaultRouteLink + `/issue-return/${7}`}
                                     type="button"
                                     className="btn btn-outline-primary"
                                     style={{ marginLeft: 15 }}
@@ -963,7 +974,7 @@ class IssueStoreInvoice extends Component {
                                     Issue Return
                                 </Link>
                                 <Link
-                                    to="/dbBackup/manage-store-invoice"
+                                    to={defaultRouteLink + `/manage-store-invoice`}
                                     type="button"
                                     className="btn btn-dark"
                                     style={{ marginLeft: 15 }}

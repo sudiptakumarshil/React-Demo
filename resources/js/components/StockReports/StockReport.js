@@ -1,25 +1,26 @@
 import React, { Component, useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { defaultRouteLink } from "../../common/config";
+import { defaultRouteLink, getCurrentDate } from "../../common/config";
 import ContentLoader, { Facebook, BulletList } from "react-content-loader";
 import Pagination from "react-js-pagination";
 const MyBulletListLoader = () => <BulletList />;
 
 function StockReport(props) {
     const [categoryList, setcategoryList] = useState([]);
-    const [stockReportList, setstockReportList] = useState([]);
+    const [stockReportData, setStockReportData] = useState([]);
     const [loading, setloading] = useState([]);
-
+    const [isContentLoading, setIsContentLoading] = useState(true);
     const data = {
         category_id: 0,
         activePage: 1,
         total_count: 0,
         limit: 10,
         start_page: 1,
+        start_date: getCurrentDate(),
+        end_date: getCurrentDate()
     };
+    //console.log("date 44="+getCurrentDate());
     const [formData, setFormData] = useState(data);
-
-    // FOR GETTING WAREHOUSE WISE STORE
     const getCategory = async wid => {
         const response = await axios.get(
             defaultRouteLink + "/api/all-category"
@@ -32,7 +33,6 @@ function StockReport(props) {
             setloading(false);
         }
     };
-
     const handleInput = event => {
         const { name, files, value } = event.target;
         setFormData(oldState => ({
@@ -40,63 +40,18 @@ function StockReport(props) {
             [name]: value
         }));
     };
-
-    // // for getting warehouse ,store ,product , vendor ,customer,vat....
-    // const fetchalldata = async () => {
-    //     const response = await axios.get(defaultRouteLink + "/api/all-data");
-    //     if (response.data.status === 200) {
-    //         setwarehouseList(response.data.warehouses),
-    //             setvendorlist(response.data.vendors),
-    //             setbankdetailsList(response.data.bankdetails);
-    //         setloading(false);
-    //     }
-    // };
-
-    // const handlePagination = async pageNumber => {
-    //     formData.start_page = pageNumber;
-    //     const res = await axios.post(
-    //         "/dbBackup/api/search-storeInvoice",
-    //         formData
-    //     );
-    //     // console.log(pageNumber);
-    //     if (res.data.count >= 0) {
-    //         setFormData(oldState => ({
-    //             ...oldState,
-    //             StoreInvoiceList: res.data.SearchInvoice,
-    //             total_count: res.data.count,
-    //             activePage: pageNumber
-    //         }));
-    //     } else {
-    //         setFormData(oldState => ({
-    //             ...oldState,
-    //             StoreInvoiceList: res.data.SearchInvoice,
-    //             activePage: pageNumber
-    //         }));
-    //     }
-    // };
-    // const searchData = async (event, pageNumber = 1) => {
-    //     event.preventDefault();
-    //     // handlePagination(1);
-
-    //     // if (res.data.status == 200) {
-    //     // setStoreInvoiceList(res.data.SearchInvoice);
-    //     // }
-    // };
-    // };
     const searchData = async (event, pageNumber = 1) => {
+        setIsContentLoading(false);
+        //setStockReportData([]);
+        //setloading(true);
         event.preventDefault();
-        const res = await axios.post(
-            "/dbBackup/api/stock-report",
-            formData
-        );
-        setstockReportList(res.data.StockReport)
+        const res = await axios.post("/dbBackup/api/stock-report", formData);
+        setStockReportData(res.data.list);
+        setIsContentLoading(true);
     };
-
     useEffect(() => {
         getCategory();
     }, []);
-
-    // FETCH ALL WAREHOUSE DATA... LOOP
     let categories = categoryList.map((item, index) => {
         return (
             <option value={item.id} data-tokens="item.category_name">
@@ -108,7 +63,6 @@ function StockReport(props) {
             category_id: item.id
         }));
     });
-
     if (loading) {
         return (
             <h2 className="text-center mt-3">
@@ -117,7 +71,15 @@ function StockReport(props) {
             </h2>
         );
     }
-
+    var sl = 0;
+    var tp_qty = 0;
+    var tpr_qty = 0;
+    var ts_qty = 0;
+    var tsr_qty = 0;
+    var tiq = 0;
+    var tirq = 0;
+    var t_clo_qty = 0;
+    var to_qty = 0;
     return (
         <div className="col-md-12">
             <div className="row">
@@ -197,7 +159,6 @@ function StockReport(props) {
                                         </div>
                                     </div>
                                 </div>
-
                                 <div className="col-md-3">
                                     <label className="control-label">
                                         Start Date
@@ -207,13 +168,13 @@ function StockReport(props) {
                                             <input
                                                 type="date"
                                                 name="start_date"
+                                                value={formData.start_date}
                                                 className="form-control"
                                                 onChange={handleInput}
                                             ></input>
                                         </div>
                                     </div>
                                 </div>
-
                                 <div className="col-md-3">
                                     <label className="control-label">
                                         End Date
@@ -223,47 +184,15 @@ function StockReport(props) {
                                             <input
                                                 type="date"
                                                 name="end_date"
+                                                value={formData.end_date}
                                                 className="form-control"
                                                 onChange={handleInput}
                                             ></input>
                                         </div>
                                     </div>
                                 </div>
-                                {/* <div className="col-md-3">
-                                    <label className="control-label">
-                                        Type
-                                    </label>
-                                    <div className="form-group">
-                                        <div className="input-group">
-                                            <select
-                                                className="form-control"
-                                                data-live-search="true"
-                                                name="type"
-                                                onChange={handleInput}
-                                            >
-                                                <option selected value="1">
-                                                    New Purshase
-                                                </option>
-                                                <option selected value="2">
-                                                    Purshase Return
-                                                </option>
-                                                <option selected value="3">
-                                                    Sale
-                                                </option>
-                                                <option selected value="4">
-                                                    Sale Return
-                                                </option>
-                                                <option selected value="6">
-                                                    Issue
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
- */}
                                 <div
                                     style={{
-                                        // marginLeft: 600,
                                         marginTop: 30,
                                         marginBottom: 40
                                     }}
@@ -286,52 +215,113 @@ function StockReport(props) {
                         <thead>
                             <tr>
                                 <th>SL</th>
-                                <th>Product Name</th>
-                                <th>Quantity</th>
-                                <th>New Purshase/Qty</th>
-                                <th>Purshase Return</th>
-                                <th>Issue/Qty</th>
-                                <th>Issue Return/Qty</th>
-                                <th>Action</th>
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th>O/Qty</th>
+                                <th>P/Qty</th>
+                                <th>PR/Qty</th>
+                                <th>I/Qty</th>
+                                <th>IR/Qty</th>
+                                <th>S/Qty</th>
+                                <th>SR/Qty</th>
+                                <th>C/Qty</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {stockReportList.map(function(
-                                item,
-                                index
-                            ) {
-                                // let type = "";
-                                // if (item.type == 1) {
-                                //     type = "New Purshase";
-                                // } else if (item.type == 2) {
-                                //     type = "Purshase Return";
-                                // } else if (item.type == 3) {
-                                //     type = "Sale";
-                                // } else if (item.type == 4) {
-                                //     type = "Sale Return";
-                                // }
+                            {isContentLoading ? (
+                                stockReportData.map(function(item, index) {
+                                    sl++;
+                                    if (item.pqty === null) item.pqty = 0;
+                                    if (item.prqty === null) item.prqty = 0;
+                                    if (item.sq === null) item.sq = 0;
+                                    if (item.srq === null) item.srq = 0;
+                                    if (item.iq === null) item.iq = 0;
+                                    if (item.irq === null) item.irq = 0;
+                                    if (item.oqty === null) item.oqty = 0;
+                                    if (item.c_qty === null) item.c_qty = 0;
 
-                                return (
-                                    <tr key={item.id}>
-                                        <td>{item.id}</td>
-                                        <td>{item.product_name}</td>
-                                        <td>{item.items_id}</td>
+                                    to_qty =
+                                        parseFloat(to_qty) +
+                                        parseFloat(item.oqty);
+                                    t_clo_qty =
+                                        parseFloat(t_clo_qty) +
+                                        parseFloat(item.c_qty);
 
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                );
-                            })}
+                                    tp_qty =
+                                        parseFloat(tp_qty) +
+                                        parseFloat(item.pqty);
+                                    tpr_qty =
+                                        parseFloat(tpr_qty) +
+                                        parseFloat(item.prqty);
+                                    ts_qty =
+                                        parseFloat(ts_qty) +
+                                        parseFloat(item.sq);
+                                    tsr_qty =
+                                        parseFloat(tsr_qty) +
+                                        parseFloat(item.srq);
+                                    tiq = parseFloat(tiq) + parseFloat(item.iq);
+                                    tirq =
+                                        parseFloat(tirq) + parseFloat(item.irq);
 
-                            <div>
-                                {/* <Pagination
-                                    activePage={formData.activePage}
-                                    pageRangeDisplayed={10}
-                                    itemsCountPerPage={formData.limit}
-                                    totalItemsCount={formData.total_count}
-                                    onChange={handlePagination}
-                                /> */}
-                            </div>
+                                    //tp_qty=parseFloat(item.pqty) + parseFloat(item.pqty);
+
+                                    return (
+                                        <tr key={item.id}>
+                                            <td>{sl}</td>
+                                            <td>{item.product_code}</td>
+                                            <td>{item.product_name}</td>
+                                            <td>{item.oqty}</td>
+                                            <td>{item.pqty}</td>
+                                            <td>{item.prqty}</td>
+                                            <td>{item.iq}</td>
+                                            <td>{item.irq}</td>
+                                            <td>{item.sq}</td>
+                                            <td>{item.srq}</td>
+
+                                            <td>{item.c_qty}</td>
+                                        </tr>
+                                    );
+                                })
+                            ) : (
+                                <tr>
+                                    <td
+                                        colSpan={11}
+                                        style={{ textAlign: "center" }}
+                                    >
+                                        <BulletList />
+                                    </td>
+                                </tr>
+                            )}
+                            <tr>
+                                <td style={{ textAlign: "right;" }} colSpan={3}>
+                                    <strong>Total</strong>
+                                </td>
+                                <td>
+                                    <strong>{to_qty}</strong>
+                                </td>
+                                <td>
+                                    <strong>{tp_qty}</strong>
+                                </td>
+                                <td>
+                                    <strong>{tpr_qty}</strong>
+                                </td>
+                                <td>
+                                    <strong>{ts_qty}</strong>
+                                </td>
+                                <td>
+                                    <strong>{tsr_qty}</strong>
+                                </td>
+                                <td>
+                                    <strong>{tiq}</strong>
+                                </td>
+                                <td>
+                                    <strong>{tirq}</strong>
+                                </td>
+
+                                <td>
+                                    <strong>{t_clo_qty}</strong>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

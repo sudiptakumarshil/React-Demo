@@ -72,7 +72,7 @@ function ManageStoreInvoice(props) {
     const handlePagination = async pageNumber => {
         formData.start_page = pageNumber;
         const res = await axios.post(
-            "/dbBackup/api/search-storeInvoice",
+            defaultRouteLink + "/api/search-storeInvoice",
             formData
         );
         // console.log(pageNumber);
@@ -199,7 +199,7 @@ function ManageStoreInvoice(props) {
                 <div className="col-md-12">
                     <div style={{ marginTop: 30 }}>
                         <Link
-                            to={`/dbBackup/new-purshase/${1}`}
+                            to={defaultRouteLink + `/new-purshase/${1}`}
                             type="button"
                             className="btn btn-danger"
                             style={{ marginLeft: 15 }}
@@ -207,7 +207,7 @@ function ManageStoreInvoice(props) {
                             New Purshase
                         </Link>
                         <Link
-                            to={`/dbBackup/purshase-return/${2}`}
+                            to={defaultRouteLink + `/purshase-return/${2}`}
                             type="button"
                             className="btn btn-info"
                             style={{ marginLeft: 15 }}
@@ -215,7 +215,7 @@ function ManageStoreInvoice(props) {
                             Purshase Return{" "}
                         </Link>
                         <Link
-                            to={`/dbBackup/sale/${3}`}
+                            to={defaultRouteLink + `/sale/${3}`}
                             type="button"
                             className="btn btn-success"
                             style={{ marginLeft: 15 }}
@@ -223,7 +223,7 @@ function ManageStoreInvoice(props) {
                             Sale{" "}
                         </Link>
                         <Link
-                            to={`/dbBackup/sale-return/${4}`}
+                            to={defaultRouteLink + `/sale-return/${4}`}
                             type="button"
                             className="btn btn-warning"
                             style={{ marginLeft: 15 }}
@@ -231,7 +231,7 @@ function ManageStoreInvoice(props) {
                             Sale Return
                         </Link>
                         <Link
-                            to={`/dbBackup/issue/${6}`}
+                            to={defaultRouteLink + `/issue/${6}`}
                             type="button"
                             className="btn btn-outline-secondary"
                             style={{ marginLeft: 15 }}
@@ -239,7 +239,7 @@ function ManageStoreInvoice(props) {
                             Issue
                         </Link>
                         <Link
-                            to={`/dbBackup/issue-return/${7}`}
+                            to={defaultRouteLink + `/issue-return/${7}`}
                             type="button"
                             className="btn btn-outline-primary"
                             style={{ marginLeft: 15 }}
@@ -480,7 +480,10 @@ function ManageStoreInvoice(props) {
                                             {item.type == 6 ||
                                             item.type == 7 ? (
                                                 <Link
-                                                    to={`/dbBackup/edit-issuestoreinvoice/${item.id}/${item.type}`}
+                                                    to={
+                                                        defaultRouteLink +
+                                                        `/edit-issuestoreinvoice/${item.id}/${item.type}`
+                                                    }
                                                     className="btn btn-primary"
                                                     type="button"
                                                 >
@@ -488,7 +491,10 @@ function ManageStoreInvoice(props) {
                                                 </Link>
                                             ) : (
                                                 <Link
-                                                    to={`/dbBackup/edit-storeinvoice/${item.id}/${item.type}`}
+                                                    to={
+                                                        defaultRouteLink +
+                                                        `/edit-storeinvoice/${item.id}/${item.type}`
+                                                    }
                                                     className="btn btn-primary"
                                                     type="button"
                                                 >

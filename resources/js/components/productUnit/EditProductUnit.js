@@ -81,7 +81,7 @@ function EditProductUnit(props) {
         <div className="col-md-12">
             <div className="row">
                 <div className="col-md-8">
-                    <h2>Add product </h2>
+                    <h2>Edit Product Unit</h2>
                     <form onSubmit={updateProductUnit}>
                         <div className="row pt-3">
                             <div className="col-md-4">

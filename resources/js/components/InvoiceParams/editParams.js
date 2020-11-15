@@ -12,18 +12,38 @@ function editParams(props) {
     const [formData, setFormData] = useState(data);
 
     const getParams = async () => {
-        const res = await axios.get(defaultRouteLink + "/api/edit-params/"+id);
+        const res = await axios.get(
+            defaultRouteLink + "/api/edit-params/" + id
+        );
         // console.log(res.data.params);
         setParams(res.data.params);
+        setFormData(res.data.params);
     };
 
     const updateParams = async event => {
         event.preventDefault();
-
         const res = await axios.patch(
-            `/dbBackup/api/update-params/${id}`,
+            defaultRouteLink + `/api/update-params/${id}`,
             formData
         );
+        if (res.data.status === 200) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                onOpen: toast => {
+                    toast.addEventListener("mouseenter", Swal.stopTimer);
+                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+                }
+            });
+
+            Toast.fire({
+                icon: "success",
+                title: "Invoices Parameter Updated  Successfully!!"
+            });
+        }
     };
 
     const handleInput = () => {
@@ -42,7 +62,7 @@ function editParams(props) {
         <div className="col-md-12">
             <div className="row">
                 <div className="col-md-8">
-                    <h2>Add product </h2>
+                    <h2>Edit Invoice Params </h2>
                     <form onSubmit={updateParams}>
                         <div className="col-md-4">
                             <label className="control-label">type</label>
@@ -54,14 +74,28 @@ function editParams(props) {
                                         name="type"
                                         onChange={handleInput}
                                     >
-                                        <option value="1" selected={Params.type ==1}>
+                                        <option
+                                            value="1"
+                                            selected={Params.type == 1}
+                                        >
                                             {"New purshase"}
                                         </option>
-                                        <option value="2"selected={Params.type ==2}>
+                                        <option
+                                            value="2"
+                                            selected={Params.type == 2}
+                                        >
                                             {"Purshase return"}
                                         </option>
-                                        <option value="3" selected={Params.type ==3}>{"Sale"}</option>
-                                        <option value="4" selected={Params.type ==4}>
+                                        <option
+                                            value="3"
+                                            selected={Params.type == 3}
+                                        >
+                                            {"Sale"}
+                                        </option>
+                                        <option
+                                            value="4"
+                                            selected={Params.type == 4}
+                                        >
                                             {"Sale return"}
                                         </option>
                                     </select>
@@ -80,10 +114,20 @@ function editParams(props) {
                                         name="discount_method"
                                         onChange={handleInput}
                                     >
-                                        <option value="1">
+                                        <option
+                                            selected={
+                                                Params.discount_method == 1
+                                            }
+                                            value="1"
+                                        >
                                             {"Invoice wise"}
                                         </option>
-                                        <option value="2">
+                                        <option
+                                            selected={
+                                                Params.discount_method == 2
+                                            }
+                                            value="2"
+                                        >
                                             {"product wise"}
                                         </option>
                                     </select>
