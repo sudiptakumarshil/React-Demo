@@ -36,7 +36,7 @@ class CreateCustomer extends Component {
     // GET ALL WAREHOUSE LIST
     fetchallwarehouse = async () => {
         const response = await axios.get(
-            defaultRouteLink + "/api/all-warehouse"
+            defaultRouteLink + "/api/all-data"
         );
         console.log(response);
 
@@ -51,7 +51,7 @@ class CreateCustomer extends Component {
         event.preventDefault();
 
         const res = await axios.post(
-            "/dbBackup/api/create-customer",
+            defaultRouteLink+"/api/create-customer",
             this.state
         );
         this.setState({
@@ -63,7 +63,7 @@ class CreateCustomer extends Component {
             accounts_no: ""
         });
         if (res.data.status === 200) {
-            this.props.history.push("/dbBackup/manage-customer");
+            this.props.history.push(defaultRouteLink+"/manage-customer");
         }
         // SUCCESS MESSAGE USING SWEET ALERT
         try {

@@ -37,7 +37,7 @@ class AddStore extends Component {
     saveStore = async event => {
         event.preventDefault();
 
-        const res = await axios.post("/dbBackup/api/save-store", this.state);
+        const res = await axios.post(defaultRouteLink+"/api/save-store", this.state);
         this.setState({
             store_name: "",
             status: "",

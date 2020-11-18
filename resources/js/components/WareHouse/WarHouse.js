@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Pagination from "react-js-pagination";
+import { defaultRouteLink } from "../../common/config";
+
+
 class WarHouse extends Component {
     render() {
         {
@@ -22,7 +25,7 @@ class WarHouse extends Component {
                     <td>{warehouse.province_no}</td>
                     <td>
                         <Link
-                            to={`/dbBackup/edit-warehouse/${warehouse.id}`}
+                            to={`${defaultRouteLink}/edit-warehouse/${warehouse.id}`}
                             className="btn btn-primary"
                             type="button"
                         >

@@ -52,7 +52,9 @@ import EditCostCenter from "./components/CostCenter/EditCostCenter";
 import PaymentVoucher from "./components/PaymentVoucher/PaymentVoucher";
 import Issue from "./components/StoreInvoice/IssueStoreInvoice";
 import StockReport from "./components/StockReports/StockReport"
-import ManageRole from "./components/RoleManagement/ManageRole"
+import ManageRole from "./components/RoleManagement/ManageRole";
+import IssueReturn from "./components/StoreInvoice/ReturnInvoice";
+import ProductReport from "./components/ProductReport/ProductReport"
 import {
     defaultRouteLink,
     getAccessTokenName,
@@ -75,6 +77,7 @@ export const Routes = props => {
         console.log("hoeel");
         isLoginExit = getCookieKeyInfo(getAccessTokenName);
     }, [props]);
+
 
     return (
         <Switch>
@@ -373,9 +376,26 @@ export const Routes = props => {
                                 component={ManageRole}
                             />
 
+                            <Route
+                                exact
+                                path={
+                                    defaultRouteLink +
+                                    "/return/:id/:idx"
+                                }
+                                render={props => <IssueReturn {...props} />}
+                            />
+                             <Route
+                                exact
+                                path={
+                                    defaultRouteLink + "/product-report"
+                                }
+                                component={ProductReport}
+                            />
+
+
                         </Header>
                     ) : (
-                        <Route component={NotFound} />
+                        <Route component={LoginPage} />
                     )
                 }
             />

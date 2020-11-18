@@ -39,11 +39,11 @@ class EditStore extends Component {
         const id = this.props.match.params.id;
 
         const res = await axios.patch(
-            `/dbBackup/api/update-store/${id}`,
+            defaultRouteLink+`/api/update-store/${id}`,
             this.state
         );
         if (res.data.status === 200) {
-            this.props.history.push("/dbBackup/manage-store");
+            this.props.history.push(defaultRouteLink+"/manage-store");
         }
         // SUCCESS ALERT MESSAGE USING SWEET ALERT
         const Toast = Swal.mixin({
@@ -69,7 +69,7 @@ class EditStore extends Component {
 
         // GET SPECIFIC DATA FROM CUSTOMER TABLE BY ID ...
         const id = this.props.match.params.id;
-        const res = await axios.get(`/dbBackup/api/edit-store/${id}`);
+        const res = await axios.get(defaultRouteLink+`/api/edit-store/${id}`);
         // assign data into new constant....
         const vInfo = res.data.store;
         // console.log("data=" + res.data);

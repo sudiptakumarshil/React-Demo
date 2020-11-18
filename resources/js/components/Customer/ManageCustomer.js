@@ -43,7 +43,7 @@ class ManageCustomer extends Component {
                     </div>
 
                     <Link
-                        to="/dbBackup/create-customer"
+                        to={defaultRouteLink+"/create-customer"}
                         type="button"
                         className="btn btn-primary"
                     >

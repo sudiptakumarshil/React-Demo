@@ -8,6 +8,10 @@ import rootReducer from './rootReducer';
 import { createBrowserHistory } from "history";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import '../public/assets/js/jquery.slimscroll'
+import '../public/assets/js/jquery-3.2.1.min'
+import '../public/assets/js/app'
+ 
 import Routes from './routes';
 
 

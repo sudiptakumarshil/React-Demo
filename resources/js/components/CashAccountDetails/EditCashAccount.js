@@ -3,6 +3,9 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import ModalAccountsLedgerList from "../modal/ModalAccountsLedgerList";
 import ContentLoader, { Facebook, BulletList } from "react-content-loader";
+import {defaultRouteLink} from '../../common/config';
+
+
 const MyBulletListLoader = () => <BulletList />;
 class EditCashAccount extends Component {
     // STATE DECLARATION
@@ -34,7 +37,7 @@ class EditCashAccount extends Component {
     async componentDidMount() {
         // GET SPECIFIC DATA FROM CASHACCOUNTDETAILS TABLE BY ID ...
         const id = this.props.match.params.id;
-        const res = await axios.get(`/dbBackup/api/edit-cash-account/${id}`);
+        const res = await axios.get(defaultRouteLink+`/api/edit-cash-account/${id}`);
         // assign data into new constant....
         const vInfo = res.data.editcash;
         // console.log("data=" + res.data);
@@ -55,7 +58,7 @@ class EditCashAccount extends Component {
         const id = this.props.match.params.id;
 
         const res = await axios.patch(
-            `/dbBackup/api/update-cash-account/${id}`,
+            defaultRouteLink+`/api/update-cash-account/${id}`,
             this.state
         );
         this.setState({
@@ -66,7 +69,7 @@ class EditCashAccount extends Component {
             accounts_no: ""
         });
         if (res.data.status === 200) {
-            this.props.history.push("/dbBackup/manage-cash-account");
+            this.props.history.push(defaultRouteLink+"/manage-cash-account");
         }
         // SUCCESS MESSAGE USING SWEET ALERT
         try {

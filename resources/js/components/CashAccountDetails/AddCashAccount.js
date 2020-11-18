@@ -35,7 +35,7 @@ class AddCashAccount extends Component {
         event.preventDefault();
 
         const res = await axios.post(
-            "/dbBackup/api/save-cash-account",
+            defaultRouteLink+"/api/save-cash-account",
             this.state
         );
         this.setState({

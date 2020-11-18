@@ -17,7 +17,7 @@ function EditAccountsInput(props) {
     const updateinput = async event => {
         event.preventDefault();
         const res = await axios.patch(
-            `/dbBackup/api/update-input/${id}`,
+            defaultRouteLink+`/api/update-input/${id}`,
             formData
         );
         const data = {
@@ -28,7 +28,7 @@ function EditAccountsInput(props) {
         };
 
         if (res.data.status === 200) {
-            props.history.push("/dbBackup/manage-account-input");
+            props.history.push(defaultRouteLink+"/manage-account-input");
         }
 
         try {

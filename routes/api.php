@@ -84,6 +84,8 @@ Route::namespace ('frontend')->group(function () {
             Route::get('/all-inventproduct', 'InventoryProductController@index')->name("all-inventproduct");
             Route::get('/edit-inventproduct/{id}', 'InventoryProductController@edit_product')->name("edit-inventproduct");
             Route::patch('/update-inventproduct/{id}', 'InventoryProductController@update_product')->name("update-inventproduct");
+            Route::post('/product-report', 'InventoryProductController@product_report')->name("product-report");
+
         });
     });
 });

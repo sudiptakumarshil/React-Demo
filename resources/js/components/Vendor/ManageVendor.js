@@ -39,7 +39,7 @@ class ManageVendor extends Component {
                     </div>
 
                     <Link
-                        to="/dbBackup/create-vendor"
+                        to={defaultRouteLink+"/create-vendor"}
                         type="button"
                         className="btn btn-primary"
                     >

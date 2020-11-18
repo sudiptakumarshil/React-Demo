@@ -42,7 +42,7 @@ class ManageStore extends Component {
                     </div>
 
                     <Link
-                        to="/dbBackup/add-store"
+                        to={defaultRouteLink+"/add-store"}
                         type="button"
                         className="btn btn-primary"
                     >

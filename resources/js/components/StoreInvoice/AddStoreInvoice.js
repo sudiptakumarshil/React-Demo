@@ -58,11 +58,12 @@ class AddStoreInvoice extends Component {
             toggle: true,
             invoice_code: [],
             remarks: "",
-            warehouse_id: 0,
-            vendor_id: "",
+            warehouse_id: 1,
+            vendor_id: 1,
+            customer_id:1,
             vendorlist: [],
             date: year + "-" + month + "-" + date,
-            store_id: "",
+            store_id: 1,
             storelist: [],
             gross_amount: "",
             discount_taka: 0,
@@ -71,7 +72,6 @@ class AddStoreInvoice extends Component {
             cash_amount: 0,
             bank_account: "",
             bank_id: "",
-            customer_id: "",
             product_id: 0,
             productList: [],
             product: "",
@@ -117,18 +117,18 @@ class AddStoreInvoice extends Component {
         // console.log(idx);
         // console.log(this.state.cash_amount);
 
-        this.setState({
+        /*this.setState({
             idx: idx
-        });
+        });*/
 
-        const isLoginExit = getCookieKeyInfo(getAccessTokenName);
-        this.setState({
+        //const isLoginExit = getCookieKeyInfo(getAccessTokenName);
+        /*this.setState({
             user_id: isLoginExit
-        });
+        });*/
         // console.log("user id=" + isLoginExit);
         this.fetchalldata();
         // this.invoiceNumbers();
-        this.getinvoiceNumber();
+        //this.getinvoiceNumber();
     }
 
     // FOR GETTING WAREHOUSE WISE STORE
@@ -151,7 +151,6 @@ class AddStoreInvoice extends Component {
             });
         }
     };
-
     // GET  STORE INVOICE ---
     editStoreInvoice = async () => {
         const id = props.match.params.id;
@@ -165,7 +164,6 @@ class AddStoreInvoice extends Component {
         });
         // setLoading(false);
     };
-
     // FOR GETTING PRODUCT WISE PRICE  ........
     getProductWisePriceAuto = async pid => {
         let productid = pid;
@@ -192,17 +190,13 @@ class AddStoreInvoice extends Component {
             });
         }
     };
-    // priceHandleInput = () => {
-    //     this.setState({ [event.target.name]: event.target.value });
-    //     this.getProductWisePriceAuto(event.target.value);
-    // };
 
     QuickPurshaseInvoiceTransec = async event => {
         // event.preventDefault();
         const idx = this.props.match.params.idx;
 
-        const res = await axios.post(defaultRouteLink +
-            "/api/save-storeinvoice",
+        const res = await axios.post(
+            defaultRouteLink + "/api/save-storeinvoice",
             this.state
         );
 
@@ -278,13 +272,14 @@ class AddStoreInvoice extends Component {
         if (typeof e[0] != "undefined") {
             this.setState({ product_id: e[0].id });
         }
-        // console.log(e[0]); //true
+
         if (typeof e[0] != "undefined") {
-            //var arr=e.isArray(e);
-            //console.log("log"+arr);
             var id = e[0].id;
             this.getProductWisePriceAuto(id);
         }
+    };
+    refreshPage = () => {
+        window.location.reload(false);
     };
 
     WarehousehandleInput = event => {
@@ -305,9 +300,6 @@ class AddStoreInvoice extends Component {
             total_discount,
             vat_amt
         );
-        // this.setState({
-        //     total_discount:total_discount
-        // })
     };
 
     // for vat calculation  ....................................
@@ -388,7 +380,6 @@ class AddStoreInvoice extends Component {
                 parseFloat(this.state.bank_amount);
         }
         if (event.target.name == "bank_amount") {
-            // console.log("exchange2="+this.state.cash_amount+","+event.target.value+"=t="+total_rev);
             total_rev =
                 parseFloat(event.target.value) +
                 parseFloat(this.state.cash_amount);
@@ -467,16 +458,6 @@ class AddStoreInvoice extends Component {
                 }
             });
         }
-        //     Swal.fire({
-        //         title: "Vendor  Cannot Be Empty!!",
-        //         showClass: {
-        //             popup: "animate__animated animate__fadeInDown"
-        //         },
-        //         hideClass: {
-        //             popup: "animate__animated animate__fadeOutUp"
-        //         }
-        //     });
-        // }
         else if (this.state.date == 0) {
             Swal.fire({
                 title: "Date  Cannot Be Empty!!",
@@ -554,21 +535,10 @@ class AddStoreInvoice extends Component {
                 }
             });
         } else {
-            const res = await axios.post(defaultRouteLink+
-                "/api/save-storeinvoice",
+            const res = await axios.post(
+                defaultRouteLink + "/api/save-storeinvoice",
                 this.state
             );
-
-            // this.setState({
-            //     discount_taka: 0,
-            //     discount_percent: 0,
-            //     quantity: 1
-            // });
-
-            // dispatch({
-            //     type:SET_REFRESH_STORETRANSECTION,
-            //     updateinvoiceTransection:res.data
-            // });
 
             this.fetchalldata();
 
@@ -696,8 +666,8 @@ class AddStoreInvoice extends Component {
         } else {
             let check = confirm("are you sure ??");
             if (check) {
-                const res = await axios.post(defaultRouteLink +
-                    "/api/save-store-invoice",
+                const res = await axios.post(
+                    defaultRouteLink + "/api/save-store-invoice",
                     this.state
                 );
                 this.state = {
@@ -708,7 +678,7 @@ class AddStoreInvoice extends Component {
                     cash_amount: 0,
                     bank_account: "",
                     bank_id: "",
-                    customer_id: "",
+                    customer_id: 1,
                     product_id: 0,
                     bankdetails_id: "",
                     cashamount_id: "",
@@ -725,7 +695,9 @@ class AddStoreInvoice extends Component {
 
                 // SUCCESS MESSAGE USING SWEET ALERT
                 if (res.data.status === 200) {
-                    this.props.history.push(defaultRouteLink+"/manage-store-invoice");
+                    this.props.history.push(
+                        defaultRouteLink + "/manage-store-invoice"
+                    );
                     const Toast = Swal.mixin({
                         toast: true,
                         position: "top-end",
@@ -758,78 +730,88 @@ class AddStoreInvoice extends Component {
     // for getting warehouse ,store ,product , vendor ,customer,vat....
     fetchalldata = async () => {
         const idx = this.props.match.params.idx;
+        if(this.state.vendorlist.length <= 0){
+            const response = await axios.get(defaultRouteLink + "/api/all-data", {
+                params: {
+                    type: idx,
+                    invoice_id: 0
+                }
+            });
 
-        const response = await axios.get(defaultRouteLink + "/api/all-data", {
-            params: {
-                type: idx,
-                invoice_id: 0
+            if (response.data.status === 200) {
+
+                const idx = this.props.match.params.idx;
+                // const id = this.props.match.params.id;
+                // console.log(idx);
+                // console.log(this.state.cash_amount);
+
+
+                const isLoginExit = getCookieKeyInfo(getAccessTokenName);
+                this.setState({
+                    warehouseList: response.data.warehouses,
+                    vendorlist: response.data.vendors,
+                    idx: idx,
+                    user_id: isLoginExit,
+                    // storelist: response.data.stores,
+                    productList: response.data.products,
+                    customerList: response.data.customer,
+                    vatList: response.data.vats,
+                    invoicetransectionList: response.data.invotransec,
+                    bankdetailsList: response.data.bankdetails,
+                    cashamountList: response.data.cashaccount,
+                    invoiceParams: response.data.invoiceParams,
+                    invoice_code: response.data.invoice_number,
+                    loading: false,
+                });
+                this.props.updateStoreInvoice(response.data.invotransec);
+                // console.log("test=tt");
+                let priceQuantity = 0;
+                let discount = 0;
+                let vat = 0;
+                let minusDiscount = 0;
+                let netAmount = 0;
+                let grossAmount = 0;
+                let minusManualDiscount = 0;
+                let discountTaka = 0;
+                let totalVat = 0;
+                let manualAndPercentDiscount = 0;
+                let netPayable = 0;
+
+                response.data.invotransec.map((item, index) => {
+                    // console.log("log="+item.id);
+                    // console.log(item.price * item.quantity)
+                    priceQuantity = item.price * item.quantity;
+                    // for getting percent ammount .....
+                    discount = (priceQuantity * item.discount_percent) / 100;
+                    minusDiscount = priceQuantity - discount;
+
+                    minusManualDiscount = minusDiscount - item.discount_taka;
+
+                    vat = (minusManualDiscount * item.value) / 100;
+                    netAmount = minusManualDiscount + vat;
+                    grossAmount += priceQuantity;
+                    manualAndPercentDiscount = discount + item.discount_taka;
+                    discountTaka += manualAndPercentDiscount;
+                    totalVat += vat;
+                    netPayable += netAmount;
+
+                    // console.log("hello2",netPayable)
+                });
+
+                this.setState({
+                    totalpriceQuantity: priceQuantity,
+                    netAmount: netAmount,
+                    gross_amount: grossAmount,
+                    discountTaka: discountTaka,
+                    totalVat: totalVat,
+                    netPayable: netPayable,
+                    vat: vat
+                });
+                // dispatch({
+                //     type:SET_REFRESH_STORETRANSECTION,
+                //     data:{}
+                // });
             }
-        });
-
-        if (response.data.status === 200) {
-            this.setState({
-                warehouseList: response.data.warehouses,
-                vendorlist: response.data.vendors,
-                // storelist: response.data.stores,
-                productList: response.data.products,
-                customerList: response.data.customers,
-                vatList: response.data.vats,
-                invoicetransectionList: response.data.invotransec,
-                bankdetailsList: response.data.bankdetails,
-                cashamountList: response.data.cashaccount,
-                invoiceParams: response.data.invoiceParams
-            });
-
-            this.props.updateStoreInvoice(response.data.invotransec);
-
-            this.setState({ loading: false });
-            // console.log("test=tt");
-            let priceQuantity = 0;
-            let discount = 0;
-            let vat = 0;
-            let minusDiscount = 0;
-            let netAmount = 0;
-            let grossAmount = 0;
-            let minusManualDiscount = 0;
-            let discountTaka = 0;
-            let totalVat = 0;
-            let manualAndPercentDiscount = 0;
-            let netPayable = 0;
-
-            response.data.invotransec.map((item, index) => {
-                // console.log("log="+item.id);
-                // console.log(item.price * item.quantity)
-                priceQuantity = item.price * item.quantity;
-                // for getting percent ammount .....
-                discount = (priceQuantity * item.discount_percent) / 100;
-                minusDiscount = priceQuantity - discount;
-
-                minusManualDiscount = minusDiscount - item.discount_taka;
-
-                vat = (minusManualDiscount * item.value) / 100;
-                netAmount = minusManualDiscount + vat;
-                grossAmount += priceQuantity;
-                manualAndPercentDiscount = discount + item.discount_taka;
-                discountTaka += manualAndPercentDiscount;
-                totalVat += vat;
-                netPayable += netAmount;
-
-                // console.log("hello2",netPayable)
-            });
-
-            this.setState({
-                totalpriceQuantity: priceQuantity,
-                netAmount: netAmount,
-                gross_amount: grossAmount,
-                discountTaka: discountTaka,
-                totalVat: totalVat,
-                netPayable: netPayable,
-                vat: vat
-            });
-            // dispatch({
-            //     type:SET_REFRESH_STORETRANSECTION,
-            //     data:{}
-            // });
         }
     };
 
@@ -885,7 +867,6 @@ class AddStoreInvoice extends Component {
             });
 
             return false;
-
         }
     };
     handleModalClose = () => {
@@ -894,14 +875,12 @@ class AddStoreInvoice extends Component {
         });
     };
     handleProductEdit = async item_id => {
-        this.setState({
-            isModalShow: true
-        });
+
         // editInvoiceTransection = async () => {
         const response = await axios.get(
             defaultRouteLink + "/api/edit-invoice-transec/" + item_id
         );
-        this.setState({ modalData: response.data.invoice });
+        this.setState({ modalData: response.data.invoice, isModalShow: true });
 
         // };
     };
@@ -916,9 +895,7 @@ class AddStoreInvoice extends Component {
                     {item.name}
                 </option>
             );
-            this.setState({
-                warehouse_id: item.id // UPDATE STATE ..
-            });
+
         });
         // FETCH ALL VENDOR DATA... LOOP
         let vendors = this.state.vendorlist.map((item, index) => {
@@ -933,6 +910,20 @@ class AddStoreInvoice extends Component {
 
             this.setState({
                 vendor_id: item.id // UPDATE STATE ..
+            });
+        });
+        let customer = this.state.customerList.map((item, index) => {
+            // if (warhouses.length === 0) return 1;
+
+            return (
+                <option value={item.id} data-tokens="item.name">
+                    {" "}
+                    {item.name}
+                </option>
+            );
+
+            this.setState({
+                customer_id: item.id // UPDATE STATE ..
             });
         });
         // FETCH ALL STORE DATA... LOOP
@@ -961,18 +952,6 @@ class AddStoreInvoice extends Component {
                 price: item.selling_price
             });
         });
-        // FETCH ALL CUSTOMER DATA... LOOP
-        // let customers = this.state.customerList.map((item, index) => {
-        //     return (
-        //         <option value={item.id} data-tokens="item.name">
-        //             {item.name}
-        //         </option>
-        //     );
-        //     this.setState({
-        //         customer_id: item.id // UPDATE STATE ........
-        //         // gross_amount:alltoTalQty
-        //     });
-        // });
 
         let priceQuantity = 0;
         let discountpercent = 0;
@@ -1143,19 +1122,24 @@ class AddStoreInvoice extends Component {
 
         return (
             <div>
-                <EditInvoiceTransec
-                    show={this.state.isModalShow}
-                    modalData={this.state.modalData}
-                    handleClose={this.handleModalClose}
-                    {...this.props}
-                />
+                {
+                    (this.state.isModalShow) ? (
+                        <EditInvoiceTransec
+                            show={this.state.isModalShow}
+                            modalData={this.state.modalData}
+                            handleClose={this.handleModalClose}
+                            {...this.props}
+                        />
+                    ) :(null)
+                }
+
 
                 <div className="col-md-12">
                     <div className="row">
                         <div className="col-md-12">
                             <div style={{ marginTop: 30 }}>
                                 <Link
-                                    to={defaultRouteLink+`/new-purshase/${1}`}
+                                    to={defaultRouteLink + `/new-purshase/${1}`}
                                     type="button"
                                     className="btn btn-danger"
                                     style={{ marginLeft: 15 }}
@@ -1163,7 +1147,10 @@ class AddStoreInvoice extends Component {
                                     New Purshase
                                 </Link>
                                 <Link
-                                    to={defaultRouteLink+`/purshase-return/${2}`}
+                                    to={
+                                        defaultRouteLink +
+                                        `/purshase-return/${2}`
+                                    }
                                     type="button"
                                     className="btn btn-info"
                                     style={{ marginLeft: 15 }}
@@ -1171,7 +1158,7 @@ class AddStoreInvoice extends Component {
                                     Purshase Return{" "}
                                 </Link>
                                 <Link
-                                    to={defaultRouteLink+`/sale/${3}`}
+                                    to={defaultRouteLink + `/sale/${3}`}
                                     type="button"
                                     className="btn btn-success"
                                     style={{ marginLeft: 15 }}
@@ -1179,7 +1166,7 @@ class AddStoreInvoice extends Component {
                                     Sale{" "}
                                 </Link>
                                 <Link
-                                    to={defaultRouteLink+`/sale-return/${4}`}
+                                    to={defaultRouteLink + `/sale-return/${4}`}
                                     type="button"
                                     className="btn btn-warning"
                                     style={{ marginLeft: 15 }}
@@ -1187,37 +1174,65 @@ class AddStoreInvoice extends Component {
                                     Sale Return
                                 </Link>
                                 <Link
-                                    to={defaultRouteLink+`/quick-purshase/${5}`}
+                                    to={
+                                        defaultRouteLink +
+                                        `/quick-purshase/${5}`
+                                    }
                                     type="button"
                                     className="btn btn-primary"
                                     style={{ marginLeft: 15 }}
                                 >
                                     Quick Purshase
                                 </Link>
-                                <Link to={defaultRouteLink+`/issue/${6}`}
-                                type="button"
-                                className="btn btn-outline-secondary"
-                                style={{ marginLeft: 15 }}
+                                <Link
+                                    to={defaultRouteLink + `/issue/${6}`}
+                                    type="button"
+                                    className="btn btn-outline-secondary"
+                                    style={{ marginLeft: 15 }}
                                 >
                                     Issue
                                 </Link>
 
-                                <Link to={defaultRouteLink+`/issue-return/${7}`}
-                                type="button"
-                                className="btn btn-outline-info"
-                                style={{ marginLeft: 15 }}
+                                <Link
+                                    to={defaultRouteLink + `/issue-return/${7}`}
+                                    type="button"
+                                    className="btn btn-outline-info"
+                                    style={{ marginLeft: 15 }}
                                 >
                                     Issue Return
                                 </Link>
 
                                 <Link
-                                    to={defaultRouteLink+`/manage-store-invoice`}
+                                    to={
+                                        defaultRouteLink +
+                                        `/manage-store-invoice`
+                                    }
                                     type="button"
                                     className="btn btn-dark"
                                     style={{ marginLeft: 15 }}
                                 >
                                     Manage Invoice
                                 </Link>
+                                <Link
+                                    to={
+                                        defaultRouteLink +
+                                        `/product-report`
+                                    }
+                                    type="button"
+                                    className="btn btn-dark"
+                                    style={{ marginLeft: 15 }}
+                                >
+                                    Product Report
+                                </Link>
+
+                                <button
+                                    onClick={this.refreshPage}
+                                    type="button"
+                                    className="btn btn-danger"
+                                    style={{ marginLeft: 35 }}
+                                >
+                                    Refresh
+                                </button>
                             </div>
 
                             <h2 className="text-center">Transaction</h2>
@@ -1299,13 +1314,13 @@ class AddStoreInvoice extends Component {
                                                                             .handleInput
                                                                     }
                                                                 >
-                                                                    <option
+                                                                    {/* <option
                                                                         selected
                                                                         value="0"
                                                                     >
                                                                         Choose
                                                                         One
-                                                                    </option>
+                                                                    </option> */}
                                                                     {vendors}
                                                                 </select>
                                                             </div>
@@ -1317,11 +1332,11 @@ class AddStoreInvoice extends Component {
                                                                 <select
                                                                     className="form-control"
                                                                     data-live-search="true"
-                                                                    name="vendor_id"
+                                                                    name="customer_id"
                                                                     value={
                                                                         this
                                                                             .state
-                                                                            .vendor_id
+                                                                            .customer_id
                                                                     }
                                                                     onChange={
                                                                         this
@@ -1335,7 +1350,7 @@ class AddStoreInvoice extends Component {
                                                                         Choose
                                                                         One
                                                                     </option>
-                                                                    {vendors}
+                                                                    {customer}
                                                                 </select>
                                                             </div>
                                                         )}

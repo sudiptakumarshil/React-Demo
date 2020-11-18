@@ -4,6 +4,9 @@ import axios from "axios";
 import "../css/style_frontend.css";
 import Swal from "sweetalert2";
 import ModalAccountsLedgerList from "../modal/ModalAccountsLedgerList";
+import { defaultRouteLink } from "../../common/config";
+
+
 class Edit_vendor extends Component {
     constructor(props) {
         super(props);
@@ -37,11 +40,11 @@ class Edit_vendor extends Component {
         const id = this.props.match.params.id;
 
         const res = await axios.patch(
-            `/dbBackup/api/update-vendor/${id}`,
+            defaultRouteLink+`/api/update-vendor/${id}`,
             this.state
         );
         if (res.data.status === 200) {
-            this.props.history.push("/dbBackup/manage-vendor");
+            this.props.history.push(defaultRouteLink+"/manage-vendor");
         }
         const Toast = Swal.mixin({
             toast: true,
@@ -63,7 +66,7 @@ class Edit_vendor extends Component {
 
     async componentDidMount() {
         const id = this.props.match.params.id;
-        const res = await axios.get(`/dbBackup/api/edit-vendor/${id}`);
+        const res = await axios.get(defaultRouteLink+`/api/edit-vendor/${id}`);
         // assign data into new constant....
         const vInfo = res.data.vendor;
         // console.log("data=" + res.data);

@@ -18,7 +18,7 @@ class CashAccount extends Component {
                     <td>{cashAccount.account_no}</td>
                     <td>
                         <Link
-                            to={`/dbBackup/edit-cashaccount/${cashAccount.id}`}
+                            to={defaultRouteLink+`/edit-cashaccount/${cashAccount.id}`}
                             className="btn btn-primary"
                             type="button"
                         >

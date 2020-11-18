@@ -23,7 +23,7 @@ class Vendor extends Component {
 
                     <td>
                         <Link
-                            to={`/dbBackup/edit-vendor/${vendor.id}`}
+                            to={defaultRouteLink+`/edit-vendor/${vendor.id}`}
                             className="btn btn-primary"
                             type="button"
                         >

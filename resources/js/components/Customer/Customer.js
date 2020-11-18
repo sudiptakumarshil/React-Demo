@@ -22,7 +22,7 @@ class Customer extends Component {
                     <td>{customer.accounts_no}</td>
                     <td>
                         <Link
-                            to={`/dbBackup/edit-customer/${customer.id}`}
+                            to={defaultRouteLink+`/edit-customer/${customer.id}`}
                             className="btn btn-primary"
                             type="button"
                         >

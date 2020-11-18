@@ -18,7 +18,7 @@ class Store extends Component {
                     {store.status == 1 ? <td sty>Active</td> : <td>Inactive</td>}
                     <td>
                         <Link
-                            to={`/dbBackup/edit-store/${store.id}`}
+                            to={defaultRouteLink+`/edit-store/${store.id}`}
                             className="btn btn-primary"
                             type="button"
                         >

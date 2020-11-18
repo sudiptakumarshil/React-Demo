@@ -52,7 +52,7 @@ function manageParams(props) {
                                         <td>{discountMethod}</td>
                                         <td>
                                             <Link
-                                                to={`/dbBackup/edit-params/${item.id}`}
+                                                to={defaultRouteLink+`/edit-params/${item.id}`}
                                                 className="btn btn-primary"
                                                 type="button"
                                             >

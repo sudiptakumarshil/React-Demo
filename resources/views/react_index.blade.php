@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <meta name="author" content="">
-    <title>Task Manage</title>
+    <title>E Store</title>
     <link href="https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 

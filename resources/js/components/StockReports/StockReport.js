@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { defaultRouteLink, getCurrentDate } from "../../common/config";
+import { defaultRouteLink,getCurrentDate } from "../../common/config";
 import ContentLoader, { Facebook, BulletList } from "react-content-loader";
 import Pagination from "react-js-pagination";
 const MyBulletListLoader = () => <BulletList />;
@@ -16,8 +16,9 @@ function StockReport(props) {
         total_count: 0,
         limit: 10,
         start_page: 1,
-        start_date: getCurrentDate(),
-        end_date: getCurrentDate()
+        start_date:getCurrentDate(),
+        end_date:getCurrentDate(),
+
     };
     //console.log("date 44="+getCurrentDate());
     const [formData, setFormData] = useState(data);
@@ -45,8 +46,11 @@ function StockReport(props) {
         //setStockReportData([]);
         //setloading(true);
         event.preventDefault();
-        const res = await axios.post("/dbBackup/api/stock-report", formData);
-        setStockReportData(res.data.list);
+        const res = await axios.post(
+            defaultRouteLink +"/api/stock-report",
+            formData
+        );
+        setStockReportData(res.data.list)
         setIsContentLoading(true);
     };
     useEffect(() => {
@@ -71,22 +75,15 @@ function StockReport(props) {
             </h2>
         );
     }
-    var sl = 0;
-    var tp_qty = 0;
-    var tpr_qty = 0;
-    var ts_qty = 0;
-    var tsr_qty = 0;
-    var tiq = 0;
-    var tirq = 0;
-    var t_clo_qty = 0;
-    var to_qty = 0;
+    var sl=0;var tp_qty=0;var tpr_qty=0;var ts_qty=0;
+    var tsr_qty=0;var tiq=0;var tirq=0;var t_clo_qty=0; var to_qty=0;
     return (
         <div className="col-md-12">
             <div className="row">
                 <div className="col-md-12">
                     <div style={{ marginTop: 30 }}>
                         <Link
-                            to={`/dbBackup/new-purshase/${1}`}
+                            to={defaultRouteLink+`/new-purshase/${1}`}
                             type="button"
                             className="btn btn-danger"
                             style={{ marginLeft: 15 }}
@@ -94,7 +91,7 @@ function StockReport(props) {
                             New Purshase
                         </Link>
                         <Link
-                            to={`/dbBackup/purshase-return/${2}`}
+                            to={defaultRouteLink+`/purshase-return/${2}`}
                             type="button"
                             className="btn btn-info"
                             style={{ marginLeft: 15 }}
@@ -102,7 +99,7 @@ function StockReport(props) {
                             Purshase Return{" "}
                         </Link>
                         <Link
-                            to={`/dbBackup/sale/${3}`}
+                            to={defaultRouteLink+`/sale/${3}`}
                             type="button"
                             className="btn btn-success"
                             style={{ marginLeft: 15 }}
@@ -110,7 +107,7 @@ function StockReport(props) {
                             Sale{" "}
                         </Link>
                         <Link
-                            to={`/dbBackup/sale-return/${4}`}
+                            to={defaultRouteLink+`/sale-return/${4}`}
                             type="button"
                             className="btn btn-warning"
                             style={{ marginLeft: 15 }}
@@ -118,7 +115,7 @@ function StockReport(props) {
                             Sale Return
                         </Link>
                         <Link
-                            to={`/dbBackup/issue/${6}`}
+                            to={defaultRouteLink+`/issue/${6}`}
                             type="button"
                             className="btn btn-outline-secondary"
                             style={{ marginLeft: 15 }}
@@ -126,7 +123,7 @@ function StockReport(props) {
                             Issue
                         </Link>
                         <Link
-                            to={`/dbBackup/issue-return/${7}`}
+                            to={defaultRouteLink+`/issue-return/${7}`}
                             type="button"
                             className="btn btn-outline-primary"
                             style={{ marginLeft: 15 }}
@@ -195,8 +192,7 @@ function StockReport(props) {
                                     style={{
                                         marginTop: 30,
                                         marginBottom: 40
-                                    }}
-                                >
+                                    }}>
                                     <button
                                         type="submit"
                                         className="btn btn-danger"
@@ -228,100 +224,114 @@ function StockReport(props) {
                             </tr>
                         </thead>
                         <tbody>
-                            {isContentLoading ? (
-                                stockReportData.map(function(item, index) {
-                                    sl++;
-                                    if (item.pqty === null) item.pqty = 0;
-                                    if (item.prqty === null) item.prqty = 0;
-                                    if (item.sq === null) item.sq = 0;
-                                    if (item.srq === null) item.srq = 0;
-                                    if (item.iq === null) item.iq = 0;
-                                    if (item.irq === null) item.irq = 0;
-                                    if (item.oqty === null) item.oqty = 0;
-                                    if (item.c_qty === null) item.c_qty = 0;
 
-                                    to_qty =
-                                        parseFloat(to_qty) +
-                                        parseFloat(item.oqty);
-                                    t_clo_qty =
-                                        parseFloat(t_clo_qty) +
-                                        parseFloat(item.c_qty);
 
-                                    tp_qty =
-                                        parseFloat(tp_qty) +
-                                        parseFloat(item.pqty);
-                                    tpr_qty =
-                                        parseFloat(tpr_qty) +
-                                        parseFloat(item.prqty);
-                                    ts_qty =
-                                        parseFloat(ts_qty) +
-                                        parseFloat(item.sq);
-                                    tsr_qty =
-                                        parseFloat(tsr_qty) +
-                                        parseFloat(item.srq);
-                                    tiq = parseFloat(tiq) + parseFloat(item.iq);
-                                    tirq =
-                                        parseFloat(tirq) + parseFloat(item.irq);
+                            {
+                            (isContentLoading) ? (
+                            stockReportData.map(function(item,index) {
+                                 sl++;
+                                 if(item.pqty === null)
+                                    item.pqty=0;
+                                if(item.prqty === null)
+                                    item.prqty=0;
+                                if(item.sq === null)
+                                    item.sq=0;
+                                if(item.srq === null)
+                                    item.srq=0;
+                                if(item.iq === null)
+                                    item.iq=0;
+                                if(item.irq === null)
+                                    item.irq=0;
+                                if(item.oqty === null)
+                                    item.oqty=0;
+                                if(item.c_qty === null)
+                                    item.c_qty=0;
 
-                                    //tp_qty=parseFloat(item.pqty) + parseFloat(item.pqty);
+                                to_qty=parseFloat(to_qty) + parseFloat(item.oqty);
+                                t_clo_qty=parseFloat(t_clo_qty) + parseFloat(item.c_qty);
 
-                                    return (
-                                        <tr key={item.id}>
-                                            <td>{sl}</td>
-                                            <td>{item.product_code}</td>
-                                            <td>{item.product_name}</td>
-                                            <td>{item.oqty}</td>
-                                            <td>{item.pqty}</td>
-                                            <td>{item.prqty}</td>
-                                            <td>{item.iq}</td>
-                                            <td>{item.irq}</td>
-                                            <td>{item.sq}</td>
-                                            <td>{item.srq}</td>
 
-                                            <td>{item.c_qty}</td>
-                                        </tr>
-                                    );
-                                })
-                            ) : (
-                                <tr>
-                                    <td
-                                        colSpan={11}
-                                        style={{ textAlign: "center" }}
-                                    >
-                                        <BulletList />
+                                tp_qty=parseFloat(tp_qty) + parseFloat(item.pqty);
+                                tpr_qty=parseFloat(tpr_qty) + parseFloat(item.prqty);
+                                 ts_qty=parseFloat(ts_qty) + parseFloat(item.sq);
+                                 tsr_qty=parseFloat(tsr_qty) + parseFloat(item.srq);
+                                 tiq=parseFloat(tiq) + parseFloat(item.iq);
+                                 tirq=parseFloat(tirq) + parseFloat(item.irq);
+
+                                 //tp_qty=parseFloat(item.pqty) + parseFloat(item.pqty);
+
+                                return (
+                                    <tr key={item.id}>
+                                        <td>{sl}</td>
+                                        <td>{item.product_code}</td>
+                                        <td>{item.product_name}</td>
+                                        <td>{item.oqty}</td>
+                                        <td>{item.pqty}</td>
+                                        <td>{item.prqty}</td>
+                                        <td>{item.iq}</td>
+                                        <td>{item.irq}</td>
+                                        <td>{item.sq}</td>
+                                        <td>{item.srq}</td>
+
+                                        <td>{item.c_qty}</td>
+                                    </tr>
+                                )}
+
+                                )
+                            ) : <tr>
+                                    <td colSpan={11} style={{textAlign:'center'}}>
+                                        <BulletList/>
                                     </td>
-                                </tr>
-                            )}
-                            <tr>
-                                <td style={{ textAlign: "right;" }} colSpan={3}>
-                                    <strong>Total</strong>
-                                </td>
-                                <td>
-                                    <strong>{to_qty}</strong>
-                                </td>
-                                <td>
-                                    <strong>{tp_qty}</strong>
-                                </td>
-                                <td>
-                                    <strong>{tpr_qty}</strong>
-                                </td>
-                                <td>
-                                    <strong>{ts_qty}</strong>
-                                </td>
-                                <td>
-                                    <strong>{tsr_qty}</strong>
-                                </td>
-                                <td>
-                                    <strong>{tiq}</strong>
-                                </td>
-                                <td>
-                                    <strong>{tirq}</strong>
-                                </td>
+                                </tr>}
+                                    <tr>
+                                        <td style={{textAlign:'right;'}} colSpan={3}>
+                                            <strong>
+                                                Total
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <strong>
+                                                {to_qty}
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <strong>
+                                                {tp_qty}
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <strong>
+                                                {tpr_qty}
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <strong>
+                                                {ts_qty}
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <strong>
+                                                {tsr_qty}
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <strong>
+                                                {tiq}
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <strong>
+                                                {tirq}
+                                            </strong>
+                                        </td>
 
-                                <td>
-                                    <strong>{t_clo_qty}</strong>
-                                </td>
-                            </tr>
+                                        <td>
+                                            <strong>
+                                                {t_clo_qty}
+                                            </strong>
+                                        </td>
+
+                                    </tr>
                         </tbody>
                     </table>
                 </div>

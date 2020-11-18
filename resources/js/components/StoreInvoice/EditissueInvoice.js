@@ -83,6 +83,7 @@ class EditissueInvoice extends Component {
             idx: "",
             user_id: "",
             isModalShow: false,
+            isTqtyCal: false,
             modalData: {},
             vatList: [],
             vat_value: 0,
@@ -108,6 +109,7 @@ class EditissueInvoice extends Component {
             editInvoice: [],
             delloading: false,
             barcode: 1,
+            totalQuantity: 0,
             invoiceParams: "",
             editInvoice: [],
             invoice_id: 0,
@@ -133,18 +135,14 @@ class EditissueInvoice extends Component {
             store_id: invoice.store_id,
             storelist: res.data.store,
             invoice_id: this.props.match.params.id
-            // invoice_id:res.data.invwisetrans.invoice_id
         });
 
         const isLoginExit = getCookieKeyInfo(getAccessTokenName);
         this.setState({
-            user_id: isLoginExit
+            user_id: isLoginExit,
+            loading: false
         });
-        // console.log("user id=" + isLoginExit);
         this.fetchalldata();
-        // this.invoiceNumbers();
-        // this.getinvoiceNumber();
-        // this.editStoreInvoice();
     }
 
     // FOR GETTING WAREHOUSE WISE STORE
@@ -167,27 +165,6 @@ class EditissueInvoice extends Component {
         }
     };
 
-    // FOR GETTING PRODUCT WISE PRICE  ........
-    // getProductWisePriceAuto = async pid => {
-    //     let productid = pid;
-    //     // console.log(productid);
-
-    //     const response = await axios.get(
-    //         defaultRouteLink + "/api/get-product-wise-price/" + productid
-    //     );
-    //     // console.log(response.data.productPrice);
-
-    //     if (typeof response.data.productPrice != "undefined") {
-    //         this.setState({
-    //             product: response.data.productPrice,
-    //             price: response.data.productPrice.selling_price
-    //         });
-    //     } else {
-    //         this.setState({
-    //             price: ""
-    //         });
-    //     }
-    // };
     getProductWisePriceAuto = async pid => {
         let productid = pid;
         // console.log(productid);
@@ -305,122 +282,8 @@ class EditissueInvoice extends Component {
         this.get_warhousewiseStore(event.target.value);
     };
 
-    //
-
-    // discountPercentHandleInput = event => {
-    //     let total_discount =
-    //         parseFloat((this.state.gross_amount * event.target.value) / 100) +
-    //         parseFloat(this.state.discountTaka);
-    //     this.calInvoiceAmt(
-    //         event.target.name,
-    //         event.target.value,
-    //         total_discount
-    //     );
-    // };
-    // discountPercentHandleInput = event => {
-    //     let total_discount =
-    //         parseFloat((this.state.gross_amount * event.target.value) / 100) +
-    //         parseFloat(this.state.discountTaka);
-    //     let vat_amt = this.state.vat_value;
-    //     this.calInvoiceAmt(
-    //         event.target.name,
-    //         event.target.value,
-    //         total_discount,
-    //         vat_amt
-    //     );
-    //     // this.setState({
-    //     //     total_discount:total_discount
-    //     // })
-    // };
-
-    // for vat calculation  ....................................
-    // handleVatInput = event => {
-    //     let disountPercentFromGrossAmount = parseFloat(
-    //         (this.state.gross_amount * this.state.final_discount_percent) / 100
-    //     );
-    //     let total_discount =
-    //         parseFloat(disountPercentFromGrossAmount) +
-    //         parseFloat(this.state.discountTaka);
-    //     let totalamount = this.state.gross_amount - this.state.total_discount;
-    //     let vat_amt = event.target.value;
-
-    //     this.calInvoiceAmt(
-    //         event.target.name,
-    //         event.target.value,
-    //         total_discount,
-    //         vat_amt
-    //     );
-    // };
-
-    // handleDiscountTaka = event => {
-    //     let disountPercentFromGrossAmount =
-    //         parseFloat(
-    //             (this.state.gross_amount * this.state.final_discount_percent) /
-    //                 100
-    //         ) + parseFloat(event.target.value);
-    //     this.calInvoiceAmt(
-    //         event.target.name,
-    //         event.target.value,
-    //         disountPercentFromGrossAmount
-    //     );
-    //     this.setState({
-    //         total_discount: disountPercentFromGrossAmount
-    //     });
-    // };
-    // handleDiscountTaka = event => {
-    //     let disountPercentFromGrossAmount =
-    //         parseFloat(
-    //             (this.state.gross_amount * this.state.final_discount_percent) /
-    //                 100
-    //         ) + parseFloat(event.target.value);
-    //     let vat_amt = this.state.vat_value;
-    //     this.calInvoiceAmt(
-    //         event.target.name,
-    //         event.target.value,
-    //         disountPercentFromGrossAmount,
-    //         vat_amt
-    //     );
-    //     this.setState({
-    //         total_discount: disountPercentFromGrossAmount
-    //     });
-    // };
-
-    // handleInput = event => {
-    //     //console.log("cash Amount",{[event.target.cash_amount]: event.target.value});
-    //     let total_rev =
-    //         parseFloat(this.state.cash_amount) +
-    //         parseFloat(this.state.bank_amount);
-    //     if (event.target.name == "cash_amount") {
-    //         total_rev =
-    //             parseFloat(event.target.value) +
-    //             parseFloat(this.state.bank_amount);
-    //     }
-    //     if (event.target.name == "bank_amount") {
-    //         // console.log("exchange2="+this.state.cash_amount+","+event.target.value+"=t="+total_rev);
-    //         total_rev =
-    //             parseFloat(event.target.value) +
-    //             parseFloat(this.state.cash_amount);
-    //     }
-
-    //     console.log(
-    //         "exchange=" +
-    //             this.state.netPayable +
-    //             "," +
-    //             event.target.value +
-    //             "=t=" +
-    //             total_rev
-    //     );
-    //     let exchange = this.state.netPayable - total_rev;
-    //     this.setState({
-    //         totalExchange: exchange,
-    //         [event.target.name]: event.target.value
-    //     });
-    // };
-
-    // save invoice transection .......
 
     handleInput = event => {
-        //console.log("cash Amount",{[event.target.cash_amount]: event.target.value});
         let total_rev =
             parseFloat(this.state.cash_amount) +
             parseFloat(this.state.bank_amount);
@@ -430,7 +293,6 @@ class EditissueInvoice extends Component {
                 parseFloat(this.state.bank_amount);
         }
         if (event.target.name == "bank_amount") {
-            // console.log("exchange2="+this.state.cash_amount+","+event.target.value+"=t="+total_rev);
             total_rev =
                 parseFloat(event.target.value) +
                 parseFloat(this.state.cash_amount);
@@ -672,7 +534,7 @@ class EditissueInvoice extends Component {
             let check = confirm("are you sure ??");
             if (check) {
                 const id = this.props.match.params.id;
-
+                this.state.totalQuantity = this.props.tqty;
                 const res = await axios.patch(
                     defaultRouteLink + `/api/update-storeInvoice/${id}`,
                     this.state
@@ -728,62 +590,20 @@ class EditissueInvoice extends Component {
             this.setState({
                 warehouseList: response.data.warehouses,
                 vendorlist: response.data.vendors,
-                // storelist: response.data.stores,
                 productList: response.data.products,
                 customerList: response.data.customers,
-                // vatList: response.data.vats,
                 invoicetransectionList: response.data.invotransec,
-                // bankdetailsList: response.data.bankdetails,
-                // cashamountList: response.data.cashaccount,
                 invoiceParams: response.data.invoiceParams
             });
 
             this.props.updateStoreInvoice(response.data.invotransec);
 
             this.setState({ loading: false });
-            // console.log("test=tt");
-            // let priceQuantity = 0;
-            // let discount = 0;
-            // let vat = 0;
-            // let minusDiscount = 0;
-            // let netAmount = 0;
-            // let grossAmount = 0;
-            // let minusManualDiscount = 0;
-            // let discountTaka = 0;
-            // let totalVat = 0;
-            // let manualAndPercentDiscount = 0;
-            // let netqty = 0;
-            // let allqty = 0;
 
             response.data.invotransec.map((item, index) => {
-                // console.log("log="+item.id);
-                // // console.log(item.price * item.quantity)
-                // priceQuantity = item.price * item.quantity;
-                // // for getting percent ammount .....
-                // discount = (priceQuantity * item.discount_percent) / 100;
-                // minusDiscount = priceQuantity - discount;
-                // minusManualDiscount = minusDiscount - item.discount_taka;
-                // vat = (minusManualDiscount * item.value) / 100;
-                // netAmount = minusManualDiscount + vat;
-                // grossAmount += priceQuantity;
-                // manualAndPercentDiscount = discount + item.discount_taka;
-                // allqty = netqty += item.quantity;
-                // console.log("hello2",netPayable)
+
             });
 
-            // this.setState({
-            //     totalpriceQuantity: priceQuantity,
-            //     netAmount: netAmount,
-            //     // gross_amount: grossAmount,
-            //     // discountTaka: discountTaka,
-            //     totalVat: totalVat,
-            //     netPayable: netPayable,
-            //     totalQty: allqty
-            // });
-            // dispatch({
-            //     type:SET_REFRESH_STORETRANSECTION,
-            //     data:{}
-            // });
         }
     };
 
@@ -935,12 +755,12 @@ class EditissueInvoice extends Component {
         let TotalQuantity = 0;
         let allQuantity = 0;
         let qty;
-
+        let tqty = 0;
         // FETCH ALL Invoice transection  DATA... LOOP
         // let invotransec = this.state.invoicetransectionList.map(
         let invotransec = this.props.data_p_list.map((item, index) => {
             const idx = this.props.match.params.idx;
-
+            tqty = parseFloat(tqty) + parseFloat(item.quantity);
             return (
                 <tr>
                     <td>{index + 1}</td>
@@ -970,6 +790,9 @@ class EditissueInvoice extends Component {
                 </tr>
             );
         });
+
+        //if(!this.state.isTqtyCal)
+        // this.setState({ totalQuantity:tqty,isTqtyCal:true });
 
         const idx = this.props.match.params.idx;
 
@@ -1581,7 +1404,11 @@ class EditissueInvoice extends Component {
                                                             <td></td>
                                                             <td>
                                                                 Total Quantity ={" "}
-                                                                {TotalQuantity}
+                                                                {/* {this.props.tqty} */}
+                                                                {this.props.tqty
+                                                                    ? this.props
+                                                                          .tqty
+                                                                    : 0}
                                                             </td>
                                                             <td>
                                                                 <button
@@ -1615,7 +1442,8 @@ class EditissueInvoice extends Component {
 // for redux configuration ..............
 const mapStateToProps = state => {
     return {
-        data_p_list: state.auth.invoicetransectionList
+        data_p_list: state.auth.invoicetransectionList,
+        tqty: state.auth.tqty
     };
 };
 

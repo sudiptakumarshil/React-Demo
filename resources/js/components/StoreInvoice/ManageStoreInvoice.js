@@ -436,6 +436,7 @@ function ManageStoreInvoice(props) {
                                 <th>Bank Amount</th>
                                 <th>Bank</th>
                                 <th>Remarks</th>
+                                <th>Total Quantity</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -476,6 +477,7 @@ function ManageStoreInvoice(props) {
                                         <td>{item.bank_amount}</td>
                                         <td>{item.bank_name}</td>
                                         <td>{item.remarks}</td>
+                                        <td>{item.total_quantity}</td>
                                         <td>
                                             {item.type == 6 ||
                                             item.type == 7 ? (
@@ -501,13 +503,7 @@ function ManageStoreInvoice(props) {
                                                     Edit
                                                 </Link>
                                             )}
-                                            {/* <Link
-                                                to={`/dbBackup/edit-storeinvoice/${item.id}/${item.type}`}
-                                                className="btn btn-primary"
-                                                type="button"
-                                            >
-                                                Edit
-                                            </Link> */}
+
                                             <button
                                                 onClick={deleteInvoice}
                                                 className="btn btn-danger"
@@ -515,6 +511,25 @@ function ManageStoreInvoice(props) {
                                             >
                                                 Delete
                                             </button>
+
+                                            {item.type == 6 &&
+                                            item.total_quantity >
+                                                item.total_rqty ? (
+                                                <Link
+                                                    to={
+                                                        defaultRouteLink +
+                                                        `/return/${
+                                                            item.id
+                                                        }/${7}`
+                                                    }
+                                                    className="btn btn-primary"
+                                                    type="button"
+                                                >
+                                                    Return{" "}
+                                                </Link>
+                                            ) : (
+                                                <td></td>
+                                            )}
                                         </td>
                                     </tr>
                                 );

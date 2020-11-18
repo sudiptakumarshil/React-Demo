@@ -41,7 +41,7 @@ class ManageBankDetails extends Component {
                     </div>
 
                     <Link
-                        to="/dbBackup/add-bank-details"
+                        to={defaultRouteLink+"/add-bank-details"}
                         type="button"
                         className="btn btn-primary"
                     >

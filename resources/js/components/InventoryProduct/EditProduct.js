@@ -46,7 +46,7 @@ const EditProduct = props => {
         // const id = this.props.match.params.id;
 
         const res = await axios.patch(
-            `/dbBackup/api/update-inventproduct/${pe_id}`,
+            defaultRouteLink+`/api/update-inventproduct/${pe_id}`,
             formData
         );
 
@@ -92,7 +92,7 @@ const EditProduct = props => {
         // );
 
         const res = await axios.get(
-            `/dbBackup/api/edit-inventproduct/${pe_id}`
+            defaultRouteLink+`/api/edit-inventproduct/${pe_id}`
         );
 
         const products = res.data.product;

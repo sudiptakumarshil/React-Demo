@@ -69,7 +69,7 @@ class EditStoreInvoice extends Component {
             cash_amount: 0,
             bank_account: "",
             bank_id: 0,
-            customer_id: "",
+            customer_id: 0,
             product_id: 0,
             productList: [],
             product: "",
@@ -689,7 +689,7 @@ class EditStoreInvoice extends Component {
                 vendorlist: response.data.vendors,
                 // storelist: response.data.stores,
                 productList: response.data.products,
-                customerList: response.data.customers,
+                customerList: response.data.customer,
                 vatList: response.data.vats,
                 invoicetransectionList: response.data.invotransec,
                 bankdetailsList: response.data.bankdetails,
@@ -824,6 +824,7 @@ class EditStoreInvoice extends Component {
         ></button>
     );
 
+
     // end for live search
     render() {
         // console.log("product lsit="+this.state.data_p_list);
@@ -859,6 +860,20 @@ class EditStoreInvoice extends Component {
 
             this.setState({
                 vendor_id: item.id // UPDATE STATE ..
+            });
+        });
+        let customer = this.state.customerList.map((item, index) => {
+            // if (warhouses.length === 0) return 1;
+
+            return (
+                <option value={item.id} data-tokens="item.name">
+                    {" "}
+                    {item.name}
+                </option>
+            );
+
+            this.setState({
+                customer_id: item.id // UPDATE STATE ..
             });
         });
         // FETCH ALL STORE DATA... LOOP
@@ -1211,11 +1226,11 @@ class EditStoreInvoice extends Component {
                                                                 <select
                                                                     className="form-control"
                                                                     data-live-search="true"
-                                                                    name="vendor_id"
+                                                                    name="customer_id"
                                                                     value={
                                                                         this
                                                                             .state
-                                                                            .vendor_id
+                                                                            .customer_id
                                                                     }
                                                                     onChange={
                                                                         this
@@ -1229,7 +1244,7 @@ class EditStoreInvoice extends Component {
                                                                         Choose
                                                                         One
                                                                     </option>
-                                                                    {vendors}
+                                                                    {customer}
                                                                 </select>
                                                             </div>
                                                         )}

@@ -39,7 +39,7 @@ const ProductUnit = props => {
                 <div className="col-md-12">
                     <h2>Manage Unit </h2>
                     <Link
-                        to="/dbBackup/add-unit"
+                        to={defaultRouteLink+"/add-unit"}
                         type="button"
                         className="btn btn-primary"
                     >
@@ -70,7 +70,7 @@ const ProductUnit = props => {
                                         )}
                                         <td>
                                             <Link
-                                                to={`/dbBackup/edit-unit/${item.id}`}
+                                                to={defaultRouteLink+`/edit-unit/${item.id}`}
                                                 className="btn btn-primary"
                                                 type="button"
                                             >

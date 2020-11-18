@@ -37,25 +37,37 @@ const EditInvoiceTransectionModal = props => {
         modalData: {},
         closingStock: 0,
         discount_taka: 0,
-        discount_percent: 0
+        discount_percent: 0,
+        pname:'',
     };
     const [formData, setFormData] = useState(dataObj);
     const dispatch = useDispatch();
     let i_id = props.modalData.id;
     let item_id = props.modalData.item_id;
+    //console.log("item id="+item_id);
     // let c_id = props.modalData.c_id;
 
     const alldata = async () => {
-        const idx = props.match.params.idx;
-        const response = await axios.get(defaultRouteLink + "/api/all-data", {
-            params: {
-                type: idx
-            }
-        });
 
-        setproductList(response.data.products);
-        setinvoiceParams(response.data.invoiceParams);
+        if(productList.length <= 0){
+            const idx = props.match.params.idx;
+            const response = await axios.get(defaultRouteLink + "/api/all-data", {
+                params: {
+                    type: idx
+                }
+            });
 
+            setproductList(response.data.products);
+            setinvoiceParams(response.data.invoiceParams);
+
+            var isExist=response.data.products.find(item => item.id == item_id);
+            var list=[];
+            list.push(isExist);
+            var data_set=JSON.stringify(list);
+            console.log("test="+JSON.stringify(isExist)+","+JSON.stringify(productList));
+            setSelected(isExist ? [isExist] :[]);
+
+        }
 
     };
 
@@ -101,7 +113,7 @@ const EditInvoiceTransectionModal = props => {
             });
         } else {
             const res = await axios.patch(
-                `/dbBackup/api/update-transecinvoice/${i_id}`,
+                defaultRouteLink+`/api/update-transecinvoice/${i_id}`,
                 formData
             );
             // for redux    .........  //
@@ -153,18 +165,25 @@ const EditInvoiceTransectionModal = props => {
         // if (typeof e[0] != "undefined") {
         //     this.setState({ product_id: e[0].id });
         // }
-        // console.log(e[0]); //true
+         //console.log("test api="+e[0]); //true
+
+         setSelected(e);
         if (typeof e[0] != "undefined") {
-            setFormData(oldState => ({
-                ...oldState,
-                product_id: e[0].id
-            }));
+                if(e[0].lenght > 0){
+                    console.log("logeee"+JSON.stringify(e));
+                    
+                    setFormData(oldState => ({
+                        ...oldState,
+                        product_id: e[0].id
+                    }));
+                    var id = e[0].id;
+                    getProductWisePriceAuto(id);
+            }
+        }
+        else{
+            
         }
 
-        if (typeof e[0] != "undefined") {
-            var id = e[0].id;
-            getProductWisePriceAuto(id);
-        }
     };
 
     const handleInputs = event => {
@@ -187,17 +206,9 @@ const EditInvoiceTransectionModal = props => {
     };
     useEffect(() => {
         setFormData(props.modalData);
-
          alldata().then(() => {
-
-            var isExist=productList.find(item => item.id == item_id);
-            var list=[];
-            list.push(isExist);
-            var data_set=JSON.stringify(list);
-            console.log("test="+[data_set]);
-            setSelected(isExist ? [isExist] :[]);
-
-          });
+            
+        });
 
 
 
@@ -271,26 +282,7 @@ const EditInvoiceTransectionModal = props => {
                                                                         Product
                                                                         Name
                                                                     </label>
-                                                                    {/* <select
-                                                                        className="form-control"
-                                                                        data-live-search="true"
-                                                                        name="product_id"
-                                                                        value={
-                                                                            formData.product_id
-                                                                        }
-                                                                        onChange={
-                                                                            handleProductPrice
-                                                                        }
-                                                                    >
-                                                                        <option value="0">
-                                                                            Choose
-                                                                            One
-                                                                        </option>
-                                                                        {
-                                                                            products
-                                                                        }
-                                                                    </select>
-                                                                */}
+                                                                  
                                                                     <Typeahead
                                                                         id="labelkey-example"
                                                                         labelKey={products =>
@@ -302,7 +294,10 @@ const EditInvoiceTransectionModal = props => {
                                                                                 e
                                                                             )
                                                                         }
-                                                                        selected={selected}
+                                                                        value={
+                                                                            formData.pname
+                                                                        }
+                                                                        defaultSelected={selected}
                                                                         options={
                                                                             productList
                                                                         }
@@ -468,7 +463,7 @@ const EditInvoiceTransectionModal = props => {
                                                                             productList
                                                                         }
                                                                         value={
-                                                                            formData.product_id
+                                                                            formData.pname
                                                                         }
                                                                         name="product_id"
                                                                         onChange={e =>

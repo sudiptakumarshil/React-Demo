@@ -18,7 +18,7 @@ function AddCostCenter(props) {
 
     const savecostcenter = async event => {
         event.preventDefault();
-        const res = await axios.post("/dbBackup/api/add-costcenter", formData);
+        const res = await axios.post(defaultRouteLink+"/api/add-costcenter", formData);
         const data = {
             name: "",
             wareHouse_id: "",
@@ -27,7 +27,7 @@ function AddCostCenter(props) {
         };
 
         if (res.data.status === 200) {
-            props.history.push("/dbBackup/manage-costcenter");
+            props.history.push(defaultRouteLink+"/manage-costcenter");
         }
 
         try {

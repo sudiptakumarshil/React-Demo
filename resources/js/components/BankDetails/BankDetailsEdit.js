@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import ModalAccountsLedgerList from "../modal/ModalAccountsLedgerList";
+import {defaultRouteLink} from '../../common/config';
 
 import ContentLoader, { Facebook, BulletList } from "react-content-loader";
 const MyBulletListLoader = () => <BulletList />;
@@ -37,7 +38,7 @@ class BankDetailsEdit extends Component {
     async componentDidMount() {
         // GET SPECIFIC DATA FROM BANKDETAILS TABLE BY ID ...
         const id = this.props.match.params.id;
-        const res = await axios.get(`/dbBackup/api/edit-bankdetails/${id}`);
+        const res = await axios.get(defaultRouteLink+`/api/edit-bankdetails/${id}`);
         // assign data into new constant....
         const vInfo = res.data.editbankdetails;
         // console.log("data=" + res.data);
@@ -60,7 +61,7 @@ class BankDetailsEdit extends Component {
         const id = this.props.match.params.id;
 
         const res = await axios.patch(
-            `/dbBackup/api/update-bankdetails/${id}`,
+            defaultRouteLink+`/api/update-bankdetails/${id}`,
             this.state
         );
 
@@ -74,7 +75,7 @@ class BankDetailsEdit extends Component {
             accounts_no: ""
         });
         if (res.data.status === 200) {
-            this.props.history.push("/dbBackup/manage-bank-details");
+            this.props.history.push(defaultRouteLink+"/manage-bank-details");
         }
         // SUCCESS MESSAGE USING SWEET ALERT
         try {

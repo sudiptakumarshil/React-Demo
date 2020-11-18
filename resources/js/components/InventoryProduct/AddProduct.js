@@ -57,7 +57,7 @@ const AddProduct = props => {
             Swal.fire("Price Type Cannot Be Empty!!");
         } else {
             const res = await axios.post(
-                "/dbBackup/api/save-inventproduct",
+                defaultRouteLink+"/api/save-inventproduct",
                 formData
             );
             const data = {
@@ -79,7 +79,7 @@ const AddProduct = props => {
             };
 
             if (res.data.status === 200) {
-                props.history.push("/dbBackup/manage-product");
+                props.history.push(defaultRouteLink+"/manage-product");
             }
 
             try {

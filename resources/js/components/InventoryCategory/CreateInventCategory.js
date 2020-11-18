@@ -45,7 +45,7 @@ const CreateInventCategory = props => {
             category_code:category_code
         };
 
-        const res = await axios.post("/dbBackup/api/save-inventcategory", data);
+        const res = await axios.post(defaultRouteLink+"/api/save-inventcategory", data);
         // UPDATE STATE
         setRoot_id(root_id);
         setInvent_category("");
@@ -74,7 +74,7 @@ const CreateInventCategory = props => {
         };
 
         const res = await axios.patch(
-            `/dbBackup/api/update-inventcategory/${id}`,
+            defaultRouteLink+`/api/update-inventcategory/${id}`,
             data
         );
 

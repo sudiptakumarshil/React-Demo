@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import ModalAccountsLedgerList from "../modal/ModalAccountsLedgerList";
+import {defaultRouteLink} from '../../common/config';
 
 class EditCustomer extends Component {
     // STATE DECLARATION ....
@@ -38,11 +39,11 @@ class EditCustomer extends Component {
         const id = this.props.match.params.id;
 
         const res = await axios.patch(
-            `/dbBackup/api/update-customer/${id}`,
+            defaultRouteLink+`/api/update-customer/${id}`,
             this.state
         );
         if (res.data.status === 200) {
-            this.props.history.push("/dbBackup/manage-customer");
+            this.props.history.push(defaultRouteLink+"/manage-customer");
         }
         // SUCCESS ALERT MESSAGE USING SWEET ALERT
         const Toast = Swal.mixin({
@@ -66,7 +67,7 @@ class EditCustomer extends Component {
     async componentDidMount() {
         // GET SPECIFIC DATA FROM CUSTOMER TABLE BY ID ...
         const id = this.props.match.params.id;
-        const res = await axios.get(`/dbBackup/api/edit-customer/${id}`);
+        const res = await axios.get(defaultRouteLink+`/api/edit-customer/${id}`);
         // assign data into new constant....
         const vInfo = res.data.customer;
         // console.log("data=" + res.data);

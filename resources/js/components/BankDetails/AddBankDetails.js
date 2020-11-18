@@ -37,7 +37,7 @@ class AddBankDetails extends Component {
         event.preventDefault();
 
         const res = await axios.post(
-            "/dbBackup/api/save-bankdetails",
+            defaultRouteLink+"/api/save-bankdetails",
             this.state
         );
         this.setState({
@@ -173,7 +173,7 @@ class AddBankDetails extends Component {
                                             <input
                                                 type="text"
                                                 className="form-control"
-                                                placeholder="phone"
+                                                placeholder="Account Number"
                                                 name="account_number"
                                                 required
                                                 value={

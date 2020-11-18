@@ -40,7 +40,7 @@ class ManageCashAccount extends Component {
                     </div>
 
                     <Link
-                        to="/dbBackup/add-cash-account"
+                        to={defaultRouteLink+"/add-cash-account"}
                         type="button"
                         className="btn btn-primary"
                     >

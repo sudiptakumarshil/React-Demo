@@ -31,7 +31,7 @@ function ManageAccountInput(props) {
                 <div className="col-md-12">
                     <h2>Manage AccountsInput </h2>
                     <Link
-                        to="/dbBackup/add-account-input"
+                        to={defaultRouteLink+"/add-account-input"}
                         type="button"
                         className="btn btn-primary"
                     >
@@ -61,7 +61,7 @@ function ManageAccountInput(props) {
                                         )}
                                         <td>
                                             <Link
-                                                to={`/dbBackup/edit-account-input/${item.id}`}
+                                                to={defaultRouteLink+`/edit-account-input/${item.id}`}
                                                 className="btn btn-primary"
                                                 type="button"
                                             >

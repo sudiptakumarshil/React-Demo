@@ -56,7 +56,7 @@ class IssueStoreInvoice extends Component {
             customerList: [],
             invoice_id: 0,
             toggle: true,
-            invoice_code: [],
+            invoice_code: 0,
             remarks: "",
             warehouse_id: 0,
             vendor_id: "",
@@ -106,7 +106,7 @@ class IssueStoreInvoice extends Component {
             delloading: false,
             barcode: 1,
             closingStock: 0,
-            Totalquantity: 0
+            totalQuantity: 0
             // items_id:0
             //----------------
         };
@@ -114,10 +114,22 @@ class IssueStoreInvoice extends Component {
 
     async componentDidMount() {
         const idx = this.props.match.params.idx;
-        // const id = this.props.match.params.id;
-        // console.log(idx);
-        // console.log(this.state.cash_amount);
+        let invotransec = this.props.data_p_list.map((item, index) => {
+            const idx = this.props.match.params.idx;
+            return (
+                <tr>
+                    <td>{index + 1}</td>
+                    <td>{item.product_name}</td>
+                    <td>{item.quantity}</td>
+                    <input type="hidden" value={(qty = item.quantity)}></input>
+                    <input
+                        type="hidden"
+                        value={(allQuantity = TotalQuantity += qty)}
+                    ></input>
+                </tr>
+            );
 
+        });
         this.setState({
             idx: idx
         });
@@ -126,10 +138,7 @@ class IssueStoreInvoice extends Component {
         this.setState({
             user_id: isLoginExit
         });
-        // console.log("user id=" + isLoginExit);
         this.fetchalldata();
-        // this.invoiceNumbers();
-        this.getinvoiceNumber();
     }
 
     // FOR GETTING WAREHOUSE WISE STORE
@@ -582,13 +591,12 @@ class IssueStoreInvoice extends Component {
         } else {
             let check = confirm("are you sure ??");
             if (check) {
+
+                this.state.totalQuantity=this.props.tqty;
                 const res = await axios.post(
                     defaultRouteLink + "/api/save-store-invoice",
                     this.state
                 );
-                this.state = {
-                    Totalquantity: 0
-                };
 
                 // SUCCESS MESSAGE USING SWEET ALERT
                 if (res.data.status === 200) {
@@ -648,10 +656,13 @@ class IssueStoreInvoice extends Component {
                 cashamountList: response.data.cashaccount,
                 invoiceParams: response.data.invoiceParams
             });
-
+            let tqty=0;
+            response.data.invotransec.map((item, index) => {
+                tqty=parseFloat(tqty) + parseFloat(item.quantity);
+            });
+            this.setState({ loading: false,totalQuantity:tqty });
             this.props.updateStoreInvoice(response.data.invotransec);
 
-            this.setState({ loading: false });
             // dispatch({
             //     type:SET_REFRESH_STORETRANSECTION,
             //     data:{}
@@ -818,55 +829,7 @@ class IssueStoreInvoice extends Component {
                 </tr>
             );
             this.setState({
-                Totalquantity: allQuantity
-            });
-        });
-
-        // FETCH ALL VAT DATA... LOOP
-        let allvat = this.state.vatList.map((item, index) => {
-            return (
-                <option value={item.id} data-tokens="item.name">
-                    {item.vat_name}
-                </option>
-            );
-            this.setState({
-                vat_id: item.id, // UPDATE STATE ........
-                vat_value: item.value // UPDATE STATE ........
-            });
-        });
-
-        // FETCH ALL VAT VALUE DATA... LOOP
-        let allvatvalue = this.state.vatList.map((item, index) => {
-            return (
-                <option value={item.value} data-tokens="item.name">
-                    {item.vat_name}
-                </option>
-            );
-            /* this.setState({
-                vat_id: item.id, // UPDATE STATE ........
-                vat_value: item.value // UPDATE STATE ........
-            });*/
-        });
-        // FETCH ALL BANK ACCOUNT LIST ... LOOP
-        let allbanklist = this.state.bankdetailsList.map((item, index) => {
-            return (
-                <option value={item.id} data-tokens="item.name">
-                    {item.bank_name}
-                </option>
-            );
-            this.setState({
-                bankdetails_id: item.id // UPDATE STATE ........
-            });
-        });
-        // FETCH ALL CASH ACCOUNT DETAILS LIST ... LOOP
-        let allaccountlist = this.state.cashamountList.map((item, index) => {
-            return (
-                <option value={item.id} data-tokens="item.name">
-                    {item.cash_name}
-                </option>
-            );
-            this.setState({
-                cashamount_id: item.id // UPDATE STATE ........
+                totalQuantity: allQuantity
             });
         });
 
@@ -909,10 +872,7 @@ class IssueStoreInvoice extends Component {
                         <div className="col-md-12">
                             <div style={{ marginTop: 30 }}>
                                 <Link
-                                    to={
-                                        defaultRouteLink +
-                                        `/new-purshase/${1}`
-                                    }
+                                    to={defaultRouteLink + `/new-purshase/${1}`}
                                     type="button"
                                     className="btn btn-danger"
                                     style={{ marginLeft: 15 }}
@@ -974,7 +934,10 @@ class IssueStoreInvoice extends Component {
                                     Issue Return
                                 </Link>
                                 <Link
-                                    to={defaultRouteLink + `/manage-store-invoice`}
+                                    to={
+                                        defaultRouteLink +
+                                        `/manage-store-invoice`
+                                    }
                                     type="button"
                                     className="btn btn-dark"
                                     style={{ marginLeft: 15 }}
@@ -1520,7 +1483,9 @@ class IssueStoreInvoice extends Component {
                                                             <td></td>
                                                             <td>
                                                                 Total Quantity ={" "}
-                                                                {TotalQuantity}
+                                                                {
+                                                                    (this.props.tqty ) ? this.props.tqty : 0
+                                                                }
                                                             </td>
 
                                                             <td>
@@ -1555,7 +1520,8 @@ class IssueStoreInvoice extends Component {
 // for redux configuration ..............
 const mapStateToProps = state => {
     return {
-        data_p_list: state.auth.invoicetransectionList
+        data_p_list: state.auth.invoicetransectionList,
+        tqty:state.auth.tqty,
     };
 };
 

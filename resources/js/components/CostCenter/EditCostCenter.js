@@ -20,7 +20,7 @@ function EditCostCenter(props) {
     const updatecostcenter = async event => {
         event.preventDefault();
         const res = await axios.patch(
-            `/dbBackup/api/update-costcenter/${id}`,
+            defaultRouteLink+`/api/update-costcenter/${id}`,
             formData
         );
 
@@ -32,7 +32,7 @@ function EditCostCenter(props) {
         };
 
         if (res.data.status === 200) {
-            props.history.push("/dbBackup/manage-costcenter");
+            props.history.push(defaultRouteLink+"/manage-costcenter");
         }
 
         try {

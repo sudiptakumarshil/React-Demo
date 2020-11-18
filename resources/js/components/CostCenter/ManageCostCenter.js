@@ -30,7 +30,7 @@ function ManageCostCenter(props) {
                 <div className="col-md-12">
                     <h2>Manage Cost Center </h2>
                     <Link
-                        to="/dbBackup/add-costcenter"
+                        to={defaultRouteLink+"/add-costcenter"}
                         type="button"
                         className="btn btn-primary"
                     >
@@ -62,7 +62,7 @@ function ManageCostCenter(props) {
                                         )}
                                         <td>
                                             <Link
-                                                to={`/dbBackup/edit-costcenter/${item.id}`}
+                                                to={defaultRouteLink+`/edit-costcenter/${item.id}`}
                                                 className="btn btn-primary"
                                                 type="button"
                                             >

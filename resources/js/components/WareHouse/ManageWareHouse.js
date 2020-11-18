@@ -4,6 +4,9 @@ import Warehouse from "./WarHouse";
 import AddWareHouse from "./addWareHouse";
 import { Link, Router } from "react-router-dom";
 import Pagination from "react-js-pagination";
+import { defaultRouteLink } from "../../common/config";
+
+
 class ManageWareHouse extends Component {
     state = {
         warehouses: [],
@@ -15,7 +18,7 @@ class ManageWareHouse extends Component {
     fetchallwarehouse = async (pageNumber = 1) => {
         console.log(pageNumber);
         const res = await axios.get(
-            "/dbBackup/api/all-warehouse",
+            defaultRouteLink+"/api/all-warehouse",
             {
                 params:{
                     start_page:pageNumber,
@@ -57,7 +60,7 @@ class ManageWareHouse extends Component {
                     <div className="col-xs-6">
                         <div className="row">
                             <Link
-                                to="/dbBackup/add-warehouse"
+                                to={defaultRouteLink+"/add-warehouse"}
                                 type="button"
                                 className="btn btn-primary"
                             >

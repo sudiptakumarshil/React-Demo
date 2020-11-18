@@ -18,6 +18,7 @@ class CreateVendor extends Component {
             address: "",
             remarks: "",
             accounts_id: "",
+            type: 0,
             warehouse_id: []
         };
     }
@@ -35,9 +36,7 @@ class CreateVendor extends Component {
     };
 
     fetchallwarehouse = async () => {
-        const response = await axios.get(
-            defaultRouteLink + "/api/all-data"
-        );
+        const response = await axios.get(defaultRouteLink + "/api/all-data");
         console.log(response);
 
         this.setState({ warehouseList: response.data.warehouses });
@@ -50,7 +49,10 @@ class CreateVendor extends Component {
     Createvendor = async event => {
         event.preventDefault();
 
-        const res = await axios.post("/dbBackup/api/save-vendor", this.state);
+        const res = await axios.post(
+            defaultRouteLink + "/api/save-vendor",
+            this.state
+        );
         this.setState({
             name: "",
             email: "",
@@ -60,7 +62,7 @@ class CreateVendor extends Component {
             accounts_no: ""
         });
         if (res.data.status === 200) {
-            this.props.history.push("/dbBackup/manage-vendor");
+            this.props.history.push(defaultRouteLink + "/manage-vendor");
         }
         const Toast = Swal.mixin({
             toast: true,
@@ -154,7 +156,9 @@ class CreateVendor extends Component {
                                                 name="warehouse_id"
                                                 onChange={this.handleInput}
                                             >
-                                            <option value="0">Choose One </option>
+                                                <option value="0">
+                                                    Choose One{" "}
+                                                </option>
                                                 {warhouses}
                                             </select>
                                         </div>
@@ -194,6 +198,31 @@ class CreateVendor extends Component {
                                                 value={this.state.phone}
                                                 onChange={this.handleInput}
                                             ></input>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label className="control-label col-lg-2">
+                                        Type
+                                    </label>
+                                    <div className="col-md-4">
+                                        <div className="input-group">
+                                            <select
+                                                className="form-control"
+                                                id="exampleFormControlSelect1"
+                                                name="type"
+                                                onChange={this.handleInput}
+                                            >
+                                                <option value="0">
+                                                    Choose One{" "}
+                                                </option>
+                                                <option value="1">
+                                                    {"Vendor "}
+                                                </option>
+                                                <option value="2">
+                                                    {"Customer"}
+                                                </option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>

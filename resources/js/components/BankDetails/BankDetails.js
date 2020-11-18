@@ -20,7 +20,7 @@ class BankDetails extends Component {
                     <td>{bankdetail.account_id}</td>
                     <td>
                         <Link
-                            to={`/dbBackup/edit-bankdetails/${bankdetail.id}`}
+                            to={defaultRouteLink+`/edit-bankdetails/${bankdetail.id}`}
                             className="btn btn-primary"
                             type="button"
                         >

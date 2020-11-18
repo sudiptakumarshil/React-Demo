@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Link, Router } from "react-router-dom";
 import Swal from "sweetalert2";
+import { defaultRouteLink } from "../../common/config";
+
+
 class EditWareHouse extends Component {
     constructor(props) {
         super(props);
@@ -38,11 +41,11 @@ class EditWareHouse extends Component {
         const id = this.props.match.params.id;
 
         const res = await axios.patch(
-            `/dbBackup/api/update-warehouse/${id}`,
+            defaultRouteLink+`/api/update-warehouse/${id}`,
             this.state
         );
         if (res.data.status === 200) {
-            this.props.history.push("/dbBackup/manage-warehouse");
+            this.props.history.push(defaultRouteLink+"/manage-warehouse");
         }
         const Toast = Swal.mixin({
             toast: true,
@@ -64,7 +67,7 @@ class EditWareHouse extends Component {
 
     async componentDidMount() {
         const id = this.props.match.params.id;
-        const res = await axios.get(`/dbBackup/api/edit-warehouse/${id}`);
+        const res = await axios.get(defaultRouteLink+`/api/edit-warehouse/${id}`);
         // console.log(res);
         // assign data into new constant....
         const wInfo = res.data.warehouses;

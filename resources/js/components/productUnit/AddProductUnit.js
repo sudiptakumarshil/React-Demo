@@ -19,7 +19,7 @@ function AddProductUnit(props) {
 
     const saveProductUnit = async event => {
         event.preventDefault();
-        const res = await axios.post("/dbBackup/api/add-unit", formData);
+        const res = await axios.post(defaultRouteLink+"/api/add-unit", formData);
 
         const data = {
             unit_name: "",
@@ -28,7 +28,7 @@ function AddProductUnit(props) {
         };
 
         if (res.data.status === 200) {
-            props.history.push("/dbBackup/manage-unit");
+            props.history.push(defaultRouteLink+"/manage-unit");
         }
 
         try {

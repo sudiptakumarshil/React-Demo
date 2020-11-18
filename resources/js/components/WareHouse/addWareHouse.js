@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Swal from "sweetalert2";
+import { defaultRouteLink } from "../../common/config";
 
 class addWareHouse extends Component {
     state = {
@@ -30,7 +31,7 @@ class addWareHouse extends Component {
         event.preventDefault();
         const SweetAlert = require("react-bootstrap-sweetalert");
         const res = await axios.post(
-            "/dbBackup/api/save-warehouse",
+            defaultRouteLink+"/api/save-warehouse",
             this.state
         );
         this.setState({
@@ -56,7 +57,7 @@ class addWareHouse extends Component {
         this.setState({ loading: false });
 
         if (res.data.status === 200) {
-            this.props.history.push("/dbBackup/manage-warehouse");
+            this.props.history.push(defaultRouteLink+"/manage-warehouse");
         }
         const Toast = Swal.mixin({
             toast: true,

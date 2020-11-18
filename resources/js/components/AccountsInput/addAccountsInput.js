@@ -17,7 +17,7 @@ function addAccountsInput(props) {
 
     const saveinput = async event => {
         event.preventDefault();
-        const res = await axios.post("/dbBackup/api/add-input", formData);
+        const res = await axios.post(defaultRouteLink+"/api/add-input", formData);
         const data = {
             name: "",
             input_type: 0,
@@ -26,7 +26,7 @@ function addAccountsInput(props) {
         };
 
         if (res.data.status === 200) {
-            props.history.push("/dbBackup/manage-account-input");
+            props.history.push(defaultRouteLink+"/manage-account-input");
         }
 
         try {

@@ -9,12 +9,28 @@ export const getApiServerDashboard="http://supporta2z.com/vendor_panel/admin_das
 export const defaultRouteLink="/vendor_panel";
 
 */
+import moment from "moment";
 
-export const getApiServerLinkDataApi = "http://localhost/dbBackup/api/";
-export const getApiServerLink = "http://localhost/dbBackup/";
-export const getApiServerDashboard =
-    "http://localhost/dbBackup/admin_dashboad/";
-export const defaultRouteLink = "/dbBackup";
+export function getCurrentDate(separator=''){
+
+    //let date= moment().format("DD-MM-YYYY hh:mm:ss");
+
+    let date= moment().format("YYYY-MM-DD");
+    console.log("date="+date);
+    return date;
+    }
+
+//export const getApiServerLinkDataApi = "https://tecn.gov.bd/e-store/api/";
+//export const getApiServerLink = "https://tecn.gov.bd/e-store/";
+//export const getApiServerDashboard ="https://tecn.gov.bd/e-store/admin_dashboad/";
+
+
+export const getApiServerLinkDataApi = "http://192.168.0.151/e-store/api/";
+export const getApiServerLink = "http://192.168.0.151/e-store/";
+export const getApiServerDashboard ="http://192.168.0.151/e-store/admin_dashboard/";
+
+
+export const defaultRouteLink = "/e-store";
 
 export const getAccessTokenName = "userId";
 export const getAccessTokenNameInfo = "userInfo";

@@ -19,6 +19,7 @@ class MenuSubmenuSettingController extends Controller
             $ara = array();
             $ara['name'] = $vsubmenu->name;
             $ara['id'] = $vsubmenu->id;
+            $ara['isChecked'] = false;
 
             $ara['sub_menu'] = $vsubmenu->getSubMenuList;
 
