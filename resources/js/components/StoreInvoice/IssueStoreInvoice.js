@@ -114,33 +114,13 @@ class IssueStoreInvoice extends Component {
 
     async componentDidMount() {
         const idx = this.props.match.params.idx;
-        let invotransec = this.props.data_p_list.map((item, index) => {
-            const idx = this.props.match.params.idx;
-            let qty;
-            let allQuantity;
-            let TotalQuantity;
-            return (
-                <tr>
-                    <td>{index + 1}</td>
-                    <td>{item.product_name}</td>
-                    <td>{item.quantity}</td>
-                    <input type="hidden" value={(qty = item.quantity)}></input>
-                    <input
-                        type="hidden"
-                        value={(allQuantity = TotalQuantity += qty)}
-                    ></input>
-                </tr>
-            );
-        });
-        this.setState({
-            idx: idx
-        });
-
         const isLoginExit = getCookieKeyInfo(getAccessTokenName);
         this.setState({
-            user_id: isLoginExit
+            user_id: isLoginExit,
+            idx: idx
         });
         this.fetchalldata();
+        this.get_warhousewiseStore(this.state.warehouse_id);
     }
 
     // FOR GETTING WAREHOUSE WISE STORE
@@ -671,7 +651,8 @@ class IssueStoreInvoice extends Component {
                 invoicetransectionList: response.data.invotransec,
                 bankdetailsList: response.data.bankdetails,
                 cashamountList: response.data.cashaccount,
-                invoiceParams: response.data.invoiceParams
+                invoiceParams: response.data.invoiceParams,
+                invoice_code: response.data.invoice_number
             });
             let tqty = 0;
             response.data.invotransec.map((item, index) => {
@@ -688,20 +669,20 @@ class IssueStoreInvoice extends Component {
     };
 
     // FOR GETTING AUTO INVOICE NUMBER .............
-    getinvoiceNumber = async () => {
-        const idx = this.props.match.params.idx;
-        if (idx == 6) {
-            const response = await axios.get(
-                defaultRouteLink + "/api/get-invoice-number-type-6"
-            );
-            this.setState({ invoice_code: response.data.invoice_number });
-        } else if (idx == 7) {
-            const response = await axios.get(
-                defaultRouteLink + "/api/get-invoice-number-type-7"
-            );
-            this.setState({ invoice_code: response.data.invoice_number });
-        }
-    };
+    // getinvoiceNumber = async () => {
+    //     const idx = this.props.match.params.idx;
+    //     if (idx == 6) {
+    //         const response = await axios.get(
+    //             defaultRouteLink + "/api/get-invoice-number-type-6"
+    //         );
+    //         this.setState({ invoice_code: response.data.invoice_number });
+    //     } else if (idx == 7) {
+    //         const response = await axios.get(
+    //             defaultRouteLink + "/api/get-invoice-number-type-7"
+    //         );
+    //         this.setState({ invoice_code: response.data.invoice_number });
+    //     }
+    // };
 
     // FOR DELETE INVOICES TRANSECTION
     delinvoicetransec = async e => {
@@ -728,6 +709,9 @@ class IssueStoreInvoice extends Component {
             });
             this.props.updateStoreInvoice(response.data.invotransec);
         } else {
+            this.setState({
+                delloading: false
+            });
             return false;
         }
     };
@@ -736,15 +720,24 @@ class IssueStoreInvoice extends Component {
             isModalShow: false
         });
     };
+    // handleProductEdit = async item_id => {
+    //     this.setState({
+    //         isModalShow: true
+    //     });
+    //     // editInvoiceTransection = async () => {
+    //     const response = await axios.get(
+    //         defaultRouteLink + "/api/edit-invoice-transec/" + item_id
+    //     );
+    //     this.setState({ modalData: response.data.invoice });
+
+    //     // };
+    // };
+
     handleProductEdit = async item_id => {
-        this.setState({
-            isModalShow: true
-        });
-        // editInvoiceTransection = async () => {
         const response = await axios.get(
             defaultRouteLink + "/api/edit-invoice-transec/" + item_id
         );
-        this.setState({ modalData: response.data.invoice });
+        this.setState({ modalData: response.data.invoice, isModalShow: true });
 
         // };
     };

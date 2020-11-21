@@ -79,6 +79,21 @@ function ManageStoreInvoice(props) {
             defaultRouteLink + "/api/search-storeInvoice",
             formData
         );
+        const data = {
+            invoice_code: 0,
+            store_id: 0,
+            warehouse_id: 0,
+            vendor_id: 0,
+            customer_id: 0,
+            activePage: 1,
+            total_count: 0,
+            limit: 10,
+            start_page: 1,
+            StoreInvoiceList: []
+        };
+
+        setFormData(data);
+
         // console.log(pageNumber);
         if (res.data.count >= 0) {
             setFormData(oldState => ({
@@ -427,22 +442,22 @@ function ManageStoreInvoice(props) {
                                                 name="type"
                                                 onChange={handleInput}
                                             >
-                                                <option selected value="1">
+                                                <option selected value="0">
+                                                    Choose One
+                                                </option>
+
+                                                <option value="1">
                                                     New Purshase
                                                 </option>
-                                                <option selected value="2">
+                                                <option value="2">
                                                     Purshase Return
                                                 </option>
-                                                <option selected value="3">
-                                                    Sale
-                                                </option>
-                                                <option selected value="4">
+                                                <option value="3">Sale</option>
+                                                <option value="4">
                                                     Sale Return
                                                 </option>
-                                                <option selected value="6">
-                                                    Issue
-                                                </option>
-                                                <option selected value="7">
+                                                <option value="6">Issue</option>
+                                                <option value="7">
                                                     Issue Return
                                                 </option>
                                             </select>

@@ -476,17 +476,26 @@ class EditStoreInvoice extends Component {
                 }
             });
         } else {
+            const invoice_id = this.props.match.params.id;
             const res = await axios.post(
                 defaultRouteLink + "/api/save-storeinvoice",
-                this.state
+                this.state,
+                {
+                    params: {
+                        type: idx,
+                        invoice_id: invoice_id
+                    }
+                }
             );
 
             // dispatch({
             //     type:SET_REFRESH_STORETRANSECTION,
             //     updateinvoiceTransection:res.data
             // });
-
-            this.fetchalldata();
+            this.setState({
+                invoicetransectionList: res.data.invotransec
+            });
+            this.props.updateStoreInvoice(res.data.invotransec);
 
             // SUCCESS MESSAGE USING SWEET ALERT
             try {
@@ -753,9 +762,21 @@ class EditStoreInvoice extends Component {
     // FOR DELETE INVOICES
     delinvoicetransec = async e => {
         const removeId = e.target.getAttribute("data-id");
+        const idx = this.props.match.params.idx;
+        const invoice_id = this.props.match.params.id;
         const response = await axios.get(
-            defaultRouteLink + "/api/delete-invoice-transec/" + removeId
+            defaultRouteLink + "/api/delete-invoice-transec/" + removeId,
+            {
+                params: {
+                    type: idx,
+                    invoice_id: invoice_id
+                }
+            }
         );
+        this.setState({
+            invoicetransectionList: response.data.invotransec
+        });
+        this.props.updateStoreInvoice(response.data.invotransec);
         // SUCCESS MESSAGE USING SWEET ALERT
         try {
             const Toast = Swal.mixin({
@@ -782,8 +803,6 @@ class EditStoreInvoice extends Component {
                 footer: "<a href>Why do I have this issue?</a>"
             });
         }
-
-        this.fetchalldata();
     };
     handleModalClose = () => {
         this.setState({
@@ -823,7 +842,6 @@ class EditStoreInvoice extends Component {
             }}
         ></button>
     );
-
 
     // end for live search
     render() {

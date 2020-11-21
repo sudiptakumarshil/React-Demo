@@ -112,22 +112,7 @@ class AddStoreInvoice extends Component {
 
     async componentDidMount() {
         const idx = this.props.match.params.idx;
-        // const id = this.props.match.params.id;
-        // console.log(idx);
-        // console.log(this.state.cash_amount);
-
-        /*this.setState({
-            idx: idx
-        });*/
-
-        //const isLoginExit = getCookieKeyInfo(getAccessTokenName);
-        /*this.setState({
-            user_id: isLoginExit
-        });*/
-        // console.log("user id=" + isLoginExit);
         this.fetchalldata();
-        // this.invoiceNumbers();
-        //this.getinvoiceNumber();
     }
 
     // FOR GETTING WAREHOUSE WISE STORE
@@ -161,7 +146,6 @@ class AddStoreInvoice extends Component {
             editInvoice: res.data.editinvoice,
             idx: res.data.editinvoice.type
         });
-        // setLoading(false);
     };
     // FOR GETTING PRODUCT WISE PRICE  ........
     getProductWisePriceAuto = async pid => {

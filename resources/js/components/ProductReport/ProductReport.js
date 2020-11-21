@@ -11,6 +11,7 @@ function ProductReport(props) {
     const [vendorList, setvendorList] = useState([]);
     const [customerList, setcustomerList] = useState([]);
     const [productReportList, setproductReportList] = useState([]);
+    const [Loading, setLoading] = useState(false);
     const data = {
         product_id: 0,
         start_page: 1,
@@ -67,6 +68,7 @@ function ProductReport(props) {
     };
 
     const searchData = async event => {
+        setLoading(true);
         event.preventDefault();
         const res = await axios.post(
             defaultRouteLink + "/api/product-report",
@@ -79,12 +81,24 @@ function ProductReport(props) {
             vendor_id: 0,
             customer_id: 0
         };
+        setFormData(data);
+
+        setLoading(false);
         setproductReportList(res.data.productReport);
     };
 
     useEffect(() => {
         fetchalldata();
     }, []);
+
+    if (Loading) {
+        return (
+            <h2 className="text-center mt-3">
+                <i className="fas fa-spinner fa-spin fa-3x"></i>
+                <MyBulletListLoader />
+            </h2>
+        );
+    }
 
     return (
         <div>

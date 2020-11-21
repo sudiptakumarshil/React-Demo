@@ -74,7 +74,7 @@ class EditissueInvoice extends Component {
             cash_amount: 0,
             bank_account: "",
             bank_id: "",
-            customer_id: "",
+            customer_id: 0,
             product_id: 0,
             productList: [],
             product: "",
@@ -193,22 +193,28 @@ class EditissueInvoice extends Component {
     QuickPurshaseInvoiceTransec = async event => {
         // event.preventDefault();
         const idx = this.props.match.params.idx;
-
+        const invoice_id = this.props.match.params.id;
         const res = await axios.post(
             defaultRouteLink + "/api/save-storeinvoice",
-            this.state
+            this.state,
+            {
+                params: {
+                    type: idx,
+                    invoice_id: invoice_id
+                }
+            }
         );
 
         this.setState({
-            quantity: 1
+            quantity: 1,
+            invoicetransectionList: res.data.invotransec
         });
+        this.props.updateStoreInvoice(res.data.invotransec);
 
         // dispatch({
         //     type:SET_REFRESH_STORETRANSECTION,
         //     updateinvoiceTransection:res.data
         // });
-
-        this.fetchalldata();
 
         // SUCCESS MESSAGE USING SWEET ALERT
         try {
@@ -281,7 +287,6 @@ class EditissueInvoice extends Component {
         this.setState({ [event.target.name]: event.target.value });
         this.get_warhousewiseStore(event.target.value);
     };
-
 
     handleInput = event => {
         let total_rev =
@@ -435,18 +440,27 @@ class EditissueInvoice extends Component {
                 }
             });
         } else {
+            const invoice_id = this.props.match.params.id;
             const res = await axios.post(
                 defaultRouteLink + "/api/save-storeinvoice",
-                this.state
+                this.state,
+                {
+                    params: {
+                        type: idx,
+                        invoice_id: invoice_id
+                    }
+                }
             );
+
+            this.setState({
+                invoicetransectionList: res.data.invotransec
+            });
+            this.props.updateStoreInvoice(res.data.invotransec);
 
             // dispatch({
             //     type:SET_REFRESH_STORETRANSECTION,
             //     updateinvoiceTransection:res.data
             // });
-
-            this.fetchalldata();
-
             // SUCCESS MESSAGE USING SWEET ALERT
             try {
                 const Toast = Swal.mixin({
@@ -591,7 +605,7 @@ class EditissueInvoice extends Component {
                 warehouseList: response.data.warehouses,
                 vendorlist: response.data.vendors,
                 productList: response.data.products,
-                customerList: response.data.customers,
+                customerList: response.data.customer,
                 invoicetransectionList: response.data.invotransec,
                 invoiceParams: response.data.invoiceParams
             });
@@ -600,10 +614,7 @@ class EditissueInvoice extends Component {
 
             this.setState({ loading: false });
 
-            response.data.invotransec.map((item, index) => {
-
-            });
-
+            response.data.invotransec.map((item, index) => {});
         }
     };
 
@@ -626,9 +637,21 @@ class EditissueInvoice extends Component {
     // FOR DELETE INVOICES
     delinvoicetransec = async e => {
         const removeId = e.target.getAttribute("data-id");
+        const invoice_id = this.props.match.params.id;
+        const idx = this.props.match.params.idx;
         const response = await axios.get(
-            defaultRouteLink + "/api/delete-invoice-transec/" + removeId
+            defaultRouteLink + "/api/delete-invoice-transec/" + removeId,
+            {
+                params: {
+                    type: idx,
+                    invoice_id: invoice_id
+                }
+            }
         );
+        this.setState({
+            invoicetransectionList: response.data.invotransec
+        });
+        this.props.updateStoreInvoice(response.data.invotransec);
         // SUCCESS MESSAGE USING SWEET ALERT
         try {
             const Toast = Swal.mixin({
@@ -655,8 +678,6 @@ class EditissueInvoice extends Component {
                 footer: "<a href>Why do I have this issue?</a>"
             });
         }
-
-        this.fetchalldata();
     };
     handleModalClose = () => {
         this.setState({
@@ -732,6 +753,22 @@ class EditissueInvoice extends Component {
 
             this.setState({
                 vendor_id: item.id // UPDATE STATE ..
+            });
+        });
+        // FETCH ALL CUSTOMER DATA... LOOP
+        let customers = this.state.customerList.map((item, index) => {
+            return (
+                <option
+                    selected={this.state.customer_id == item.id}
+                    value={item.id}
+                    data-tokens="item.name"
+                >
+                    {item.name}
+                </option>
+            );
+            this.setState({
+                customer_id: item.id // UPDATE STATE ........
+                // gross_amount:alltoTalQty
             });
         });
         // FETCH ALL STORE DATA... LOOP
@@ -967,11 +1004,11 @@ class EditissueInvoice extends Component {
                                                                 <select
                                                                     className="form-control"
                                                                     data-live-search="true"
-                                                                    name="vendor_id"
+                                                                    name="customer_id"
                                                                     value={
                                                                         this
                                                                             .state
-                                                                            .vendor_id
+                                                                            .customer_id
                                                                     }
                                                                     onChange={
                                                                         this
@@ -985,7 +1022,7 @@ class EditissueInvoice extends Component {
                                                                         Choose
                                                                         One
                                                                     </option>
-                                                                    {vendors}
+                                                                    {customers}
                                                                 </select>
                                                             </div>
                                                         )}

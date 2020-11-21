@@ -525,21 +525,29 @@ class StoreInvoiceController extends Controller
 
         // return $request->product_id;
         // exit();
+        $types = $request->type;
         $invoice_id = $request->invoice_id;
+
         $invotran = InvoiceTrasection::find($id);
         // if ($request->idx == 1 or $request->idx == 2) {
         //     $invotran->d_id = $request->product_id;
         // } elseif ($request->idx == 3 or $request->idx == 4) {
         //     $invotran->c_id = $request->product_id;
         // }
-        if ($request->idx == 1 or $request->idx == 2 or $request->idx == 7) {
+        // if ($request->idx == 1 or $request->idx == 2 or $request->idx == 7) {
+        //     $invotran->d_id = $request->product_id;
+        //     $invotran->party_id = $request->vendor_id;
+        // } elseif ($request->idx == 3 or $request->idx == 4 or $request->idx == 6) {
+        //     $invotran->c_id = $request->product_id;
+        //     $invotran->party_id = $request->customer_id;
+        // }
+        if ($request->idx == 1 || $request->idx == 2) {
             $invotran->d_id = $request->product_id;
-            $invotran->party_id = $request->vendor_id;
-        } elseif ($request->idx == 3 or $request->idx == 4 or $request->idx == 6) {
+        } elseif ($request->idx == 3 || $request->idx == 4 || $request->idx == 6 || $request->idx == 7) {
             $invotran->c_id = $request->product_id;
-            $invotran->party_id = $request->customer_id;
         }
         $invotran->item_id = $request->product_id;
+
         $invotran->status = 1;
         $invotran->date = $request->date;
         $invotran->quantity = $request->quantity;
@@ -548,14 +556,25 @@ class StoreInvoiceController extends Controller
         $invotran->discount_percent = $request->discount_percent;
         $invotran->save();
 
+        // $invotransec = DB::table('invoice_trasections')
+        //     ->Join('inventory_products', 'invoice_trasections.item_id', '=', 'inventory_products.id')
+        //     ->leftJoin('vats', 'invoice_trasections.vat', 'vats.id')
+        //     ->select('invoice_trasections.*', 'inventory_products.product_name', 'vats.vat_name', 'vats.value')
+        //     ->where('type', $request->idx)
+        //     ->where('invoice_id', $invoice_id)
+        //     ->where('inventory_products.trash', 1)
+        //     ->get();
+
         $invotransec = DB::table('invoice_trasections')
-            ->Join('inventory_products', 'invoice_trasections.item_id', '=', 'inventory_products.id')
-            ->leftJoin('vats', 'invoice_trasections.vat', 'vats.id')
-            ->select('invoice_trasections.*', 'inventory_products.product_name', 'vats.vat_name', 'vats.value')
-            ->where('type', $request->idx)
-            ->where('invoice_id', $invoice_id)
-            ->where('inventory_products.trash', 1)
-            ->get();
+        ->Join('inventory_products', 'invoice_trasections.item_id', '=', 'inventory_products.id')
+        ->leftJoin('vats', 'invoice_trasections.vat', 'vats.id')
+        ->select('invoice_trasections.*', 'vats.vat_name', 'vats.value', 'inventory_products.product_name', 'inventory_products.id as pid')
+        ->where('invoice_id', $invoice_id)
+        ->where('type', $types)
+        ->where('invoice_trasections.trash', 1)
+        ->where("invoice_trasections.status", 1)
+        ->get();
+
 
         return response()->json([
             'status' => 200,
