@@ -12,7 +12,7 @@ class MenuSubmenuSettingController extends Controller
     public function get_menu_submenu()
     {
 
-        $menu = MenuSubmenuSetting::where('root_id', 0)->get();
+        $menu = MenuSubmenuSetting::where('root_id', 0)->where('status',1)->get();
         $res["list"] = array();
 
         foreach ($menu as $vsubmenu) {

@@ -18,7 +18,8 @@ class Edit_vendor extends Component {
             phone: "",
             address: "",
             remarks: "",
-            accounts_id: ""
+            accounts_id: "",
+            status:1
         };
     }
 
@@ -77,7 +78,7 @@ class Edit_vendor extends Component {
         this.setState({ address: vInfo.address });
         this.setState({ remarks: vInfo.remarks });
         this.setState({ accounts_no: vInfo.accounts_no });
-
+        this.setState({ status: vInfo.status });
         this.setState({ loading: false });
     }
     render() {
@@ -204,6 +205,31 @@ class Edit_vendor extends Component {
                                         </div>
                                     </div>
                                 </div>
+                                <div className="form-group">
+                                    <label className="control-label col-lg-2">
+                                        Status
+                                    </label>
+                                    <div className="col-md-4">
+                                        <div className="input-group">
+                                            <select
+                                                className="form-control"
+                                                id="exampleFormControlSelect1"
+                                                name="status"
+                                                onChange={this.handleInput}
+                                                required
+                                            >
+                                                <option>Choose one </option>
+                                                <option selected={this.state.status==1} value="1">
+                                                    Active
+                                                </option>
+                                                <option selected={this.state.status==2} value="2">
+                                                    Inactive
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
 
                                 <div className="form-group">
                                     <label className="control-label col-lg-2"></label>

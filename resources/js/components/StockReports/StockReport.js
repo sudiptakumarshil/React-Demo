@@ -20,7 +20,6 @@ function StockReport(props) {
         end_date:getCurrentDate(),
 
     };
-    //console.log("date 44="+getCurrentDate());
     const [formData, setFormData] = useState(data);
     const getCategory = async wid => {
         const response = await axios.get(

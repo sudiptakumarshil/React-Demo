@@ -7,7 +7,8 @@ function editParams(props) {
 
     const data = {
         type: 0,
-        discount_method: 0
+        discount_method: 0,
+        status: 0
     };
     const [formData, setFormData] = useState(data);
 
@@ -129,6 +130,32 @@ function editParams(props) {
                                             value="2"
                                         >
                                             {"product wise"}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-4">
+                            <label className="control-label">Status</label>
+                            <div className="form-group">
+                                <div className="input-group">
+                                    <select
+                                        className="form-control"
+                                        id="exampleFormControlSelect1"
+                                        name="status"
+                                        onChange={handleInput}
+                                    >
+                                        <option
+                                            selected={Params.status == 1}
+                                            value="1"
+                                        >
+                                            {"Active"}
+                                        </option>
+                                        <option
+                                            selected={Params.status == 2}
+                                            value="2"
+                                        >
+                                            {"Inactive"}
                                         </option>
                                     </select>
                                 </div>

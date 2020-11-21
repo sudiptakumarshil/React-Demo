@@ -13,7 +13,7 @@ class MenuSubmenuSetting extends Model
     }
     public function getSubMenuList(){
 
-        return $this->hasMany(MenuSubmenuSetting::class, 'root_id');
+        return $this->hasMany(MenuSubmenuSetting::class, 'root_id')->where('status',1);
 
     }
 }

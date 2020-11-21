@@ -32,7 +32,8 @@ const AddProduct = props => {
         loading: true,
         category_autocode: 0,
         category_code: 0,
-        unit_id: 0
+        unit_id: 0,
+        status:1,
     };
     const [formData, setFormData] = useState(data);
 
@@ -57,7 +58,7 @@ const AddProduct = props => {
             Swal.fire("Price Type Cannot Be Empty!!");
         } else {
             const res = await axios.post(
-                defaultRouteLink+"/api/save-inventproduct",
+                defaultRouteLink + "/api/save-inventproduct",
                 formData
             );
             const data = {
@@ -79,7 +80,7 @@ const AddProduct = props => {
             };
 
             if (res.data.status === 200) {
-                props.history.push(defaultRouteLink+"/manage-product");
+                props.history.push(defaultRouteLink + "/manage-product");
             }
 
             try {
@@ -429,6 +430,36 @@ const AddProduct = props => {
                                     </select>
                                 </div>
                             </div>
+
+                            {/* <div className="row pt-3"> */}
+                                <div className="col-md-4">
+                                    <label className="control-label">
+                                        Status
+                                    </label>
+                                    <div className="form-group">
+                                        <div className="input-group">
+                                            <select
+                                                className="form-control"
+                                                id="exampleFormControlSelect1"
+                                                name="status"
+                                                onChange={handleInput}
+                                                required
+                                            >
+                                                <option selected>
+                                                    Choose one{" "}
+                                                </option>
+                                                <option value="1">
+                                                    Active
+                                                </option>
+                                                <option value="2">
+                                                    Inactive
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            {/* </div> */}
+
                             <div className="col-md-4">
                                 <label className="control-label">
                                     Image Upload

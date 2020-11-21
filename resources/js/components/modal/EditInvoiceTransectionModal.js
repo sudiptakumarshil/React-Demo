@@ -38,7 +38,7 @@ const EditInvoiceTransectionModal = props => {
         closingStock: 0,
         discount_taka: 0,
         discount_percent: 0,
-        pname:'',
+        pname: ""
     };
     const [formData, setFormData] = useState(dataObj);
     const dispatch = useDispatch();
@@ -48,27 +48,34 @@ const EditInvoiceTransectionModal = props => {
     // let c_id = props.modalData.c_id;
 
     const alldata = async () => {
-
-        if(productList.length <= 0){
+        if (productList.length <= 0) {
             const idx = props.match.params.idx;
-            const response = await axios.get(defaultRouteLink + "/api/all-data", {
-                params: {
-                    type: idx
+            const response = await axios.get(
+                defaultRouteLink + "/api/all-data",
+                {
+                    params: {
+                        type: idx
+                    }
                 }
-            });
+            );
 
             setproductList(response.data.products);
             setinvoiceParams(response.data.invoiceParams);
 
-            var isExist=response.data.products.find(item => item.id == item_id);
-            var list=[];
+            var isExist = response.data.products.find(
+                item => item.id == item_id
+            );
+            var list = [];
             list.push(isExist);
-            var data_set=JSON.stringify(list);
-            console.log("test="+JSON.stringify(isExist)+","+JSON.stringify(productList));
-            setSelected(isExist ? [isExist] :[]);
-
+            var data_set = JSON.stringify(list);
+            console.log(
+                "test=" +
+                    JSON.stringify(isExist) +
+                    "," +
+                    JSON.stringify(productList)
+            );
+            setSelected(isExist ? [isExist] : []);
         }
-
     };
 
     const updateinvoiceTransection = async event => {
@@ -113,7 +120,7 @@ const EditInvoiceTransectionModal = props => {
             });
         } else {
             const res = await axios.patch(
-                defaultRouteLink+`/api/update-transecinvoice/${i_id}`,
+                defaultRouteLink + `/api/update-transecinvoice/${i_id}`,
                 formData
             );
             // for redux    .........  //
@@ -152,8 +159,7 @@ const EditInvoiceTransectionModal = props => {
     };
 
     const handleProductPrice = e => {
-
-        console.log("onchange="+JSON.stringify(e));
+        console.log("onchange=" + JSON.stringify(e));
 
         // const { name, value } = event.target;
         // getProductWisePriceAuto(event.target.value);
@@ -165,25 +171,22 @@ const EditInvoiceTransectionModal = props => {
         // if (typeof e[0] != "undefined") {
         //     this.setState({ product_id: e[0].id });
         // }
-         //console.log("test api="+e[0]); //true
+        //console.log("test api="+e[0]); //true
 
-         setSelected(e);
+        setSelected(e);
         if (typeof e[0] != "undefined") {
-                if(e[0].lenght > 0){
-                    console.log("logeee"+JSON.stringify(e));
-                    
-                    setFormData(oldState => ({
-                        ...oldState,
-                        product_id: e[0].id
-                    }));
-                    var id = e[0].id;
-                    getProductWisePriceAuto(id);
-            }
-        }
-        else{
-            
-        }
+            if (e[0].lenght > 0) {
+                console.log("logeee" + JSON.stringify(e));
 
+                setFormData(oldState => ({
+                    ...oldState,
+                    product_id: e[0].id
+                }));
+                var id = e[0].id;
+                getProductWisePriceAuto(id);
+            }
+        } else {
+        }
     };
 
     const handleInputs = event => {
@@ -206,11 +209,7 @@ const EditInvoiceTransectionModal = props => {
     };
     useEffect(() => {
         setFormData(props.modalData);
-         alldata().then(() => {
-            
-        });
-
-
+        alldata().then(() => {});
 
         i_id = props.modalData.id;
         const idx = props.match.params.idx;
@@ -238,9 +237,6 @@ const EditInvoiceTransectionModal = props => {
 
     return (
         <>
-            {/* <Button variant="primary" onClick={props.handleShow}>
-
-            </Button> */}
             <Modal
                 show={props.show}
                 onHide={props.handleClose}
@@ -282,7 +278,7 @@ const EditInvoiceTransectionModal = props => {
                                                                         Product
                                                                         Name
                                                                     </label>
-                                                                  
+
                                                                     <Typeahead
                                                                         id="labelkey-example"
                                                                         labelKey={products =>
@@ -297,11 +293,12 @@ const EditInvoiceTransectionModal = props => {
                                                                         value={
                                                                             formData.pname
                                                                         }
-                                                                        defaultSelected={selected}
+                                                                        defaultSelected={
+                                                                            selected
+                                                                        }
                                                                         options={
                                                                             productList
                                                                         }
-
                                                                         placeholder="Select your product"
                                                                     />
                                                                 </div>
@@ -471,7 +468,9 @@ const EditInvoiceTransectionModal = props => {
                                                                                 e
                                                                             )
                                                                         }
-                                                                        selected={selected}
+                                                                        selected={
+                                                                            selected
+                                                                        }
                                                                         placeholder="Select your product"
                                                                     />
                                                                 </div>

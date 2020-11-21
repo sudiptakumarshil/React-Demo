@@ -23,7 +23,7 @@ function EditProductUnit(props) {
     const updateProductUnit = async event => {
         event.preventDefault();
         const res = await axios.patch(
-            defaultRouteLink+`/api/update-unit/${id}`,
+            defaultRouteLink + `/api/update-unit/${id}`,
             formData
         );
 
@@ -33,7 +33,7 @@ function EditProductUnit(props) {
         };
 
         if (res.data.status === 200) {
-            props.history.push(defaultRouteLink+"/manage-unit");
+            props.history.push(defaultRouteLink + "/manage-unit");
         }
 
         try {
@@ -59,7 +59,7 @@ function EditProductUnit(props) {
     };
 
     const getUnitData = async () => {
-        const res = await axios.get(defaultRouteLink+`/api/edit-unit/${id}`);
+        const res = await axios.get(defaultRouteLink + `/api/edit-unit/${id}`);
 
         const units = res.data.unit;
         setFormData(units);
@@ -135,6 +135,10 @@ function EditProductUnit(props) {
                                 </div>
                             </div>
                         </div>
+
+
+
+
                         <div className="form-group">
                             <label className="control-label col-lg-2"></label>
                             <div className="col-md-10">

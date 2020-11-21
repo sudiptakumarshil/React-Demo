@@ -25,12 +25,15 @@ class StoreInvoiceController extends Controller
 
         // return $request->all();
         // exit();
+        $types = $request->type;
+        $invoice_id = $request->invoice_id;
+
         $invotran = new InvoiceTrasection();
         $invotran->invoice_id = $request->invoice_id;
-        if ($request->idx == 1 or $request->idx == 2 or $request->idx == 7) {
+        if ($request->idx == 1 || $request->idx == 2) {
             $invotran->d_id = $request->product_id;
             $invotran->party_id = $request->vendor_id;
-        } elseif ($request->idx == 3 or $request->idx == 4 or $request->idx == 6) {
+        } elseif ($request->idx == 3 || $request->idx == 4 || $request->idx == 6 || $request->idx == 7) {
             $invotran->c_id = $request->product_id;
             $invotran->party_id = $request->customer_id;
         }
@@ -50,8 +53,19 @@ class StoreInvoiceController extends Controller
         $invotran->type = $request->idx;
         $invotran->save();
 
+        $invotransec = DB::table('invoice_trasections')
+            ->Join('inventory_products', 'invoice_trasections.item_id', '=', 'inventory_products.id')
+            ->leftJoin('vats', 'invoice_trasections.vat', 'vats.id')
+            ->select('invoice_trasections.*', 'vats.vat_name', 'vats.value', 'inventory_products.product_name', 'inventory_products.id as pid')
+            ->where('invoice_id', $invoice_id)
+            ->where('type', $types)
+            ->where('invoice_trasections.trash', 1)
+            ->where("invoice_trasections.status", 1)
+            ->get();
+
         return response()->json([
             'status' => 200,
+            'invotransec' => $invotransec,
             'message' => "Invoices Transection Saved Successfully!!",
         ]);
     }
@@ -223,29 +237,33 @@ class StoreInvoiceController extends Controller
         $stores = DB::table('stores')
             ->join('ware_house_details', 'stores.ware_id', 'ware_house_details.id')
             ->select('stores.*', 'ware_house_details.name as wname')
+            ->where("stores.status", 1)
             ->get();
 
         $vendors = DB::table('vendors')
             ->join('ware_house_details', 'vendors.ware_id', 'ware_house_details.id')
             ->select('vendors.*', 'ware_house_details.name as wname')
             ->where('vendors.type', 1)
+            ->where("vendors.status", 1)
             ->get();
         $customer = DB::table('vendors')
             ->join('ware_house_details', 'vendors.ware_id', 'ware_house_details.id')
             ->select('vendors.*', 'ware_house_details.name as wname')
             ->where('vendors.type', 2)
+            ->where("vendors.status", 1)
             ->get();
 
-        $vats = Vat::orderBy('id', 'desc')->get();
-        $warehouses = WareHouseDetails::all();
-        $bankdetails = BankDetails::all();
-        $cashaccount = CashAccountDetails::all();
-        $costcenter = CostCenter::all();
-        $unitlist = Unit::all();
+        $vats = Vat::orderBy('id', 'desc')->where("status", 1)
+            ->get();
+        $warehouses = WareHouseDetails::where("status", 1)->get();
+        $bankdetails = BankDetails::where("status", 1)->get();
+        $cashaccount = CashAccountDetails::where("status", 1)->get();
+        $costcenter = CostCenter::where("status", 1)->get();
+        $unitlist = Unit::where("status", 1)->get();
         #AccountsInput for posting type ...
-        $postingType = AccountsInput::where('input_type', 1)->get();
+        $postingType = AccountsInput::where('input_type', 1)->where("status", 1)->get();
         #AccountsInput for doctype type ...
-        $docType = AccountsInput::where('input_type', 2)->get();
+        $docType = AccountsInput::where('input_type', 2)->where("status", 1)->get();
 
         $invotransec = DB::table('invoice_trasections')
             ->Join('inventory_products', 'invoice_trasections.item_id', '=', 'inventory_products.id')
@@ -254,7 +272,7 @@ class StoreInvoiceController extends Controller
             ->where('invoice_id', $invoice_id)
             ->where('type', $types)
             ->where('invoice_trasections.trash', 1)
-        // ->where('publishing_by','=',$user_id)
+            ->where("invoice_trasections.status", 1)
             ->get();
 
         $returned_issues = DB::table('invoice_trasections')
@@ -263,11 +281,13 @@ class StoreInvoiceController extends Controller
             ->select('invoice_trasections.*', 'inventory_products.product_name', 'inventory_products.id as pid')
             ->where('invoice_trasections.type', $types)
             ->where('invoice_id', $invoice_id)
+            ->where("invoice_trasections.status", 1)
             ->where('invoice_trasections.trash', 1)
             ->get();
 
         $invoiceParams = DB::table('invoice_parameters')
             ->where('type', '=', $types)
+            ->where('status', 1)
             ->first();
 
         return response()->json([
@@ -335,105 +355,105 @@ class StoreInvoiceController extends Controller
         ]);
     }
 
-    public function get_invoice_number_for_type2()
-    {
-        $invoicnumber = DB::table('store_invoices')
-            ->join('users', 'store_invoices.ware_id', 'users.ware_id')
-            ->select('store_invoices.*')
-            ->where('type', 2)
-            ->orderBy('id', "desc")
-            ->first();
+    // public function get_invoice_number_for_type2()
+    // {
+    //     $invoicnumber = DB::table('store_invoices')
+    //         ->join('users', 'store_invoices.ware_id', 'users.ware_id')
+    //         ->select('store_invoices.*')
+    //         ->where('type', 2)
+    //         ->orderBy('id', "desc")
+    //         ->first();
 
-        if (!empty($invoicnumber)) {
-            $invoice_number = $invoicnumber->invoice_number + 1;
-        } else {
-            $invoice_number = 2000;
-        }
+    //     if (!empty($invoicnumber)) {
+    //         $invoice_number = $invoicnumber->invoice_number + 1;
+    //     } else {
+    //         $invoice_number = 2000;
+    //     }
 
-        return response()->json([
-            'invoice_number' => $invoice_number,
-        ]);
-    }
+    //     return response()->json([
+    //         'invoice_number' => $invoice_number,
+    //     ]);
+    // }
 
-    public function get_invoice_number_for_type3()
-    {
-        $invoicnumber = DB::table('store_invoices')
-            ->join('users', 'store_invoices.ware_id', 'users.ware_id')
-            ->select('store_invoices.*')
-            ->where('type', 3)
-            ->orderBy('id', "desc")
-            ->first();
+    // public function get_invoice_number_for_type3()
+    // {
+    //     $invoicnumber = DB::table('store_invoices')
+    //         ->join('users', 'store_invoices.ware_id', 'users.ware_id')
+    //         ->select('store_invoices.*')
+    //         ->where('type', 3)
+    //         ->orderBy('id', "desc")
+    //         ->first();
 
-        if (!empty($invoicnumber)) {
-            $invoice_number = $invoicnumber->invoice_number + 1;
-        } else {
-            $invoice_number = 3000;
-        }
+    //     if (!empty($invoicnumber)) {
+    //         $invoice_number = $invoicnumber->invoice_number + 1;
+    //     } else {
+    //         $invoice_number = 3000;
+    //     }
 
-        return response()->json([
-            'invoice_number' => $invoice_number,
-        ]);
-    }
+    //     return response()->json([
+    //         'invoice_number' => $invoice_number,
+    //     ]);
+    // }
 
-    public function get_invoice_number_for_type5()
-    {
-        $invoicnumber = DB::table('store_invoices')
-            ->join('users', 'store_invoices.ware_id', 'users.ware_id')
-            ->select('store_invoices.*')
-            ->where('type', 5)
-            ->orderBy('id', "desc")
-            ->first();
+    // public function get_invoice_number_for_type5()
+    // {
+    //     $invoicnumber = DB::table('store_invoices')
+    //         ->join('users', 'store_invoices.ware_id', 'users.ware_id')
+    //         ->select('store_invoices.*')
+    //         ->where('type', 5)
+    //         ->orderBy('id', "desc")
+    //         ->first();
 
-        if (!empty($invoicnumber)) {
-            $invoice_number = $invoicnumber->invoice_number + 1;
-        } else {
-            $invoice_number = 5000;
-        }
+    //     if (!empty($invoicnumber)) {
+    //         $invoice_number = $invoicnumber->invoice_number + 1;
+    //     } else {
+    //         $invoice_number = 5000;
+    //     }
 
-        return response()->json([
-            'invoice_number' => $invoice_number,
-        ]);
-    }
+    //     return response()->json([
+    //         'invoice_number' => $invoice_number,
+    //     ]);
+    // }
 
-    public function get_invoice_number_for_type6()
-    {
-        $invoicnumber = DB::table('store_invoices')
-            ->join('users', 'store_invoices.ware_id', 'users.ware_id')
-            ->select('store_invoices.*')
-            ->where('type', 6)
-            ->orderBy('id', "desc")
-            ->first();
+    // public function get_invoice_number_for_type6()
+    // {
+    //     $invoicnumber = DB::table('store_invoices')
+    //         ->join('users', 'store_invoices.ware_id', 'users.ware_id')
+    //         ->select('store_invoices.*')
+    //         ->where('type', 6)
+    //         ->orderBy('id', "desc")
+    //         ->first();
 
-        if (!empty($invoicnumber)) {
-            $invoice_number = $invoicnumber->invoice_number + 1;
-        } else {
-            $invoice_number = 6000;
-        }
+    //     if (!empty($invoicnumber)) {
+    //         $invoice_number = $invoicnumber->invoice_number + 1;
+    //     } else {
+    //         $invoice_number = 6000;
+    //     }
 
-        return response()->json([
-            'invoice_number' => $invoice_number,
-        ]);
-    }
+    //     return response()->json([
+    //         'invoice_number' => $invoice_number,
+    //     ]);
+    // }
 
-    public function get_invoice_number_for_type7()
-    {
-        $invoicnumber = DB::table('store_invoices')
-            ->join('users', 'store_invoices.ware_id', 'users.ware_id')
-            ->select('store_invoices.*')
-            ->where('type', 7)
-            ->orderBy('id', "desc")
-            ->first();
+    // public function get_invoice_number_for_type7()
+    // {
+    //     $invoicnumber = DB::table('store_invoices')
+    //         ->join('users', 'store_invoices.ware_id', 'users.ware_id')
+    //         ->select('store_invoices.*')
+    //         ->where('type', 7)
+    //         ->orderBy('id', "desc")
+    //         ->first();
 
-        if (!empty($invoicnumber)) {
-            $invoice_number = $invoicnumber->invoice_number + 1;
-        } else {
-            $invoice_number = 7000;
-        }
+    //     if (!empty($invoicnumber)) {
+    //         $invoice_number = $invoicnumber->invoice_number + 1;
+    //     } else {
+    //         $invoice_number = 7000;
+    //     }
 
-        return response()->json([
-            'invoice_number' => $invoice_number,
-        ]);
-    }
+    //     return response()->json([
+    //         'invoice_number' => $invoice_number,
+    //     ]);
+    // }
 
     public function getwarehouse($id)
     {
@@ -448,25 +468,25 @@ class StoreInvoiceController extends Controller
         ]);
     }
 
-    public function get_invoice_number_for_type4()
-    {
-        $invoicnumber = DB::table('store_invoices')
-            ->join('users', 'store_invoices.ware_id', 'users.ware_id')
-            ->select('store_invoices.*')
-            ->where('type', 4)
-            ->orderBy('id', "desc")
-            ->first();
+    // public function get_invoice_number_for_type4()
+    // {
+    //     $invoicnumber = DB::table('store_invoices')
+    //         ->join('users', 'store_invoices.ware_id', 'users.ware_id')
+    //         ->select('store_invoices.*')
+    //         ->where('type', 4)
+    //         ->orderBy('id', "desc")
+    //         ->first();
 
-        if (!empty($invoicnumber)) {
-            $invoice_number = $invoicnumber->invoice_number + 1;
-        } else {
-            $invoice_number = 4000;
-        }
+    //     if (!empty($invoicnumber)) {
+    //         $invoice_number = $invoicnumber->invoice_number + 1;
+    //     } else {
+    //         $invoice_number = 4000;
+    //     }
 
-        return response()->json([
-            'invoice_number' => $invoice_number,
-        ]);
-    }
+    //     return response()->json([
+    //         'invoice_number' => $invoice_number,
+    //     ]);
+    // }
 
     public function editinvoicetransection($id)
     {
@@ -476,14 +496,27 @@ class StoreInvoiceController extends Controller
         ]);
     }
 
-    public function delete_invoice_transec($id)
+    public function delete_invoice_transec(Request $request, $id)
     {
+        $types = $request->type;
+        $invoice_id = $request->invoice_id;
         $invoice = InvoiceTrasection::find($id);
         $invoice->trash = 2;
         $invoice->save();
+
+        $invotransec = DB::table('invoice_trasections')
+            ->Join('inventory_products', 'invoice_trasections.item_id', '=', 'inventory_products.id')
+            ->leftJoin('vats', 'invoice_trasections.vat', 'vats.id')
+            ->select('invoice_trasections.*', 'vats.vat_name', 'vats.value', 'inventory_products.product_name', 'inventory_products.id as pid')
+            ->where('invoice_id', $invoice_id)
+            ->where('type', $types)
+            ->where('invoice_trasections.trash', 1)
+            ->where("invoice_trasections.status", 1)
+            ->get();
         return response()->json([
             'status' => 200,
             'message' => 'success',
+            'invotransec'=>$invotransec
         ]);
     }
 
@@ -600,6 +633,7 @@ class StoreInvoiceController extends Controller
         // return $request->all();
         // exit();
         $vendor_id = (int) $request->vendor_id;
+        $customer_id = (int) $request->customer_id;
         $ware_id = (int) $request->warehouse_id;
         $invoice_code = (int) $request->invoice_code;
         $store_id = (int) $request->store_id;
@@ -619,13 +653,16 @@ class StoreInvoiceController extends Controller
             ->join('vendors', 'store_invoices.vendor_id', '=', 'vendors.id')
             ->join('stores', 'store_invoices.store_id', '=', 'stores.id')
             ->select('store_invoices.*', 'vendors.name as vendor', 'ware_house_details.name as ware_name', 'stores.store_name')
-            ->where(function ($filter) use ($vendor_id, $ware_id, $invoice_code, $store_id, $start, $end, $type) {
+            ->where(function ($filter) use ($vendor_id, $customer_id, $ware_id, $invoice_code, $store_id, $start, $end, $type) {
                 if (!empty($invoice_code)) {
                     $filter->where('store_invoices.invoice_number', 'LIKE', "%{$invoice_code}");
                 }
 
                 if (!empty($vendor_id)) {
                     $filter->where('store_invoices.vendor_id', $vendor_id);
+                }
+                if (!empty($customer_id)) {
+                    $filter->where('store_invoices.vendor_id', $customer_id);
                 }
 
                 if (!empty($ware_id)) {

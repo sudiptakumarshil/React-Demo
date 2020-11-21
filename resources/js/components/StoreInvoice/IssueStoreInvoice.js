@@ -58,11 +58,11 @@ class IssueStoreInvoice extends Component {
             toggle: true,
             invoice_code: 0,
             remarks: "",
-            warehouse_id: 0,
-            vendor_id: "",
+            warehouse_id: 1,
+            vendor_id: 1,
             vendorlist: [],
             date: year + "-" + month + "-" + date,
-            store_id: "",
+            store_id: 1,
             storelist: [],
             gross_amount: "",
             discount_taka: 0,
@@ -71,7 +71,7 @@ class IssueStoreInvoice extends Component {
             cash_amount: 0,
             bank_account: "",
             bank_id: "",
-            customer_id: "",
+            customer_id: 2,
             product_id: 0,
             productList: [],
             product: "",
@@ -104,7 +104,7 @@ class IssueStoreInvoice extends Component {
             total_discount: 0,
             editInvoice: [],
             delloading: false,
-            barcode: 1,
+            barcode: 0,
             closingStock: 0,
             totalQuantity: 0
             // items_id:0
@@ -116,6 +116,9 @@ class IssueStoreInvoice extends Component {
         const idx = this.props.match.params.idx;
         let invotransec = this.props.data_p_list.map((item, index) => {
             const idx = this.props.match.params.idx;
+            let qty;
+            let allQuantity;
+            let TotalQuantity;
             return (
                 <tr>
                     <td>{index + 1}</td>
@@ -128,7 +131,6 @@ class IssueStoreInvoice extends Component {
                     ></input>
                 </tr>
             );
-
         });
         this.setState({
             idx: idx
@@ -213,22 +215,26 @@ class IssueStoreInvoice extends Component {
 
         const res = await axios.post(
             defaultRouteLink + "/api/save-storeinvoice",
-            this.state
+            this.state,
+            {
+                params: {
+                    type: idx,
+                    invoice_id: 0
+                }
+            }
         );
 
         this.setState({
             discount_taka: 0,
             discount_percent: 0,
-            quantity: 1
+            quantity: 1,
+            invoicetransectionList: res.data.invotransec
         });
-
+        this.props.updateStoreInvoice(res.data.invotransec);
         // dispatch({
         //     type:SET_REFRESH_STORETRANSECTION,
         //     updateinvoiceTransection:res.data
         // });
-
-        this.fetchalldata();
-
         // SUCCESS MESSAGE USING SWEET ALERT
         try {
             const Toast = Swal.mixin({
@@ -487,21 +493,23 @@ class IssueStoreInvoice extends Component {
         } else {
             const res = await axios.post(
                 defaultRouteLink + "/api/save-storeinvoice",
-                this.state
+                this.state,
+                {
+                    params: {
+                        type: idx,
+                        invoice_id: 0
+                    }
+                }
             );
-
-            // this.setState({
-            //     discount_taka: 0,
-            //     discount_percent: 0,
-            //     quantity: 1
-            // });
+            this.props.updateStoreInvoice(res.data.invotransec);
+            this.setState({
+                invoicetransectionList: res.data.invotransec
+            });
 
             // dispatch({
             //     type:SET_REFRESH_STORETRANSECTION,
             //     updateinvoiceTransection:res.data
             // });
-
-            this.fetchalldata();
 
             // SUCCESS MESSAGE USING SWEET ALERT
             try {
@@ -588,11 +596,20 @@ class IssueStoreInvoice extends Component {
                     popup: "animate__animated animate__fadeOutUp"
                 }
             });
+        } else if (this.state.price == null) {
+            Swal.fire({
+                title: "Price Cannot Be Empty!!",
+                showClass: {
+                    popup: "animate__animated animate__fadeInDown"
+                },
+                hideClass: {
+                    popup: "animate__animated animate__fadeOutUp"
+                }
+            });
         } else {
             let check = confirm("are you sure ??");
             if (check) {
-
-                this.state.totalQuantity=this.props.tqty;
+                this.state.totalQuantity = this.props.tqty;
                 const res = await axios.post(
                     defaultRouteLink + "/api/save-store-invoice",
                     this.state
@@ -649,18 +666,18 @@ class IssueStoreInvoice extends Component {
                 vendorlist: response.data.vendors,
                 // storelist: response.data.stores,
                 productList: response.data.products,
-                customerList: response.data.customers,
+                customerList: response.data.customer,
                 vatList: response.data.vats,
                 invoicetransectionList: response.data.invotransec,
                 bankdetailsList: response.data.bankdetails,
                 cashamountList: response.data.cashaccount,
                 invoiceParams: response.data.invoiceParams
             });
-            let tqty=0;
+            let tqty = 0;
             response.data.invotransec.map((item, index) => {
-                tqty=parseFloat(tqty) + parseFloat(item.quantity);
+                tqty = parseFloat(tqty) + parseFloat(item.quantity);
             });
-            this.setState({ loading: false,totalQuantity:tqty });
+            this.setState({ loading: false, totalQuantity: tqty });
             this.props.updateStoreInvoice(response.data.invotransec);
 
             // dispatch({
@@ -694,14 +711,22 @@ class IssueStoreInvoice extends Component {
 
         let delcheck = confirm("Are you Sure to Delete It?");
         if (delcheck) {
+            const idx = this.props.match.params.idx;
             const removeId = e.target.getAttribute("data-id");
             const response = await axios.get(
-                defaultRouteLink + "/api/delete-invoice-transec/" + removeId
+                defaultRouteLink + "/api/delete-invoice-transec/" + removeId,
+                {
+                    params: {
+                        type: idx,
+                        invoice_id: 0
+                    }
+                }
             );
             this.setState({
-                delloading: false
+                delloading: false,
+                invoicetransectionList: response.data.invotransec
             });
-            this.fetchalldata();
+            this.props.updateStoreInvoice(response.data.invotransec);
         } else {
             return false;
         }
@@ -730,7 +755,11 @@ class IssueStoreInvoice extends Component {
         // FETCH ALL WAREHOUSE DATA... LOOP
         let warhouses = this.state.warehouseList.map((item, index) => {
             return (
-                <option value={item.id} data-tokens="item.name">
+                <option
+                    selected={this.state.warehouse_id == item.id}
+                    value={item.id}
+                    data-tokens="item.name"
+                >
                     {item.name}
                 </option>
             );
@@ -743,7 +772,11 @@ class IssueStoreInvoice extends Component {
             // if (warhouses.length === 0) return 1;
 
             return (
-                <option value={item.id} data-tokens="item.name">
+                <option
+                    selected={this.state.vendor_id == item.id}
+                    value={item.id}
+                    data-tokens="item.name"
+                >
                     {" "}
                     {item.name}
                 </option>
@@ -756,7 +789,11 @@ class IssueStoreInvoice extends Component {
         // FETCH ALL STORE DATA... LOOP
         let stores = this.state.storelist.map((item, index) => {
             return (
-                <option value={item.id} data-tokens="item.name">
+                <option
+                    selected={this.state.store_id == item.id}
+                    value={item.id}
+                    data-tokens="item.name"
+                >
                     {" "}
                     {item.store_name}
                 </option>
@@ -780,17 +817,21 @@ class IssueStoreInvoice extends Component {
             });
         });
         // FETCH ALL CUSTOMER DATA... LOOP
-        // let customers = this.state.customerList.map((item, index) => {
-        //     return (
-        //         <option value={item.id} data-tokens="item.name">
-        //             {item.name}
-        //         </option>
-        //     );
-        //     this.setState({
-        //         customer_id: item.id // UPDATE STATE ........
-        //         // gross_amount:alltoTalQty
-        //     });
-        // });
+        let customers = this.state.customerList.map((item, index) => {
+            return (
+                <option
+                    selected={this.state.customer_id == item.id}
+                    value={item.id}
+                    data-tokens="item.name"
+                >
+                    {item.name}
+                </option>
+            );
+            this.setState({
+                customer_id: item.id // UPDATE STATE ........
+                // gross_amount:alltoTalQty
+            });
+        });
 
         let TotalQuantity = 0;
         let allQuantity = 0;
@@ -890,7 +931,7 @@ class IssueStoreInvoice extends Component {
                                 >
                                     Purshase Return{" "}
                                 </Link>
-                                <Link
+                                {/* <Link
                                     to={defaultRouteLink + `/sale-return/${3}`}
                                     type="button"
                                     className="btn btn-success"
@@ -905,18 +946,8 @@ class IssueStoreInvoice extends Component {
                                     style={{ marginLeft: 15 }}
                                 >
                                     Sale Return
-                                </Link>
-                                <Link
-                                    to={
-                                        defaultRouteLink +
-                                        `/quick-purshase/${5}`
-                                    }
-                                    type="button"
-                                    className="btn btn-primary"
-                                    style={{ marginLeft: 15 }}
-                                >
-                                    Quick Purshase
-                                </Link>
+                                </Link> */}
+
                                 <Link
                                     to={defaultRouteLink + `/issue/${6}`}
                                     type="button"
@@ -1043,11 +1074,11 @@ class IssueStoreInvoice extends Component {
                                                                 <select
                                                                     className="form-control"
                                                                     data-live-search="true"
-                                                                    name="vendor_id"
+                                                                    name="customer_id"
                                                                     value={
                                                                         this
                                                                             .state
-                                                                            .vendor_id
+                                                                            .customer_id
                                                                     }
                                                                     onChange={
                                                                         this
@@ -1061,7 +1092,7 @@ class IssueStoreInvoice extends Component {
                                                                         Choose
                                                                         One
                                                                     </option>
-                                                                    {vendors}
+                                                                    {customers}
                                                                 </select>
                                                             </div>
                                                         )}
@@ -1240,6 +1271,7 @@ class IssueStoreInvoice extends Component {
                                                                             <input
                                                                                 type="text"
                                                                                 name="price"
+                                                                                required
                                                                                 value={
                                                                                     this
                                                                                         .state
@@ -1483,9 +1515,10 @@ class IssueStoreInvoice extends Component {
                                                             <td></td>
                                                             <td>
                                                                 Total Quantity ={" "}
-                                                                {
-                                                                    (this.props.tqty ) ? this.props.tqty : 0
-                                                                }
+                                                                {this.props.tqty
+                                                                    ? this.props
+                                                                          .tqty
+                                                                    : 0}
                                                             </td>
 
                                                             <td>
@@ -1521,7 +1554,7 @@ class IssueStoreInvoice extends Component {
 const mapStateToProps = state => {
     return {
         data_p_list: state.auth.invoicetransectionList,
-        tqty:state.auth.tqty,
+        tqty: state.auth.tqty
     };
 };
 

@@ -59,7 +59,8 @@ class CreateVendor extends Component {
             phone: "",
             address: "",
             remarks: "",
-            accounts_no: ""
+            accounts_no: "",
+            status:1
         });
         if (res.data.status === 200) {
             this.props.history.push(defaultRouteLink + "/manage-vendor");
@@ -265,6 +266,30 @@ class CreateVendor extends Component {
                                                     this.handleAccountsid
                                                 }
                                             />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label className="control-label col-lg-2">
+                                        Status
+                                    </label>
+                                    <div className="col-md-4">
+                                        <div className="input-group">
+                                            <select
+                                                className="form-control"
+                                                id="exampleFormControlSelect1"
+                                                name="status"
+                                                onChange={this.handleInput}
+                                                required
+                                            >
+                                                <option selected>Choose one </option>
+                                                <option value="1">
+                                                    Active
+                                                </option>
+                                                <option value="2">
+                                                    Inactive
+                                                </option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>

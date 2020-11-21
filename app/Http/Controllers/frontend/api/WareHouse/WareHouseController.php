@@ -76,6 +76,7 @@ class WareHouseController extends Controller
         $warehouse->latitude = $request->latitude;
         $warehouse->address = $request->address;
         $warehouse->foreign_address = $request->foreign_address;
+        $warehouse->status = $request->status;
         $warehouse->save();
 
         return response()->json([

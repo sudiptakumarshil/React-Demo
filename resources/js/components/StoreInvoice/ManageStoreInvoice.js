@@ -9,15 +9,18 @@ function ManageStoreInvoice(props) {
     // const [StoreInvoiceList, setStoreInvoiceList] = useState([]);
     const [warehouseList, setwarehouseList] = useState([]);
     const [vendorlist, setvendorlist] = useState([]);
+    const [customerlist, setcustomerlist] = useState([]);
     const [bankdetailsList, setbankdetailsList] = useState([]);
     const [storelist, setstorelist] = useState([]);
     const [loading, setloading] = useState([]);
+    const [isContentLoading, setIsContentLoading] = useState(false);
 
     const data = {
         invoice_code: 0,
         store_id: 0,
         warehouse_id: 0,
         vendor_id: 0,
+        customer_id: 0,
         activePage: 1,
         total_count: 0,
         limit: 10,
@@ -64,6 +67,7 @@ function ManageStoreInvoice(props) {
         if (response.data.status === 200) {
             setwarehouseList(response.data.warehouses),
                 setvendorlist(response.data.vendors),
+                setcustomerlist(response.data.customer),
                 setbankdetailsList(response.data.bankdetails);
             setloading(false);
         }
@@ -90,8 +94,12 @@ function ManageStoreInvoice(props) {
                 activePage: pageNumber
             }));
         }
+        if (res.data.status == 200) {
+            setIsContentLoading(false);
+        }
     };
     const searchData = async (event, pageNumber = 1) => {
+        setIsContentLoading(true);
         event.preventDefault();
         handlePagination(1);
 
@@ -169,6 +177,21 @@ function ManageStoreInvoice(props) {
             vendor_id: item.id // UPDATE STATE ..
         }));
     });
+    let customers = customerlist.map((item, index) => {
+        // if (warhouses.length === 0) return 1;
+
+        return (
+            <option value={item.id} data-tokens="item.name">
+                {" "}
+                {item.name}
+            </option>
+        );
+
+        setFormData(oldState => ({
+            ...oldState,
+            customer_id: item.id // UPDATE STATE ..
+        }));
+    });
     // FETCH ALL STORE DATA... LOOP
     let stores = storelist.map((item, index) => {
         return (
@@ -185,6 +208,14 @@ function ManageStoreInvoice(props) {
     });
 
     if (loading) {
+        return (
+            <h2 className="text-center mt-3">
+                <i className="fas fa-spinner fa-spin fa-3x"></i>
+                <MyBulletListLoader />
+            </h2>
+        );
+    }
+    if (isContentLoading) {
         return (
             <h2 className="text-center mt-3">
                 <i className="fas fa-spinner fa-spin fa-3x"></i>
@@ -214,7 +245,7 @@ function ManageStoreInvoice(props) {
                         >
                             Purshase Return{" "}
                         </Link>
-                        <Link
+                        {/* <Link
                             to={defaultRouteLink + `/sale/${3}`}
                             type="button"
                             className="btn btn-success"
@@ -229,7 +260,7 @@ function ManageStoreInvoice(props) {
                             style={{ marginLeft: 15 }}
                         >
                             Sale Return
-                        </Link>
+                        </Link> */}
                         <Link
                             to={defaultRouteLink + `/issue/${6}`}
                             type="button"
@@ -305,6 +336,27 @@ function ManageStoreInvoice(props) {
                                                     Choose One
                                                 </option>
                                                 {vendors}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="col-md-3">
+                                    <label className="control-label">
+                                        Customer
+                                    </label>
+                                    <div className="form-group">
+                                        <div className="input-group">
+                                            <select
+                                                className="form-control"
+                                                data-live-search="true"
+                                                name="customer_id"
+                                                onChange={handleInput}
+                                            >
+                                                <option selected value="0">
+                                                    Choose One
+                                                </option>
+                                                {customers}
                                             </select>
                                         </div>
                                     </div>
@@ -441,6 +493,7 @@ function ManageStoreInvoice(props) {
                             </tr>
                         </thead>
                         <tbody>
+                            {/* isContentLoading */}
                             {formData.StoreInvoiceList.map(function(
                                 item,
                                 index

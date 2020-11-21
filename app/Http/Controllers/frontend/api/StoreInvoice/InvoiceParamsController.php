@@ -33,6 +33,7 @@ class InvoiceParamsController extends Controller
         $params = InvoiceParameter::find($id);
         $params->type = $request->type;
         $params->discount_method = $request->discount_method;
+        $params->status = $request->status;
         $params->save();
         return response()->json([
             'status' => 200,

@@ -20,7 +20,8 @@ class addWareHouse extends Component {
         pricing_level: "",
         global_location_no: "",
         longitude: "",
-        latitude: ""
+        latitude: "",
+        status: 1
     };
 
     handleInput = event => {
@@ -31,7 +32,7 @@ class addWareHouse extends Component {
         event.preventDefault();
         const SweetAlert = require("react-bootstrap-sweetalert");
         const res = await axios.post(
-            defaultRouteLink+"/api/save-warehouse",
+            defaultRouteLink + "/api/save-warehouse",
             this.state
         );
         this.setState({
@@ -57,7 +58,7 @@ class addWareHouse extends Component {
         this.setState({ loading: false });
 
         if (res.data.status === 200) {
-            this.props.history.push(defaultRouteLink+"/manage-warehouse");
+            this.props.history.push(defaultRouteLink + "/manage-warehouse");
         }
         const Toast = Swal.mixin({
             toast: true,
@@ -518,6 +519,34 @@ class addWareHouse extends Component {
                                                             this.handleInput
                                                         }
                                                     ></input>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <label className="control-label">
+                                               Status
+                                            </label>
+                                            <div className="form-group">
+                                                <div className="input-group">
+                                                    <select
+                                                        className="form-control"
+                                                        id="exampleFormControlSelect1"
+                                                        name="status"
+                                                        onChange={
+                                                            this.handleInput
+                                                        }
+                                                        required
+                                                    >
+                                                        <option selected>
+                                                            Choose one{" "}
+                                                        </option>
+                                                        <option value="1">
+                                                            Active
+                                                        </option>
+                                                        <option value="2">
+                                                            Inactive
+                                                        </option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>

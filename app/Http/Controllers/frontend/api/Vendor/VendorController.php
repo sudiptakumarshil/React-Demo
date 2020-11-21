@@ -34,6 +34,7 @@ class VendorController extends Controller
         $vendor->accounts_no = $request->accounts_id;
         $vendor->ware_id = $request->warehouse_id;
         $vendor->type = $request->type;
+        $vendor->status = $request->status;
         $vendor->save();
         return response()->json([
             'status' => 200,
@@ -50,6 +51,8 @@ class VendorController extends Controller
         ]);
     }
 
+
+
     public function update_vendor(Request $request, $id)
     {
         $vendor = Vendor::find($id);
@@ -59,6 +62,7 @@ class VendorController extends Controller
         $vendor->phone = $request->phone;
         $vendor->remarks = $request->remarks;
         $vendor->accounts_no = $request->accounts_id;
+        $vendor->status = $request->status;
         $vendor->save();
         return response()->json([
             'status' => 200,

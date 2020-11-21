@@ -108,7 +108,7 @@ class EditissueInvoice extends Component {
             total_discount: 0,
             editInvoice: [],
             delloading: false,
-            barcode: 1,
+            barcode: 0,
             totalQuantity: 0,
             invoiceParams: "",
             editInvoice: [],

@@ -4,7 +4,6 @@ import { Link, Router } from "react-router-dom";
 import Swal from "sweetalert2";
 import { defaultRouteLink } from "../../common/config";
 
-
 class EditWareHouse extends Component {
     constructor(props) {
         super(props);
@@ -28,7 +27,8 @@ class EditWareHouse extends Component {
             latitude: "",
             address: "",
             foreign_address: "",
-            loading:true
+            loading: true,
+            status: 0
         };
     }
 
@@ -41,11 +41,11 @@ class EditWareHouse extends Component {
         const id = this.props.match.params.id;
 
         const res = await axios.patch(
-            defaultRouteLink+`/api/update-warehouse/${id}`,
+            defaultRouteLink + `/api/update-warehouse/${id}`,
             this.state
         );
         if (res.data.status === 200) {
-            this.props.history.push(defaultRouteLink+"/manage-warehouse");
+            this.props.history.push(defaultRouteLink + "/manage-warehouse");
         }
         const Toast = Swal.mixin({
             toast: true,
@@ -67,36 +67,61 @@ class EditWareHouse extends Component {
 
     async componentDidMount() {
         const id = this.props.match.params.id;
-        const res = await axios.get(defaultRouteLink+`/api/edit-warehouse/${id}`);
+        const res = await axios.get(
+            defaultRouteLink + `/api/edit-warehouse/${id}`
+        );
         // console.log(res);
         // assign data into new constant....
         const wInfo = res.data.warehouses;
         // console.log("data=" + res.data);
         // assign data into state....
-        this.setState({ name: wInfo.name });
-        this.setState({ foreign_name: wInfo.foreign_name });
-        this.setState({ wh_keeper: wInfo.wh_keeper });
-        this.setState({ location: wInfo.location });
-        this.setState({ telephone: wInfo.telephone });
-        this.setState({ sequence: wInfo.sequence });
-        this.setState({ province_no: wInfo.province_no });
-        this.setState({ resign_code: wInfo.resign_code });
         this.setState({
-            wh_transfer_interface_account: wInfo.wh_transfer_interface_account
+            name: wInfo.name,
+            foreign_name: wInfo.foreign_name,
+            wh_keeper: wInfo.wh_keeper,
+            location: wInfo.location,
+            telephone: wInfo.telephone,
+            sequence: wInfo.sequence,
+            province_no: wInfo.province_no,
+            resign_code: wInfo.resign_code,
+            wh_transfer_interface_account: wInfo.wh_transfer_interface_account,
+            item_activity: wInfo.item_activity,
+            default_cc_code: wInfo.default_cc_code,
+            account_name: wInfo.account_name,
+            branch: wInfo.branch,
+            pricing_level: wInfo.pricing_level,
+            global_location_no: wInfo.global_location_no,
+            longitude: wInfo.longitude,
+            latitude: wInfo.latitude,
+            address: wInfo.address,
+            foreign_address: wInfo.foreign_address,
+            status: wInfo.status,
+            loading: false
         });
-        this.setState({ item_activity: wInfo.item_activity });
-        this.setState({ default_cc_code: wInfo.default_cc_code });
-        this.setState({ account_name: wInfo.account_name });
-        this.setState({ branch: wInfo.branch });
-        this.setState({ pricing_level: wInfo.pricing_level });
-        this.setState({
-            global_location_no: wInfo.global_location_no
-        });
-        this.setState({ longitude: wInfo.longitude });
-        this.setState({ latitude: wInfo.latitude });
-        this.setState({ address: wInfo.address });
-        this.setState({ foreign_address: wInfo.foreign_address });
-        this.setState({ loading: false });
+        // this.setState({ name: wInfo.name });
+        // this.setState({ foreign_name: wInfo.foreign_name });
+        // this.setState({ wh_keeper: wInfo.wh_keeper });
+        // this.setState({ location: wInfo.location });
+        // this.setState({ telephone: wInfo.telephone });
+        // this.setState({ sequence: wInfo.sequence });
+        // this.setState({ province_no: wInfo.province_no });
+        // this.setState({ resign_code: wInfo.resign_code });
+        // this.setState({
+        //     wh_transfer_interface_account: wInfo.wh_transfer_interface_account
+        // });
+        // this.setState({ item_activity: wInfo.item_activity });
+        // this.setState({ default_cc_code: wInfo.default_cc_code });
+        // this.setState({ account_name: wInfo.account_name });
+        // this.setState({ branch: wInfo.branch });
+        // this.setState({ pricing_level: wInfo.pricing_level });
+        // this.setState({
+        //     global_location_no: wInfo.global_location_no
+        // });
+        // this.setState({ longitude: wInfo.longitude });
+        // this.setState({ latitude: wInfo.latitude });
+        // this.setState({ address: wInfo.address });
+        // this.setState({ foreign_address: wInfo.foreign_address });
+        // this.setState({ loading: false });
     }
 
     render() {
@@ -120,7 +145,9 @@ class EditWareHouse extends Component {
                             <div className="card-box">
                                 <h4 className="card-title"></h4>
                                 <form onSubmit={this.updateWarehouse}>
-                                    <h4 className="text-center mt-top:20" >Edit WareHouse </h4>
+                                    <h4 className="text-center mt-top:20">
+                                        Edit WareHouse{" "}
+                                    </h4>
                                     <div className="row">
                                         <div className="col-md-4">
                                             <label className="control-label">
@@ -529,6 +556,46 @@ class EditWareHouse extends Component {
                                                             this.handleInput
                                                         }
                                                     ></input>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <label className="control-label">
+                                                Status
+                                            </label>
+                                            <div className="form-group">
+                                                <div className="input-group">
+                                                    <select
+                                                        className="form-control"
+                                                        id="exampleFormControlSelect1"
+                                                        name="status"
+                                                        onChange={
+                                                            this.handleInput
+                                                        }
+                                                        required
+                                                    >
+                                                        <option>
+                                                            Choose one{" "}
+                                                        </option>
+                                                        <option
+                                                            selected={
+                                                                this.state
+                                                                    .status == 1
+                                                            }
+                                                            value="1"
+                                                        >
+                                                            Active
+                                                        </option>
+                                                        <option
+                                                            selected={
+                                                                this.state
+                                                                    .status == 2
+                                                            }
+                                                            value="2"
+                                                        >
+                                                            Inactive
+                                                        </option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>

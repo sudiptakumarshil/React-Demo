@@ -23,7 +23,7 @@ class AddStore extends Component {
     // GET ALL WAREHOUSE LIST
     fetchallwarehouse = async () => {
         const response = await axios.get(
-            defaultRouteLink + "/api/all-warehouse"
+            defaultRouteLink + "/api/all-data"
         );
         console.log(response);
 
@@ -94,7 +94,7 @@ class AddStore extends Component {
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="card-box">
-                            <h4 className="card-title">Create Vendor</h4>
+                            <h4 className="card-title">Create Store</h4>
                             <form
                                 className="form-horizontal"
                                 onSubmit={this.saveStore}

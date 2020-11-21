@@ -47,7 +47,6 @@ class AddStoreInvoice extends Component {
         const date = today.getDate();
         const month = today.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
         const year = today.getFullYear();
-
         // const dateStr = date + "/" + month + "/" + year;
 
         this.state = {
@@ -60,7 +59,7 @@ class AddStoreInvoice extends Component {
             remarks: "",
             warehouse_id: 1,
             vendor_id: 1,
-            customer_id:1,
+            customer_id: 1,
             vendorlist: [],
             date: year + "-" + month + "-" + date,
             store_id: 1,
@@ -104,7 +103,7 @@ class AddStoreInvoice extends Component {
             total_discount: 0,
             editInvoice: [],
             delloading: false,
-            barcode: 1,
+            barcode: 0,
             closingStock: 0
             // items_id:0
             //----------------
@@ -194,24 +193,29 @@ class AddStoreInvoice extends Component {
     QuickPurshaseInvoiceTransec = async event => {
         // event.preventDefault();
         const idx = this.props.match.params.idx;
-
         const res = await axios.post(
             defaultRouteLink + "/api/save-storeinvoice",
-            this.state
+            this.state,
+            {
+                params: {
+                    type: idx,
+                    invoice_id: 0
+                }
+            }
         );
 
         this.setState({
             discount_taka: 0,
             discount_percent: 0,
-            quantity: 1
+            quantity: 1,
+            invoicetransectionList: res.data.invotransec
         });
+        this.props.updateStoreInvoice(res.data.invotransec);
 
         // dispatch({
         //     type:SET_REFRESH_STORETRANSECTION,
         //     updateinvoiceTransection:res.data
         // });
-
-        this.fetchalldata();
 
         // SUCCESS MESSAGE USING SWEET ALERT
         try {
@@ -334,7 +338,6 @@ class AddStoreInvoice extends Component {
                 barcode: 0
             });
         }
-        // this.searchInput.current.focus();
     };
 
     handleDiscountTaka = event => {
@@ -457,8 +460,7 @@ class AddStoreInvoice extends Component {
                     popup: "animate__animated animate__fadeOutUp"
                 }
             });
-        }
-        else if (this.state.date == 0) {
+        } else if (this.state.date == 0) {
             Swal.fire({
                 title: "Date  Cannot Be Empty!!",
                 showClass: {
@@ -537,10 +539,18 @@ class AddStoreInvoice extends Component {
         } else {
             const res = await axios.post(
                 defaultRouteLink + "/api/save-storeinvoice",
-                this.state
+                this.state,
+                {
+                    params: {
+                        type: idx,
+                        invoice_id: 0
+                    }
+                }
             );
-
-            this.fetchalldata();
+            this.setState({
+                invoicetransectionList: res.data.invotransec
+            });
+            this.props.updateStoreInvoice(res.data.invotransec);
 
             // SUCCESS MESSAGE USING SWEET ALERT
             try {
@@ -730,21 +740,22 @@ class AddStoreInvoice extends Component {
     // for getting warehouse ,store ,product , vendor ,customer,vat....
     fetchalldata = async () => {
         const idx = this.props.match.params.idx;
-        if(this.state.vendorlist.length <= 0){
-            const response = await axios.get(defaultRouteLink + "/api/all-data", {
-                params: {
-                    type: idx,
-                    invoice_id: 0
+        if (this.state.vendorlist.length <= 0) {
+            const response = await axios.get(
+                defaultRouteLink + "/api/all-data",
+                {
+                    params: {
+                        type: idx,
+                        invoice_id: 0
+                    }
                 }
-            });
+            );
 
             if (response.data.status === 200) {
-
                 const idx = this.props.match.params.idx;
                 // const id = this.props.match.params.id;
                 // console.log(idx);
                 // console.log(this.state.cash_amount);
-
 
                 const isLoginExit = getCookieKeyInfo(getAccessTokenName);
                 this.setState({
@@ -761,7 +772,7 @@ class AddStoreInvoice extends Component {
                     cashamountList: response.data.cashaccount,
                     invoiceParams: response.data.invoiceParams,
                     invoice_code: response.data.invoice_number,
-                    loading: false,
+                    loading: false
                 });
                 this.props.updateStoreInvoice(response.data.invotransec);
                 // console.log("test=tt");
@@ -853,14 +864,22 @@ class AddStoreInvoice extends Component {
 
         let delcheck = confirm("Are you Sure to Delete It?");
         if (delcheck) {
+            const idx = this.props.match.params.idx;
             const removeId = e.target.getAttribute("data-id");
             const response = await axios.get(
-                defaultRouteLink + "/api/delete-invoice-transec/" + removeId
+                defaultRouteLink + "/api/delete-invoice-transec/" + removeId,
+                {
+                    params: {
+                        type: idx,
+                        invoice_id: 0
+                    }
+                }
             );
             this.setState({
-                delloading: false
+                delloading: false,
+                invoicetransectionList: response.data.invotransec
             });
-            this.fetchalldata();
+            this.props.updateStoreInvoice(response.data.invotransec);
         } else {
             this.setState({
                 delloading: false
@@ -875,7 +894,6 @@ class AddStoreInvoice extends Component {
         });
     };
     handleProductEdit = async item_id => {
-
         // editInvoiceTransection = async () => {
         const response = await axios.get(
             defaultRouteLink + "/api/edit-invoice-transec/" + item_id
@@ -887,7 +905,7 @@ class AddStoreInvoice extends Component {
 
     render() {
         // console.log("product lsit="+this.state.data_p_list);
-        console.log("props=" + this.props.data_p_list);
+        // console.log("props=" + this.props.data_p_list);
         // FETCH ALL WAREHOUSE DATA... LOOP
         let warhouses = this.state.warehouseList.map((item, index) => {
             return (
@@ -895,7 +913,6 @@ class AddStoreInvoice extends Component {
                     {item.name}
                 </option>
             );
-
         });
         // FETCH ALL VENDOR DATA... LOOP
         let vendors = this.state.vendorlist.map((item, index) => {
@@ -964,7 +981,6 @@ class AddStoreInvoice extends Component {
         // let invotransec = this.state.invoicetransectionList.map(
         let invotransec = this.props.data_p_list.map((item, index) => {
             const idx = this.props.match.params.idx;
-
             return (
                 <tr>
                     <td>{index + 1}</td>
@@ -979,7 +995,6 @@ class AddStoreInvoice extends Component {
                     <td>{item.quantity}</td>
                     <td>{item.price}</td>
                     <td>{(priceQuantity = item.price * item.quantity)}</td>
-
                     {/* <input type="hidden" value={priceQuantity}></input> */}
 
                     <td>{item.discount_taka}</td>
@@ -1122,17 +1137,14 @@ class AddStoreInvoice extends Component {
 
         return (
             <div>
-                {
-                    (this.state.isModalShow) ? (
-                        <EditInvoiceTransec
-                            show={this.state.isModalShow}
-                            modalData={this.state.modalData}
-                            handleClose={this.handleModalClose}
-                            {...this.props}
-                        />
-                    ) :(null)
-                }
-
+                {this.state.isModalShow ? (
+                    <EditInvoiceTransec
+                        show={this.state.isModalShow}
+                        modalData={this.state.modalData}
+                        handleClose={this.handleModalClose}
+                        {...this.props}
+                    />
+                ) : null}
 
                 <div className="col-md-12">
                     <div className="row">
@@ -1157,7 +1169,7 @@ class AddStoreInvoice extends Component {
                                 >
                                     Purshase Return{" "}
                                 </Link>
-                                <Link
+                                {/* <Link
                                     to={defaultRouteLink + `/sale/${3}`}
                                     type="button"
                                     className="btn btn-success"
@@ -1172,8 +1184,8 @@ class AddStoreInvoice extends Component {
                                     style={{ marginLeft: 15 }}
                                 >
                                     Sale Return
-                                </Link>
-                                <Link
+                                </Link> */}
+                                {/* <Link
                                     to={
                                         defaultRouteLink +
                                         `/quick-purshase/${5}`
@@ -1183,7 +1195,7 @@ class AddStoreInvoice extends Component {
                                     style={{ marginLeft: 15 }}
                                 >
                                     Quick Purshase
-                                </Link>
+                                </Link> */}
                                 <Link
                                     to={defaultRouteLink + `/issue/${6}`}
                                     type="button"
@@ -1214,10 +1226,7 @@ class AddStoreInvoice extends Component {
                                     Manage Invoice
                                 </Link>
                                 <Link
-                                    to={
-                                        defaultRouteLink +
-                                        `/product-report`
-                                    }
+                                    to={defaultRouteLink + `/product-report`}
                                     type="button"
                                     className="btn btn-dark"
                                     style={{ marginLeft: 15 }}

@@ -60,6 +60,7 @@ class ManageVendor extends Component {
                                             <td>Email</td>
                                             <td>Address</td>
                                             <td>Phone</td>
+                                            <td>type</td>
                                             <td>Remarks</td>
                                             <td>WareHouse Name</td>
                                             <td>Accounts No</td>

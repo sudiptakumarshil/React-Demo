@@ -34,7 +34,8 @@ const EditProduct = props => {
         cost: "",
         selling_price: "",
         price_type: "",
-        product_image: ""
+        product_image: "",
+        status:1,
     };
     const [formData, setFormData] = useState(data);
 
@@ -46,7 +47,7 @@ const EditProduct = props => {
         // const id = this.props.match.params.id;
 
         const res = await axios.patch(
-            defaultRouteLink+`/api/update-inventproduct/${pe_id}`,
+            defaultRouteLink + `/api/update-inventproduct/${pe_id}`,
             formData
         );
 
@@ -67,9 +68,7 @@ const EditProduct = props => {
     };
 
     const fetchallwarehouse = async () => {
-        const response = await axios.get(
-            defaultRouteLink + "/api/all-warehouse"
-        );
+        const response = await axios.get(defaultRouteLink + "/api/all-data");
 
         setWarehouselist(response.data.warehouses);
         // console.log(response.data.warehouses);
@@ -92,24 +91,11 @@ const EditProduct = props => {
         // );
 
         const res = await axios.get(
-            defaultRouteLink+`/api/edit-inventproduct/${pe_id}`
+            defaultRouteLink + `/api/edit-inventproduct/${pe_id}`
         );
 
         const products = res.data.product;
         setFormData(products);
-
-        // onsole.log("ok="+products.product_code);
-
-        //setFormData([{ product_code: products.product_code}]);
-
-        // setFormData({
-        //     [product_code]: products.product_code,
-        //     [product_name]: products.product_name,
-        //     [pices_of_carton]: products.pices_of_carton,
-        // });
-
-        // console.log(products);
-        // console.log(res.data.product);
     };
 
     useEffect(() => {
@@ -158,7 +144,12 @@ const EditProduct = props => {
     };
 
     const warhouses = warehouselist.map(function(item, index) {
-        return <option value={item.id}> {item.name}</option>;
+        return (
+            <option selected={formData.warehouse_id == item.id} value={item.id}>
+                {" "}
+                {item.name}
+            </option>
+        );
         setFormData(oldState => ({
             ...oldState,
             warehouse_id: item.id
@@ -247,6 +238,7 @@ const EditProduct = props => {
                                         <input
                                             type="text"
                                             className="form-control"
+                                            readOnly
                                             placeholder="Category Name"
                                             name="category_id"
                                             value={formData.category_name}
@@ -395,6 +387,40 @@ const EditProduct = props => {
                                     </select>
                                 </div>
                             </div>
+                            {/* <div className="row pt-3"> */}
+                            <div className="col-md-4">
+                                <label className="control-label">Status</label>
+                                <div className="form-group">
+                                    <div className="input-group">
+                                        <select
+                                            className="form-control"
+                                            id="exampleFormControlSelect1"
+                                            name="status"
+                                            onChange={handleInput}
+                                            required
+                                        >
+                                            <option selected>
+                                                Choose one{" "}
+                                            </option>
+                                            <option
+                                                selected={formData.status == 1}
+                                                value="1"
+                                            >
+                                                Active
+                                            </option>
+                                            <option
+                                                selected={formData.status == 2}
+                                                value="2"
+                                            >
+                                                Inactive
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        {/* </div> */}
+
+
                             <div className="col-md-4">
                                 <label className="control-label">
                                     Image Upload
