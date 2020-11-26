@@ -73,7 +73,7 @@ class ReturnInvoice extends Component {
             cash_amount: 0,
             bank_account: "",
             bank_id: "",
-            customer_id: "",
+            // customer_id: "",
             product_id: 0,
             productList: [],
             product: "",
@@ -113,7 +113,6 @@ class ReturnInvoice extends Component {
             return_quantity: [],
             transec_id: []
         };
-
     }
 
     async componentDidMount() {
@@ -179,20 +178,24 @@ class ReturnInvoice extends Component {
             [event.target.name]: event.target.value
         });
     };
+    handleCustomerInput = event => {
+        this.setState({
+            vendor_id: event.target.value
+        });
+    };
 
-    handleChange(i,event) {
-
+    handleChange(i, event) {
         //console.log("data="+event.target.value);
         //console.log("data3="+event.target.getAttribute("data-ref"));
-        let obj={
-            qty:event.target.value,
-            ref_id:event.target.getAttribute("data-ref"),
-            ref_pid:event.target.getAttribute("data-pid"),
-        }
+        let obj = {
+            qty: event.target.value,
+            ref_id: event.target.getAttribute("data-ref"),
+            ref_pid: event.target.getAttribute("data-pid")
+        };
         let return_quantity = [...this.state.return_quantity];
         return_quantity[i] = obj;
         //let return_quantity = [...this.state.return_quantity,JSON.stringify(event)];
-        console.log("data="+i);
+        console.log("data=" + i);
         //return_quantity[event.id] = event;
         this.setState({ return_quantity });
     }
@@ -256,15 +259,15 @@ class ReturnInvoice extends Component {
             let check = confirm("are you sure ??");
             if (check) {
                 const res = await axios.post(
-                    defaultRouteLink + "/api/save-store-invoice",
+                    defaultRouteLink + "/api/return-save-store-invoice",
                     this.state
                 );
 
                 // SUCCESS MESSAGE USING SWEET ALERT
                 if (res.data.status === 200) {
-                    /*this.props.history.push(
+                    this.props.history.push(
                         defaultRouteLink + "/manage-store-invoice"
-                    );*/
+                    );
                     const Toast = Swal.mixin({
                         toast: true,
                         position: "top-end",
@@ -311,7 +314,7 @@ class ReturnInvoice extends Component {
                 warehouseList: response.data.warehouses,
                 vendorlist: response.data.vendors,
                 productList: response.data.products,
-                customerList: response.data.customers,
+                customerList: response.data.customer,
                 invoicetransectionList: response.data.return_issue,
                 invoiceParams: response.data.invoiceParams,
                 invoice_code: response.data.invoice_number
@@ -348,8 +351,18 @@ class ReturnInvoice extends Component {
     delinvoicetransec = async e => {
         const removeId = e.target.getAttribute("data-id");
         const response = await axios.get(
-            defaultRouteLink + "/api/delete-invoice-transec/" + removeId
+            defaultRouteLink + "/api/delete-invoice-transec/" + removeId,
+            {
+                params: {
+                    type: idx,
+                    invoice_id: this.props.match.params.id
+                }
+            }
         );
+        this.setState({
+            invoicetransectionList: response.data.invotransec
+        });
+        this.props.updateStoreInvoice(response.data.invotransec);
         // SUCCESS MESSAGE USING SWEET ALERT
         try {
             const Toast = Swal.mixin({
@@ -377,7 +390,7 @@ class ReturnInvoice extends Component {
             });
         }
 
-        this.fetchalldata();
+        // this.fetchalldata();
     };
     handleModalClose = () => {
         this.setState({
@@ -437,7 +450,7 @@ class ReturnInvoice extends Component {
             });
         });
         // FETCH ALL VENDOR DATA... LOOP
-        let vendors = this.state.vendorlist.map((item, index) => {
+        let customers = this.state.customerList.map((item, index) => {
             // if (warhouses.length === 0) return 1;
 
             return (
@@ -499,7 +512,7 @@ class ReturnInvoice extends Component {
                             //     this
                             //         .handleChange
                             // }
-                            onChange={this.handleChange.bind(this,index)}
+                            onChange={this.handleChange.bind(this, index)}
                         ></input>
                     </td>
                     <input type="hidden" value={(qty = item.quantity)}></input>
@@ -555,7 +568,7 @@ class ReturnInvoice extends Component {
                                 >
                                     Purshase Return{" "}
                                 </Link>
-                                <Link
+                                {/* <Link
                                     to={defaultRouteLink + `/sale-return/${3}`}
                                     type="button"
                                     className="btn btn-success"
@@ -570,6 +583,22 @@ class ReturnInvoice extends Component {
                                     style={{ marginLeft: 15 }}
                                 >
                                     Sale Return
+                                </Link> */}
+                                <Link
+                                    to={defaultRouteLink + `/issue/${6}`}
+                                    type="button"
+                                    className="btn btn-outline-secondary"
+                                    style={{ marginLeft: 15 }}
+                                >
+                                    Issue
+                                </Link>
+                                <Link
+                                    to={defaultRouteLink + `/issue-return/${7}`}
+                                    type="button"
+                                    className="btn btn-outline-primary"
+                                    style={{ marginLeft: 15 }}
+                                >
+                                    Issue Return
                                 </Link>
                                 <Link
                                     to={
@@ -689,7 +718,7 @@ class ReturnInvoice extends Component {
                                                                     }
                                                                     onChange={
                                                                         this
-                                                                            .handleInput
+                                                                            .handleCustomerInput
                                                                     }
                                                                 >
                                                                     <option
@@ -699,7 +728,7 @@ class ReturnInvoice extends Component {
                                                                         Choose
                                                                         One
                                                                     </option>
-                                                                    {vendors}
+                                                                    {customers}
                                                                 </select>
                                                             </div>
                                                         )}

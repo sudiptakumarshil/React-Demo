@@ -76,6 +76,7 @@ Route::namespace ('frontend')->group(function () {
         });
     });
 });
+
 Route::namespace ('frontend')->group(function () {
     Route::namespace ('api')->group(function () {
         Route::namespace ('InventoryProduct')->group(function () {
@@ -123,12 +124,14 @@ Route::namespace ('frontend')->group(function () {
 
             // for store invoice .....................
             Route::post('/save-store-invoice', 'StoreInvoiceController@save_store_invoice')->name("save-store-invoice");
+            Route::post('/return-save-store-invoice', 'StoreInvoiceController@returnsave_store_invoice')->name("return-save-store-invoice");
             Route::get('/all-storeInvoice', 'StoreInvoiceController@all_store_invoice')->name("all-storeInvoice");
             Route::get('/edit-storeInvoice/{id}', 'StoreInvoiceController@edit_storeInvoice')->name("edit-storeInvoice");
             Route::get('/edit-issuestoreInvoice/{id}', 'StoreInvoiceController@edit_issuestoreInvoice')->name("edit-issuestoreInvoice");
             Route::patch('/update-storeInvoice/{id}', 'StoreInvoiceController@update_storeInvoice')->name("update-storeInvoice");
             Route::post('/search-storeInvoice', 'StoreInvoiceController@search_store_invoice')->name("search-storeInvoice");
             Route::get('/delete-invoice/{id}', 'StoreInvoiceController@delete_store_invoice')->name("delete-invoice");
+            Route::get('/invoice-print/{id}', 'StoreInvoiceController@store_invoice_print')->name("invoice-print");
 
         });
     });
@@ -226,5 +229,52 @@ Route::namespace ('frontend')->group(function () {
 
         Route::get('/get-menu-submenu', 'MenuSubmenuSettingController@get_menu_submenu')->name("get-menu-submenu");
         Route::post('/save-menu', 'MenuSubmenuSettingController@save_menu')->name("save-menu");
+    });
+});
+
+Route::namespace ('frontend')->group(function () {
+    Route::namespace ('api')->group(function () {
+        Route::namespace ('SalesMan')->group(function () {
+            Route::get('/all-salesman', 'SalesManController@ManageSalesMan');
+            Route::post('/save-salesman', 'SalesManController@add_salesman');
+            Route::patch('/update-salesman/{id}', 'SalesManController@update_salesman');
+            Route::get('/edit-salesman/{id}', 'SalesManController@edit_salesMan');
+        });
+    });
+});
+
+Route::namespace ('frontend')->group(function () {
+    Route::namespace ('api')->group(function () {
+        Route::post('/sales-report', 'SalesReportController@salesReport');
+    });
+});
+Route::namespace ('frontend')->group(function () {
+    Route::namespace ('api')->group(function () {
+        Route::namespace ('Size')->group(function () {
+            Route::get('/all-size', 'SizeController@manage_size');
+            Route::post('/save-size', 'SizeController@add_size');
+            Route::patch('/update-size/{id}', 'SizeController@update_size');
+            Route::get('/edit-size/{id}', 'SizeController@edit_size');
+        });
+    });
+});
+
+Route::namespace ('frontend')->group(function () {
+    Route::namespace ('api')->group(function () {
+        Route::get('/get-menu-submenu', 'MenuSubmenuSettingController@get_menu_submenu')->name("get-menu-submenu");
+        Route::post('/save-menu', 'MenuSubmenuSettingController@save_menu_submenu');
+        Route::get('/all-menusubmenu', 'MenuSubmenuSettingController@getMenuSubmenuInfoAsTree');
+        Route::patch('/update-menusubmenu/{id}', 'MenuSubmenuSettingController@update_menu_submenu');
+        Route::get('/delete-menusubmenu/{id}', 'MenuSubmenuSettingController@delete_menu_submenu');
+
+        // for module List
+        Route::post('/save-module', 'MenuSubmenuSettingController@savemodule_submodule');
+        Route::get('/all-modulesubmodule', 'MenuSubmenuSettingController@getModuleSubmoduleInfoAsTree');
+        Route::patch('/update-module/{id}', 'MenuSubmenuSettingController@update_module');
+        Route::get('/delete-module/{id}', 'MenuSubmenuSettingController@delete_module');
+
+
+
+
     });
 });

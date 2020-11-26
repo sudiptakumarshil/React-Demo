@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend\Api\Customer;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\Customer\Customer;
+use App\Model\Vendor\Vendor;
 use DB;
 
 class CustomerController extends Controller
@@ -13,27 +14,28 @@ class CustomerController extends Controller
 
     public function index()
     {
-        // $customers = Customer::all();
-
-        $customers = DB::table('customers')
-            ->join('ware_house_details', 'customers.ware_id', 'ware_house_details.id')
-            ->select('customers.*', 'ware_house_details.name as wname')
+        // $vendors = Vendor::all();
+        $customer = DB::table('vendors')
+            ->join('ware_house_details', 'vendors.ware_id', 'ware_house_details.id')
+            ->select('vendors.*', 'ware_house_details.name as wname')
+            ->where('type', 2)
             ->get();
 
         return response()->json([
             'status' => 200,
-            'customers' => $customers
+            'customer' => $customer,
         ]);
     }
 
 
     public function create_customer(Request $request)
     {
-        $customer = new Customer();
+        $customer = new Vendor();
         $customer->name = $request->name;
         $customer->email = $request->email;
         $customer->address = $request->address;
         $customer->phone = $request->phone;
+        $customer->type = $request->type;
         $customer->remarks = $request->remarks;
         $customer->accounts_no = $request->accounts_id;
         $customer->ware_id = $request->warehouse_id;
@@ -47,7 +49,7 @@ class CustomerController extends Controller
 
     public function edit_customer($id)
     {
-        $customer = Customer::find($id);
+        $customer = Vendor::find($id);
         return response()->json([
             'status' => 200,
             'customer' => $customer
@@ -60,7 +62,7 @@ class CustomerController extends Controller
 
         //        return $request->all();
         //        exit();
-        $customer = Customer::find($id);
+        $customer = Vendor::find($id);
         $customer->name = $request->name;
         $customer->email = $request->email;
         $customer->address = $request->address;

@@ -16,4 +16,5 @@ class MenuSubmenuSetting extends Model
         return $this->hasMany(MenuSubmenuSetting::class, 'root_id')->where('status',1);
 
     }
+
 }

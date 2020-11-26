@@ -34,13 +34,16 @@ export default (state = initialState, action = {}) =>
 
             case SET_REFRESH_STORETRANSECTION:
                 let tqty=0;
+                 let toTal = 0;
                 action.updateinvoiceTransection.map((item, index) => {
                     tqty=parseFloat(tqty) + parseFloat(item.quantity);
+                    toTal=parseFloat(toTal) + parseFloat(item.quantity * item.price);
                 });
                 return {
                     ...state,
                     invoicetransectionList:action.updateinvoiceTransection,
                     tqty:tqty,
+                    toTal:toTal,
                 };
         default: return state;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\frontend\api\StoreInvoice;
 
+use App\common\ItemModel;
 use App\Http\Controllers\Controller;
 use App\Model\AccountsInput\AccountsInput;
 use App\Model\BankDetails\BankDetails;
@@ -9,6 +10,8 @@ use App\Model\CashAccount\CashAccountDetails;
 use App\Model\CostCenter\CostCenter;
 use App\Model\InvoiceTrasection\InvoiceParameter;
 use App\Model\InvoiceTrasection\InvoiceTrasection;
+use App\Model\SalesMan\SalesMan;
+use App\Model\Size\Size;
 use App\Model\StoreInvoice\StoreInvoice;
 use App\Model\Store\Store;
 use App\Model\Unit\Unit;
@@ -35,7 +38,7 @@ class StoreInvoiceController extends Controller
             $invotran->party_id = $request->vendor_id;
         } elseif ($request->idx == 3 || $request->idx == 4 || $request->idx == 6 || $request->idx == 7) {
             $invotran->c_id = $request->product_id;
-            $invotran->party_id = $request->customer_id;
+            $invotran->party_id = $request->vendor_id; //thats mean vendor id= customer id for idx 6 and 7
         }
         // $invotran->party_id = $request->vendor_id;
         $invotran->ware_id = $request->warehouse_id;
@@ -71,6 +74,44 @@ class StoreInvoiceController extends Controller
     }
 
     public function save_store_invoice(Request $request)
+    {
+
+        $getreturnQuantity = 0;
+        $return_msg = "";
+        $invoice_id = $request->invoice_id;
+        $storeinvoice = new StoreInvoice();
+        $storeinvoice->invoice_number = $request->invoice_code;
+        $storeinvoice->type = $request->idx;
+        $storeinvoice->vendor_id = $request->vendor_id;
+        $storeinvoice->ware_id = $request->warehouse_id;
+        $storeinvoice->date = date($request->date);
+        $storeinvoice->posting_by = $request->user_id;
+        $storeinvoice->store_id = $request->store_id;
+        $storeinvoice->gross_amount = $request->gross_amount;
+        $storeinvoice->discount_taka = $request->discountTaka;
+        $storeinvoice->discount_percent = $request->final_discount_percent;
+        $storeinvoice->cash_amount = $request->cash_amount;
+        $storeinvoice->cash_id = $request->cashamount_id;
+        $storeinvoice->bank_amount = $request->bank_amount;
+        $storeinvoice->bank_id = $request->bankdetails_id;
+        $storeinvoice->remarks = $request->remarks;
+        $storeinvoice->total_quantity = $request->totalQuantity;
+        $storeinvoice->save();
+        $data['invoice_id'] = $storeinvoice->id;
+        DB::table('invoice_trasections')
+            ->where('publishing_by', "=", $storeinvoice->posting_by)
+            ->where('invoice_id', $invoice_id)
+            ->update($data);
+
+        return response()->json([
+            'status' => 200,
+            // 'message' => "Store Invoice Save Successfully!!",
+            'message' => $getreturnQuantity,
+        ]);
+
+    }
+
+    public function returnsave_store_invoice(Request $request)
     {
 
         $getreturnQuantity = 0;
@@ -222,6 +263,7 @@ class StoreInvoiceController extends Controller
                 $invoice_number = $info->invoice_start_no;
             }
         }
+        $salesMan = SalesMan::all();
 
         $products = DB::table('inventory_products')
             ->select('inventory_products.*')
@@ -289,7 +331,7 @@ class StoreInvoiceController extends Controller
             ->where('type', '=', $types)
             ->where('status', 1)
             ->first();
-
+        $allSize = Size::all();
         return response()->json([
             'status' => 200,
             'products' => $products,
@@ -308,6 +350,8 @@ class StoreInvoiceController extends Controller
             'invoice_number' => $invoice_number,
             'returned_issues' => $returned_issues,
             'customer' => $customer,
+            'salesMan' => $salesMan,
+            'allSize' => $allSize,
         ]);
     }
 
@@ -319,10 +363,11 @@ class StoreInvoiceController extends Controller
 
         $closing_stock = DB::select(DB::raw("SELECT item_id, sum(d_qty) as d_qty,sum(d_qty) as c_qty,sum(d_qty-c_qty) as closing from (
 
-            SELECT d_id as item_id, sum(quantity) as d_qty,0 c_qty FROM `invoice_trasections` WHERE d_id='$id'
+            SELECT d_id as item_id, sum(quantity) as d_qty,0 c_qty FROM `invoice_trasections` WHERE d_id='$id' and trash != '2'
+
                 UNION
 
-            SELECT c_id as item_id, 0 d_qty,sum(quantity) as c_qty FROM `invoice_trasections` WHERE c_id='$id'
+            SELECT c_id as item_id, 0 d_qty,sum(quantity) as c_qty FROM `invoice_trasections` WHERE c_id='$id' and trash != '2'
 
                  ) as t WHERE item_id is not null GROUP by item_id"));
 
@@ -490,9 +535,15 @@ class StoreInvoiceController extends Controller
 
     public function editinvoicetransection($id)
     {
+        $result = 0;
+
         $invoice = InvoiceTrasection::find($id);
+        $closing_stock = ItemModel::getItemClosing($invoice->item_id);
+
+        $plusClosingStock = $invoice->quantity + $result;
         return response()->json([
             'invoice' => $invoice,
+            'plusClosingStock' => ($closing_stock + $invoice->quantity),
         ]);
     }
 
@@ -516,7 +567,7 @@ class StoreInvoiceController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'success',
-            'invotransec'=>$invotransec
+            'invotransec' => $invotransec,
         ]);
     }
 
@@ -566,15 +617,14 @@ class StoreInvoiceController extends Controller
         //     ->get();
 
         $invotransec = DB::table('invoice_trasections')
-        ->Join('inventory_products', 'invoice_trasections.item_id', '=', 'inventory_products.id')
-        ->leftJoin('vats', 'invoice_trasections.vat', 'vats.id')
-        ->select('invoice_trasections.*', 'vats.vat_name', 'vats.value', 'inventory_products.product_name', 'inventory_products.id as pid')
-        ->where('invoice_id', $invoice_id)
-        ->where('type', $types)
-        ->where('invoice_trasections.trash', 1)
-        ->where("invoice_trasections.status", 1)
-        ->get();
-
+            ->Join('inventory_products', 'invoice_trasections.item_id', '=', 'inventory_products.id')
+            ->leftJoin('vats', 'invoice_trasections.vat', 'vats.id')
+            ->select('invoice_trasections.*', 'vats.vat_name', 'vats.value', 'inventory_products.product_name', 'inventory_products.id as pid')
+            ->where('invoice_id', $invoice_id)
+            ->where('type', $types)
+            ->where('invoice_trasections.trash', 1)
+            ->where("invoice_trasections.status", 1)
+            ->get();
 
         return response()->json([
             'status' => 200,
@@ -724,6 +774,33 @@ class StoreInvoiceController extends Controller
             'del_invoice' => $del_invoice,
         ]);
 
+    }
+
+    public function store_invoice_print($id)
+    {
+        $invoicePrint = DB::table('store_invoices')
+            ->join('ware_house_details', 'store_invoices.ware_id', '=', 'ware_house_details.id')
+            ->join('vendors', 'store_invoices.vendor_id', '=', 'vendors.id')
+            ->join('stores', 'store_invoices.store_id', '=', 'stores.id')
+            ->select('store_invoices.*', 'vendors.name as vendor', 'ware_house_details.name as ware_name', 'ware_house_details.address as ware_address', 'stores.store_name')
+            ->where('store_invoices.id', $id)
+            ->first();
+
+        $invotransec = DB::table('invoice_trasections')
+            ->Join('inventory_products', 'invoice_trasections.item_id', '=', 'inventory_products.id')
+            ->Join('units', 'inventory_products.unit_id', '=', 'units.id')
+            ->leftJoin('vats', 'invoice_trasections.vat', 'vats.id')
+            ->select('invoice_trasections.*', 'vats.vat_name', 'vats.value', 'inventory_products.product_name', 'inventory_products.id as pid', 'units.unit_name')
+            ->where('invoice_id', $id)
+            ->where('invoice_trasections.trash', 1)
+            ->where("invoice_trasections.status", 1)
+            ->get();
+
+        return response()->json([
+            'status' => 200,
+            'invoicePrint' => $invoicePrint,
+            'invotransec' => $invotransec,
+        ]);
     }
 
 }

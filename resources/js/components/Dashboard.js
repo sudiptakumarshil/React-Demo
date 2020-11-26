@@ -25,10 +25,10 @@ const pusher = new Pusher('a9cdb39cd7355f9e1675', {
         setCountOrderStatus(data.order_info);
 
     });
-    async function fetchOrderStatusInfo() 
+    async function fetchOrderStatusInfo()
     {
         const res = axios.get(getApiServerLinkDataApi+"client/getOrderStatus")
-              .then(res => 
+              .then(res =>
                 {
                     setCountOrderStatus(res.data.order_info);
                 }).catch(function(err)
@@ -46,7 +46,7 @@ const pusher = new Pusher('a9cdb39cd7355f9e1675', {
     ) : (<span></span>)
     return(
         <div className="col-12">
-             <h1>sdfsfs</h1>
+             {/* <h1>sdfsfs</h1> */}
         </div>
     )
  }

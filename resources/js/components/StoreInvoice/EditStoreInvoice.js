@@ -177,11 +177,12 @@ class EditStoreInvoice extends Component {
         if (typeof response.data.productPrice != "undefined") {
             this.setState({
                 product: response.data.productPrice,
-                price: response.data.productPrice.selling_price
+                //price: response.data.productPrice.selling_price,
+                price:0,
             });
         } else {
             this.setState({
-                price: ""
+                price: 0
             });
         }
     };
@@ -739,14 +740,13 @@ class EditStoreInvoice extends Component {
                 discountTaka += manualAndPercentDiscount;
                 totalVat += vat;
                 netPayable += netAmount;
-
                 // console.log("hello2",netPayable)
             });
 
             this.setState({
                 totalpriceQuantity: priceQuantity,
                 netAmount: netAmount,
-                // gross_amount: grossAmount,
+                 gross_amount: grossAmount,
                 // discountTaka: discountTaka,
                 totalVat: totalVat,
                 netPayable: netPayable,
@@ -804,6 +804,13 @@ class EditStoreInvoice extends Component {
             });
         }
     };
+    handleEditUpdate=(data)=>{
+
+        this.fetchalldata();
+        this.setState({
+            isModalShow: false,
+        });
+    }
     handleModalClose = () => {
         this.setState({
             isModalShow: false
@@ -842,6 +849,7 @@ class EditStoreInvoice extends Component {
             }}
         ></button>
     );
+
 
     // end for live search
     render() {
@@ -1088,12 +1096,14 @@ class EditStoreInvoice extends Component {
             );
         }
 
+
         return (
             <div>
                 <EditInvoiceTransec
                     show={this.state.isModalShow}
                     modalData={this.state.modalData}
                     handleClose={this.handleModalClose}
+                    handleUpdate={this.handleEditUpdate}
                     {...this.props}
                 />
 

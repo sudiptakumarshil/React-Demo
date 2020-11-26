@@ -16,7 +16,9 @@ class VendorController extends Controller
         $vendors = DB::table('vendors')
             ->join('ware_house_details', 'vendors.ware_id', 'ware_house_details.id')
             ->select('vendors.*', 'ware_house_details.name as wname')
+            ->where('type', 1)
             ->get();
+
         return response()->json([
             'status' => 200,
             'vendors' => $vendors,
@@ -50,8 +52,6 @@ class VendorController extends Controller
             'vendor' => $vendor,
         ]);
     }
-
-
 
     public function update_vendor(Request $request, $id)
     {

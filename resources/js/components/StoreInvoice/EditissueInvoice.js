@@ -63,6 +63,7 @@ class EditissueInvoice extends Component {
             remarks: "",
             warehouse_id: 0,
             vendor_id: "",
+            isInvEdit:false,
             vendorlist: [],
             date: year + "-" + month + "-" + date,
             store_id: "",
@@ -74,7 +75,7 @@ class EditissueInvoice extends Component {
             cash_amount: 0,
             bank_account: "",
             bank_id: "",
-            customer_id: 0,
+            // customer_id: 0,
             product_id: 0,
             productList: [],
             product: "",
@@ -706,6 +707,14 @@ class EditissueInvoice extends Component {
             option.label.toLowerCase().indexOf(state.text.toLowerCase()) > -1
         );
     };
+    handleEditUpdate=(data)=>{
+
+        this.fetchalldata();
+        this.setState({
+            isModalShow: false,
+            isInvEdit:true,
+        });
+    }
 
     ToggleButton = ({ isOpen, onClick }) => (
         <button
@@ -759,7 +768,7 @@ class EditissueInvoice extends Component {
         let customers = this.state.customerList.map((item, index) => {
             return (
                 <option
-                    selected={this.state.customer_id == item.id}
+                    selected={this.state.vendor_id == item.id}
                     value={item.id}
                     data-tokens="item.name"
                 >
@@ -767,7 +776,7 @@ class EditissueInvoice extends Component {
                 </option>
             );
             this.setState({
-                customer_id: item.id // UPDATE STATE ........
+                vendor_id: item.id // UPDATE STATE ........
                 // gross_amount:alltoTalQty
             });
         });
@@ -848,12 +857,14 @@ class EditissueInvoice extends Component {
             );
         }
 
+
         return (
             <div>
                 <EditInvoiceTransec
                     show={this.state.isModalShow}
                     modalData={this.state.modalData}
                     handleClose={this.handleModalClose}
+                    handleUpdate={this.handleEditUpdate}
                     {...this.props}
                 />
 
@@ -880,7 +891,7 @@ class EditissueInvoice extends Component {
                                 >
                                     Purshase Return{" "}
                                 </Link>
-                                <Link
+                                {/* <Link
                                     to={defaultRouteLink + `/sale-return/${3}`}
                                     type="button"
                                     className="btn btn-success"
@@ -895,7 +906,7 @@ class EditissueInvoice extends Component {
                                     style={{ marginLeft: 15 }}
                                 >
                                     Sale Return
-                                </Link>
+                                </Link> */}
                                 <Link
                                     to={
                                         defaultRouteLink +
@@ -1004,11 +1015,11 @@ class EditissueInvoice extends Component {
                                                                 <select
                                                                     className="form-control"
                                                                     data-live-search="true"
-                                                                    name="customer_id"
+                                                                    name="vendor_id"
                                                                     value={
                                                                         this
                                                                             .state
-                                                                            .customer_id
+                                                                            .vendor_id
                                                                     }
                                                                     onChange={
                                                                         this

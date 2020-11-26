@@ -14,7 +14,8 @@ class LedgerController extends Controller
     public function index()
     {
 
-        $ledgers = Ledger::all();
+        // $ledgers = Ledger::all();
+        $ledgers = Ledger::where("id", 751)->get();
         return response()->json([
             "status" => 200,
             "ledgers" => $ledgers,

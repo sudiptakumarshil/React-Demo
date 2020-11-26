@@ -4,17 +4,18 @@ namespace App\Http\Controllers\frontend\api\AccountsInput;
 
 use App\Http\Controllers\Controller;
 use App\Model\AccountsInput\AccountsInput;
-use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Request;
+
 class AccountsInputController extends Controller
 {
 
     public function index()
     {
         $inputs = DB::table('accounts_inputs')
-        ->join('module_lists','accounts_inputs.input_type','module_lists.id')
-        ->select('accounts_inputs.*','module_lists.name as m_name')
-        ->get();
+            ->join('module_lists', 'accounts_inputs.input_type', 'module_lists.id')
+            ->select('accounts_inputs.*', 'module_lists.name as m_name')
+            ->get();
         return response()->json([
             'status' => 200,
             'inputs' => $inputs,
@@ -30,10 +31,9 @@ class AccountsInputController extends Controller
         $input->save();
         return response()->json([
             'status' => 200,
-            'message' => 'success'
+            'message' => 'success',
         ]);
     }
-
 
     public function edit_input($id)
     {
@@ -56,10 +56,9 @@ class AccountsInputController extends Controller
         ]);
     }
 
-
     public function all_module()
     {
-        $module  = DB::table('module_lists')->get();
+        $module = DB::table('module_lists')->get();
         return response()->json([
             'status' => 200,
             'module' => $module,

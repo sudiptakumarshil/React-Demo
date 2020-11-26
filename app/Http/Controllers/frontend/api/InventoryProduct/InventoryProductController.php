@@ -113,6 +113,7 @@ class InventoryProductController extends Controller
         $product_id = (int) $request->product_id;
         $vendor_id = (int) $request->vendor_id;
         $customer_id = (int) $request->customer_id;
+        $type = (int) $request->type;
         $start = date($request->start_date);
         $end = date($request->end_date);
 
@@ -120,8 +121,8 @@ class InventoryProductController extends Controller
             ->join('inventory_products', 'invoice_trasections.item_id', '=', 'inventory_products.id')
             ->join('store_invoices', 'inventory_products.id', '=', 'store_invoices.ref_product_id')
             ->join('vendors', 'invoice_trasections.party_id', '=', 'vendors.id')
-            ->select('invoice_trasections.*', 'store_invoices.invoice_number', 'vendors.name as party_name')
-            ->where(function ($filter) use ($product_id, $customer_id, $vendor_id, $start, $end) {
+            ->select('invoice_trasections.*', 'store_invoices.invoice_number','inventory_products.product_name', 'vendors.name as party_name')
+            ->where(function ($filter) use ($product_id, $customer_id, $vendor_id, $start, $end, $type) {
                 if (!empty($product_id)) {
                     $filter->where('invoice_trasections.item_id', '=', $product_id);
                 }
@@ -130,6 +131,9 @@ class InventoryProductController extends Controller
                 }
                 if (!empty($vendor_id)) {
                     $filter->where('invoice_trasections.party_id', '=', $vendor_id);
+                }
+                if (!empty($type)) {
+                    $filter->where('invoice_trasections.type', '=', $type);
                 }
                 if (!empty($start) && !empty($end)) {
                     $filter->whereBetween('invoice_trasections.created_at', [$start, $end]);

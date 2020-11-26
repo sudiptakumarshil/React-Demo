@@ -17,8 +17,10 @@ class CreateCustomer extends Component {
             phone: "",
             address: "",
             remarks: "",
+            type:2,
             accounts_id: "",
-            warehouse_id: []
+            warehouse_id: [],
+            status:1,
         };
     }
 
@@ -60,7 +62,8 @@ class CreateCustomer extends Component {
             phone: "",
             address: "",
             remarks: "",
-            accounts_no: ""
+            accounts_no: "",
+            type:2
         });
         if (res.data.status === 200) {
             this.props.history.push(defaultRouteLink+"/manage-customer");
@@ -144,7 +147,6 @@ class CreateCustomer extends Component {
                                                 className="form-control"
                                                 placeholder="Email"
                                                 name="email"
-                                                required
                                                 value={this.state.email}
                                                 onChange={this.handleInput}
                                             ></input>
@@ -220,7 +222,6 @@ class CreateCustomer extends Component {
                                                 className="form-control"
                                                 placeholder="remarks"
                                                 name="remarks"
-                                                required
                                                 value={this.state.remarks}
                                                 onChange={this.handleInput}
                                             ></textarea>
@@ -238,7 +239,6 @@ class CreateCustomer extends Component {
                                                 className="form-control"
                                                 placeholder="Accounts No"
                                                 name="accounts_no"
-                                                required
                                                 value={this.state.accounts_no}
                                                 data-id={this.state.accounts_id}
                                                 onChange={this.handleInput}

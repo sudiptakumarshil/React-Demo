@@ -64,7 +64,7 @@ class AddStoreInvoice extends Component {
             date: year + "-" + month + "-" + date,
             store_id: 1,
             storelist: [],
-            gross_amount: "",
+            gross_amount: 0,
             discount_taka: 0,
             discount_percent: 0,
             final_discount_percent: "",
@@ -86,6 +86,7 @@ class AddStoreInvoice extends Component {
             cashamountList: [],
             vat_id: 0,
             loading: true,
+            isInvEdit:false,
             time: "",
             bankdetails_id: "",
             cashamount_id: "",
@@ -195,6 +196,50 @@ class AddStoreInvoice extends Component {
             invoicetransectionList: res.data.invotransec
         });
         this.props.updateStoreInvoice(res.data.invotransec);
+        // console.log("test=tt");
+        let priceQuantity = 0;
+        let discount = 0;
+        let vat = 0;
+        let minusDiscount = 0;
+        let netAmount = 0;
+        let grossAmount = 0;
+        let minusManualDiscount = 0;
+        let discountTaka = 0;
+        let totalVat = 0;
+        let manualAndPercentDiscount = 0;
+        let netPayable = 0;
+
+        res.data.invotransec.map((item, index) => {
+            // console.log("log="+item.id);
+            // console.log(item.price * item.quantity)
+            priceQuantity = item.price * item.quantity;
+            // for getting percent ammount .....
+            discount = (priceQuantity * item.discount_percent) / 100;
+            minusDiscount = priceQuantity - discount;
+
+            minusManualDiscount = minusDiscount - item.discount_taka;
+
+            vat = (minusManualDiscount * item.value) / 100;
+            netAmount = minusManualDiscount + vat;
+            grossAmount += priceQuantity;
+            manualAndPercentDiscount = discount + item.discount_taka;
+            discountTaka += manualAndPercentDiscount;
+            totalVat += vat;
+            netPayable += netAmount;
+
+            // console.log("hello2",netPayable)
+        });
+
+        this.setState({
+            totalpriceQuantity: priceQuantity,
+            netAmount: netAmount,
+            // gross_amount: grossAmount,
+            gross_amount: grossAmount,
+            discountTaka: discountTaka,
+            totalVat: totalVat,
+            netPayable: netPayable,
+            vat: vat
+        });
 
         // dispatch({
         //     type:SET_REFRESH_STORETRANSECTION,
@@ -267,7 +312,7 @@ class AddStoreInvoice extends Component {
         }
     };
     refreshPage = () => {
-        window.location.reload(false);
+        window.location.reload(true);
     };
 
     WarehousehandleInput = event => {
@@ -535,6 +580,50 @@ class AddStoreInvoice extends Component {
                 invoicetransectionList: res.data.invotransec
             });
             this.props.updateStoreInvoice(res.data.invotransec);
+            // console.log("test=tt");
+            let priceQuantity = 0;
+            let discount = 0;
+            let vat = 0;
+            let minusDiscount = 0;
+            let netAmount = 0;
+            let grossAmount = 0;
+            let minusManualDiscount = 0;
+            let discountTaka = 0;
+            let totalVat = 0;
+            let manualAndPercentDiscount = 0;
+            let netPayable = 0;
+
+            res.data.invotransec.map((item, index) => {
+                // console.log("log="+item.id);
+                // console.log(item.price * item.quantity)
+                priceQuantity = item.price * item.quantity;
+                // for getting percent ammount .....
+                discount = (priceQuantity * item.discount_percent) / 100;
+                minusDiscount = priceQuantity - discount;
+
+                minusManualDiscount = minusDiscount - item.discount_taka;
+
+                vat = (minusManualDiscount * item.value) / 100;
+                netAmount = minusManualDiscount + vat;
+                grossAmount += priceQuantity;
+                manualAndPercentDiscount = discount + item.discount_taka;
+                discountTaka += manualAndPercentDiscount;
+                totalVat += vat;
+                netPayable += netAmount;
+
+                // console.log("hello2",netPayable)
+            });
+
+            this.setState({
+                totalpriceQuantity: priceQuantity,
+                netAmount: netAmount,
+                // gross_amount: grossAmount,
+                gross_amount: grossAmount,
+                discountTaka: discountTaka,
+                totalVat: totalVat,
+                netPayable: netPayable,
+                vat: vat
+            });
 
             // SUCCESS MESSAGE USING SWEET ALERT
             try {
@@ -665,7 +754,7 @@ class AddStoreInvoice extends Component {
                     this.state
                 );
                 this.state = {
-                    gross_amount: "",
+                    gross_amount: 0,
                     discount_taka: 0,
                     discount_percent: 0,
                     final_discount_percent: "",
@@ -724,7 +813,7 @@ class AddStoreInvoice extends Component {
     // for getting warehouse ,store ,product , vendor ,customer,vat....
     fetchalldata = async () => {
         const idx = this.props.match.params.idx;
-        if (this.state.vendorlist.length <= 0) {
+        if (this.state.vendorlist.length <= 0 || this.state.isInvEdit) {
             const response = await axios.get(
                 defaultRouteLink + "/api/all-data",
                 {
@@ -746,6 +835,7 @@ class AddStoreInvoice extends Component {
                     warehouseList: response.data.warehouses,
                     vendorlist: response.data.vendors,
                     idx: idx,
+                    isInvEdit:false,
                     user_id: isLoginExit,
                     // storelist: response.data.stores,
                     productList: response.data.products,
@@ -796,6 +886,7 @@ class AddStoreInvoice extends Component {
                 this.setState({
                     totalpriceQuantity: priceQuantity,
                     netAmount: netAmount,
+                    // gross_amount: grossAmount,
                     gross_amount: grossAmount,
                     discountTaka: discountTaka,
                     totalVat: totalVat,
@@ -807,36 +898,6 @@ class AddStoreInvoice extends Component {
                 //     data:{}
                 // });
             }
-        }
-    };
-
-    // FOR GETTING AUTO INVOICE NUMBER .............
-    getinvoiceNumber = async () => {
-        const idx = this.props.match.params.idx;
-        if (idx == 1) {
-            const response = await axios.get(
-                defaultRouteLink + "/api/get-invoice-number-type-1"
-            );
-
-            this.setState({ invoice_code: response.data.invoice_number });
-        } else if (idx == 2) {
-            const response2 = await axios.get(
-                defaultRouteLink + "/api/get-invoice-number-type-2"
-            );
-
-            this.setState({ invoice_code: response2.data.invoice_number });
-        } else if (idx == 3) {
-            const response3 = await axios.get(
-                defaultRouteLink + "/api/get-invoice-number-type-3"
-            );
-            this.setState({ invoice_code: response3.data.invoice_number });
-        } else if (idx == 4) {
-            const response4 = await axios.get(
-                defaultRouteLink + "/api/get-invoice-number-type-4"
-            );
-            this.setState({ invoice_code: response4.data.invoice_number });
-        } else {
-            console.log("ok");
         }
     };
 
@@ -864,6 +925,50 @@ class AddStoreInvoice extends Component {
                 invoicetransectionList: response.data.invotransec
             });
             this.props.updateStoreInvoice(response.data.invotransec);
+            // console.log("test=tt");
+            let priceQuantity = 0;
+            let discount = 0;
+            let vat = 0;
+            let minusDiscount = 0;
+            let netAmount = 0;
+            let grossAmount = 0;
+            let minusManualDiscount = 0;
+            let discountTaka = 0;
+            let totalVat = 0;
+            let manualAndPercentDiscount = 0;
+            let netPayable = 0;
+
+            response.data.invotransec.map((item, index) => {
+                // console.log("log="+item.id);
+                // console.log(item.price * item.quantity)
+                priceQuantity = item.price * item.quantity;
+                // for getting percent ammount .....
+                discount = (priceQuantity * item.discount_percent) / 100;
+                minusDiscount = priceQuantity - discount;
+
+                minusManualDiscount = minusDiscount - item.discount_taka;
+
+                vat = (minusManualDiscount * item.value) / 100;
+                netAmount = minusManualDiscount + vat;
+                grossAmount += priceQuantity;
+                manualAndPercentDiscount = discount + item.discount_taka;
+                discountTaka += manualAndPercentDiscount;
+                totalVat += vat;
+                netPayable += netAmount;
+
+                // console.log("hello2",netPayable)
+            });
+
+            this.setState({
+                totalpriceQuantity: priceQuantity,
+                netAmount: netAmount,
+                // gross_amount: grossAmount,
+                gross_amount: grossAmount,
+                discountTaka: discountTaka,
+                totalVat: totalVat,
+                netPayable: netPayable,
+                vat: vat
+            });
         } else {
             this.setState({
                 delloading: false
@@ -874,22 +979,33 @@ class AddStoreInvoice extends Component {
     };
     handleModalClose = () => {
         this.setState({
-            isModalShow: false
+            isModalShow: false,
         });
     };
+    handleEditUpdate=(data)=>{
+
+        this.fetchalldata();
+        this.setState({
+            isModalShow: false,
+            isInvEdit:true,
+        });
+    }
     handleProductEdit = async item_id => {
         // editInvoiceTransection = async () => {
         const response = await axios.get(
             defaultRouteLink + "/api/edit-invoice-transec/" + item_id
         );
-        this.setState({ modalData: response.data.invoice, isModalShow: true });
+        // console.log("clossingTest",response.data.plusClosingStock);
+        this.setState({
+            modalData: response.data.invoice,
+            isModalShow: true,
+            closingStock: response.data.plusClosingStock
+        });
 
         // };
     };
 
     render() {
-        // console.log("product lsit="+this.state.data_p_list);
-        // console.log("props=" + this.props.data_p_list);
         // FETCH ALL WAREHOUSE DATA... LOOP
         let warhouses = this.state.warehouseList.map((item, index) => {
             return (
@@ -1125,7 +1241,9 @@ class AddStoreInvoice extends Component {
                     <EditInvoiceTransec
                         show={this.state.isModalShow}
                         modalData={this.state.modalData}
+                        closingStock={this.state.closingStock}
                         handleClose={this.handleModalClose}
+                        handleUpdate={this.handleEditUpdate}
                         {...this.props}
                     />
                 ) : null}
@@ -2543,7 +2661,8 @@ class AddStoreInvoice extends Component {
 // for redux configuration ..............
 const mapStateToProps = state => {
     return {
-        data_p_list: state.auth.invoicetransectionList
+        data_p_list: state.auth.invoicetransectionList,
+        invTotal: state.auth.toTal,
     };
 };
 

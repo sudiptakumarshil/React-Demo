@@ -15,7 +15,7 @@ class ManageCustomer extends Component {
     fetchallCustomer = async () => {
         const res = await axios.get(defaultRouteLink + "/api/all-customer");
         if (res.data.status === 200) {
-            this.setState({ customers: res.data.customers });
+            this.setState({ customers: res.data.customer });
             this.setState({ loading: false });
         }
         console.log(res);

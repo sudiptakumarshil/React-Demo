@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { defaultRouteLink } from "../../common/config";
 import ContentLoader, { Facebook, BulletList } from "react-content-loader";
 import Pagination from "react-js-pagination";
+
 const MyBulletListLoader = () => <BulletList />;
 
 function ManageStoreInvoice(props) {
@@ -464,6 +465,8 @@ function ManageStoreInvoice(props) {
                                         </div>
                                     </div>
                                 </div>
+
+
                                 <div
                                     style={{
                                         // marginLeft: 600,
@@ -481,139 +484,182 @@ function ManageStoreInvoice(props) {
                             </div>
                         </form>
                     </div>
-
-                    <table
-                        className="table table-bordered"
-                        style={{ marginTop: 30 }}
+                    <div
+                        className="table-responsive"
+                        style={{ overflowX: "auto" }}
                     >
-                        <thead>
-                            <tr>
-                                <th>SL</th>
-                                <th>Invoice Number</th>
-                                <th>Type</th>
-                                <th>Vendor Name</th>
-                                <th>WareHouse</th>
-                                <th>Date</th>
-                                <th>Store</th>
-                                <th>Gross Amount</th>
-                                <th>Discount Taka</th>
-                                <th>Discount Percent</th>
-                                <th>Cash Amount</th>
-                                <th>Cash</th>
-                                <th>Bank Amount</th>
-                                <th>Bank</th>
-                                <th>Remarks</th>
-                                <th>Total Quantity</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {/* isContentLoading */}
-                            {formData.StoreInvoiceList.map(function(
-                                item,
-                                index
-                            ) {
-                                let type = "";
-                                if (item.type == 1) {
-                                    type = "New Purshase";
-                                } else if (item.type == 2) {
-                                    type = "Purshase Return";
-                                } else if (item.type == 3) {
-                                    type = "Sale";
-                                } else if (item.type == 4) {
-                                    type = "Sale Return";
-                                } else if (item.type == 6) {
-                                    type = "Issue";
-                                } else if (item.type == 7) {
-                                    type = "Issue Return ";
-                                }
+                        <table
+                            className="table table-bordered"
+                            style={{ marginTop: 30 }}
+                        >
+                            <thead>
+                                <tr>
+                                    <th>SL</th>
+                                    <th>Invoice Number</th>
+                                    <th>Type</th>
+                                    <th>Vendor/Customer</th>
+                                    <th>WareHouse</th>
+                                    <th>Date</th>
+                                    <th>Store</th>
+                                    {/* <th>Gross Amount</th>
+                                    <th>Discount Taka</th>
+                                    <th>Discount Percent</th>
+                                    <th>Cash Amount</th>
+                                    <th>Cash</th>
+                                    <th>Bank Amount</th>
+                                    <th>Bank</th>
+                                    <th>Remarks</th>
+                                    <th>Total Quantity</th> */}
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {/* isContentLoading */}
+                                {formData.StoreInvoiceList.map(function(
+                                    item,
+                                    index
+                                ) {
+                                    let type = "";
+                                    if (item.type == 1) {
+                                        type = "New Purshase";
+                                    } else if (item.type == 2) {
+                                        type = "Purshase Return";
+                                    } else if (item.type == 3) {
+                                        type = "Sale";
+                                    } else if (item.type == 4) {
+                                        type = "Sale Return";
+                                    } else if (item.type == 6) {
+                                        type = "Issue";
+                                    } else if (item.type == 7) {
+                                        type = "Issue Return ";
+                                    }
 
-                                return (
-                                    <tr key={item.id}>
-                                        <td>{item.id}</td>
-                                        <td>{item.invoice_number}</td>
-                                        <td>{type}</td>
-                                        <td>{item.vendor}</td>
-                                        <td>{item.ware_name}</td>
-                                        <td>{item.date}</td>
-                                        <td>{item.store_name}</td>
-                                        <td>{item.gross_amount}</td>
-                                        <td>{item.discount_taka}</td>
-                                        <td>{item.discount_percent}</td>
-                                        <td>{item.cash_amount}</td>
-                                        <td>{item.cash_name}</td>
-                                        <td>{item.bank_amount}</td>
-                                        <td>{item.bank_name}</td>
-                                        <td>{item.remarks}</td>
-                                        <td>{item.total_quantity}</td>
-                                        <td>
-                                            {item.type == 6 ||
-                                            item.type == 7 ? (
-                                                <Link
-                                                    to={
-                                                        defaultRouteLink +
-                                                        `/edit-issuestoreinvoice/${item.id}/${item.type}`
-                                                    }
-                                                    className="btn btn-primary"
-                                                    type="button"
-                                                >
-                                                    Edit
-                                                </Link>
-                                            ) : (
-                                                <Link
-                                                    to={
-                                                        defaultRouteLink +
-                                                        `/edit-storeinvoice/${item.id}/${item.type}`
-                                                    }
-                                                    className="btn btn-primary"
-                                                    type="button"
-                                                >
-                                                    Edit
-                                                </Link>
-                                            )}
+                                    return (
+                                        <tr key={item.id}>
+                                            <td>{item.id}</td>
+                                            <td>{item.invoice_number}</td>
+                                            <td>{type}</td>
 
-                                            <button
-                                                onClick={deleteInvoice}
-                                                className="btn btn-danger"
-                                                data-id={item.id}
+                                            <td>{item.vendor}</td>
+
+                                            <td>{item.ware_name}</td>
+                                            <td>{item.date}</td>
+                                            <td>{item.store_name}</td>
+                                            {/* <td>{item.gross_amount}</td>
+                                            <td>{item.discount_taka}</td>
+                                            <td>{item.discount_percent}</td>
+                                            <td>{item.cash_amount}</td>
+                                            <td>{item.cash_name}</td>
+                                            <td>{item.bank_amount}</td>
+                                            <td>{item.bank_name}</td>
+                                            <td>{item.remarks}</td>
+                                            <td>{item.total_quantity}</td> */}
+                                            <td className="text-nowrap">
+                                                {item.type == 6 ||
+                                                item.type == 7 ? (
+                                                    <>
+                                                        <Link
+                                                            to={
+                                                                defaultRouteLink +
+                                                                `/edit-issuestoreinvoice/${item.id}/${item.type}`
+                                                            }
+                                                            className="btn btn-primary"
+                                                            type="button"
+                                                        >
+                                                            Edit
+                                                        </Link>
+
+                                                        <Link
+                                                            to={
+                                                                defaultRouteLink +
+                                                                `/issue-store-invoice-print/${item.id}/${item.type}`
+                                                            }
+                                                            className="btn btn-outline-info"
+                                                            type="button"
+                                                        >
+                                                            Print
+                                                        </Link>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Link
+                                                            to={
+                                                                defaultRouteLink +
+                                                                `/edit-storeinvoice/${item.id}/${item.type}`
+                                                            }
+                                                            className="btn btn-primary"
+                                                            type="button"
+                                                        >
+                                                            Edit
+                                                        </Link>
+
+                                                        <Link
+                                                            to={
+                                                                defaultRouteLink +
+                                                                `/store-invoice-print/${item.id}/${item.type}`
+                                                            }
+                                                            className="btn btn-outline-info"
+                                                            type="button"
+                                                        >
+                                                            Print
+                                                        </Link>
+                                                    </>
+                                                )}
+
+                                                <button
+                                                    onClick={deleteInvoice}
+                                                    className="btn btn-danger"
+                                                    data-id={item.id}
+                                                >
+                                                    Delete
+                                                </button>
+                                                {/*
+                                            <Link
+                                                to={
+                                                    defaultRouteLink +
+                                                    `/store-invoice-print/${item.id}/${item.type}`
+                                                }
+                                                className="btn btn-outline-info"
+                                                type="button"
                                             >
-                                                Delete
-                                            </button>
+                                                Print
+                                            </Link> */}
 
-                                            {item.type == 6 &&
-                                            item.total_quantity >
-                                                item.total_rqty ? (
-                                                <Link
-                                                    to={
-                                                        defaultRouteLink +
-                                                        `/return/${
-                                                            item.id
-                                                        }/${7}`
-                                                    }
-                                                    className="btn btn-primary"
-                                                    type="button"
-                                                >
-                                                    Return{" "}
-                                                </Link>
-                                            ) : (
-                                                <td></td>
-                                            )}
-                                        </td>
-                                    </tr>
-                                );
-                            })}
+                                                {item.type == 6 &&
+                                                item.total_quantity >
+                                                    item.total_rqty ? (
+                                                    <Link
+                                                        to={
+                                                            defaultRouteLink +
+                                                            `/return/${
+                                                                item.id
+                                                            }/${7}`
+                                                        }
+                                                        className="btn btn-primary"
+                                                        type="button"
+                                                    >
+                                                        Return{" "}
+                                                    </Link>
+                                                ) : (
+                                                    <td></td>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
 
-                            <div>
-                                <Pagination
-                                    activePage={formData.activePage}
-                                    pageRangeDisplayed={10}
-                                    itemsCountPerPage={formData.limit}
-                                    totalItemsCount={formData.total_count}
-                                    onChange={handlePagination}
-                                />
-                            </div>
-                        </tbody>
-                    </table>
+                                <div>
+                                    <Pagination
+                                        activePage={formData.activePage}
+                                        pageRangeDisplayed={10}
+                                        itemsCountPerPage={formData.limit}
+                                        totalItemsCount={formData.total_count}
+                                        onChange={handlePagination}
+                                    />
+                                </div>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

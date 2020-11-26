@@ -18,8 +18,9 @@ class CreateVendor extends Component {
             address: "",
             remarks: "",
             accounts_id: "",
-            type: 0,
-            warehouse_id: []
+            type: 1,
+            warehouse_id: [],
+            status:1,
         };
     }
 
@@ -60,6 +61,7 @@ class CreateVendor extends Component {
             address: "",
             remarks: "",
             accounts_no: "",
+            type:1,
             status:1
         });
         if (res.data.status === 200) {
@@ -138,7 +140,7 @@ class CreateVendor extends Component {
                                                 className="form-control"
                                                 placeholder="Email"
                                                 name="email"
-                                                required
+
                                                 value={this.state.email}
                                                 onChange={this.handleInput}
                                             ></input>
@@ -177,7 +179,7 @@ class CreateVendor extends Component {
                                                 className="form-control"
                                                 placeholder="Address"
                                                 name="address"
-                                                required
+
                                                 value={this.state.address}
                                                 onChange={this.handleInput}
                                             ></input>
@@ -202,7 +204,7 @@ class CreateVendor extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="form-group">
+                                {/* <div className="form-group">
                                     <label className="control-label col-lg-2">
                                         Type
                                     </label>
@@ -226,7 +228,7 @@ class CreateVendor extends Component {
                                             </select>
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
 
                                 <div className="form-group">
                                     <label className="control-label col-lg-2">
@@ -238,7 +240,7 @@ class CreateVendor extends Component {
                                                 className="form-control"
                                                 placeholder="remarks"
                                                 name="remarks"
-                                                required
+
                                                 value={this.state.remarks}
                                                 onChange={this.handleInput}
                                             ></textarea>
@@ -256,7 +258,7 @@ class CreateVendor extends Component {
                                                 className="form-control"
                                                 placeholder="Accounts No"
                                                 name="accounts_no"
-                                                required
+
                                                 value={this.state.accounts_no}
                                                 data-id={this.state.accounts_id}
                                                 onChange={this.handleInput}

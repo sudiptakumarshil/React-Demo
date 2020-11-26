@@ -59,7 +59,8 @@ class IssueStoreInvoice extends Component {
             invoice_code: 0,
             remarks: "",
             warehouse_id: 1,
-            vendor_id: 1,
+            vendor_id: 0,
+            isInvEdit:false,
             vendorlist: [],
             date: year + "-" + month + "-" + date,
             store_id: 1,
@@ -71,7 +72,7 @@ class IssueStoreInvoice extends Component {
             cash_amount: 0,
             bank_account: "",
             bank_id: "",
-            customer_id: 2,
+            // customer_id: 2,
             product_id: 0,
             productList: [],
             product: "",
@@ -260,7 +261,6 @@ class IssueStoreInvoice extends Component {
                 product_id: res.data.productCode.id,
                 store_id: 1,
                 warehouse_id: 1,
-                vendor_id: 1,
                 quantity: 1
             });
             this.QuickPurshaseInvoiceTransec();
@@ -282,6 +282,13 @@ class IssueStoreInvoice extends Component {
             this.getProductWisePriceAuto(id);
         }
     };
+
+    handlecustomerInput = (event)=>{
+        this.setState({
+            vendor_id: event.target.value
+        });
+        // console.log("customer_d",event.target.value);
+    }
 
     WarehousehandleInput = event => {
         this.setState({ [event.target.name]: event.target.value });
@@ -648,6 +655,7 @@ class IssueStoreInvoice extends Component {
                 productList: response.data.products,
                 customerList: response.data.customer,
                 vatList: response.data.vats,
+                isInvEdit:false,
                 invoicetransectionList: response.data.invotransec,
                 bankdetailsList: response.data.bankdetails,
                 cashamountList: response.data.cashaccount,
@@ -667,6 +675,14 @@ class IssueStoreInvoice extends Component {
             // });
         }
     };
+    handleEditUpdate=(data)=>{
+
+        this.fetchalldata();
+        this.setState({
+            isModalShow: false,
+            isInvEdit:true,
+        });
+    }
 
     // FOR GETTING AUTO INVOICE NUMBER .............
     // getinvoiceNumber = async () => {
@@ -737,10 +753,15 @@ class IssueStoreInvoice extends Component {
         const response = await axios.get(
             defaultRouteLink + "/api/edit-invoice-transec/" + item_id
         );
-        this.setState({ modalData: response.data.invoice, isModalShow: true });
+        // console.log("clossingTest",response.data.plusClosingStock);
 
-        // };
+        this.setState({
+             modalData: response.data.invoice,
+             isModalShow: true ,
+             closingStock: response.data.plusClosingStock
+            });
     };
+
 
     render() {
         // console.log("product lsit="+this.state.data_p_list);
@@ -820,10 +841,10 @@ class IssueStoreInvoice extends Component {
                     {item.name}
                 </option>
             );
-            this.setState({
-                customer_id: item.id // UPDATE STATE ........
-                // gross_amount:alltoTalQty
-            });
+            // this.setState({
+            //     customer_id: item.id // UPDATE STATE ........
+            //     // gross_amount:alltoTalQty
+            // });
         });
 
         let TotalQuantity = 0;
@@ -897,7 +918,9 @@ class IssueStoreInvoice extends Component {
                 <EditInvoiceTransec
                     show={this.state.isModalShow}
                     modalData={this.state.modalData}
+                    closingStock ={this.state.closingStock}
                     handleClose={this.handleModalClose}
+                    handleUpdate={this.handleEditUpdate}
                     {...this.props}
                 />
 
@@ -1027,39 +1050,7 @@ class IssueStoreInvoice extends Component {
                                                                 {warhouses}
                                                             </select>
                                                         </div>
-                                                        {idx == 1 ||
-                                                        idx == 2 ? (
-                                                            <div className="col-md-2">
-                                                                <label className="control-label">
-                                                                    Vendor
-                                                                </label>
-                                                                <select
-                                                                    className="form-control"
-                                                                    // id="exampleFormControlSelect1"
-                                                                    // className="selectpicker"
-                                                                    data-live-search="true"
-                                                                    value={
-                                                                        this
-                                                                            .state
-                                                                            .vendor_id
-                                                                    }
-                                                                    name="vendor_id"
-                                                                    onChange={
-                                                                        this
-                                                                            .handleInput
-                                                                    }
-                                                                >
-                                                                    <option
-                                                                        selected
-                                                                        value="0"
-                                                                    >
-                                                                        Choose
-                                                                        One
-                                                                    </option>
-                                                                    {vendors}
-                                                                </select>
-                                                            </div>
-                                                        ) : (
+
                                                             <div className="col-md-2">
                                                                 <label className="control-label">
                                                                     Customer
@@ -1067,15 +1058,15 @@ class IssueStoreInvoice extends Component {
                                                                 <select
                                                                     className="form-control"
                                                                     data-live-search="true"
-                                                                    name="customer_id"
+                                                                    name="vendor_id"
                                                                     value={
                                                                         this
                                                                             .state
-                                                                            .customer_id
+                                                                            .vendor_id
                                                                     }
                                                                     onChange={
                                                                         this
-                                                                            .handleInput
+                                                                            .handlecustomerInput
                                                                     }
                                                                 >
                                                                     <option
@@ -1088,7 +1079,7 @@ class IssueStoreInvoice extends Component {
                                                                     {customers}
                                                                 </select>
                                                             </div>
-                                                        )}
+
 
                                                         <div className="col-md-2">
                                                             <label className="control-label">

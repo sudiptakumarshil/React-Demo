@@ -11,26 +11,24 @@ export const defaultRouteLink="/vendor_panel";
 */
 import moment from "moment";
 
-export function getCurrentDate(separator=''){
-
+export function getCurrentDate(separator = "") {
     //let date= moment().format("DD-MM-YYYY hh:mm:ss");
 
-    let date= moment().format("YYYY-MM-DD");
-    console.log("date="+date);
+    let date = moment().format("YYYY-MM-DD");
+    console.log("date=" + date);
     return date;
-    }
+}
 
-//export const getApiServerLinkDataApi = "https://tecn.gov.bd/e-store/api/";
-//export const getApiServerLink = "https://tecn.gov.bd/e-store/";
-//export const getApiServerDashboard ="https://tecn.gov.bd/e-store/admin_dashboad/";
+// export const getApiServerLinkDataApi = "https://tecn.gov.bd/e-store/api/";
+// export const getApiServerLink = "https://tecn.gov.bd/e-store/";
+// export const getApiServerDashboard ="https://tecn.gov.bd/e-store/admin_dashboad/";
 
+export const getApiServerLinkDataApi = "http://localhost/estores/api/";
+export const getApiServerLink = "http://localhost/estores/";
+export const getApiServerDashboard =
+    "http://localhost/estores/admin_dashboard/";
 
-export const getApiServerLinkDataApi = "http://192.168.0.151/e-store/api/";
-export const getApiServerLink = "http://192.168.0.151/e-store/";
-export const getApiServerDashboard ="http://192.168.0.151/e-store/admin_dashboard/";
-
-
-export const defaultRouteLink = "/e-store";
+export const defaultRouteLink = "/estores";
 
 export const getAccessTokenName = "userId";
 export const getAccessTokenNameInfo = "userInfo";
@@ -59,16 +57,9 @@ export const dispatchLoginAction = info => {
     };
 };
 
-
 // export const dispatchEditAction =  => {
 //     return {
 //         type: SET_REFRESH_STORETRANSECTION,
 //         Edit:
 //     };
 // };
-
-
-
-
-
-

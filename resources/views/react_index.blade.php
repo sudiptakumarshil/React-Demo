@@ -29,12 +29,18 @@
     <link rel="stylesheet" type="text/css" href="<?= asset('public/assets/css/bootstrap-timepicker.css') ?>">
 
     {{--    for tree view--}}
-    <link rel=" stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
+    <link rel=" stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
+
+
     <link rel="stylesheet" href=" https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.6/css/responsive.bootstrap.min.css">
 
+    {{--
     <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+    --}}
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.6/css/responsive.bootstrap4.min.css">
 
@@ -56,7 +62,9 @@
 
     <script type="text/javascript" src="<?= asset('public/assets/js/google-chart.js') ?>"></script>
     <script src="https://cdn.ckeditor.com/4.14.1/standard/ckeditor.js"></script>
-    <script src="http://vitalets.github.io/bootstrap-datepicker/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    {{-- <script src="
+        http://vitalets.github.io/bootstrap-datepicker/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    --}}
     <script type="text/javascript" src="<?= asset('public/assets/js/moment.min.js') ?>"></script>
     <script type="text/javascript" src="<?= asset('public/assets/js/bootstrap-datepicker.min.js') ?>"></script>
     <script type="text/javascript" src="<?= asset('public/assets/js/bootstrap-timepicker.js') ?>"></script>
@@ -88,6 +96,7 @@
         $(document).ready(function() {
             $('.selectpicker').selectpicker();
         });
+
     </script>
 </head>
 

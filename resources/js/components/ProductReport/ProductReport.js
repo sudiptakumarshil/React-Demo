@@ -18,7 +18,8 @@ function ProductReport(props) {
         start_date: "",
         end_date: "",
         vendor_id: 0,
-        customer_id: 0
+        customer_id: 0,
+        type:0
     };
 
     const [formData, setFormData] = useState(data);
@@ -79,7 +80,8 @@ function ProductReport(props) {
             start_date: "",
             end_date: "",
             vendor_id: 0,
-            customer_id: 0
+            customer_id: 0,
+            type:0
         };
         setFormData(data);
 
@@ -176,6 +178,34 @@ function ProductReport(props) {
                                 </div>
                             </div>
                         </div>
+
+                        <div className="col-md-3">
+                            <label className="control-label">Type</label>
+                            <div className="form-group">
+                                <div className="input-group">
+                                    <select
+                                        className="form-control"
+                                        data-live-search="true"
+                                        name="type"
+                                        onChange={handleInput}
+                                    >
+                                        <option selected value="0">
+                                            Choose One
+                                        </option>
+
+                                        <option value="1">New Purshase</option>
+                                        <option value="2">
+                                            Purshase Return
+                                        </option>
+                                        <option value="3">Sale</option>
+                                        <option value="4">Sale Return</option>
+                                        <option value="6">Issue</option>
+                                        <option value="7">Issue Return</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
                         <div
                             style={{
                                 marginTop: 30,
@@ -194,6 +224,7 @@ function ProductReport(props) {
                 <thead>
                     <tr>
                         <th>SL</th>
+                        <th>Product Name</th>
                         <th>Invoice Number </th>
                         <th>Party Name</th>
                         <th>Date</th>
@@ -220,10 +251,10 @@ function ProductReport(props) {
                         return (
                             <tr>
                                 <td>{index + 1}</td>
+                                <td>{item.product_name}</td>
                                 <td>{item.invoice_number}</td>
                                 <td>{item.party_name}</td>
                                 <td>{item.created_at}</td>
-
                                 <td>{productType}</td>
                                 <td>{item.quantity}</td>
                             </tr>

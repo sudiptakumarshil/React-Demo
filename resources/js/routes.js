@@ -51,10 +51,22 @@ import AddCostCenter from "./components/CostCenter/AddCostCenter";
 import EditCostCenter from "./components/CostCenter/EditCostCenter";
 import PaymentVoucher from "./components/PaymentVoucher/PaymentVoucher";
 import Issue from "./components/StoreInvoice/IssueStoreInvoice";
-import StockReport from "./components/StockReports/StockReport"
+import StockReport from "./components/StockReports/StockReport";
 import ManageRole from "./components/RoleManagement/ManageRole";
 import IssueReturn from "./components/StoreInvoice/ReturnInvoice";
-import ProductReport from "./components/ProductReport/ProductReport"
+import ProductReport from "./components/ProductReport/ProductReport";
+import IssueStoreInvoicePrint from "./components/StoreInvoice/IssueStoreInvoicePrint";
+
+import CreateSaleMan from "./components/SalesMan/CreateSalesMan";
+import ManageSaleMan from "./components/SalesMan/ManageSalesMan";
+import EditSalesMan from "./components/SalesMan/EditSalesMan";
+import ManageSize from "./components/Size/ManageSize";
+import AddSize from "./components/Size/AddSize";
+import EditSize from "./components/Size/EditSize";
+import SalesReport from "./components/SalesReport/SalesReport";
+import ManageMenuSubmenu from "./components/MenuSubmenu/MenuSubmenu";
+import ManageModule from "./components/ModuleList/ManageModule";
+
 import {
     defaultRouteLink,
     getAccessTokenName,
@@ -70,6 +82,10 @@ import AddProduct from "./components/InventoryProduct/AddProduct";
 import EditProduct from "./components/InventoryProduct/EditProduct";
 import EditInvoice from "./components/StoreInvoice/EditStoreInvoice";
 import EditIssueInvoice from "./components/StoreInvoice/EditissueInvoice";
+import {
+    StoreInvoicePrint2,
+    StoreInvoicePrint
+} from "./components/StoreInvoice/store-invoice-print";
 
 export const Routes = props => {
     let isLoginExit = getCookieKeyInfo(getAccessTokenName);
@@ -77,7 +93,6 @@ export const Routes = props => {
         console.log("hoeel");
         isLoginExit = getCookieKeyInfo(getAccessTokenName);
     }, [props]);
-
 
     return (
         <Switch>
@@ -232,6 +247,14 @@ export const Routes = props => {
                             />
                             <Route
                                 exact
+                                path={
+                                    defaultRouteLink +
+                                    "/edit-storeinvoice/:id/:idx"
+                                }
+                                render={props => <EditInvoice {...props} />}
+                            />
+                            <Route
+                                exact
                                 path={defaultRouteLink + "/add-bank-details"}
                                 component={AddBankDetails}
                             />
@@ -275,17 +298,38 @@ export const Routes = props => {
                                 exact
                                 path={
                                     defaultRouteLink +
-                                    "/edit-storeinvoice/:id/:idx"
+                                    "/store-invoice-print/:id/:idx"
                                 }
-                                render={props => <EditInvoice {...props} />}
+                                render={props => (
+                                    <StoreInvoicePrint {...props} />
+                                )}
                             />
+                            <Route
+                                exact
+                                path={
+                                    defaultRouteLink +
+                                    "/issue-store-invoice-print/:id/:idx"
+                                }
+                                render={props => (
+                                    <IssueStoreInvoicePrint {...props} />
+                                )}
+                            />
+                            {/* <Route
+                                exact
+                                path={
+                                    defaultRouteLink + "/store-invoice-print"
+                                }
+                                component={StoreInvoicePrint}
+                            /> */}
                             <Route
                                 exact
                                 path={
                                     defaultRouteLink +
                                     "/edit-issuestoreinvoice/:id/:idx"
                                 }
-                                render={props => <EditIssueInvoice {...props} />}
+                                render={props => (
+                                    <EditIssueInvoice {...props} />
+                                )}
                             />
                             <Route
                                 exact
@@ -347,52 +391,79 @@ export const Routes = props => {
                             />
                             <Route
                                 exact
-                                path={
-                                    defaultRouteLink + "/edit-costcenter/:id"
-                                }
-                                render={props => (
-                                    <EditCostCenter {...props} />
-                                )}
+                                path={defaultRouteLink + "/edit-costcenter/:id"}
+                                render={props => <EditCostCenter {...props} />}
                             />
-                             <Route
+                            <Route
                                 exact
                                 path={defaultRouteLink + "/paymentvaucher"}
                                 component={PaymentVoucher}
                             />
-
                             <Route
                                 exact
-                                path={
-                                    defaultRouteLink + "/stock-report"
-                                }
+                                path={defaultRouteLink + "/stock-report"}
                                 component={StockReport}
                             />
-
                             <Route
                                 exact
-                                path={
-                                    defaultRouteLink + "/manage-role"
-                                }
+                                path={defaultRouteLink + "/manage-role"}
                                 component={ManageRole}
                             />
-
                             <Route
                                 exact
-                                path={
-                                    defaultRouteLink +
-                                    "/return/:id/:idx"
-                                }
+                                path={defaultRouteLink + "/return/:id/:idx"}
                                 render={props => <IssueReturn {...props} />}
                             />
-                             <Route
+                            <Route
                                 exact
-                                path={
-                                    defaultRouteLink + "/product-report"
-                                }
+                                path={defaultRouteLink + "/product-report"}
                                 component={ProductReport}
                             />
-
-
+                            <Route
+                                exact
+                                path={defaultRouteLink + "/add-salesman"}
+                                component={CreateSaleMan}
+                            />
+                            <Route
+                                exact
+                                path={defaultRouteLink + "/manage-salesman"}
+                                component={ManageSaleMan}
+                            />
+                            <Route
+                                exact
+                                path={defaultRouteLink + "/edit-salesman/:id"}
+                                render={props => <EditSalesMan {...props} />}
+                            />
+                            <Route
+                                exact
+                                path={defaultRouteLink + "/manage-size"}
+                                component={ManageSize}
+                            />
+                            <Route
+                                exact
+                                path={defaultRouteLink + "/add-size"}
+                                component={AddSize}
+                            />
+                            <Route
+                                exact
+                                path={defaultRouteLink + "/edit-size/:id"}
+                                render={props => <EditSize {...props} />}
+                            />
+                            <Route
+                                exact
+                                path={defaultRouteLink + "/sales-report"}
+                                component={SalesReport}
+                            />
+                            <Route
+                                exact
+                                path={defaultRouteLink + "/manage-module"}
+                                component={ManageModule}
+                            />
+                            <Route
+                                exact
+                                path={defaultRouteLink + "/menu-submenu"}
+                                component={ManageMenuSubmenu}
+                            />
                         </Header>
                     ) : (
                         <Route component={LoginPage} />

@@ -38,12 +38,14 @@ const EditInvoiceTransectionModal = props => {
         closingStock: 0,
         discount_taka: 0,
         discount_percent: 0,
-        pname: ""
+        pname: "",
+        clossingStock: {}
     };
     const [formData, setFormData] = useState(dataObj);
     const dispatch = useDispatch();
     // invoice id ..
     let i_id = props.modalData.id;
+    let closingstock = props.closingStock;
     // end invoice id
 
     let item_id = props.modalData.item_id;
@@ -85,10 +87,7 @@ const EditInvoiceTransectionModal = props => {
 
     const updateinvoiceTransection = async event => {
         event.preventDefault();
-        if (
-            idx == 2 &&
-            parseInt(formData.closingStock) < parseInt(formData.quantity)
-        ) {
+        if (idx == 2 && parseInt(closingstock) < parseInt(formData.quantity)) {
             Swal.fire({
                 title: "Quantity  Cannot Be Greater than closingStock!!",
                 showClass: {
@@ -100,7 +99,7 @@ const EditInvoiceTransectionModal = props => {
             });
         } else if (
             idx == 3 &&
-            parseInt(formData.closingStock) < parseInt(formData.quantity)
+            parseInt(closingstock) < parseInt(formData.quantity)
         ) {
             Swal.fire({
                 title: "Quantity  Cannot Be Greater than closingStock!!",
@@ -113,7 +112,7 @@ const EditInvoiceTransectionModal = props => {
             });
         } else if (
             idx == 6 &&
-            parseInt(formData.closingStock) < parseInt(formData.quantity)
+            parseInt(closingstock) < parseInt(formData.quantity)
         ) {
             Swal.fire({
                 title: "Quantity  Cannot Be Greater than closingStock!!",
@@ -126,7 +125,7 @@ const EditInvoiceTransectionModal = props => {
             });
         } else if (
             idx == 7 &&
-            parseInt(formData.closingStock) < parseInt(formData.quantity)
+            parseInt(closingstock) < parseInt(formData.quantity)
         ) {
             Swal.fire({
                 title: "Quantity  Cannot Be Greater than closingStock!!",
@@ -151,11 +150,11 @@ const EditInvoiceTransectionModal = props => {
                 }
             );
             // for redux    .........  //
-            dispatch({
-                type: SET_REFRESH_STORETRANSECTION,
-                updateinvoiceTransection: res.data.products
-            });
-            props.handleClose();
+            // dispatch({
+            //     type: SET_REFRESH_STORETRANSECTION,
+            //     updateinvoiceTransection: res.data.products
+            // });
+            props.handleUpdate(res.data.products);
         }
     };
 
@@ -173,8 +172,9 @@ const EditInvoiceTransectionModal = props => {
         ) {
             setFormData(oldState => ({
                 ...oldState,
-                price: response.data.productPrice.selling_price,
-                closingStock: response.data.closing_stock[0].closing
+                price: response.data.productPrice.selling_price
+                // closingStock: response.data.closing_stock[0].closing
+                // closingStock: response.data.plusClosingStock
             }));
         } else {
             setFormData(oldState => ({
@@ -608,7 +608,8 @@ const EditInvoiceTransectionModal = props => {
                                                                         type="text"
                                                                         readOnly
                                                                         value={
-                                                                            formData.closingStock
+                                                                            // formData.closingStock
+                                                                            closingstock
                                                                         }
                                                                         // onChange={
                                                                         //     this
