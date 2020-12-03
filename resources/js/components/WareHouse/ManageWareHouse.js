@@ -5,7 +5,8 @@ import AddWareHouse from "./addWareHouse";
 import { Link, Router } from "react-router-dom";
 import Pagination from "react-js-pagination";
 import { defaultRouteLink } from "../../common/config";
-
+import ContentLoader, { Facebook,BulletList  } from 'react-content-loader'
+const MyBulletListLoader = () => <BulletList />
 
 class ManageWareHouse extends Component {
     state = {
@@ -45,9 +46,7 @@ class ManageWareHouse extends Component {
     render() {
         if (this.state.loading) {
             return (
-                <h2 className="text-center mt-50">
-                    <i className="fas fa-spinner fa-spin fa-3x"></i>
-                </h2>
+                <MyBulletListLoader/>
             );
         }
 

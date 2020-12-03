@@ -5,6 +5,8 @@ namespace App\Http\Controllers\frontend\api\StoreInvoice;
 use App\common\ItemModel;
 use App\Http\Controllers\Controller;
 use App\Model\AccountsInput\AccountsInput;
+use App\Model\Accounts\Ledger;
+use App\Model\Accounts\Setting;
 use App\Model\BankDetails\BankDetails;
 use App\Model\CashAccount\CashAccountDetails;
 use App\Model\CostCenter\CostCenter;
@@ -19,8 +21,7 @@ use App\Model\Vat;
 use App\Model\WareHouse\WareHouseDetails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Model\Accounts\Ledger;
-use App\Model\Accounts\Setting;
+
 class StoreInvoiceController extends Controller
 {
 
@@ -31,7 +32,7 @@ class StoreInvoiceController extends Controller
         // exit();
         $types = $request->type;
         $invoice_id = $request->invoice_id;
-
+        $user = $request->user_id;
         $invotran = new InvoiceTrasection();
         $invotran->invoice_id = $request->invoice_id;
         if ($request->idx == 1 || $request->idx == 2) {
@@ -65,6 +66,7 @@ class StoreInvoiceController extends Controller
             ->where('type', $types)
             ->where('invoice_trasections.trash', 1)
             ->where("invoice_trasections.status", 1)
+            ->where('invoice_trasections.publishing_by', $user)
             ->get();
 
         return response()->json([
@@ -283,7 +285,7 @@ class StoreInvoiceController extends Controller
 
     // }
 
-    public function getallinvoicetransection()
+    public function getallinvoicetransection(Request $request)
     {
         $invotransec = DB::table('invoice_trasections')
             ->leftJoin('inventory_products as dip', 'invoice_trasections.d_id', '=', 'dip.id')
@@ -292,6 +294,7 @@ class StoreInvoiceController extends Controller
         // ->leftJoin('ware_house_details', 'invoice_trasections.ware_id', '=', 'ware_house_details.id')
         // ->leftJoin('vats', 'ware_house_details.id', '=', 'vats.ware_id')
             ->select('invoice_trasections.*', 'dip.product_name as dp_name', 'vats.vat_name', 'vats.value', 'cip.product_name as cp_name')
+            ->where('publishing_by', $request->user_id)
             ->get();
 
         // $nettotal  =
@@ -307,6 +310,7 @@ class StoreInvoiceController extends Controller
 
         $types = $request->type;
         $invoice_id = $request->invoice_id;
+        $user = $request->user_id;
         // print_r($invoice_id = $request->invoice_id);
         $invoice_number = 0;
         if (isset($types) && empty($invoice_id)) {
@@ -391,6 +395,7 @@ class StoreInvoiceController extends Controller
             ->where('type', $types)
             ->where('invoice_trasections.trash', 1)
             ->where("invoice_trasections.status", 1)
+            ->where('invoice_trasections.publishing_by', $user)
             ->get();
 
         $returned_issues = DB::table('invoice_trasections')
@@ -487,6 +492,7 @@ class StoreInvoiceController extends Controller
         // print_r($closing_stock);
         // exit();
         $closing_stock[0]->closing = $op + $closing_stock[0]->closing;
+
         return response()->json([
             'productPrice' => $productPrice,
             'closing_stock' => $closing_stock,
@@ -664,6 +670,7 @@ class StoreInvoiceController extends Controller
     {
         $types = $request->type;
         $invoice_id = $request->invoice_id;
+        $user = $request->user_id;
         $invoice = InvoiceTrasection::find($id);
         $invoice->trash = 2;
         $invoice->save();
@@ -676,6 +683,7 @@ class StoreInvoiceController extends Controller
             ->where('type', $types)
             ->where('invoice_trasections.trash', 1)
             ->where("invoice_trasections.status", 1)
+            ->where('invoice_trasections.publishing_by', $user)
             ->get();
         return response()->json([
             'status' => 200,
@@ -691,7 +699,7 @@ class StoreInvoiceController extends Controller
         // exit();
         $types = $request->type;
         $invoice_id = $request->invoice_id;
-
+        $user = $request->user_id;
         $invotran = InvoiceTrasection::find($id);
         // if ($request->idx == 1 or $request->idx == 2) {
         //     $invotran->d_id = $request->product_id;
@@ -737,6 +745,7 @@ class StoreInvoiceController extends Controller
             ->where('type', $types)
             ->where('invoice_trasections.trash', 1)
             ->where("invoice_trasections.status", 1)
+            ->where('invoice_trasections.publishing_by', $user)
             ->get();
 
         return response()->json([
@@ -755,6 +764,7 @@ class StoreInvoiceController extends Controller
             ->leftjoin('bank_details', 'store_invoices.bank_id', 'bank_details.id')
             ->leftjoin('cash_account_details', 'store_invoices.cash_id', 'cash_account_details.id')
             ->select('store_invoices.*', 'vendors.name as vendor', 'ware_house_details.name as ware_name', 'stores.store_name', 'bank_details.bank_name', 'cash_account_details.cash_name')
+
             ->orderBy("id", "desc")
             ->get();
 

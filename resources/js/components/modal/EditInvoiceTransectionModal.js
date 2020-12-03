@@ -16,6 +16,16 @@ import {
     SET_CURRENT_USER_NOT_FOUND
 } from "../../actions/user_types";
 
+import {
+    getAccessTokenNameInfo,
+    getAccessTokenName,
+    getApiServerDashboard
+} from "../../common/config";
+import {
+    getCookieKeyInfo,
+    setCookie,
+    removeCookie
+} from "../../common/CookieService";
 // import {defaultRouteLink,dispatchEditAction} from '../common/config';
 const MyBulletListLoader = () => <BulletList />;
 
@@ -32,6 +42,7 @@ const EditInvoiceTransectionModal = props => {
         product_id: 0,
         quantity: 1,
         price: 0,
+        user_id:0,
         idx: "",
         isModalShow: false,
         modalData: {},
@@ -139,13 +150,15 @@ const EditInvoiceTransectionModal = props => {
         } else {
             let i_id = props.modalData.id;
             const idx = props.match.params.idx;
+            const isLoginExit = getCookieKeyInfo(getAccessTokenName);
             const res = await axios.patch(
                 defaultRouteLink + `/api/update-transecinvoice/${i_id}`,
                 formData,
                 {
                     params: {
                         invoice_id: i_id,
-                        type: idx
+                        type: idx,
+                        user_id: isLoginExit
                     }
                 }
             );
@@ -229,10 +242,13 @@ const EditInvoiceTransectionModal = props => {
 
         i_id = props.modalData.id;
         const idx = props.match.params.idx;
+        const isLoginExit = getCookieKeyInfo(getAccessTokenName);
+        console.log("user",isLoginExit)
         setFormData(oldState => ({
             ...oldState,
             idx: idx,
-            product_id: item_id
+            product_id: item_id,
+            user_id:isLoginExit
         }));
         getProductWisePriceAuto(props.modalData.item_id);
     }, [props]);

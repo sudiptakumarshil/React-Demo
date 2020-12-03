@@ -3,7 +3,8 @@ import { defaultRouteLink } from "../../common/config";
 import { Link } from "react-router-dom";
 import Vendor from "../Vendor/Vendor";
 import Customer from "./Customer";
-
+import ContentLoader, { Facebook, BulletList } from "react-content-loader";
+const MyBulletListLoader = () => <BulletList />;
 class ManageCustomer extends Component {
     // state declaration
     state = {
@@ -28,11 +29,7 @@ class ManageCustomer extends Component {
     render() {
         //  first page loading icon
         if (this.state.loading) {
-            return (
-                <h2 className="text-center mt-50">
-                    <i className="fas fa-spinner fa-spin fa-3x"></i>
-                </h2>
-            );
+            return <MyBulletListLoader />;
         }
 
         return (
@@ -43,7 +40,7 @@ class ManageCustomer extends Component {
                     </div>
 
                     <Link
-                        to={defaultRouteLink+"/create-customer"}
+                        to={defaultRouteLink + "/create-customer"}
                         type="button"
                         className="btn btn-primary"
                     >

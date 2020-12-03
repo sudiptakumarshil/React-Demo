@@ -13,8 +13,8 @@ class AccountsInputController extends Controller
     public function index()
     {
         $inputs = DB::table('accounts_inputs')
-            ->join('module_lists', 'accounts_inputs.input_type', 'module_lists.id')
-            ->select('accounts_inputs.*', 'module_lists.name as m_name')
+            ->join('modules', 'accounts_inputs.input_type', 'modules.id')
+            ->select('accounts_inputs.*', 'modules.name as m_name')
             ->get();
         return response()->json([
             'status' => 200,
@@ -56,9 +56,10 @@ class AccountsInputController extends Controller
         ]);
     }
 
+
     public function all_module()
     {
-        $module = DB::table('module_lists')->get();
+        $module = DB::table('modules')->get();
         return response()->json([
             'status' => 200,
             'module' => $module,

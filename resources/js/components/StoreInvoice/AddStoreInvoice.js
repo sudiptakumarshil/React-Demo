@@ -77,7 +77,7 @@ class AddStoreInvoice extends Component {
             quantity: 1,
             price: 0,
             idx: "",
-            user_id: "",
+            user_id: 0,
             isModalShow: false,
             modalData: {},
             vatList: [],
@@ -86,7 +86,7 @@ class AddStoreInvoice extends Component {
             cashamountList: [],
             vat_id: 0,
             loading: true,
-            isInvEdit:false,
+            isInvEdit: false,
             time: "",
             bankdetails_id: "",
             cashamount_id: "",
@@ -113,6 +113,11 @@ class AddStoreInvoice extends Component {
 
     async componentDidMount() {
         const idx = this.props.match.params.idx;
+        const isLoginExit = getCookieKeyInfo(getAccessTokenName);
+        // console.log("userid",isLoginExit)
+        this.setState({
+            user_id: isLoginExit
+        });
         this.fetchalldata();
     }
 
@@ -813,13 +818,15 @@ class AddStoreInvoice extends Component {
     // for getting warehouse ,store ,product , vendor ,customer,vat....
     fetchalldata = async () => {
         const idx = this.props.match.params.idx;
+        const isLoginExit = getCookieKeyInfo(getAccessTokenName);
         if (this.state.vendorlist.length <= 0 || this.state.isInvEdit) {
             const response = await axios.get(
                 defaultRouteLink + "/api/all-data",
                 {
                     params: {
                         type: idx,
-                        invoice_id: 0
+                        invoice_id: 0,
+                        user_id: isLoginExit
                     }
                 }
             );
@@ -830,12 +837,11 @@ class AddStoreInvoice extends Component {
                 // console.log(idx);
                 // console.log(this.state.cash_amount);
 
-                const isLoginExit = getCookieKeyInfo(getAccessTokenName);
                 this.setState({
                     warehouseList: response.data.warehouses,
                     vendorlist: response.data.vendors,
                     idx: idx,
-                    isInvEdit:false,
+                    isInvEdit: false,
                     user_id: isLoginExit,
                     // storelist: response.data.stores,
                     productList: response.data.products,
@@ -910,13 +916,15 @@ class AddStoreInvoice extends Component {
         let delcheck = confirm("Are you Sure to Delete It?");
         if (delcheck) {
             const idx = this.props.match.params.idx;
+            const isLoginExit = getCookieKeyInfo(getAccessTokenName);
             const removeId = e.target.getAttribute("data-id");
             const response = await axios.get(
                 defaultRouteLink + "/api/delete-invoice-transec/" + removeId,
                 {
                     params: {
                         type: idx,
-                        invoice_id: 0
+                        invoice_id: 0,
+                        user_id: isLoginExit
                     }
                 }
             );
@@ -979,17 +987,16 @@ class AddStoreInvoice extends Component {
     };
     handleModalClose = () => {
         this.setState({
-            isModalShow: false,
+            isModalShow: false
         });
     };
-    handleEditUpdate=(data)=>{
-
+    handleEditUpdate = data => {
         this.fetchalldata();
         this.setState({
             isModalShow: false,
-            isInvEdit:true,
+            isInvEdit: true
         });
-    }
+    };
     handleProductEdit = async item_id => {
         // editInvoiceTransection = async () => {
         const response = await axios.get(
@@ -1219,20 +1226,10 @@ class AddStoreInvoice extends Component {
             pagetitle1 = "SALE RETURN ";
         }
         if (this.state.loading) {
-            return (
-                <h2 className="text-center mt-3">
-                    <i className="fas fa-spinner fa-spin fa-3x"></i>
-                    <MyBulletListLoader />
-                </h2>
-            );
+            return <MyBulletListLoader />;
         }
         if (this.state.delloading) {
-            return (
-                <h2 className="text-center mt-3">
-                    <i className="fas fa-spinner fa-spin fa-3x"></i>
-                    {/* <MyBulletListLoader /> */}
-                </h2>
-            );
+            return <MyBulletListLoader />;
         }
 
         return (
@@ -2662,7 +2659,7 @@ class AddStoreInvoice extends Component {
 const mapStateToProps = state => {
     return {
         data_p_list: state.auth.invoicetransectionList,
-        invTotal: state.auth.toTal,
+        invTotal: state.auth.toTal
     };
 };
 

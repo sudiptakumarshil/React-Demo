@@ -898,18 +898,12 @@ class IssueStoreInvoice extends Component {
         }
         if (this.state.loading) {
             return (
-                <h2 className="text-center mt-3">
-                    <i className="fas fa-spinner fa-spin fa-3x"></i>
-                    <MyBulletListLoader />
-                </h2>
+                <MyBulletListLoader />
             );
         }
         if (this.state.delloading) {
             return (
-                <h2 className="text-center mt-3">
-                    <i className="fas fa-spinner fa-spin fa-3x"></i>
-                    {/* <MyBulletListLoader /> */}
-                </h2>
+                 <MyBulletListLoader />
             );
         }
 
