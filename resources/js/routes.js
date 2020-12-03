@@ -66,7 +66,8 @@ import EditSize from "./components/Size/EditSize";
 import SalesReport from "./components/SalesReport/SalesReport";
 import ManageMenuSubmenu from "./components/MenuSubmenu/MenuSubmenu";
 import ManageModule from "./components/ModuleList/ManageModule";
-
+import ManagePaymentVoucher from  "./components/PaymentVoucher/ManagePaymentVoucher"
+import EditPaymentVoucher from "./components/PaymentVoucher/EditPayment"
 import {
     defaultRouteLink,
     getAccessTokenName,
@@ -463,6 +464,18 @@ export const Routes = props => {
                                 exact
                                 path={defaultRouteLink + "/menu-submenu"}
                                 component={ManageMenuSubmenu}
+                            />
+
+                            <Route
+                                exact
+                                path={defaultRouteLink + "/manage-paymentvoucher"}
+                                component={ManagePaymentVoucher}
+                            />
+
+                             <Route
+                                exact
+                                path={defaultRouteLink + "/edit-paymentvoucher/:id"}
+                                render={props => <EditPaymentVoucher {...props} />}
                             />
                         </Header>
                     ) : (

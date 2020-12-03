@@ -11,17 +11,25 @@ import ContentLoader, { Facebook, BulletList } from "react-content-loader";
 const MyBulletListLoader = () => <BulletList />;
 function ManageSalesMan(props) {
     const [SalesManList, setSalesManList] = useState([]);
-
+    const [loading, setLoading] = useState([true]);
     const allSalesMan = async () => {
         const res = await axios.get(defaultRouteLink + "/api/all-salesman");
         setSalesManList(res.data.allSalesMan);
-        // setLoading(false);
+        setLoading(false);
     };
 
     useEffect(()=>{
         allSalesMan();
     },[])
-
+    if (loading) {
+        return (
+            <MyBulletListLoader />
+            // <h2 className="text-center mt-3">
+            //     <i className="fas fa-spinner fa-spin fa-3x"></i>
+            //     <MyBulletListLoader />
+            // </h2>
+        );
+    }
     return (
         <div className="col-md-12">
             <div className="row">

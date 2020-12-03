@@ -11,17 +11,22 @@ import ContentLoader, { Facebook, BulletList } from "react-content-loader";
 const MyBulletListLoader = () => <BulletList />;
 function ManageSize(props) {
     const [sizeList, setsizeList] = useState([]);
+    const [loading, setLoading] = useState([true]);
 
     const allsizelist = async () => {
         const res = await axios.get(defaultRouteLink + "/api/all-size");
         setsizeList(res.data.size);
-        // setLoading(false);
+        setLoading(false);
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         allsizelist();
-    },[])
-
+    }, []);
+    if (loading) {
+        return (
+            <MyBulletListLoader />
+        );
+    }
     return (
         <div className="col-md-12">
             <div className="row">

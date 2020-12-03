@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { defaultRouteLink } from "../../common/config";
 import { Link } from "react-router-dom";
 import Store from "./Store";
-
+import ContentLoader, { Facebook, BulletList } from "react-content-loader";
+const MyBulletListLoader = () => <BulletList />;
 class ManageStore extends Component {
     // state declaration
     state = {
@@ -28,9 +29,7 @@ class ManageStore extends Component {
         //  first page loading icon
         if (this.state.loading) {
             return (
-                <h2 className="text-center mt-50">
-                    <i className="fas fa-spinner fa-spin fa-3x"></i>
-                </h2>
+                <MyBulletListLoader />
             );
         }
 

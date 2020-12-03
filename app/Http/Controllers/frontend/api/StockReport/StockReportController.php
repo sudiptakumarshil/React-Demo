@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\frontend\api\StockReport;
-use App\Model\Common\CommonReport;
+
 use App\Http\Controllers\Controller;
+use App\Model\Common\CommonReport;
 use App\Model\InventoryCategory\InventoryCategory;
 use Illuminate\Http\Request;
-use DB;
+
 class StockReportController extends Controller
 {
     public function get_category()
@@ -16,6 +17,78 @@ class StockReportController extends Controller
         ]);
     }
 
+    // public function stock_reports(Request $request)
+    // {
+
+    //     $category_id = (int) $request->category_id;
+    //     $start_page = $request->start_page;
+    //     $limit = $request->limit;
+    //     $start = date($request->start_date);
+    //     $end = date($request->end_date);
+    //     $type = $request->type;
+
+    //     $sql="SELECT t.*,pl.* from inventory_products as pl left join (
+    //                 SELECT item_id,sum((oqty+pqty+srq+irq)-(orqty+prqty+sq+iq)) as c_qty, sum(oqty-orqty) as oqty,sum(orqty) as orqty,
+    //                         sum(pqty) as pqty,sum(prqty) as prqty,
+    //                         sum(sq) as sq,sum(srq) as srq,
+    //                         sum(iq) as iq,sum(irq) as irq from (
+
+    //                 SELECT `item_id`,sum(quantity) as  oqty,0 orqty, 0 pqty,0 prqty,0 sq,0 srq,0 iq,0 irq FROM `invoice_trasections`
+    //                         WHERE type in (1,4,7) and  date < '".$start."' and status=1 and trash=1
+
+    //                             UNION
+
+    //                 SELECT `item_id`,0 oqty,SUM(quantity) as orqty, 0 pqty,0 prqty,0 sq,0 srq,0 iq,0 irq FROM `invoice_trasections`
+    //                         WHERE type in (2,3,6) and  date < '".$start."' and status=1 and trash=1
+
+    //                             UNION
+
+    //                 SELECT `item_id`,0 oqty,0 orqty, SUM(quantity) as pqty,0 prqty,0 sq,0 srq,0 iq,0 irq
+    //                     FROM `invoice_trasections`
+    //                         WHERE type=1 and date >= '".$start."' and date <= '".$end."' and status=1 and trash=1
+
+    //                             UNION
+
+    //                 SELECT `item_id`,0 oqty,0 orqty, 0 pqty,SUM(quantity) as prqty,0 sq,0 srq,0 iq,0 irq
+    //                     FROM `invoice_trasections`
+    //                         WHERE type=2 and date >= '".$start."' and date <= '".$end."' and status=1 and trash=1
+
+    //                             UNION
+
+    //                 SELECT `item_id`,0 oqty,0 orqty, 0 pqty,0 prqty,SUM(quantity) as sq,0 srq,0 iq,0 irq
+    //                     FROM `invoice_trasections`
+    //                         WHERE type=3 and date >= '".$start."' and date <= '".$end."' and status=1 and trash=1
+
+    //                             UNION
+
+    //                 SELECT `item_id`,0 oqty,0 orqty, 0 pqty,0 prqty,0 sq,SUM(quantity) as srq,0 iq,0 irq
+    //                     FROM `invoice_trasections`
+    //                         WHERE type=4 and date >= '".$start."' and date <= '".$end."' and status=1 and trash=1
+
+    //                             UNION
+
+    //                 SELECT `item_id`,0 oqty,0 orqty, 0 pqty,0 prqty,0 sq,0 srq,SUM(quantity) as iq,0 irq
+    //                     FROM `invoice_trasections`
+    //                         WHERE type=6 and date >= '".$start."' and date <= '".$end."' and status=1 and trash=1
+
+    //                             UNION
+
+    //                 SELECT `item_id`, 0 oqty,0 orqty, 0 pqty,0 prqty,0 sq,0 srq,0 iq,SUM(quantity) as irq
+    //                     FROM `invoice_trasections`
+    //                     WHERE type=7 and date >= '".$start."' and date <= '".$end."'
+    //                         and status=1 and trash=1
+
+    //                 ) as t GROUP by item_id
+    //             ) as t on pl.id=t.item_id WHERE pl.warehouse_id='1' and pl.status='1'
+    //             and pl.trash='1' ORDER by pl.product_name asc";
+
+    //     $info=CommonReport::getRawSqlData($sql);
+
+    //     return response()->json([
+    //         'status' => 200,
+    //         'list' => $info,
+    //     ]);
+    // }
     public function stock_reports(Request $request)
     {
 
@@ -26,72 +99,73 @@ class StockReportController extends Controller
         $end = date($request->end_date);
         $type = $request->type;
 
-
-        $sql="SELECT t.*,pl.* from inventory_products as pl left join (
-                    SELECT item_id,sum((oqty+pqty+srq+irq)-(orqty+prqty+sq+iq)) as c_qty, sum(oqty-orqty) as oqty,sum(orqty) as orqty,
+        $sql = "SELECT t.*,pl.*,sum(cc_qty + pl.opening_stock) as c_qty,sum(ooqty + pl.opening_stock) as oqty
+                    from inventory_products as pl left join (
+                    SELECT item_id,sum((oqty+pqty+srq+irq)-(orqty+prqty+sq+iq)) as cc_qty,
+                            sum(oqty-orqty) as ooqty,sum(orqty) as orqty,
                             sum(pqty) as pqty,sum(prqty) as prqty,
                             sum(sq) as sq,sum(srq) as srq,
                             sum(iq) as iq,sum(irq) as irq from (
-                    
-                    
-                    SELECT `item_id`,sum(quantity) as  oqty,0 orqty, 0 pqty,0 prqty,0 sq,0 srq,0 iq,0 irq FROM `invoice_trasections` 
-                            WHERE type in (1,4,7) and  date < '".$start."' and status=1 and trash=1
-                            
-                                UNION
-                            
-                    SELECT `item_id`,0 oqty,SUM(quantity) as orqty, 0 pqty,0 prqty,0 sq,0 srq,0 iq,0 irq FROM `invoice_trasections` 
-                            WHERE type in (2,3,6) and  date < '".$start."' and status=1 and trash=1
-                            
-                                UNION
-                            
-                    SELECT `item_id`,0 oqty,0 orqty, SUM(quantity) as pqty,0 prqty,0 sq,0 srq,0 iq,0 irq 
-                        FROM `invoice_trasections` 
-                            WHERE type=1 and date >= '".$start."' and date <= '".$end."' and status=1 and trash=1
-                            
-                                UNION
-                            
-                    SELECT `item_id`,0 oqty,0 orqty, 0 pqty,SUM(quantity) as prqty,0 sq,0 srq,0 iq,0 irq 
-                        FROM `invoice_trasections` 
-                            WHERE type=2 and date >= '".$start."' and date <= '".$end."' and status=1 and trash=1
-                            
-                                UNION
-                            
-                    SELECT `item_id`,0 oqty,0 orqty, 0 pqty,0 prqty,SUM(quantity) as sq,0 srq,0 iq,0 irq 
-                        FROM `invoice_trasections` 
-                            WHERE type=3 and date >= '".$start."' and date <= '".$end."' and status=1 and trash=1
-                            
-                                UNION
-                            
-                    SELECT `item_id`,0 oqty,0 orqty, 0 pqty,0 prqty,0 sq,SUM(quantity) as srq,0 iq,0 irq 
-                        FROM `invoice_trasections` 
-                            WHERE type=4 and date >= '".$start."' and date <= '".$end."' and status=1 and trash=1
-                            
-                                UNION
-                            
-                    SELECT `item_id`,0 oqty,0 orqty, 0 pqty,0 prqty,0 sq,0 srq,SUM(quantity) as iq,0 irq 
-                        FROM `invoice_trasections` 
-                            WHERE type=6 and date >= '".$start."' and date <= '".$end."' and status=1 and trash=1
-                            
-                                UNION
-                            
-                    SELECT `item_id`, 0 oqty,0 orqty, 0 pqty,0 prqty,0 sq,0 srq,0 iq,SUM(quantity) as irq 
-                        FROM `invoice_trasections` 
-                        WHERE type=7 and date >= '".$start."' and date <= '".$end."' 
-                            and status=1 and trash=1
-                    
-                    ) as t GROUP by item_id
-                ) as t on pl.id=t.item_id WHERE pl.warehouse_id='1' and pl.status='1' 
-                and pl.trash='1' ORDER by pl.product_name asc";
 
-        $info=CommonReport::getRawSqlData($sql);                            
+
+                    SELECT `item_id`,sum(quantity) as  oqty,0 orqty, 0 pqty,0 prqty,0 sq,0 srq,0 iq,0 irq FROM `invoice_trasections`
+                            WHERE type in (1,4,7) and  date < '" . $start . "' and status=1 and trash=1 and d_id > 0
+
+                                UNION
+
+                    SELECT `item_id`,0 oqty,SUM(quantity) as orqty, 0 pqty,0 prqty,0 sq,0 srq,0 iq,0 irq FROM `invoice_trasections`
+                            WHERE type in (2,3,6) and  date < '" . $start . "' and status=1 and trash=1 and c_id > 0
+
+                                UNION
+
+                    SELECT `item_id`,0 oqty,0 orqty, SUM(quantity) as pqty,0 prqty,0 sq,0 srq,0 iq,0 irq
+                        FROM `invoice_trasections`
+                            WHERE type=1 and date >= '" . $start . "' and date <= '" . $end . "' and d_id > 0 and status=1 and trash=1
+
+                                UNION
+
+                    SELECT `item_id`,0 oqty,0 orqty, 0 pqty,SUM(quantity) as prqty,0 sq,0 srq,0 iq,0 irq
+                        FROM `invoice_trasections`
+                            WHERE type=2 and date >= '" . $start . "' and date <= '" . $end . "' and c_id > 0 and status=1 and trash=1
+
+                                UNION
+
+                    SELECT `item_id`,0 oqty,0 orqty, 0 pqty,0 prqty,SUM(quantity) as sq,0 srq,0 iq,0 irq
+                        FROM `invoice_trasections`
+                            WHERE type=3 and date >= '" . $start . "' and date <= '" . $end . "' and c_id > 0 and status=1 and trash=1
+
+                                UNION
+
+                    SELECT `item_id`,0 oqty,0 orqty, 0 pqty,0 prqty,0 sq,SUM(quantity) as srq,0 iq,0 irq
+                        FROM `invoice_trasections`
+                            WHERE type=4 and date >= '" . $start . "' and date <= '" . $end . "' and d_id > 0 and status=1 and trash=1
+
+                                UNION
+
+                    SELECT `item_id`,0 oqty,0 orqty, 0 pqty,0 prqty,0 sq,0 srq,SUM(quantity) as iq,0 irq
+                        FROM `invoice_trasections`
+                            WHERE type=6 and date >= '" . $start . "' and date <= '" . $end . "' and c_id > 0 and status=1 and trash=1
+
+                                UNION
+
+                    SELECT `item_id`, 0 oqty,0 orqty, 0 pqty,0 prqty,0 sq,0 srq,0 iq,SUM(quantity) as irq
+                        FROM `invoice_trasections`
+                        WHERE type=7 and date >= '" . $start . "' and date <= '" . $end . "'
+                            and status=1 and trash=1 and d_id > 0
+
+                    ) as t GROUP by item_id
+                ) as t on pl.id=t.item_id WHERE  pl.status='1'
+                and pl.trash='1' group by pl.id asc";
+
+        $info = CommonReport::getRawSqlData($sql);
 
         return response()->json([
             'status' => 200,
             'list' => $info,
+            "sql" => $sql,
         ]);
     }
-	
-	
+
     // public function stock_reports(Request $request)
     // {
 
@@ -129,7 +203,6 @@ class StockReportController extends Controller
     // WHERE type=1
     // GROUP BY item_id
 
-    
     // SELECT SUM(quantity) as newPurshase, inventory_products.product_name as product_name,
     // (SELECT SUM(quantity)  from invoice_trasections WHERE type=2 and invoice_trasections.item_id = item_id) as purshaseReturn,
     // (SELECT SUM(quantity)  from invoice_trasections WHERE type=3 and invoice_trasections.item_id = item_id) as sale,

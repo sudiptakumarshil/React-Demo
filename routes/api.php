@@ -111,13 +111,13 @@ Route::namespace ('frontend')->group(function () {
             Route::get('/all-data', 'StoreInvoiceController@fetch_all_data')->name("all-data");
             Route::get('/delete-invoice-transec/{id}', 'StoreInvoiceController@delete_invoice_transec')->name("delete-invoice-transec");
             Route::patch('/update-transecinvoice/{id}', 'StoreInvoiceController@update_invoice_transection')->name("update-transecinvoice");
-            Route::get('/get-invoice-number-type-1', 'StoreInvoiceController@get_invoice_number_for_type1');
-            Route::get('/get-invoice-number-type-2', 'StoreInvoiceController@get_invoice_number_for_type2');
-            Route::get('/get-invoice-number-type-3', 'StoreInvoiceController@get_invoice_number_for_type3');
-            Route::get('/get-invoice-number-type-4', 'StoreInvoiceController@get_invoice_number_for_type4');
-            Route::get('/get-invoice-number-type-5', 'StoreInvoiceController@get_invoice_number_for_type5');
-            Route::get('/get-invoice-number-type-6', 'StoreInvoiceController@get_invoice_number_for_type6');
-            Route::get('/get-invoice-number-type-7', 'StoreInvoiceController@get_invoice_number_for_type7');
+            // Route::get('/get-invoice-number-type-1', 'StoreInvoiceController@get_invoice_number_for_type1');
+            // Route::get('/get-invoice-number-type-2', 'StoreInvoiceController@get_invoice_number_for_type2');
+            // Route::get('/get-invoice-number-type-3', 'StoreInvoiceController@get_invoice_number_for_type3');
+            // Route::get('/get-invoice-number-type-4', 'StoreInvoiceController@get_invoice_number_for_type4');
+            // Route::get('/get-invoice-number-type-5', 'StoreInvoiceController@get_invoice_number_for_type5');
+            // Route::get('/get-invoice-number-type-6', 'StoreInvoiceController@get_invoice_number_for_type6');
+            // Route::get('/get-invoice-number-type-7', 'StoreInvoiceController@get_invoice_number_for_type7');
             Route::get('/get-warehouse/{id}', 'StoreInvoiceController@getwarehouse');
             Route::get('/get-product-wise-price/{id}', 'StoreInvoiceController@product_wise_price');
             Route::get('/get-productCode', 'InvoiceParamsController@get_productCode');
@@ -219,6 +219,9 @@ Route::namespace ('frontend')->group(function () {
     Route::namespace ('api')->group(function () {
         Route::namespace ('PaymentVoucher')->group(function () {
             Route::post('/save-paymentvoucher', 'PaymentVoucherController@save_payment_voucher')->name("save-paymentvoucher");
+            Route::get('/all-paymentvoucher', 'PaymentVoucherController@Manage_payment_voucher')->name("all-paymentvoucher");
+            Route::get('/edit-paymentvoucher/{id}', 'PaymentVoucherController@Edit_payment_voucher')->name("edit-paymentvoucher");
+            Route::patch('/update-paymentvoucher/{id}', 'PaymentVoucherController@update_payment_voucher')->name("update-paymentvoucher");
         });
     });
 });
@@ -272,9 +275,6 @@ Route::namespace ('frontend')->group(function () {
         Route::get('/all-modulesubmodule', 'MenuSubmenuSettingController@getModuleSubmoduleInfoAsTree');
         Route::patch('/update-module/{id}', 'MenuSubmenuSettingController@update_module');
         Route::get('/delete-module/{id}', 'MenuSubmenuSettingController@delete_module');
-
-
-
 
     });
 });

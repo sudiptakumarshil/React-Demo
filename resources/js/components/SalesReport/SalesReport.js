@@ -10,6 +10,7 @@ import "react-bootstrap-typeahead/css/Typeahead.css";
 function SalesReport(props) {
     const [allSize, setallSize] = useState([]);
     const [SaleReport, setSaleReport] = useState([]);
+    const [loading, SetLoading] = useState(true);
     const data = {
         size_id: 0,
         start_date: "",
@@ -19,6 +20,7 @@ function SalesReport(props) {
     const getSize = async () => {
         const res = await axios.get(defaultRouteLink + "/api/all-data");
         setallSize(res.data.allSize);
+        SetLoading(false);
     };
 
     const [formData, setFormData] = useState(data);
@@ -58,6 +60,10 @@ function SalesReport(props) {
             size_id: item.id
         }));
     });
+
+    if (loading) {
+        return <MyBulletListLoader />;
+    }
 
     return (
         <div>

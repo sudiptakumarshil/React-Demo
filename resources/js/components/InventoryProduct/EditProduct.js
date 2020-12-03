@@ -24,7 +24,7 @@ const EditProduct = props => {
         product_code: "",
         product_name: "",
         pices_of_carton: "",
-        category_id: "",
+        category_id: 0,
         category_name: "",
         warehouse_id: "",
         sorting: "",
@@ -188,7 +188,6 @@ const EditProduct = props => {
                                             name="product_code"
                                             value={formData.product_code}
                                             onChange={handleInput}
-                                            required
                                         ></input>
                                     </div>
                                 </div>
@@ -203,9 +202,9 @@ const EditProduct = props => {
                                             className="form-control"
                                             placeholder="Product Name"
                                             name="product_name"
+                                            required
                                             value={formData.product_name}
                                             onChange={handleInput}
-                                            required
                                         ></input>
                                     </div>
                                 </div>
@@ -224,7 +223,6 @@ const EditProduct = props => {
                                             name="pices_of_carton"
                                             value={formData.pices_of_carton}
                                             onChange={handleInput}
-                                            required
                                         ></input>
                                     </div>
                                 </div>
@@ -244,7 +242,6 @@ const EditProduct = props => {
                                             value={formData.category_name}
                                             data-id={formData.category_id}
                                             onChange={handleInput}
-                                            required
                                         ></input>
                                     </div>
                                 </div>
@@ -278,7 +275,6 @@ const EditProduct = props => {
                                             name="sorting"
                                             value={formData.sorting}
                                             onChange={handleInput}
-                                            required
                                         ></input>
                                     </div>
                                 </div>
@@ -294,7 +290,6 @@ const EditProduct = props => {
                                             name="unit"
                                             value={formData.unit}
                                             onChange={handleInput}
-                                            required
                                         ></input>
                                     </div>
                                 </div>
@@ -312,7 +307,6 @@ const EditProduct = props => {
                                             name="opening_stock"
                                             value={formData.opening_stock}
                                             onChange={handleInput}
-                                            required
                                         ></input>
                                     </div>
                                 </div>
@@ -330,7 +324,6 @@ const EditProduct = props => {
                                             name="buy_price"
                                             value={formData.buy_price}
                                             onChange={handleInput}
-                                            required
                                         ></input>
                                     </div>
                                 </div>
@@ -346,7 +339,6 @@ const EditProduct = props => {
                                             name="cost"
                                             value={formData.cost}
                                             onChange={handleInput}
-                                            required
                                         ></input>
                                     </div>
                                 </div>
@@ -364,7 +356,6 @@ const EditProduct = props => {
                                             name="selling_price"
                                             value={formData.selling_price}
                                             onChange={handleInput}
-                                            required
                                         ></input>
                                     </div>
                                 </div>
@@ -397,7 +388,6 @@ const EditProduct = props => {
                                             id="exampleFormControlSelect1"
                                             name="status"
                                             onChange={handleInput}
-                                            required
                                         >
                                             <option selected>
                                                 Choose one{" "}

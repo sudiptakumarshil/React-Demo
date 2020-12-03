@@ -19,7 +19,8 @@ use App\Model\Vat;
 use App\Model\WareHouse\WareHouseDetails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use App\Model\Accounts\Ledger;
+use App\Model\Accounts\Setting;
 class StoreInvoiceController extends Controller
 {
 
@@ -38,7 +39,7 @@ class StoreInvoiceController extends Controller
             $invotran->party_id = $request->vendor_id;
         } elseif ($request->idx == 3 || $request->idx == 4 || $request->idx == 6 || $request->idx == 7) {
             $invotran->c_id = $request->product_id;
-            $invotran->party_id = $request->vendor_id; //thats mean vendor id= customer id for idx 6 and 7
+            $invotran->party_id = $request->vendor_id; // vendor id &customer id = idx 6 and 7
         }
         // $invotran->party_id = $request->vendor_id;
         $invotran->ware_id = $request->warehouse_id;
@@ -110,71 +111,21 @@ class StoreInvoiceController extends Controller
         ]);
 
     }
-
     public function returnsave_store_invoice(Request $request)
     {
+        // return $request->all();
 
         $getreturnQuantity = 0;
         $return_msg = "";
         if ($request->idx == 7) {
             $invoice_id = $request->invoice_id;
-
             $returnQuantity = $request->return_quantity;
             $transec_id_count = count($returnQuantity);
-            for ($i = 0; $i < $transec_id_count; $i++) {
-                if ($returnQuantity[$i]) {
-                    $rowInfo = $returnQuantity[$i];
-                    $qty = $rowInfo["qty"];
-                    $ref_id = $rowInfo["ref_id"];
-                    $ref_pid = $rowInfo["ref_pid"];
 
-                    // $getreturnQuantity = DB::table('store_invoices')->where('id', $invoice_id)->first();
-                    // if($getreturnQuantity->total_quantity <= $qty){
-                    //     echo "Return quantity Cannot be Gretter than Product Quantity!!";
-                    // }
-                    $storeinvoice = new StoreInvoice();
-                    $storeinvoice->ref_inv = $request->invoice_id;
-                    $storeinvoice->return_quantity = $qty;
-                    $storeinvoice->ref_product_id = $ref_pid;
-                    $storeinvoice->invoice_number = $request->invoice_code;
-                    $storeinvoice->type = $request->idx;
-                    $storeinvoice->vendor_id = $request->vendor_id;
-                    $storeinvoice->ware_id = $request->warehouse_id;
-                    $storeinvoice->date = date($request->date);
-                    $storeinvoice->posting_by = $request->user_id;
-                    $storeinvoice->store_id = $request->store_id;
-                    $storeinvoice->gross_amount = $request->gross_amount;
-                    $storeinvoice->discount_taka = $request->discountTaka;
-                    $storeinvoice->discount_percent = $request->final_discount_percent;
-                    $storeinvoice->cash_amount = $request->cash_amount;
-                    $storeinvoice->cash_id = $request->cashamount_id;
-                    $storeinvoice->bank_amount = $request->bank_amount;
-                    $storeinvoice->bank_id = $request->bankdetails_id;
-                    $storeinvoice->remarks = $request->remarks;
-                    $storeinvoice->total_quantity = $request->totalQuantity;
-                    $storeinvoice->save();
-
-                }
-
-                $getreturnQuantity = DB::table('store_invoices')->where('ref_inv', $invoice_id)
-                    ->sum('return_quantity');
-                // $saveRqty = StoreInvoice::find($invoice_id);
-                // $saveRqty->total_rqty = $getreturnQuantity;
-                // $saveRqty->save();
-
-                $data['total_rqty'] = $getreturnQuantity;
-                DB::table('store_invoices')
-                    ->where('id', $invoice_id)
-                    ->update($data);
-
-                // DB::table('invoice_trasections')
-                // ->where('publishing_by', "=", $storeinvoice->posting_by)
-                // ->where('invoice_id', $invoice_id)
-                // ->update($data);
-            }
-        } else {
-            $invoice_id = $request->invoice_id;
             $storeinvoice = new StoreInvoice();
+            $storeinvoice->ref_inv = $request->invoice_id;
+            $storeinvoice->return_quantity = 0;
+            $storeinvoice->ref_product_id = 0;
             $storeinvoice->invoice_number = $request->invoice_code;
             $storeinvoice->type = $request->idx;
             $storeinvoice->vendor_id = $request->vendor_id;
@@ -192,11 +143,47 @@ class StoreInvoiceController extends Controller
             $storeinvoice->remarks = $request->remarks;
             $storeinvoice->total_quantity = $request->totalQuantity;
             $storeinvoice->save();
-            $data['invoice_id'] = $storeinvoice->id;
-            DB::table('invoice_trasections')
-                ->where('publishing_by', "=", $storeinvoice->posting_by)
-                ->where('invoice_id', $invoice_id)
-                ->update($data);
+
+            for ($i = 0; $i < $transec_id_count; $i++) {
+                if ($returnQuantity[$i]) {
+                    $rowInfo = $returnQuantity[$i];
+                    $qty = $rowInfo["qty"];
+                    $ref_id = $rowInfo["ref_id"];
+                    $ref_pid = $rowInfo["ref_pid"];
+                    $invotran = new InvoiceTrasection();
+                    $invotran->invoice_id = $storeinvoice->id;
+                    $invotran->c_id = $ref_pid;
+                    $invotran->party_id = $request->vendor_id; //thats mean vendor id= customer id for idx 6 and 7
+                    $invotran->ware_id = $request->warehouse_id;
+                    $invotran->item_id = $ref_pid;
+                    $invotran->status = 1;
+                    $invotran->date = date($request->date);
+                    $invotran->store_id = $request->store_id;
+                    $invotran->quantity = $qty;
+                    $invotran->price = 0;
+                    $invotran->discount_taka = 0;
+                    $invotran->discount_percent = 0;
+                    $invotran->vat = 0;
+                    $invotran->publishing_by = $request->user_id;
+                    $invotran->type = $request->idx;
+                    $invotran->save();
+
+                }
+                // $updateinvoice = StoreInvoice::find($storeinvoice->id);
+                // // $updateinvoice->return_quantity = $qty;
+                // $updateinvoice->ref_product_id = $ref_pid;
+                // $updateinvoice->save();
+
+                $getreturnQuantity = DB::table('invoice_trasections')->where('invoice_id', $invoice_id)
+                    ->sum('quantity');
+                // $getreturnQuantity = DB::table('store_invoices')->where('ref_inv', $invoice_id)
+                // ->sum('return_quantity');
+
+                $data['total_rqty'] = $getreturnQuantity;
+                DB::table('store_invoices')
+                    ->where('id', $invoice_id)
+                    ->update($data);
+            }
         }
 
         return response()->json([
@@ -206,6 +193,95 @@ class StoreInvoiceController extends Controller
         ]);
 
     }
+    // public function returnsave_store_invoice(Request $request)
+    // {
+
+    //     $getreturnQuantity = 0;
+    //     $return_msg = "";
+    //     if ($request->idx == 7) {
+    //         $invoice_id = $request->invoice_id;
+    //         $returnQuantity = $request->return_quantity;
+    //         $transec_id_count = count($returnQuantity);
+    //         for ($i = 0; $i < $transec_id_count; $i++) {
+    //             if ($returnQuantity[$i]) {
+    //                 $rowInfo = $returnQuantity[$i];
+    //                 $qty = $rowInfo["qty"];
+    //                 $ref_id = $rowInfo["ref_id"];
+    //                 $ref_pid = $rowInfo["ref_pid"];
+    //                 $storeinvoice = new StoreInvoice();
+    //                 $storeinvoice->ref_inv = $request->invoice_id;
+    //                 $storeinvoice->return_quantity = $qty;
+    //                 $storeinvoice->ref_product_id = $ref_pid;
+    //                 $storeinvoice->invoice_number = $request->invoice_code;
+    //                 $storeinvoice->type = $request->idx;
+    //                 $storeinvoice->vendor_id = $request->vendor_id;
+    //                 $storeinvoice->ware_id = $request->warehouse_id;
+    //                 $storeinvoice->date = date($request->date);
+    //                 $storeinvoice->posting_by = $request->user_id;
+    //                 $storeinvoice->store_id = $request->store_id;
+    //                 $storeinvoice->gross_amount = $request->gross_amount;
+    //                 $storeinvoice->discount_taka = $request->discountTaka;
+    //                 $storeinvoice->discount_percent = $request->final_discount_percent;
+    //                 $storeinvoice->cash_amount = $request->cash_amount;
+    //                 $storeinvoice->cash_id = $request->cashamount_id;
+    //                 $storeinvoice->bank_amount = $request->bank_amount;
+    //                 $storeinvoice->bank_id = $request->bankdetails_id;
+    //                 $storeinvoice->remarks = $request->remarks;
+    //                 $storeinvoice->total_quantity = $request->totalQuantity;
+    //                 $storeinvoice->save();
+
+    //             }
+
+    //             $getreturnQuantity = DB::table('store_invoices')->where('ref_inv', $invoice_id)
+    //                 ->sum('return_quantity');
+    //             // $saveRqty = StoreInvoice::find($invoice_id);
+    //             // $saveRqty->total_rqty = $getreturnQuantity;
+    //             // $saveRqty->save();
+
+    //             $data['total_rqty'] = $getreturnQuantity;
+    //             DB::table('store_invoices')
+    //                 ->where('id', $invoice_id)
+    //                 ->update($data);
+
+    //             // DB::table('invoice_trasections')
+    //             // ->where('publishing_by', "=", $storeinvoice->posting_by)
+    //             // ->where('invoice_id', $invoice_id)
+    //             // ->update($data);
+    //         }
+    //     } else {
+    //         $invoice_id = $request->invoice_id;
+    //         $storeinvoice = new StoreInvoice();
+    //         $storeinvoice->invoice_number = $request->invoice_code;
+    //         $storeinvoice->type = $request->idx;
+    //         $storeinvoice->vendor_id = $request->vendor_id;
+    //         $storeinvoice->ware_id = $request->warehouse_id;
+    //         $storeinvoice->date = date($request->date);
+    //         $storeinvoice->posting_by = $request->user_id;
+    //         $storeinvoice->store_id = $request->store_id;
+    //         $storeinvoice->gross_amount = $request->gross_amount;
+    //         $storeinvoice->discount_taka = $request->discountTaka;
+    //         $storeinvoice->discount_percent = $request->final_discount_percent;
+    //         $storeinvoice->cash_amount = $request->cash_amount;
+    //         $storeinvoice->cash_id = $request->cashamount_id;
+    //         $storeinvoice->bank_amount = $request->bank_amount;
+    //         $storeinvoice->bank_id = $request->bankdetails_id;
+    //         $storeinvoice->remarks = $request->remarks;
+    //         $storeinvoice->total_quantity = $request->totalQuantity;
+    //         $storeinvoice->save();
+    //         $data['invoice_id'] = $storeinvoice->id;
+    //         DB::table('invoice_trasections')
+    //             ->where('publishing_by', "=", $storeinvoice->posting_by)
+    //             ->where('invoice_id', $invoice_id)
+    //             ->update($data);
+    //     }
+
+    //     return response()->json([
+    //         'status' => 200,
+    //         // 'message' => "Store Invoice Save Successfully!!",
+    //         'message' => $getreturnQuantity,
+    //     ]);
+
+    // }
 
     public function getallinvoicetransection()
     {
@@ -332,6 +408,8 @@ class StoreInvoiceController extends Controller
             ->where('status', 1)
             ->first();
         $allSize = Size::all();
+        $setting = Setting::all();
+        $ledgers = Ledger::where("id", 751)->get();
         return response()->json([
             'status' => 200,
             'products' => $products,
@@ -352,8 +430,35 @@ class StoreInvoiceController extends Controller
             'customer' => $customer,
             'salesMan' => $salesMan,
             'allSize' => $allSize,
+            "setting" => $setting,
+            "ledgers" => $ledgers,
         ]);
     }
+
+    // public function product_wise_price($id)
+    // {
+    //     $productPrice = DB::table('inventory_products')
+    //         ->where('id', $id)
+    //         ->first();
+
+    //     $closing_stock = DB::select(DB::raw("SELECT item_id, sum(d_qty) as d_qty,sum(d_qty) as c_qty,sum(d_qty-c_qty) as closing from (
+
+    //         SELECT d_id as item_id, sum(quantity) as d_qty,0 c_qty FROM `invoice_trasections` WHERE d_id='$id' and trash != '2'
+
+    //             UNION
+
+    //         SELECT c_id as item_id, 0 d_qty,sum(quantity) as c_qty FROM `invoice_trasections` WHERE c_id='$id' and trash != '2'
+
+    //              ) as t WHERE item_id is not null GROUP by item_id"));
+
+    //     // print_r($closing_stock);
+    //     // exit();
+
+    //     return response()->json([
+    //         'productPrice' => $productPrice,
+    //         'closing_stock' => $closing_stock,
+    //     ]);
+    // }
 
     public function product_wise_price($id)
     {
@@ -361,19 +466,27 @@ class StoreInvoiceController extends Controller
             ->where('id', $id)
             ->first();
 
-        $closing_stock = DB::select(DB::raw("SELECT item_id, sum(d_qty) as d_qty,sum(d_qty) as c_qty,sum(d_qty-c_qty) as closing from (
+        $op = 0;
+        if (!empty($productPrice)) {
+            $op = $productPrice->opening_stock;
+        }
 
-            SELECT d_id as item_id, sum(quantity) as d_qty,0 c_qty FROM `invoice_trasections` WHERE d_id='$id' and trash != '2'
+        $closing_stock = DB::select(DB::raw("SELECT item_id, sum(d_qty) as d_qty,sum(d_qty) as c_qty,sum(d_qty-c_qty ) as closing
+            from (
 
-                UNION
+                SELECT d_id as item_id, sum(quantity) as d_qty,0 c_qty FROM `invoice_trasections`
+                        WHERE d_id='$id' and status=1 and trash=1
 
-            SELECT c_id as item_id, 0 d_qty,sum(quantity) as c_qty FROM `invoice_trasections` WHERE c_id='$id' and trash != '2'
+                    UNION
+
+                SELECT c_id as item_id, 0 d_qty,sum(quantity) as c_qty FROM `invoice_trasections`
+                        WHERE c_id='$id' and status=1 and trash=1
 
                  ) as t WHERE item_id is not null GROUP by item_id"));
 
         // print_r($closing_stock);
         // exit();
-
+        $closing_stock[0]->closing = $op + $closing_stock[0]->closing;
         return response()->json([
             'productPrice' => $productPrice,
             'closing_stock' => $closing_stock,
@@ -782,7 +895,7 @@ class StoreInvoiceController extends Controller
             ->join('ware_house_details', 'store_invoices.ware_id', '=', 'ware_house_details.id')
             ->join('vendors', 'store_invoices.vendor_id', '=', 'vendors.id')
             ->join('stores', 'store_invoices.store_id', '=', 'stores.id')
-            ->select('store_invoices.*', 'vendors.name as vendor', 'ware_house_details.name as ware_name', 'ware_house_details.address as ware_address', 'stores.store_name')
+            ->select('store_invoices.*', 'vendors.name as vendor', 'vendors.type as vtype', 'ware_house_details.name as ware_name', 'ware_house_details.address as ware_address', 'stores.store_name')
             ->where('store_invoices.id', $id)
             ->first();
 

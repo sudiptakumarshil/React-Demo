@@ -58,7 +58,10 @@ export function StoreInvoicePrint(props) {
                     style={{ fontSize: 13, fontWeight: 500 }}
                 >
                     {/* <p className="mb-1">Description: </p> */}
-                    <p className="mb-1">Vendor: {invoicedata.vendor}</p>
+                    <p className="mb-1">
+                        {invoicedata.vtype == 1 ? "Vendor" : "Customer"}:{" "}
+                        {invoicedata.vendor}
+                    </p>
                     {/* <p className="mb-1">Vendor Code: 1001</p> */}
                 </div>
 

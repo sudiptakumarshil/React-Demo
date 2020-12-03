@@ -12,6 +12,7 @@ function ProductReport(props) {
     const [customerList, setcustomerList] = useState([]);
     const [productReportList, setproductReportList] = useState([]);
     const [Loading, setLoading] = useState(false);
+    const [firstLoading, setFirstLoading] = useState(true);
     const data = {
         product_id: 0,
         start_page: 1,
@@ -19,7 +20,7 @@ function ProductReport(props) {
         end_date: "",
         vendor_id: 0,
         customer_id: 0,
-        type:0
+        type: 0
     };
 
     const [formData, setFormData] = useState(data);
@@ -65,6 +66,7 @@ function ProductReport(props) {
             setproductList(response.data.products);
             setvendorList(response.data.vendors);
             setcustomerList(response.data.customer);
+            setFirstLoading(false);
         }
     };
 
@@ -81,7 +83,7 @@ function ProductReport(props) {
             end_date: "",
             vendor_id: 0,
             customer_id: 0,
-            type:0
+            type: 0
         };
         setFormData(data);
 
@@ -94,12 +96,10 @@ function ProductReport(props) {
     }, []);
 
     if (Loading) {
-        return (
-            <h2 className="text-center mt-3">
-                <i className="fas fa-spinner fa-spin fa-3x"></i>
-                <MyBulletListLoader />
-            </h2>
-        );
+        return <MyBulletListLoader />;
+    }
+    if (firstLoading) {
+        return <MyBulletListLoader />;
     }
 
     return (
@@ -226,7 +226,7 @@ function ProductReport(props) {
                         <th>SL</th>
                         <th>Product Name</th>
                         <th>Invoice Number </th>
-                        <th>Party Name</th>
+                        <th>Customer/ Vendor</th>
                         <th>Date</th>
                         <th>Type</th>
                         <th>Quantity</th>

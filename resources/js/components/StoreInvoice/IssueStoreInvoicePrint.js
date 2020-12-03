@@ -34,10 +34,12 @@ export function IssueStoreInvoicePrint(props) {
                             <td>
                                 <h4 style={{ textAlign: "center" }}>E-Store</h4>
                                 <p style={{ textAlign: "center" }}>
-                                {invoicedata.ware_address}
+                                    {invoicedata.ware_address}
                                 </p>
                             </td>
-                            <button  type="button" className="btn btn-primary">Print</button>
+                            <button type="button" className="btn btn-primary">
+                                Print
+                            </button>
                         </tr>
                     </table>
                 </div>
@@ -56,7 +58,10 @@ export function IssueStoreInvoicePrint(props) {
                     style={{ fontSize: 13, fontWeight: 500 }}
                 >
                     {/* <p className="mb-1">Description: </p> */}
-                    <p className="mb-1">Vendor: {invoicedata.vendor}</p>
+                    <p className="mb-1">
+                        {invoicedata.vtype == 1 ? "Vendor" : "Customer"}:{" "}
+                        {invoicedata.vendor}
+                    </p>
                     {/* <p className="mb-1">Vendor Code: 1001</p> */}
                 </div>
 

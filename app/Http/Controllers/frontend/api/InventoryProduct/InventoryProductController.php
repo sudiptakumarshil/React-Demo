@@ -15,8 +15,8 @@ class InventoryProductController extends Controller
     {
         $products = DB::table('inventory_products')
             ->join('inventory_categories', 'inventory_products.category_id', 'inventory_categories.id')
-            ->join('ware_house_details', 'inventory_products.warehouse_id', 'ware_house_details.id')
-            ->join('units', 'inventory_products.unit_id', 'units.id')
+            ->leftjoin('ware_house_details', 'inventory_products.warehouse_id', 'ware_house_details.id')
+            ->leftjoin('units', 'inventory_products.unit_id', 'units.id')
             ->select('inventory_products.*', 'inventory_categories.category_name', 'ware_house_details.name', 'units.unit_name')
             ->get();
 
@@ -78,7 +78,12 @@ class InventoryProductController extends Controller
 
     public function edit_product($id)
     {
-        $product = InventoryProduct::find($id);
+        // $product = InventoryProduct::find($id);
+        $product = DB::table('inventory_products')
+        ->join('inventory_categories','inventory_products.category_id','inventory_categories.id')
+        ->select("inventory_products.*","inventory_categories.category_name as category_name")
+        ->where('inventory_products.id',$id)
+        ->first();
         return response()->json([
             'status' => 200,
             'product' => $product,

@@ -33,30 +33,35 @@ const AddProduct = props => {
         category_autocode: 0,
         category_code: 0,
         unit_id: 0,
-        status:1,
+        status: 1
     };
     const [formData, setFormData] = useState(data);
 
     const SaveInventProduct = async event => {
         event.preventDefault();
-
-        if (formData.product_code == 0) {
-            Swal.fire("Product Code Cannot Be Empty!!");
-        } else if (formData.product_name == 0) {
+        if (formData.product_name == 0) {
             Swal.fire("Product Name Cannot Be Empty!!");
-        } else if (formData.category_id == 0) {
+        }
+        // if (formData.product_code == 0) {
+        //     Swal.fire("Product Code Cannot Be Empty!!");
+        // } else if (formData.product_name == 0) {
+        //     Swal.fire("Product Name Cannot Be Empty!!");
+        // }
+        else if (formData.category_id == 0) {
             Swal.fire("Category  Cannot Be Empty!!");
-        } else if (formData.warehouse_id == 0) {
-            Swal.fire("Warehouse Cannot Be Empty!!");
-        } else if (formData.unit_id == 0) {
-            Swal.fire("Unit  Cannot Be Empty!!");
-        } else if (formData.buy_price == 0) {
-            Swal.fire("Buy Price  Cannot Be Empty!!");
-        } else if (formData.selling_price == 0) {
-            Swal.fire("Selling Price Cannot Be Empty!!");
-        } else if (formData.price_type == 0) {
-            Swal.fire("Price Type Cannot Be Empty!!");
-        } else {
+        }
+        //  else if (formData.warehouse_id == 0) {
+        //     Swal.fire("Warehouse Cannot Be Empty!!");
+        // } else if (formData.unit_id == 0) {
+        //     Swal.fire("Unit  Cannot Be Empty!!");
+        // } else if (formData.buy_price == 0) {
+        //     Swal.fire("Buy Price  Cannot Be Empty!!");
+        // } else if (formData.selling_price == 0) {
+        //     Swal.fire("Selling Price Cannot Be Empty!!");
+        // } else if (formData.price_type == 0) {
+        //     Swal.fire("Price Type Cannot Be Empty!!");
+        // }
+        else {
             const res = await axios.post(
                 defaultRouteLink + "/api/save-inventproduct",
                 formData
@@ -432,32 +437,26 @@ const AddProduct = props => {
                             </div>
 
                             {/* <div className="row pt-3"> */}
-                                <div className="col-md-4">
-                                    <label className="control-label">
-                                        Status
-                                    </label>
-                                    <div className="form-group">
-                                        <div className="input-group">
-                                            <select
-                                                className="form-control"
-                                                id="exampleFormControlSelect1"
-                                                name="status"
-                                                onChange={handleInput}
-                                                required
-                                            >
-                                                <option selected>
-                                                    Choose one{" "}
-                                                </option>
-                                                <option value="1">
-                                                    Active
-                                                </option>
-                                                <option value="2">
-                                                    Inactive
-                                                </option>
-                                            </select>
-                                        </div>
+                            <div className="col-md-4">
+                                <label className="control-label">Status</label>
+                                <div className="form-group">
+                                    <div className="input-group">
+                                        <select
+                                            className="form-control"
+                                            id="exampleFormControlSelect1"
+                                            name="status"
+                                            onChange={handleInput}
+                                            required
+                                        >
+                                            <option selected>
+                                                Choose one{" "}
+                                            </option>
+                                            <option value="1">Active</option>
+                                            <option value="2">Inactive</option>
+                                        </select>
                                     </div>
                                 </div>
+                            </div>
                             {/* </div> */}
 
                             <div className="col-md-4">

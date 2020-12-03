@@ -53,7 +53,7 @@ class MenuSubmenuSettingController extends Controller
             } else {
                 $q->where("root_id", $id);
             }
-        })->where('trash', 1)
+        })->where('trash', 1)->where('status',1)
             ->get();
 
         foreach ($info as $val) {
@@ -151,7 +151,7 @@ class MenuSubmenuSettingController extends Controller
         $menu->save();
         return response()->json([
             'status' => 200,
-            'message' => 'Menu Saved Successfully!!',
+            'message' => 'Menu Updated Successfully!!',
         ]);
     }
 

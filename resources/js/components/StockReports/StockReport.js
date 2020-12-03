@@ -68,10 +68,11 @@ function StockReport(props) {
     });
     if (loading) {
         return (
-            <h2 className="text-center mt-3">
-                <i className="fas fa-spinner fa-spin fa-3x"></i>
-                <MyBulletListLoader />
-            </h2>
+            <MyBulletListLoader />
+            // <h2 className="text-center mt-3">
+            //     <i className="fas fa-spinner fa-spin fa-3x"></i>
+            //     <MyBulletListLoader />
+            // </h2>
         );
     }
     var sl=0;var tp_qty=0;var tpr_qty=0;var ts_qty=0;
