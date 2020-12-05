@@ -102,18 +102,34 @@ class InventoryProductController extends Controller
     public function update_product(Request $request, $id)
     {
         $product = InventoryProduct::find($id);
+        if ($request->product_image != $product->product_image) {
+            $strpos = strpos($request->product_image, ';');
+            $sub = substr($request->product_image, 0, $strpos);
+            $Ex = explode('/', $sub)[1];
+            $name = time() . "." . $Ex;
+            $img = Image::make($request->product_image)->resize(300, 200);
+            $upload_path = public_path() . "/productImage/";
+            $image = $upload_path . $product->product_image;
+            $img->save($upload_path . $name);
+            if (file_exists($image)) {
+                unlink($image);
+            }
+        } else {
+            $name = $product->product_image;
+        }
         $product->category_id = $request->category_id;
         $product->product_code = $request->product_code;
         $product->product_name = $request->product_name;
         $product->pices_of_carton = $request->pices_of_carton;
         $product->warehouse_id = $request->warehouse_id;
         $product->sorting = $request->sorting;
-        $product->unit = $request->unit;
+        $product->unit_id = $request->unit_id;
         $product->opening_stock = $request->opening_stock;
         $product->buy_price = $request->buy_price;
         $product->cost = $request->cost;
         $product->selling_price = $request->selling_price;
         $product->price_type = $request->price_type;
+        $product->product_image = $name;
         $product->save();
 
         return response()->json([

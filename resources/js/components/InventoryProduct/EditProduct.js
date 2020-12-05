@@ -28,14 +28,14 @@ const EditProduct = props => {
         category_name: "",
         warehouse_id: "",
         sorting: "",
-        unit: "",
+        unit_id: 0,
         opening_stock: "",
         buy_price: "",
         cost: "",
         selling_price: "",
         price_type: "",
         product_image: "",
-        status:1,
+        status: 1
     };
     const [formData, setFormData] = useState(data);
 
@@ -50,6 +50,25 @@ const EditProduct = props => {
             defaultRouteLink + `/api/update-inventproduct/${pe_id}`,
             formData
         );
+        if (res.data.status === 200) {
+            props.history.push(defaultRouteLink + "/manage-product");
+        }
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            onOpen: toast => {
+                toast.addEventListener("mouseenter", Swal.stopTimer);
+                toast.addEventListener("mouseleave", Swal.resumeTimer);
+            }
+        });
+
+        Toast.fire({
+            icon: "success",
+            title: "Product Updated  Successfully!!"
+        });
 
         // const res = await axios.patch(
         //     "/dbBackup/api/update-inventproduct/${pe_id}",
@@ -81,6 +100,21 @@ const EditProduct = props => {
             ...oldState,
             [name]: value
         }));
+    };
+    const changephoto = event => {
+        const file = event.target.files[0];
+        if (file.size > 1048576) {
+            alert("your image too long");
+        } else {
+            let reader = new FileReader();
+            reader.onload = event => {
+                setFormData(oldState => ({
+                    ...oldState,
+                    product_image: event.target.result
+                }));
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     const fetchproduct = async () => {
@@ -157,9 +191,7 @@ const EditProduct = props => {
     });
 
     if (loading) {
-        return (
-            <MyBulletListLoader />
-        );
+        return <MyBulletListLoader />;
     }
 
     return (
@@ -284,8 +316,8 @@ const EditProduct = props => {
                                             type="text"
                                             className="form-control"
                                             placeholder="Unit"
-                                            name="unit"
-                                            value={formData.unit}
+                                            name="unit_id"
+                                            value={formData.unit_id}
                                             onChange={handleInput}
                                         ></input>
                                     </div>
@@ -405,8 +437,7 @@ const EditProduct = props => {
                                     </div>
                                 </div>
                             </div>
-                        {/* </div> */}
-
+                            {/* </div> */}
 
                             <div className="col-md-4">
                                 <label className="control-label">
@@ -415,12 +446,28 @@ const EditProduct = props => {
                                 <div className="form-group">
                                     <input
                                         type="file"
-                                        onChange={handleInput}
+                                        onChange={changephoto}
                                         name="product_image"
                                         className="form-control-file"
                                         id="exampleFormControlFile1"
                                     ></input>
                                 </div>
+                                <img
+                                    src={
+                                        defaultRouteLink +
+                                        `/public/productImage/${formData.product_image}`
+                                    }
+                                    height="80px"
+                                    width="80px"
+                                    alt="test"
+                                />
+
+                                <img
+                                    src={formData.product_image}
+                                    height="80px"
+                                    width="80px"
+                                    alt="test"
+                                />
                             </div>
                         </div>
                         <div className="form-group">
@@ -428,7 +475,7 @@ const EditProduct = props => {
                             <div className="col-md-10">
                                 <div className="input-group">
                                     <button className="btn btn-primary text-center">
-                                        save
+                                        Update
                                     </button>
                                 </div>
                             </div>
