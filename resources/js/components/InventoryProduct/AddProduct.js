@@ -64,7 +64,12 @@ const AddProduct = props => {
         else {
             const res = await axios.post(
                 defaultRouteLink + "/api/save-inventproduct",
-                formData
+                formData,
+                {
+                    params: {
+                        cate_id: formData.category_id
+                    }
+                }
             );
             const data = {
                 product_code: "",
@@ -146,6 +151,22 @@ const AddProduct = props => {
             [name]: value
             // [files]: value
         }));
+    };
+
+    const changephoto = event => {
+        const file = event.target.files[0];
+        if (file.size > 1048576) {
+            alert("your image too long");
+        } else {
+            let reader = new FileReader();
+            reader.onload = event => {
+                setFormData(oldState => ({
+                    ...oldState,
+                    product_image: event.target.result
+                }));
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     useEffect(() => {
@@ -466,12 +487,18 @@ const AddProduct = props => {
                                 <div className="form-group">
                                     <input
                                         type="file"
-                                        onChange={handleInput}
+                                        onChange={changephoto}
                                         name="product_image"
                                         className="form-control-file"
                                         id="exampleFormControlFile1"
                                     ></input>
                                 </div>
+                                <img
+                                    src={formData.product_image}
+                                    height="80px"
+                                    width="80px"
+                                    alt="test"
+                                />
                             </div>
                         </div>
                         <div className="form-group">

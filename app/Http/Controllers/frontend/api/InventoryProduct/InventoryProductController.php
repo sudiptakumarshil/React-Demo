@@ -8,6 +8,7 @@ use App\Model\InvoiceTrasection\InvoiceTrasection;
 use App\Model\WareHouse\WareHouseDetails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Intervention\Image\Facades\Image;
 
 class InventoryProductController extends Controller
 {
@@ -18,6 +19,7 @@ class InventoryProductController extends Controller
             ->leftjoin('ware_house_details', 'inventory_products.warehouse_id', 'ware_house_details.id')
             ->leftjoin('units', 'inventory_products.unit_id', 'units.id')
             ->select('inventory_products.*', 'inventory_categories.category_name', 'ware_house_details.name', 'units.unit_name')
+            ->orderBy('inventory_products.id', 'DESC')
             ->get();
 
         return response()->json([
@@ -36,21 +38,28 @@ class InventoryProductController extends Controller
     public function save_product(Request $request)
     {
         $categoryCode = DB::table('inventory_categories')
-            ->where('id', $request->category_id)
-            ->orderBy('id', "desc")
+            ->where('id', $request->cate_id)
             ->first();
+        $categorycode = $categoryCode->category_code;
+        $categoryId = $categoryCode->id;
 
         $productCode = DB::table('inventory_products')
-            ->where('category_id', $categoryCode->id)
-            ->where('category_autocode', $categoryCode->category_code)
-            ->orderBy('id', "desc")
+            ->where('category_id', $categoryId)
+            ->orderBy('id', 'DESC')
             ->first();
 
-        if (isset($productCode)) {
+        if (!empty($productCode->category_autocode)) {
             $cate_code = $productCode->category_autocode + 1;
         } else {
-            $cate_code = $categoryCode->category_code;
+            $cate_code = $categorycode;
         }
+        $strpos = strpos($request->product_image, ';');
+        $sub = substr($request->product_image, 0, $strpos);
+        $Ex = explode('/', $sub)[1];
+        $name = time() . "." . $Ex;
+        $img = Image::make($request->product_image)->resize(300, 200);
+        $upload_path = public_path() . "/productImage/";
+        $img->save($upload_path . $name);
 
         $product = new InventoryProduct();
         $product->category_id = $request->category_id;
@@ -67,7 +76,7 @@ class InventoryProductController extends Controller
         $product->cost = $request->cost;
         $product->selling_price = $request->selling_price;
         $product->price_type = $request->price_type;
-        // $product->product_image = $directory.$imageName;
+        $product->product_image = $name;
         $product->save();
 
         return response()->json([
@@ -80,10 +89,10 @@ class InventoryProductController extends Controller
     {
         // $product = InventoryProduct::find($id);
         $product = DB::table('inventory_products')
-        ->join('inventory_categories','inventory_products.category_id','inventory_categories.id')
-        ->select("inventory_products.*","inventory_categories.category_name as category_name")
-        ->where('inventory_products.id',$id)
-        ->first();
+            ->join('inventory_categories', 'inventory_products.category_id', 'inventory_categories.id')
+            ->select("inventory_products.*", "inventory_categories.category_name as category_name")
+            ->where('inventory_products.id', $id)
+            ->first();
         return response()->json([
             'status' => 200,
             'product' => $product,
@@ -126,7 +135,7 @@ class InventoryProductController extends Controller
             ->join('inventory_products', 'invoice_trasections.item_id', '=', 'inventory_products.id')
             ->join('store_invoices', 'inventory_products.id', '=', 'store_invoices.ref_product_id')
             ->join('vendors', 'invoice_trasections.party_id', '=', 'vendors.id')
-            ->select('invoice_trasections.*', 'store_invoices.invoice_number','inventory_products.product_name', 'vendors.name as party_name')
+            ->select('invoice_trasections.*', 'store_invoices.invoice_number', 'inventory_products.product_name', 'vendors.name as party_name')
             ->where(function ($filter) use ($product_id, $customer_id, $vendor_id, $start, $end, $type) {
                 if (!empty($product_id)) {
                     $filter->where('invoice_trasections.item_id', '=', $product_id);

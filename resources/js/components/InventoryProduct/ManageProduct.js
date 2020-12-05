@@ -8,6 +8,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeItem from "@material-ui/lab/TreeItem";
 import { data, map } from "jquery";
 import ContentLoader, { Facebook, BulletList } from "react-content-loader";
+import { red } from "@material-ui/core/colors";
 const MyBulletListLoader = () => <BulletList />;
 
 const ManageProduct = props => {
@@ -43,7 +44,7 @@ const ManageProduct = props => {
                 <div className="col-md-12">
                     <h2>Add product </h2>
                     <Link
-                        to={defaultRouteLink+"/add-product"}
+                        to={defaultRouteLink + "/add-product"}
                         type="button"
                         className="btn btn-primary"
                     >
@@ -76,7 +77,7 @@ const ManageProduct = props => {
                                 // return <option value={item.id}> {item.product_name}</option>
                                 return (
                                     <tr>
-                                        <td>{item.id}</td>
+                                        <td>{index + 1}</td>
                                         <td>{item.product_code}</td>
                                         <td>{item.product_name}</td>
                                         <td>{item.pices_of_carton}</td>
@@ -95,10 +96,31 @@ const ManageProduct = props => {
                                         ) : (
                                             <td id="36">Fixed Price</td>
                                         )}
-                                        <td>{item.product_image}</td>
+                                        {/* <td>{item.product_image}</td> */}
+                                        {item.product_image ? (
+                                            <td>
+                                                <img
+                                                    src={
+                                                        defaultRouteLink +
+                                                        `/public/productImage/${item.product_image}`
+                                                    }
+                                                    height="80px"
+                                                    width="80px"
+                                                    alt="test"
+                                                />
+                                            </td>
+                                        ) : (
+                                            <td style={{ color: "red" }}>
+                                                Image Not Found
+                                            </td>
+                                        )}
+
                                         <td>
                                             <Link
-                                                to={defaultRouteLink+`/edit-product/${item.id}`}
+                                                to={
+                                                    defaultRouteLink +
+                                                    `/edit-product/${item.id}`
+                                                }
                                                 className="btn btn-primary"
                                                 type="button"
                                             >

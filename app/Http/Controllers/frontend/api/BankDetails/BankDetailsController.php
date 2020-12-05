@@ -18,6 +18,8 @@ class BankDetailsController extends Controller
 
     }
 
+
+
     public function save_bank_details(Request $request)
     {
         $addbankDetails = new BankDetails();
@@ -33,6 +35,8 @@ class BankDetailsController extends Controller
             'message' => "Bank Details  Created Successfully!!",
         ]);
     }
+
+
 
     public function edit_bank_details($id)
     {
