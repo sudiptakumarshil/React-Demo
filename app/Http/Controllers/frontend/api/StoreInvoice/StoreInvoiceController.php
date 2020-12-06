@@ -753,8 +753,9 @@ class StoreInvoiceController extends Controller
 
     }
 
-    public function store_invoice_print($id)
+    public function store_invoice_print(Request $request, $id)
     {
+        $user = $request->user_id;
         $invoicePrint = DB::table('store_invoices')
             ->join('ware_house_details', 'store_invoices.ware_id', '=', 'ware_house_details.id')
             ->join('vendors', 'store_invoices.vendor_id', '=', 'vendors.id')

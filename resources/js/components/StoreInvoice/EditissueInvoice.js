@@ -63,7 +63,7 @@ class EditissueInvoice extends Component {
             remarks: "",
             warehouse_id: 0,
             vendor_id: "",
-            isInvEdit:false,
+            isInvEdit: false,
             vendorlist: [],
             date: year + "-" + month + "-" + date,
             store_id: "",
@@ -594,10 +594,12 @@ class EditissueInvoice extends Component {
         const idx = this.props.match.params.idx;
         const invoice_id = this.props.match.params.id;
         // const  invoice_id = this.state.invoice_id;
+        const isLoginExit = getCookieKeyInfo(getAccessTokenName);
         const response = await axios.get(defaultRouteLink + "/api/all-data", {
             params: {
                 type: idx,
-                invoice_id: invoice_id
+                invoice_id: invoice_id,
+                user_id: isLoginExit
             }
         });
 
@@ -707,14 +709,13 @@ class EditissueInvoice extends Component {
             option.label.toLowerCase().indexOf(state.text.toLowerCase()) > -1
         );
     };
-    handleEditUpdate=(data)=>{
-
+    handleEditUpdate = data => {
         this.fetchalldata();
         this.setState({
             isModalShow: false,
-            isInvEdit:true,
+            isInvEdit: true
         });
-    }
+    };
 
     ToggleButton = ({ isOpen, onClick }) => (
         <button
@@ -849,11 +850,8 @@ class EditissueInvoice extends Component {
             pagetitle1 = "EDIT ISSUE RETURN";
         }
         if (this.state.loading) {
-            return (
-                <MyBulletListLoader />
-            );
+            return <MyBulletListLoader />;
         }
-
 
         return (
             <div>

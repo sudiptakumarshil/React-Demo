@@ -189,9 +189,7 @@ const ManageModule = props => {
     };
 
     if (loading) {
-        return (
-            <MyBulletListLoader />
-        );
+        return <MyBulletListLoader />;
     }
 
     return (

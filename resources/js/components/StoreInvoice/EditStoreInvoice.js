@@ -76,7 +76,7 @@ class EditStoreInvoice extends Component {
             quantity: "",
             price: 0,
             idx: "",
-            user_id: "",
+            user_id: 0,
             isModalShow: false,
             modalData: {},
             vatList: [],
@@ -111,7 +111,7 @@ class EditStoreInvoice extends Component {
         );
 
         const invoice = res.data.editinvoice;
-
+        const isLoginExit = getCookieKeyInfo(getAccessTokenName);
         this.setState({
             discountTaka: invoice.discount_taka,
             // discount_percent: invoice.discount_percent,
@@ -129,13 +129,9 @@ class EditStoreInvoice extends Component {
             bankdetails_id: invoice.bank_id,
             store_id: invoice.store_id,
             storelist: res.data.store,
-            invoice_id: this.props.match.params.id
-            // invoice_id:res.data.invwisetrans.invoice_id
-        });
-
-        const isLoginExit = getCookieKeyInfo(getAccessTokenName);
-        this.setState({
+            invoice_id: this.props.match.params.id,
             user_id: isLoginExit
+            // invoice_id:res.data.invwisetrans.invoice_id
         });
         // console.log("user id=" + isLoginExit);
         this.fetchalldata();
@@ -178,7 +174,7 @@ class EditStoreInvoice extends Component {
             this.setState({
                 product: response.data.productPrice,
                 //price: response.data.productPrice.selling_price,
-                price:0,
+                price: 0
             });
         } else {
             this.setState({
@@ -685,11 +681,13 @@ class EditStoreInvoice extends Component {
     fetchalldata = async () => {
         const idx = this.props.match.params.idx;
         const invoice_id = this.props.match.params.id;
+        const isLoginExit = getCookieKeyInfo(getAccessTokenName);
         // const  invoice_id = this.state.invoice_id;
         const response = await axios.get(defaultRouteLink + "/api/all-data", {
             params: {
                 type: idx,
-                invoice_id: invoice_id
+                invoice_id: invoice_id,
+                user_id: isLoginExit
             }
         });
 
@@ -746,7 +744,7 @@ class EditStoreInvoice extends Component {
             this.setState({
                 totalpriceQuantity: priceQuantity,
                 netAmount: netAmount,
-                 gross_amount: grossAmount,
+                gross_amount: grossAmount,
                 // discountTaka: discountTaka,
                 totalVat: totalVat,
                 netPayable: netPayable,
@@ -804,13 +802,12 @@ class EditStoreInvoice extends Component {
             });
         }
     };
-    handleEditUpdate=(data)=>{
-
+    handleEditUpdate = data => {
         this.fetchalldata();
         this.setState({
-            isModalShow: false,
+            isModalShow: false
         });
-    }
+    };
     handleModalClose = () => {
         this.setState({
             isModalShow: false
@@ -849,7 +846,6 @@ class EditStoreInvoice extends Component {
             }}
         ></button>
     );
-
 
     // end for live search
     render() {
@@ -1088,11 +1084,8 @@ class EditStoreInvoice extends Component {
             pagetitle1 = "SALE RETURN ";
         }
         if (this.state.loading) {
-            return (
-                <MyBulletListLoader />
-            );
+            return <MyBulletListLoader />;
         }
-
 
         return (
             <div>
