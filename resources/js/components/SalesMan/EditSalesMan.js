@@ -38,19 +38,36 @@ function EditSalesMan(props) {
 
     const UpdateSalesman = async () => {
         event.preventDefault();
-        const res = await axios.patch(
-            defaultRouteLink + `/api/update-salesman/${id}`,
-            formData
-        );
-        if (res.data.status === 200) {
-            props.history.push(defaultRouteLink + "/manage-salesman");
+
+        if (formData.name == "") {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Name Cannot Be Empty!!",
+                footer: "<a href>Why do I have this issue?</a>"
+            });
+        } else if (formData.ware_id == 0) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Warehouse  Cannot Be Empty!!",
+                footer: "<a href>Why do I have this issue?</a>"
+            });
+        } else {
+            const res = await axios.patch(
+                defaultRouteLink + `/api/update-salesman/${id}`,
+                formData
+            );
+            if (res.data.status === 200) {
+                props.history.push(defaultRouteLink + "/manage-salesman");
+            }
+            const data = {
+                name: "",
+                ware_id: 0,
+                status: 1
+            };
+            setformData(data);
         }
-        const data = {
-            name: "",
-            ware_id: 0,
-            status: 1
-        };
-        setformData(data);
     };
     useEffect(() => {
         edit_SalesMan();

@@ -19,41 +19,57 @@ function EditCostCenter(props) {
 
     const updatecostcenter = async event => {
         event.preventDefault();
-        const res = await axios.patch(
-            defaultRouteLink+`/api/update-costcenter/${id}`,
-            formData
-        );
-
-        const data = {
-            name: "",
-            ware_id: 0,
-            status: 1,
-            trash: 1
-        };
-
-        if (res.data.status === 200) {
-            props.history.push(defaultRouteLink+"/manage-costcenter");
-        }
-
-        try {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                onOpen: toast => {
-                    toast.addEventListener("mouseenter", Swal.stopTimer);
-                    toast.addEventListener("mouseleave", Swal.resumeTimer);
-                }
+        if (formData.name == "") {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Cost Center Name Cannot Be Empty!!",
+                footer: "<a href>Why do I have this issue?</a>"
             });
-
-            Toast.fire({
-                icon: "success",
-                title: "Cost Center  Updated  Successfully!!"
+        } else if (formData.wareHouse_id == 0) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "WareHouse Cannot Be Empty!!",
+                footer: "<a href>Why do I have this issue?</a>"
             });
-        } catch (error) {
-            console.error(error);
+        } else {
+            const res = await axios.patch(
+                defaultRouteLink + `/api/update-costcenter/${id}`,
+                formData
+            );
+
+            const data = {
+                name: "",
+                ware_id: 0,
+                status: 1,
+                trash: 1
+            };
+
+            if (res.data.status === 200) {
+                props.history.push(defaultRouteLink + "/manage-costcenter");
+            }
+
+            try {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    onOpen: toast => {
+                        toast.addEventListener("mouseenter", Swal.stopTimer);
+                        toast.addEventListener("mouseleave", Swal.resumeTimer);
+                    }
+                });
+
+                Toast.fire({
+                    icon: "success",
+                    title: "Cost Center  Updated  Successfully!!"
+                });
+            } catch (error) {
+                console.error(error);
+            }
         }
     };
 

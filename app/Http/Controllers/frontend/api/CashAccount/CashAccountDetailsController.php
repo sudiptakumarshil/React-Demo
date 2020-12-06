@@ -20,6 +20,12 @@ class CashAccountDetailsController extends Controller
 
     public function save_cash_account(Request $request)
     {
+        $request->validate([
+            'cash_no' => 'required|max:12',
+            'cash_name' => 'required|max:12',
+            'remarks' => 'required|max:20',
+            'account_id' => 'required|max:20',
+        ]);
         $save_cash = new CashAccountDetails();
         $save_cash->cash_no = $request->cash_no;
         $save_cash->cash_name = $request->cash_name;
@@ -44,6 +50,13 @@ class CashAccountDetailsController extends Controller
 
     public function update_cash_account(Request $request, $id)
     {
+        $request->validate([
+            'cash_no' => 'required|max:12',
+            'cash_name' => 'required|max:12',
+            'remarks' => 'required|max:20',
+            'account_id' => 'required|max:20',
+        ]);
+
         $update_cash = CashAccountDetails::find($id);
         $update_cash->cash_no = $request->cash_no;
         $update_cash->cash_name = $request->cash_name;

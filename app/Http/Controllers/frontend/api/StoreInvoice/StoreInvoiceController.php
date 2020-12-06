@@ -350,12 +350,6 @@ class StoreInvoiceController extends Controller
             ->where("status", 1)
             ->get();
 
-        /*$products = DB::table('inventory_products')
-        ->join('inventory_categories', 'inventory_products.category_id', 'inventory_categories.id')
-        ->join('ware_house_details', 'inventory_products.warehouse_id', 'ware_house_details.id')
-        ->select('inventory_products.*', 'inventory_categories.category_name', 'ware_house_details.name')
-        ->get();*/
-
         $stores = DB::table('stores')
             ->join('ware_house_details', 'stores.ware_id', 'ware_house_details.id')
             ->select('stores.*', 'ware_house_details.name as wname')
@@ -499,126 +493,6 @@ class StoreInvoiceController extends Controller
         ]);
     }
 
-    public function get_invoice_number_for_type1()
-    {
-        $invoicnumber = DB::table('store_invoices')
-            ->join('users', 'store_invoices.ware_id', 'users.ware_id')
-            ->select('store_invoices.*')
-            ->where('type', 1)
-            ->orderBy('id', "desc")
-            ->first();
-
-        if (!empty($invoicnumber)) {
-            $invoice_number = $invoicnumber->invoice_number + 1;
-        } else {
-            $invoice_number = 1000;
-        }
-
-        return response()->json([
-            'invoice_number' => $invoice_number,
-        ]);
-    }
-
-    // public function get_invoice_number_for_type2()
-    // {
-    //     $invoicnumber = DB::table('store_invoices')
-    //         ->join('users', 'store_invoices.ware_id', 'users.ware_id')
-    //         ->select('store_invoices.*')
-    //         ->where('type', 2)
-    //         ->orderBy('id', "desc")
-    //         ->first();
-
-    //     if (!empty($invoicnumber)) {
-    //         $invoice_number = $invoicnumber->invoice_number + 1;
-    //     } else {
-    //         $invoice_number = 2000;
-    //     }
-
-    //     return response()->json([
-    //         'invoice_number' => $invoice_number,
-    //     ]);
-    // }
-
-    // public function get_invoice_number_for_type3()
-    // {
-    //     $invoicnumber = DB::table('store_invoices')
-    //         ->join('users', 'store_invoices.ware_id', 'users.ware_id')
-    //         ->select('store_invoices.*')
-    //         ->where('type', 3)
-    //         ->orderBy('id', "desc")
-    //         ->first();
-
-    //     if (!empty($invoicnumber)) {
-    //         $invoice_number = $invoicnumber->invoice_number + 1;
-    //     } else {
-    //         $invoice_number = 3000;
-    //     }
-
-    //     return response()->json([
-    //         'invoice_number' => $invoice_number,
-    //     ]);
-    // }
-
-    // public function get_invoice_number_for_type5()
-    // {
-    //     $invoicnumber = DB::table('store_invoices')
-    //         ->join('users', 'store_invoices.ware_id', 'users.ware_id')
-    //         ->select('store_invoices.*')
-    //         ->where('type', 5)
-    //         ->orderBy('id', "desc")
-    //         ->first();
-
-    //     if (!empty($invoicnumber)) {
-    //         $invoice_number = $invoicnumber->invoice_number + 1;
-    //     } else {
-    //         $invoice_number = 5000;
-    //     }
-
-    //     return response()->json([
-    //         'invoice_number' => $invoice_number,
-    //     ]);
-    // }
-
-    // public function get_invoice_number_for_type6()
-    // {
-    //     $invoicnumber = DB::table('store_invoices')
-    //         ->join('users', 'store_invoices.ware_id', 'users.ware_id')
-    //         ->select('store_invoices.*')
-    //         ->where('type', 6)
-    //         ->orderBy('id', "desc")
-    //         ->first();
-
-    //     if (!empty($invoicnumber)) {
-    //         $invoice_number = $invoicnumber->invoice_number + 1;
-    //     } else {
-    //         $invoice_number = 6000;
-    //     }
-
-    //     return response()->json([
-    //         'invoice_number' => $invoice_number,
-    //     ]);
-    // }
-
-    // public function get_invoice_number_for_type7()
-    // {
-    //     $invoicnumber = DB::table('store_invoices')
-    //         ->join('users', 'store_invoices.ware_id', 'users.ware_id')
-    //         ->select('store_invoices.*')
-    //         ->where('type', 7)
-    //         ->orderBy('id', "desc")
-    //         ->first();
-
-    //     if (!empty($invoicnumber)) {
-    //         $invoice_number = $invoicnumber->invoice_number + 1;
-    //     } else {
-    //         $invoice_number = 7000;
-    //     }
-
-    //     return response()->json([
-    //         'invoice_number' => $invoice_number,
-    //     ]);
-    // }
-
     public function getwarehouse($id)
     {
         if (!empty($id)) {
@@ -631,26 +505,6 @@ class StoreInvoiceController extends Controller
             'store' => $store,
         ]);
     }
-
-    // public function get_invoice_number_for_type4()
-    // {
-    //     $invoicnumber = DB::table('store_invoices')
-    //         ->join('users', 'store_invoices.ware_id', 'users.ware_id')
-    //         ->select('store_invoices.*')
-    //         ->where('type', 4)
-    //         ->orderBy('id', "desc")
-    //         ->first();
-
-    //     if (!empty($invoicnumber)) {
-    //         $invoice_number = $invoicnumber->invoice_number + 1;
-    //     } else {
-    //         $invoice_number = 4000;
-    //     }
-
-    //     return response()->json([
-    //         'invoice_number' => $invoice_number,
-    //     ]);
-    // }
 
     public function editinvoicetransection($id)
     {

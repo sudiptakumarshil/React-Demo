@@ -4,7 +4,7 @@ import { Button, ButtonToolbar, Modal } from "react-bootstrap";
 import {defaultRouteLink} from '../../common/config';
 import ContentLoader, { Facebook,BulletList  } from 'react-content-loader'
 const MyBulletListLoader = () => <BulletList />
-
+import $ from 'jquery';
 
 const ModalAccountsLedgerList=(props)=> {
 

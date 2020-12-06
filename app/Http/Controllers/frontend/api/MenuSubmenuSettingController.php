@@ -179,11 +179,7 @@ class MenuSubmenuSettingController extends Controller
     public function savemodule_submodule(Request $request)
     {
         $menu = new MenuSubmenuSetting();
-        // if (!empty($menu->root_id)) {
         $menu->root_id = $request->root_id;
-        // } else {
-        //     $menu->root_id = 0;
-        // }
         $menu->name = $request->invent_category;
         $menu->type = 3;
         $menu->status = $request->status;

@@ -3,28 +3,27 @@
 namespace App\Http\Controllers\Frontend\Api\WareHouse;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Model\WareHouse\WareHouseDetails;
-use DB;
+use Illuminate\Http\Request;
+
 class WareHouseController extends Controller
 {
     public function index(Request $req)
     {
-        $start_page=$req->start_page;
-        $limit=$req->limit;
+        $start_page = $req->start_page;
+        $limit = $req->limit;
 
-        $range=0;
-        if($start_page > 1){
-            $range=($start_page * $limit)-1;
+        $range = 0;
+        if ($start_page > 1) {
+            $range = ($start_page * $limit) - 1;
         }
 
         $warehouses = WareHouseDetails::skip($range)->take($limit)->get();
         // $warehouses = DB::table('ware_house_details')->paginate(20);
 
-        $count=-1;
-        if($start_page == 1)
-        {
-            $count=WareHouseDetails::count();
+        $count = -1;
+        if ($start_page == 1) {
+            $count = WareHouseDetails::count();
         }
 
         return response()->json([
@@ -34,14 +33,32 @@ class WareHouseController extends Controller
         ]);
     }
 
-
-
     public function add_warehouse(Request $request)
     {
+        $request->validate([
+            'name' => 'required|max:12',
+            'foreign_name' => 'required |max:20',
+            'wh_keeper' => 'required |max:20',
+            'location' => 'required |max:20',
+            'sequence' => 'required |max:20',
+            'province_no' => 'required |max:20',
+            'resign_code' => 'required |max:20',
+            'wh_transfer_interface_account' => 'required |max:20',
+            'item_activity' => 'required |max:20',
+            'default_cc_code' => 'required |max:20',
+            'account_name' => 'required |max:20',
+            'branch' => 'required |max:20',
+            'pricing_level' => 'required |max:20',
+            'global_location_no' => 'required |max:20',
+            'longitude' => 'required |max:20',
+            'latitude' => 'required |max:20',
+            'address' => 'required |max:20',
+            'foreign_address' => 'required |max:20',
+        ]);
         $warehouse = WareHouseDetails::Create($request->all());
         return response()->json([
             'status' => 200,
-            'message' => 'Ware House Saved Successfully!!'
+            'message' => 'Ware House Saved Successfully!!',
         ]);
     }
 
@@ -50,12 +67,33 @@ class WareHouseController extends Controller
         $warehouses = WareHouseDetails::find($id);
         return response()->json([
             'status' => 200,
-            'warehouses' => $warehouses
+            'warehouses' => $warehouses,
         ]);
     }
 
     public function update_warehouse(Request $request, $id)
     {
+        $request->validate([
+            'name' => 'required|max:12',
+            'foreign_name' => 'required |max:20',
+            'wh_keeper' => 'required |max:20',
+            'location' => 'required |max:20',
+            'sequence' => 'required |max:20',
+            'province_no' => 'required |max:20',
+            'resign_code' => 'required |max:20',
+            'wh_transfer_interface_account' => 'required |max:20',
+            'item_activity' => 'required |max:20',
+            'default_cc_code' => 'required |max:20',
+            'account_name' => 'required |max:20',
+            'branch' => 'required |max:20',
+            'pricing_level' => 'required |max:20',
+            'global_location_no' => 'required |max:20',
+            'longitude' => 'required |max:20',
+            'latitude' => 'required |max:20',
+            'address' => 'required |max:20',
+            'foreign_address' => 'required |max:20',
+        ]);
+
         $warehouse = WareHouseDetails::find($id);
         $warehouse->name = $request->name;
         $warehouse->foreign_name = $request->foreign_name;
@@ -81,7 +119,7 @@ class WareHouseController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Ware House Updated Successfully!!'
+            'message' => 'Ware House Updated Successfully!!',
         ]);
     }
 }

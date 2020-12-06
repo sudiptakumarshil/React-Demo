@@ -79,7 +79,7 @@ const AddProduct = props => {
                 category_name: "",
                 warehouse_id: 0,
                 sorting: "",
-                unit: "",
+                unit_id: 0,
                 opening_stock: "",
                 buy_price: 0,
                 cost: 0,
@@ -497,7 +497,6 @@ const AddProduct = props => {
                                     src={formData.product_image}
                                     height="80px"
                                     width="80px"
-                                    alt="test"
                                 />
                             </div>
                         </div>

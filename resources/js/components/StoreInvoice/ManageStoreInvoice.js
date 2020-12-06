@@ -255,7 +255,7 @@ function ManageStoreInvoice(props) {
                         >
                             Purshase Return{" "}
                         </Link>
-                        {/* <Link
+                        <Link
                             to={defaultRouteLink + `/sale/${3}`}
                             type="button"
                             className="btn btn-success"
@@ -270,7 +270,7 @@ function ManageStoreInvoice(props) {
                             style={{ marginLeft: 15 }}
                         >
                             Sale Return
-                        </Link> */}
+                        </Link>
                         <Link
                             to={defaultRouteLink + `/issue/${6}`}
                             type="button"

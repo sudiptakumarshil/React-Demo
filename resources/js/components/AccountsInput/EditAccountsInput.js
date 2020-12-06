@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from "react";
-import { Link,useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { defaultRouteLink } from "../../common/config";
 import ContentLoader, { Facebook, BulletList } from "react-content-loader";
 function EditAccountsInput(props) {
@@ -16,40 +16,56 @@ function EditAccountsInput(props) {
 
     const updateinput = async event => {
         event.preventDefault();
-        const res = await axios.patch(
-            defaultRouteLink+`/api/update-input/${id}`,
-            formData
-        );
-        const data = {
-            name: "",
-            input_type: 0,
-            status: 1,
-            trash: 1
-        };
-
-        if (res.data.status === 200) {
-            props.history.push(defaultRouteLink+"/manage-account-input");
-        }
-
-        try {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                onOpen: toast => {
-                    toast.addEventListener("mouseenter", Swal.stopTimer);
-                    toast.addEventListener("mouseleave", Swal.resumeTimer);
-                }
+        if (formData.name == "") {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Account Unit Name Cannot Be Empty!!",
+                footer: "<a href>Why do I have this issue?</a>"
             });
-
-            Toast.fire({
-                icon: "success",
-                title: "Account Input  Saved  Successfully!!"
+        } else if (formData.input_type == 0) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Input type Cannot Be Empty!!",
+                footer: "<a href>Why do I have this issue?</a>"
             });
-        } catch (error) {
-            console.error(error);
+        } else {
+            const res = await axios.patch(
+                defaultRouteLink + `/api/update-input/${id}`,
+                formData
+            );
+            const data = {
+                name: "",
+                input_type: 0,
+                status: 1,
+                trash: 1
+            };
+
+            if (res.data.status === 200) {
+                props.history.push(defaultRouteLink + "/manage-account-input");
+            }
+
+            try {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    onOpen: toast => {
+                        toast.addEventListener("mouseenter", Swal.stopTimer);
+                        toast.addEventListener("mouseleave", Swal.resumeTimer);
+                    }
+                });
+
+                Toast.fire({
+                    icon: "success",
+                    title: "Account Input  Saved  Successfully!!"
+                });
+            } catch (error) {
+                console.error(error);
+            }
         }
     };
 
@@ -60,8 +76,8 @@ function EditAccountsInput(props) {
     };
 
     const editAccountInput = async () => {
-        const res = await axios.get(defaultRouteLink + "/api/edit-input/"+id);
-        setFormData(res.data.input)
+        const res = await axios.get(defaultRouteLink + "/api/edit-input/" + id);
+        setFormData(res.data.input);
         setLoading(false);
     };
 
@@ -73,7 +89,12 @@ function EditAccountsInput(props) {
         }));
     };
     const Module = moduleList.map(function(item, index) {
-        return <option selected={formData.input_type == item.id}  value={item.id}> {item.name}</option>;
+        return (
+            <option selected={formData.input_type == item.id} value={item.id}>
+                {" "}
+                {item.name}
+            </option>
+        );
         setFormData(oldState => ({
             ...oldState,
             input_type: item.id
@@ -149,8 +170,18 @@ function EditAccountsInput(props) {
                                             <option selected>
                                                 Choose one{" "}
                                             </option>
-                                            <option selected={formData.status ==1 }value="1">Active</option>
-                                            <option selected={formData.status ==2 } value="2">Inactive</option>
+                                            <option
+                                                selected={formData.status == 1}
+                                                value="1"
+                                            >
+                                                Active
+                                            </option>
+                                            <option
+                                                selected={formData.status == 2}
+                                                value="2"
+                                            >
+                                                Inactive
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
@@ -170,7 +201,7 @@ function EditAccountsInput(props) {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default EditAccountsInput;

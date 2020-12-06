@@ -941,7 +941,7 @@ class IssueStoreInvoice extends Component {
                                 >
                                     Purshase Return{" "}
                                 </Link>
-                                {/* <Link
+                                <Link
                                     to={defaultRouteLink + `/sale-return/${3}`}
                                     type="button"
                                     className="btn btn-success"
@@ -956,7 +956,7 @@ class IssueStoreInvoice extends Component {
                                     style={{ marginLeft: 15 }}
                                 >
                                     Sale Return
-                                </Link> */}
+                                </Link>
 
                                 <Link
                                     to={defaultRouteLink + `/issue/${6}`}

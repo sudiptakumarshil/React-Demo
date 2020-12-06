@@ -19,40 +19,49 @@ function AddSize(props) {
 
     const saveSize = async event => {
         event.preventDefault();
-        const res = await axios.post(
-            defaultRouteLink + "/api/save-size",
-            formData
-        );
-
-        const data = {
-            name: "",
-            status: 1
-        };
-        setFormData(data)
-
-        if (res.data.status === 200) {
-            props.history.push(defaultRouteLink + "/manage-size");
-        }
-
-        try {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                onOpen: toast => {
-                    toast.addEventListener("mouseenter", Swal.stopTimer);
-                    toast.addEventListener("mouseleave", Swal.resumeTimer);
-                }
+        if (formData.name == "") {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Name Cannot Be Empty!!",
+                footer: "<a href>Why do I have this issue?</a>"
             });
+        } else {
+            const res = await axios.post(
+                defaultRouteLink + "/api/save-size",
+                formData
+            );
 
-            Toast.fire({
-                icon: "success",
-                title: "Size  Saved  Successfully!!"
-            });
-        } catch (error) {
-            console.error(error);
+            const data = {
+                name: "",
+                status: 1
+            };
+            setFormData(data);
+
+            if (res.data.status === 200) {
+                props.history.push(defaultRouteLink + "/manage-size");
+            }
+
+            try {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    onOpen: toast => {
+                        toast.addEventListener("mouseenter", Swal.stopTimer);
+                        toast.addEventListener("mouseleave", Swal.resumeTimer);
+                    }
+                });
+
+                Toast.fire({
+                    icon: "success",
+                    title: "Size  Saved  Successfully!!"
+                });
+            } catch (error) {
+                console.error(error);
+            }
         }
     };
 

@@ -24,6 +24,10 @@ class CostCenterController extends Controller
 
     public function add_cost(Request $request)
     {
+        $request->validate([
+            'name' => 'required|max:12',
+            'wareHouse_id' => 'required',
+        ]);
 
         $codecode = DB::table('cost_centers')
             ->orderBy('id', 'desc')
@@ -54,13 +58,17 @@ class CostCenterController extends Controller
     {
         $cost = CostCenter::find($id);
         return response()->json([
-            'cost'=>$cost
+            'cost' => $cost,
         ]);
 
     }
 
     public function update_cost(Request $request, $id)
     {
+        $request->validate([
+            'name' => 'required|max:12',
+            'ware_id' => 'required',
+        ]);
         $cost = CostCenter::find($id);
         $cost->name = $request->name;
         $cost->ware_id = $request->ware_id;

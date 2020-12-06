@@ -63,7 +63,7 @@ function ManageSize(props) {
                                             <Link
                                                 to={
                                                     defaultRouteLink +
-                                                    `/edit/${item.id}`
+                                                    `/edit-size/${item.id}`
                                                 }
                                                 className="btn btn-primary"
                                                 type="button"

@@ -5,8 +5,7 @@ namespace App\Http\Controllers\frontend\api\AccountsInput;
 use App\Http\Controllers\Controller;
 use App\Model\AccountsInput\AccountsInput;
 use Illuminate\Support\Facades\DB;
-use Symfony\Component\HttpFoundation\Request;
-
+use Illuminate\Http\Request;
 class AccountsInputController extends Controller
 {
 
@@ -24,6 +23,10 @@ class AccountsInputController extends Controller
 
     public function add_input(Request $request)
     {
+        $request->validate([
+            'name' => 'required|max:12',
+        ]);
+
         $input = new AccountsInput();
         $input->name = $request->name;
         $input->input_type = $request->input_type;
@@ -46,6 +49,9 @@ class AccountsInputController extends Controller
 
     public function Update_input(Request $request, $id)
     {
+        $request->validate([
+            'name' => 'required|max:12',
+        ]);
         $input = AccountsInput::find($id);
         $input->name = $request->name;
         $input->input_type = $request->input_type;

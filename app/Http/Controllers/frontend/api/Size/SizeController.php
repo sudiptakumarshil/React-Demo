@@ -11,6 +11,10 @@ class SizeController extends Controller
 
     public function add_size(Request $request)
     {
+        $request->validate([
+        'name' => 'required|max:12',
+        ]);
+
         $addSize = new Size();
         $addSize->name = $request->name;
         $addSize->status = $request->status;
@@ -43,7 +47,11 @@ class SizeController extends Controller
 
     public function update_size(Request $request, $id)
     {
-        $updateSize = new Size();
+        $request->validate([
+            'name' => 'required|max:12',
+        ]);
+
+        $updateSize = Size::find($id);
         $updateSize->name = $request->name;
         $updateSize->status = $request->status;
         $updateSize->save();

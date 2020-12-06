@@ -9,7 +9,7 @@ function addAccountsInput(props) {
 
     const data = {
         name: "",
-        input_type: "",
+        input_type: 0,
         status: 1,
         trash: 1
     };
@@ -17,6 +17,21 @@ function addAccountsInput(props) {
 
     const saveinput = async event => {
         event.preventDefault();
+        if (formData.name == "") {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Account Unit Name Cannot Be Empty!!",
+                footer: "<a href>Why do I have this issue?</a>"
+            });
+        } else if (formData.input_type == 0) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Input type Cannot Be Empty!!",
+                footer: "<a href>Why do I have this issue?</a>"
+            });
+        } else {
         const res = await axios.post(defaultRouteLink+"/api/add-input", formData);
         const data = {
             name: "",
@@ -49,6 +64,7 @@ function addAccountsInput(props) {
         } catch (error) {
             console.error(error);
         }
+    }
     };
 
     const fetchAllModuleList = async () => {

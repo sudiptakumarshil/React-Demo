@@ -12,44 +12,55 @@ import ContentLoader, { Facebook, BulletList } from "react-content-loader";
 function AddProductUnit(props) {
     const data = {
         unit_name: "",
-        unit_code: "",
         status: 1
     };
     const [formData, setFormData] = useState(data);
 
     const saveProductUnit = async event => {
         event.preventDefault();
-        const res = await axios.post(defaultRouteLink+"/api/add-unit", formData);
 
-        const data = {
-            unit_name: "",
-            unit_code: "",
-            status: 1
-        };
-
-        if (res.data.status === 200) {
-            props.history.push(defaultRouteLink+"/manage-unit");
-        }
-
-        try {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                onOpen: toast => {
-                    toast.addEventListener("mouseenter", Swal.stopTimer);
-                    toast.addEventListener("mouseleave", Swal.resumeTimer);
-                }
+        if (formData.unit_name == "") {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Unit Name Cannot Be Empty!!",
+                footer: "<a href>Why do I have this issue?</a>"
             });
+        } else {
+            const res = await axios.post(
+                defaultRouteLink + "/api/add-unit",
+                formData
+            );
 
-            Toast.fire({
-                icon: "success",
-                title: "Product Saved  Successfully!!"
-            });
-        } catch (error) {
-            console.error(error);
+            const data = {
+                unit_name: "",
+                status: 1
+            };
+
+            if (res.data.status === 200) {
+                props.history.push(defaultRouteLink + "/manage-unit");
+            }
+
+            try {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    onOpen: toast => {
+                        toast.addEventListener("mouseenter", Swal.stopTimer);
+                        toast.addEventListener("mouseleave", Swal.resumeTimer);
+                    }
+                });
+
+                Toast.fire({
+                    icon: "success",
+                    title: "Product Saved  Successfully!!"
+                });
+            } catch (error) {
+                console.error(error);
+            }
         }
     };
 
@@ -67,7 +78,7 @@ function AddProductUnit(props) {
         <div className="col-md-12">
             <div className="row">
                 <div className="col-md-8">
-                    <h2>Add product </h2>
+                    <h2>Add Unit </h2>
                     <form onSubmit={saveProductUnit}>
                         <div className="row pt-3">
                             <div className="col-md-4">

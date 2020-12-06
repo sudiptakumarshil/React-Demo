@@ -22,39 +22,48 @@ function EditProductUnit(props) {
 
     const updateProductUnit = async event => {
         event.preventDefault();
-        const res = await axios.patch(
-            defaultRouteLink + `/api/update-unit/${id}`,
-            formData
-        );
-
-        const data = {
-            unit_name: "",
-            status: 1
-        };
-
-        if (res.data.status === 200) {
-            props.history.push(defaultRouteLink + "/manage-unit");
-        }
-
-        try {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                onOpen: toast => {
-                    toast.addEventListener("mouseenter", Swal.stopTimer);
-                    toast.addEventListener("mouseleave", Swal.resumeTimer);
-                }
+        if (formData.unit_name == "") {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Unit Name Cannot Be Empty!!",
+                footer: "<a href>Why do I have this issue?</a>"
             });
+        } else {
+            const res = await axios.patch(
+                defaultRouteLink + `/api/update-unit/${id}`,
+                formData
+            );
 
-            Toast.fire({
-                icon: "success",
-                title: "Product Saved  Successfully!!"
-            });
-        } catch (error) {
-            console.error(error);
+            const data = {
+                unit_name: "",
+                status: 1
+            };
+
+            if (res.data.status === 200) {
+                props.history.push(defaultRouteLink + "/manage-unit");
+            }
+
+            try {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    onOpen: toast => {
+                        toast.addEventListener("mouseenter", Swal.stopTimer);
+                        toast.addEventListener("mouseleave", Swal.resumeTimer);
+                    }
+                });
+
+                Toast.fire({
+                    icon: "success",
+                    title: "Product Saved  Successfully!!"
+                });
+            } catch (error) {
+                console.error(error);
+            }
         }
     };
 
@@ -135,9 +144,6 @@ function EditProductUnit(props) {
                                 </div>
                             </div>
                         </div>
-
-
-
 
                         <div className="form-group">
                             <label className="control-label col-lg-2"></label>

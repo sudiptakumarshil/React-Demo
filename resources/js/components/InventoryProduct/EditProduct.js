@@ -15,6 +15,7 @@ const EditProduct = props => {
     const [warehouselist, setWarehouselist] = useState([]);
     const [loading, setLoading] = useState(true);
     const [productvalue] = useState([]);
+    const [unitlist, setunitlist] = useState([]);
 
     const { pe_id } = useParams();
 
@@ -35,6 +36,7 @@ const EditProduct = props => {
         selling_price: "",
         price_type: "",
         product_image: "",
+        unit_id: 0,
         status: 1
     };
     const [formData, setFormData] = useState(data);
@@ -90,6 +92,7 @@ const EditProduct = props => {
         const response = await axios.get(defaultRouteLink + "/api/all-data");
 
         setWarehouselist(response.data.warehouses);
+        setunitlist(response.data.unitlist);
         // console.log(response.data.warehouses);
         setLoading(false);
     };
@@ -187,6 +190,18 @@ const EditProduct = props => {
         setFormData(oldState => ({
             ...oldState,
             warehouse_id: item.id
+        }));
+    });
+    const unitlists = unitlist.map(function(item, index) {
+        return (
+            <option selected={formData.unit_id == item.id}>
+                {" "}
+                {item.unit_name}
+            </option>
+        );
+        setFormData(oldState => ({
+            ...oldState,
+            unit_id: item.id
         }));
     });
 
@@ -312,14 +327,17 @@ const EditProduct = props => {
                                 <label className="control-label">Unit</label>
                                 <div className="form-group">
                                     <div className="input-group">
-                                        <input
-                                            type="text"
+                                        <select
                                             className="form-control"
-                                            placeholder="Unit"
+                                            id="exampleFormControlSelect1"
                                             name="unit_id"
-                                            value={formData.unit_id}
                                             onChange={handleInput}
-                                        ></input>
+                                        >
+                                            <option value="0" selected>
+                                                Choose One{" "}
+                                            </option>
+                                            {unitlists}
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -452,6 +470,23 @@ const EditProduct = props => {
                                         id="exampleFormControlFile1"
                                     ></input>
                                 </div>
+                                {/* {defaultRouteLink +
+                                `/public/productImage/${formData.product_image}` ? (
+                                    <img
+                                        src={
+                                            defaultRouteLink +
+                                            `/public/productImage/${formData.product_image}`
+                                        }
+                                        height="80px"
+                                        width="80px"
+                                    />
+                                ) : (
+                                    <img
+                                        src={formData.product_image}
+                                        height="80px"
+                                        width="80px"
+                                    />
+                                )} */}
                                 <img
                                     src={
                                         defaultRouteLink +
@@ -459,15 +494,17 @@ const EditProduct = props => {
                                     }
                                     height="80px"
                                     width="80px"
-                                    alt="test"
                                 />
 
-                                <img
-                                    src={formData.product_image}
-                                    height="80px"
-                                    width="80px"
-                                    alt="test"
-                                />
+                                {formData.product_image ? (
+                                    <img
+                                        src={formData.product_image}
+                                        height="80px"
+                                        width="80px"
+                                    />
+                                ) : (
+                                    <td></td>
+                                )}
                             </div>
                         </div>
                         <div className="form-group">

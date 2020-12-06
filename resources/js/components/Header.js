@@ -17,36 +17,35 @@ import { Link } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import Swal from "sweetalert2";
 
-import { makeStyles } from '@material-ui/core/styles';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Collapse from '@material-ui/core/Collapse';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
-import SendIcon from '@material-ui/icons/Send';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
-import StarBorder from '@material-ui/icons/StarBorder';
+import { makeStyles } from "@material-ui/core/styles";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import Collapse from "@material-ui/core/Collapse";
+import InboxIcon from "@material-ui/icons/MoveToInbox";
+import DraftsIcon from "@material-ui/icons/Drafts";
+import SendIcon from "@material-ui/icons/Send";
+import ExpandLess from "@material-ui/icons/ExpandLess";
+import ExpandMore from "@material-ui/icons/ExpandMore";
+import StarBorder from "@material-ui/icons/StarBorder";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     root: {
-      width: '100%',
-      maxWidth: 360,
-      backgroundColor: theme.palette.background.paper,
+        width: "100%",
+        maxWidth: 360,
+        backgroundColor: theme.palette.background.paper
     },
     nested: {
-      paddingLeft: theme.spacing(4),
-    },
-  }));
+        paddingLeft: theme.spacing(4)
+    }
+}));
 
 const Header = props => {
-
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
-    
+
     const [menuList, setMenuList] = useState([]);
     const [submenuList, setsubmenuList] = useState([]);
     const [loading, setLoading] = useState([]);
@@ -58,8 +57,6 @@ const Header = props => {
     };
     const [formData, setformData] = useState(data);
 
-    
-
     const fetchAllmenu = async () => {
         const res = await axios.get(defaultRouteLink + "/api/get-menu-submenu");
         // console.log(res.data.submenu);
@@ -70,10 +67,11 @@ const Header = props => {
         fetchAllmenu();
     }, []);
 
-    const handleClick = (e) => {
-        console.log("edd="+!menuState[e]);
+    const handleClick = e => {
+        // console.log("edd="+!menuState[e]);
         setMenuState(oldState => ({
-            [e]: !menuState[e]  }));
+            [e]: !menuState[e]
+        }));
     };
 
     return (
@@ -160,38 +158,67 @@ const Header = props => {
             <div className="sidebar opened" id="sidebar">
                 <div className="sidebar-inner slimscroll">
                     <div id="sidebar-menu" className="sidebar-menu">
-
-                    <List
-                        component="nav"
-                        aria-labelledby="nested-list-subheader"
-                        subheader={
-                            <ListSubheader component="div" id="nested-list-subheader">
+                        <List
+                            component="nav"
+                            aria-labelledby="nested-list-subheader"
+                            subheader={
+                                <ListSubheader
+                                    component="div"
+                                    id="nested-list-subheader"
+                                >
                                     <Link
-                                        to={defaultRouteLink + `/admin_dashboard`}>
+                                        to={
+                                            defaultRouteLink +
+                                            `/admin_dashboard`
+                                        }
+                                    >
                                         Dashboard
                                     </Link>
-                            </ListSubheader>
-                        }
-                        className={classes.root}
+                                </ListSubheader>
+                            }
+                            className={classes.root}
                         >
-                        {menuList.map(function(item, index) {
-                            console.log("item testing ="+item.isChecked);
+                            {menuList.map(function(item, index) {
+                                console.log("item testing =" + item.isChecked);
                                 return (
                                     <div>
-                                        <ListItem button onClick={()=>handleClick(item.id)}>
-                                        <ListItemIcon>
-                                            <InboxIcon />
-                                        </ListItemIcon> 
-                                        <ListItemText primary={item.name}/>
-                                        {menuState[item.id] ? <ExpandLess /> : <ExpandMore />}
-                                    </ListItem>
-                                    {item.sub_menu.map(sub => {
+                                        <ListItem
+                                            button
+                                            onClick={() => handleClick(item.id)}
+                                        >
+                                            <ListItemIcon>
+                                                <InboxIcon />
+                                            </ListItemIcon>
+                                            <ListItemText primary={item.name} />
+                                            {menuState[item.id] ? (
+                                                <ExpandLess />
+                                            ) : (
+                                                <ExpandMore />
+                                            )}
+                                        </ListItem>
+                                        {item.sub_menu.map(sub => {
                                             return (
-                                                <Collapse in={menuState[item.id]} timeout="auto" unmountOnExit>
-                                                    <List component="div" disablePadding>
-                                                        <ListItem button className={classes.nested}>
+                                                <Collapse
+                                                    in={menuState[item.id]}
+                                                    timeout="auto"
+                                                    unmountOnExit
+                                                >
+                                                    <List
+                                                        component="div"
+                                                        disablePadding
+                                                    >
+                                                        <ListItem
+                                                            button
+                                                            className={
+                                                                classes.nested
+                                                            }
+                                                        >
                                                             <Link
-                                                                to={defaultRouteLink + `/${sub.link_id}`}>
+                                                                to={
+                                                                    defaultRouteLink +
+                                                                    `/${sub.link_id}`
+                                                                }
+                                                            >
                                                                 {sub.name}
                                                             </Link>
                                                         </ListItem>
@@ -200,12 +227,10 @@ const Header = props => {
                                             );
                                         })}
                                     </div>
-                                )
-                        })
-                                
-                        }
+                                );
+                            })}
                         </List>
-                   </div>
+                    </div>
                 </div>
             </div>
             <div className="page-wrapper">{props.children}</div>

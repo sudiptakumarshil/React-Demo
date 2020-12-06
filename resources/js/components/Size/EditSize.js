@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Customer from "../Customer/Customer";
 import { defaultRouteLink } from "../../common/config";
 import TreeView from "@material-ui/lab/TreeView";
@@ -9,18 +9,24 @@ import TreeItem from "@material-ui/lab/TreeItem";
 import { data, map } from "jquery";
 import ContentLoader, { Facebook, BulletList } from "react-content-loader";
 const MyBulletListLoader = () => <BulletList />;
-
 function EditSize(props) {
+    const { id } = useParams();
     const data = {
         name: "",
         status: 1
     };
     const [formData, setFormData] = useState(data);
 
+    const editSize = async () => {
+        const res = await axios.get(defaultRouteLink + `/api/edit-size/${id}`);
+
+        setFormData(res.data.size);
+    };
+
     const UpdateSize = async event => {
         event.preventDefault();
-        const res = await axios.post(
-            defaultRouteLink + "/api/save-size",
+        const res = await axios.patch(
+            defaultRouteLink + `/api/update-size/${id}`,
             formData
         );
 
@@ -28,7 +34,7 @@ function EditSize(props) {
             name: "",
             status: 1
         };
-        setFormData(data)
+        setFormData(data);
 
         if (res.data.status === 200) {
             props.history.push(defaultRouteLink + "/manage-size");
@@ -49,7 +55,7 @@ function EditSize(props) {
 
             Toast.fire({
                 icon: "success",
-                title: "Size  Saved  Successfully!!"
+                title: "Size  Updated  Successfully!!"
             });
         } catch (error) {
             console.error(error);
@@ -74,12 +80,15 @@ function EditSize(props) {
             [name]: value
         }));
     };
+    useEffect(() => {
+        editSize();
+    }, []);
 
     return (
         <div className="col-md-12">
             <div className="row">
                 <div className="col-md-8">
-                    <h2>Add Size</h2>
+                    <h2>Edit Size</h2>
                     <form onSubmit={UpdateSize}>
                         <div className="row pt-3">
                             <div className="col-md-4">
@@ -92,6 +101,7 @@ function EditSize(props) {
                                             type="text"
                                             className="form-control"
                                             placeholder="Name"
+                                            value={formData.name}
                                             name="name"
                                             onChange={handleInput}
                                         ></input>
@@ -115,8 +125,18 @@ function EditSize(props) {
                                             <option selected>
                                                 Choose one{" "}
                                             </option>
-                                            <option value="1">Active</option>
-                                            <option value="2">Inactive</option>
+                                            <option
+                                                selected={formData.status == 1}
+                                                value="1"
+                                            >
+                                                Active
+                                            </option>
+                                            <option
+                                                selected={formData.status == 2}
+                                                value="2"
+                                            >
+                                                Inactive
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
@@ -140,4 +160,3 @@ function EditSize(props) {
 }
 
 export default EditSize;
-

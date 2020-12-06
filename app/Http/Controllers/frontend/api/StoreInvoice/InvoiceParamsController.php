@@ -4,7 +4,7 @@ namespace App\Http\Controllers\frontend\api\StoreInvoice;
 
 use App\Http\Controllers\Controller;
 use App\Model\InvoiceTrasection\InvoiceParameter;
-use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Http\Request;
 use DB;
 class InvoiceParamsController extends Controller
 {
@@ -30,6 +30,10 @@ class InvoiceParamsController extends Controller
 
     public function update_params(Request $request,$id)
     {
+        $request->validate([
+            'type' => 'required',
+            'discount_method' => 'required',
+        ]);
         $params = InvoiceParameter::find($id);
         $params->type = $request->type;
         $params->discount_method = $request->discount_method;

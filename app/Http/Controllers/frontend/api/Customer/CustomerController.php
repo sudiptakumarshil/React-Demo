@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Frontend\Api\Customer;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Model\Customer\Customer;
 use App\Model\Vendor\Vendor;
 use DB;
+use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
-
 
     public function index()
     {
@@ -27,9 +26,18 @@ class CustomerController extends Controller
         ]);
     }
 
-
     public function create_customer(Request $request)
     {
+        $request->validate([
+            'name' => 'required|max:12',
+            'warehouse_id' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
+            'accounts_id' => 'required',
+            'type' => 'required',
+            'remarks' => 'required',
+        ]);
+
         $customer = new Vendor();
         $customer->name = $request->name;
         $customer->email = $request->email;
@@ -42,26 +50,33 @@ class CustomerController extends Controller
         $customer->save();
         return response()->json([
             'status' => 200,
-            'message' => "Customer Created Successfully!!"
+            'message' => "Customer Created Successfully!!",
         ]);
     }
-
 
     public function edit_customer($id)
     {
         $customer = Vendor::find($id);
         return response()->json([
             'status' => 200,
-            'customer' => $customer
+            'customer' => $customer,
         ]);
     }
-
 
     public function update_customer(Request $request, $id)
     {
 
         //        return $request->all();
         //        exit();
+        $request->validate([
+            'name' => 'required|max:12',
+            'warehouse_id' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
+            'accounts_id' => 'required',
+            'type' => 'required',
+            'remarks' => 'required',
+        ]);
         $customer = Vendor::find($id);
         $customer->name = $request->name;
         $customer->email = $request->email;
@@ -72,7 +87,7 @@ class CustomerController extends Controller
         $customer->save();
         return response()->json([
             'status' => 200,
-            'message' => "Customer Updated Successfully!!"
+            'message' => "Customer Updated Successfully!!",
         ]);
     }
 }

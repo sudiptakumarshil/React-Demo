@@ -27,6 +27,16 @@ class VendorController extends Controller
 
     public function create_vendor(Request $request)
     {
+        $request->validate([
+            'name' => 'required|max:12',
+            'warehouse_id' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
+            'accounts_id' => 'required',
+            'type' => 'required',
+            'remarks' => 'required',
+        ]);
+
         $vendor = new Vendor();
         $vendor->name = $request->name;
         $vendor->email = $request->email;
@@ -55,6 +65,16 @@ class VendorController extends Controller
 
     public function update_vendor(Request $request, $id)
     {
+        $request->validate([
+            'name' => 'required|max:12',
+            'warehouse_id' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
+            'accounts_id' => 'required',
+            'type' => 'required',
+            'remarks' => 'required',
+        ]);
+
         $vendor = Vendor::find($id);
         $vendor->name = $request->name;
         $vendor->email = $request->email;
