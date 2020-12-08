@@ -18,6 +18,8 @@ function EditPayment(props) {
     const [ledgers, setLedgers] = useState([]);
     const [Setting, setSetting] = useState([]);
     const [bankList, setbankList] = useState([]);
+    const [selected, setSelected] = useState([0]);
+    const [selected_item, setselected_item] = useState([]);
     const { id } = useParams();
     const data = {
         name: "",
@@ -37,6 +39,7 @@ function EditPayment(props) {
         doc_no: 0,
         description: "",
         Addrow: [1],
+        isWriteable: true,
         allData: [
             {
                 id: 1,
@@ -45,7 +48,8 @@ function EditPayment(props) {
                 remarks: "",
                 amount: 0,
                 setting_id: 0,
-                accounts_id: 0
+                accounts_id: 0,
+                selected_item: 0
             }
         ],
         gross_amount: 0
@@ -95,24 +99,13 @@ function EditPayment(props) {
         // filter_accountId(value);
     };
 
-    const fetchalldata = async () => {
-        const res = await axios.get(defaultRouteLink + "/api/all-data");
-        setwarhouseList(res.data.warehouses);
-        setcashList(res.data.cashaccount);
-        setcostcenterList(res.data.costcenter);
-        setbankList(res.data.bankdetails);
-        setdocType(res.data.docType);
-        setpostingType(res.data.postingType);
-        setLoading(false);
-        setSetting(res.data.setting);
-        setLedgers(res.data.ledgers);
-    };
-
     const EditPaymentVoucher = async () => {
         const res = await axios.get(
             defaultRouteLink + `/api/edit-paymentvoucher/${id}`
         );
+        const AccGroupId = res.data.accountTransec[0].acc_group_id;
         const acc_info = res.data.accountDetails;
+        fetchalldata(AccGroupId);
         setFormData(oldState => ({
             ...oldState,
             ware_id: acc_info.ware_id,
@@ -136,6 +129,25 @@ function EditPayment(props) {
         }));
 
         // setFormData(res.data.accountDetails);
+    };
+
+    const fetchalldata = async AccGroupId => {
+        const res = await axios.get(defaultRouteLink + "/api/all-data");
+        setwarhouseList(res.data.warehouses);
+        setcashList(res.data.cashaccount);
+        setcostcenterList(res.data.costcenter);
+        setbankList(res.data.bankdetails);
+        setdocType(res.data.docType);
+        setpostingType(res.data.postingType);
+        setLoading(false);
+        setSetting(res.data.setting);
+        setLedgers(res.data.ledgers);
+
+        var isExist = res.data.setting.find(item => item.id == AccGroupId);
+        // var list = [];
+        // list.push(isExist);
+        // var data_set = JSON.stringify(list);
+        setSelected(isExist ? [isExist] : []);
     };
 
     const warehouse = warhouseList.map(function(item, index) {
@@ -234,26 +246,26 @@ function EditPayment(props) {
         // }));
     });
 
-    const setting = Setting.map(list => {
-        return (
-            <option
-                selected={formData.allData[0].setting_id == list.id}
-                value={list.id}
-            >
-                {list.name}
-            </option>
-        );
-    });
-    const account = ledgers.map(list => {
-        return (
-            <option
-                selected={formData.allData[0].accounts_id == list.id}
-                value={list.id}
-            >
-                {list.ledger_title}
-            </option>
-        );
-    });
+    // const setting = Setting.map(list => {
+    //     return (
+    //         <option
+    //             selected={formData.allData[0].acc_group_id == list.id}
+    //             value={list.id}
+    //         >
+    //             {list.name}
+    //         </option>
+    //     );
+    // });
+    // const account = ledgers.map(list => {
+    //     return (
+    //         <option
+    //             selected={formData.allData[0].acc_id == list.id}
+    //             value={list.id}
+    //         >
+    //             {list.ledger_title}
+    //         </option>
+    //     );
+    // });
 
     const handleAccountsid = object => {
         //console.log("accId="+object.id);
@@ -311,29 +323,41 @@ function EditPayment(props) {
     let totalvalue = 0;
     let rowamount = 0;
 
-    const handleDataInput = (event, id) => {
-        // console.log("target", event.target);
-
-        // console.log("event", event);
-        // console.log("id", id);
-
+    const handleDataInput = (event, item_obj, input_name) => {
         if (typeof event.target != "undefined") {
             const { name, files, value } = event.target;
             if (typeof event != "undefined") {
                 let rowId = event.target.getAttribute("data-rowId");
+
                 let isExist = formData.allData.find(item => item.id == rowId);
                 if (typeof isExist != "undefined") {
                     isExist[name] = value;
-                    // isExist.setting_name = item.name;
-                    // isExist.setting_id = item.id;
-                    // isExist.accounts_id = item.id;
                     setFormData(oldState => ({
                         ...oldState,
                         ["allData"]: formData.allData
                     }));
                 }
             }
+        } else if (typeof event != "undefined") {
+            let isExist = formData.allData.find(item => item.id == item_obj.id);
+            // console.log("json="+event);
+
+            if (
+                typeof isExist != "undefined" &&
+                typeof event[0] != "undefined"
+            ) {
+                //isExist.selected_item=event;
+                isExist[input_name] = event[0].id;
+                //console.log("idx", (isExist[input_name] = event[0].id));
+                setFormData(oldState => ({
+                    ...oldState,
+                    ["allData"]: formData.allData
+                    //isWriteable:false,
+                }));
+                // setSelected(input_name)
+            }
         }
+        //    else if(){}
 
         formData.allData.map(item => {
             return (
@@ -783,128 +807,56 @@ function EditPayment(props) {
                                             <tbody>
                                                 <td></td>
                                                 <td>
-                                                    {/* <input
-                                                        type="text"
-                                                        className="form-control"
-                                                        placeholder="Accounts No"
-                                                        name="setting_id"
-                                                        data-rowId={item.id}
-                                                        required
-                                                        // value={
-                                                        //     item.setting_name
-                                                        // }
-                                                        value={item.setting_id}
-                                                        data-id={
-                                                            item.setting_id
-                                                        }
-                                                        onChange={
-                                                            handleDataInput
-                                                        }
-                                                    /> */}
-                                                    {/* <ModalSetting
-                                                        handleSettingsid={
-                                                            handleSettingsid
-                                                        }
-                                                    /> */}
-                                                    {/* <Typeahead
+                                                    <Typeahead
                                                         id="labelkey-example"
                                                         labelKey={Setting =>
                                                             `${Setting.name}`
                                                         }
+                                                        key={Setting =>
+                                                            `${Setting.id}`
+                                                        }
                                                         placeholder="Accounts No"
-                                                        name="setting_id"
+                                                        name="acc_group_id"
                                                         options={Setting}
                                                         // value={item.id}
-                                                        value={item.setting_id}
+                                                        value={
+                                                            item.acc_group_id
+                                                        }
                                                         data-rowId={item.id}
+                                                        // selected={
+                                                        //     item.selected_item
+                                                        //         ? item.selected_item
+                                                        //         : null
+                                                        // }
+                                                        selected={selected}
                                                         onChange={event =>
                                                             handleDataInput(
                                                                 event,
-                                                                // item.id
-                                                                item.id
+                                                                item,
+                                                                "acc_group_id"
                                                             )
                                                         }
-                                                        // onChange={()=>handleDataInput(
-                                                        //     event,item.id
-                                                        // )}
-                                                    /> */}
-
-                                                    <div className="input-group">
-                                                        <select
-                                                            className="form-control"
-                                                            id="exampleFormControlSelect1"
-                                                            name="setting_id"
-                                                            onChange={
-                                                                handleDataInput
-                                                            }
-                                                            data-rowId={item.id}
-                                                            required
-                                                        >
-                                                            <option selected>
-                                                                Choose one{" "}
-                                                            </option>
-                                                            {setting}
-                                                        </select>
-                                                    </div>
+                                                    />
                                                 </td>
                                                 <td>
-                                                    {/* <input
-                                                        type="text"
-                                                        className="form-control"
-                                                        placeholder="Setting No"
-                                                        name="accounts_id"
-                                                        data-rowId={item.id}
-                                                        required
-                                                        // value={item.accounts_no}
-                                                        value={item.accounts_id}
-                                                        data-id={
-                                                            item.accounts_id
-                                                        }
-                                                        // onChange={handleInput}
-                                                        onChange={
-                                                            handleDataInput
-                                                        }
-                                                    />
-
-                                                    <ModalAccountsLedgerList
-                                                        handleAccountsid={
-                                                            handleAccountsid
-                                                        }
-                                                    /> */}
-                                                    {/* <Typeahead
+                                                    <Typeahead
                                                         id="labelkey-example"
                                                         labelKey={ledgers =>
                                                             `${ledgers.ledger_title}`
                                                         }
-                                                        name="accounts_id"
+                                                        name="acc_id"
                                                         options={ledgers}
                                                         // value={item.id}
-                                                        value={item.accounts_id}
+                                                        value={item.acc_id}
                                                         data-rowId={item.id}
                                                         onChange={event =>
                                                             handleDataInput(
                                                                 event,
-                                                                item.id
+                                                                item,
+                                                                "acc_id"
                                                             )
                                                         }
-                                                    /> */}
-                                                    <div className="input-group">
-                                                        <select
-                                                            className="form-control"
-                                                            id="exampleFormControlSelect1"
-                                                            name="accounts_id"
-                                                            onChange={
-                                                                handleDataInput
-                                                            }
-                                                            data-rowId={item.id}
-                                                            required
-                                                        >
-                                                            <option selected>
-                                                                Choose one{" "}
-                                                            </option>
-                                                            {account}
-                                                        </select>
-                                                    </div>
+                                                    />
                                                 </td>
 
                                                 <td>
@@ -962,12 +914,6 @@ function EditPayment(props) {
                                     );
                                 })}
                             </table>
-
-                            {/* <tr>
-                                <td colSpan="4">Total</td>
-                                <td>{formData.gross_amount}</td>
-                                <td></td>
-                            </tr> */}
                         </div>
 
                         <div className="form-group">

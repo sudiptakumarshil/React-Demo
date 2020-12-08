@@ -370,6 +370,7 @@ class EditStoreInvoice extends Component {
     saveinvoiceTransection = async event => {
         event.preventDefault();
         const idx = this.props.match.params.idx;
+        const isLoginExit = getCookieKeyInfo(getAccessTokenName);
         if (this.state.warehouse_id == 0) {
             Swal.fire({
                 title: "WareHouse Cannot Be Empty!!",
@@ -480,7 +481,8 @@ class EditStoreInvoice extends Component {
                 {
                     params: {
                         type: idx,
-                        invoice_id: invoice_id
+                        invoice_id: invoice_id,
+                        user_id: isLoginExit
                     }
                 }
             );

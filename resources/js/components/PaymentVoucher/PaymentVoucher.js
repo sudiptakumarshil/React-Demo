@@ -321,16 +321,18 @@ function AddPaymentVoucher(props) {
     //     }
     // };
 
-    const handleDataInput = (event, id) => {
+    const handleDataInput = (event, item_obj,input_name) => {
         // console.log("target", event.target);
 
-        // console.log("event", event);
-        // console.log("id", id);
+         //console.log("event", event);
+         //console.log("id", id);
 
         if (typeof event.target != "undefined") {
             const { name, files, value } = event.target;
             if (typeof event != "undefined") {
                 let rowId = event.target.getAttribute("data-rowId");
+
+
                 let isExist = formData.allData.find(item => item.id == rowId);
                 if (typeof isExist != "undefined") {
                     isExist[name] = value;
@@ -342,6 +344,20 @@ function AddPaymentVoucher(props) {
                         ["allData"]: formData.allData
                     }));
                 }
+            }
+        }
+        else if(typeof event != 'undefined'){
+
+            let isExist = formData.allData.find(item => item.id == item_obj.id);
+            //console.log("json="+JSON.stringify(event[0]));
+
+            if(typeof isExist != 'undefined' && typeof event[0] != 'undefined'){
+
+                   isExist[input_name] = event[0].id;
+                   setFormData(oldState => ({
+                       ...oldState,
+                       ["allData"]: formData.allData
+                   }));
             }
         }
 
@@ -781,24 +797,7 @@ function AddPaymentVoucher(props) {
                                             <tbody>
                                                 <td></td>
                                                 <td>
-                                                    {/* <input
-                                                        type="text"
-                                                        className="form-control"
-                                                        placeholder="Accounts No"
-                                                        name="setting_id"
-                                                        data-rowId={item.id}
-                                                        required
-                                                        value={
-                                                            item.setting_name
-                                                        }
-                                                        data-id={
-                                                            item.setting_id
-                                                        }
-                                                        onChange={
-                                                            handleDataInput
-                                                        }
-                                                    /> */}
-                                                    {/* <Typeahead
+                                                    <Typeahead
                                                         id="labelkey-example"
                                                         labelKey={Setting =>
                                                             `${Setting.name}`
@@ -807,7 +806,7 @@ function AddPaymentVoucher(props) {
                                                             `${Setting.id}`
                                                         }
                                                         placeholder="Accounts No"
-                                                        name="setting_id"
+                                                        name="acc_group_id"
                                                         options={Setting}
                                                         // value={item.id}
                                                         value={item.setting_id}
@@ -815,15 +814,13 @@ function AddPaymentVoucher(props) {
                                                         onChange={event =>
                                                             handleDataInput(
                                                                 event,
-                                                                // item.id
-                                                                item.id
+                                                                item,
+                                                                "acc_group_id"
                                                             )
                                                         }
-                                                        // onChange={()=>handleDataInput(
-                                                        //     event,item.id
-                                                        // )}
-                                                    /> */}
 
+                                                    />
+{/*
                                                     <div className="input-group">
                                                         <select
                                                             className="form-control"
@@ -844,7 +841,7 @@ function AddPaymentVoucher(props) {
                                                             </option>
                                                             {setting}
                                                         </select>
-                                                    </div>
+                                                    </div> */}
 
                                                     {/* <ModalSetting
                                                         handleSettingsid={
@@ -853,29 +850,12 @@ function AddPaymentVoucher(props) {
                                                     /> */}
                                                 </td>
                                                 <td>
-                                                    {/* <input
-                                                        type="text"
-                                                        className="form-control"
-                                                        placeholder="Setting No"
-                                                        name="accounts_id"
-                                                        data-rowId={item.id}
-                                                        required
-                                                        value={item.accounts_no}
-                                                        data-id={
-                                                            item.accounts_id
-                                                        }
-                                                        // onChange={handleInput}
-                                                        onChange={
-                                                            handleDataInput
-                                                        }
-                                                    /> */}
-
-                                                    {/* <Typeahead
+                                                    <Typeahead
                                                         id="labelkey-example"
                                                         labelKey={ledgers =>
                                                             `${ledgers.ledger_title}`
                                                         }
-                                                        name="accounts_id"
+                                                        name="acc_id"
                                                         options={ledgers}
                                                         // value={item.id}
                                                         value={item.accounts_id}
@@ -883,12 +863,13 @@ function AddPaymentVoucher(props) {
                                                         onChange={event =>
                                                             handleDataInput(
                                                                 event,
-                                                                item.id
+                                                                item,
+                                                                "acc_id"
                                                             )
                                                         }
-                                                    /> */}
+                                                    />
 
-                                                    <div className="input-group">
+                                                    {/* <div className="input-group">
                                                         <select
                                                             className="form-control"
                                                             id="exampleFormControlSelect1"
@@ -905,7 +886,7 @@ function AddPaymentVoucher(props) {
                                                             </option>
                                                             {account}
                                                         </select>
-                                                    </div>
+                                                    </div> */}
 
                                                     {/* <ModalAccountsLedgerList
                                                         handleAccountsid={

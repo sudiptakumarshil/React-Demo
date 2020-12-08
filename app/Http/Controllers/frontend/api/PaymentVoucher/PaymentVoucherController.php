@@ -42,8 +42,8 @@ class PaymentVoucherController extends Controller
                 $iatd->credit_id = $request->bank_id;
             }
             $iatd->invoice_acc_details_id = $iad->id;
-            $iatd->debit_id = $value['accounts_id'];
-            $iatd->group_account_code = $value['setting_id'];
+            $iatd->debit_id = $value['acc_id'];
+            $iatd->group_account_code = $value['acc_group_id'];
             $iatd->date = $request->date;
             $iatd->ware_id = $request->ware_id;
             $iatd->remarks = $value['remarks'];
@@ -72,7 +72,7 @@ class PaymentVoucherController extends Controller
             ->join('ware_house_details', 'invoice_account_details.ware_id', 'ware_house_details.id')
             ->join('cost_centers', 'invoice_account_details.cost_center_id', 'cost_centers.id')
             ->select('invoice_account_details.*', 'ware_house_details.name as cost_name', 'ware_house_details.name as ware_name')
-            ->orderBy('invoice_account_details.id','desc')
+            ->orderBy('invoice_account_details.id', 'desc')
             ->get();
 
         return response()->json([
@@ -87,7 +87,7 @@ class PaymentVoucherController extends Controller
 
         $accountTransec = DB::table('invoice_account_transec_details')
             ->join('invoice_account_details', 'invoice_account_transec_details.invoice_acc_details_id', 'invoice_account_details.id')
-            ->select('invoice_account_transec_details.*', 'invoice_account_transec_details.group_account_code as setting_id', 'invoice_account_transec_details.debit_id as accounts_id', )
+            ->select('invoice_account_transec_details.*', 'invoice_account_transec_details.group_account_code as acc_group_id', 'invoice_account_transec_details.debit_id as acc_id', )
             ->where('invoice_acc_details_id', $id)
             ->get();
         return response()->json([
@@ -131,8 +131,8 @@ class PaymentVoucherController extends Controller
                 $iatd->credit_id = $request->bank_id;
             }
             $iatd->invoice_acc_details_id = $iad->id;
-            $iatd->debit_id = $value['accounts_id'];
-            $iatd->group_account_code = $value['setting_id'];
+            $iatd->debit_id = $value['acc_id'];
+            $iatd->group_account_code = $value['acc_group_id'];
             $iatd->date = $request->date;
             $iatd->ware_id = $request->ware_id;
             $iatd->remarks = $value['remarks'];

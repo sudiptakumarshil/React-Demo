@@ -907,6 +907,15 @@ class AddStoreInvoice extends Component {
         }
     };
 
+    handleEditUpdate=(data)=>{
+
+        this.fetchalldata();
+        this.setState({
+            isModalShow: false,
+            isInvEdit:true,
+        });
+    }
+
     // FOR DELETE INVOICES TRANSECTION
     delinvoicetransec = async e => {
         this.setState({
@@ -1241,6 +1250,7 @@ class AddStoreInvoice extends Component {
                         closingStock={this.state.closingStock}
                         handleClose={this.handleModalClose}
                         handleUpdate={this.handleEditUpdate}
+
                         {...this.props}
                     />
                 ) : null}

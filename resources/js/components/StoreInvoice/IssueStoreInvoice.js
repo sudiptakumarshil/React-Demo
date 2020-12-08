@@ -79,7 +79,7 @@ class IssueStoreInvoice extends Component {
             quantity: 1,
             price: 0,
             idx: "",
-            user_id: "",
+            user_id: 0,
             isModalShow: false,
             modalData: {},
             vatList: [],
@@ -193,14 +193,15 @@ class IssueStoreInvoice extends Component {
     QuickPurshaseInvoiceTransec = async event => {
         // event.preventDefault();
         const idx = this.props.match.params.idx;
-
+        const isLoginExit = getCookieKeyInfo(getAccessTokenName);
         const res = await axios.post(
             defaultRouteLink + "/api/save-storeinvoice",
             this.state,
             {
                 params: {
                     type: idx,
-                    invoice_id: 0
+                    invoice_id: 0,
+                    user_id:isLoginExit
                 }
             }
         );
@@ -321,7 +322,7 @@ class IssueStoreInvoice extends Component {
     saveinvoiceTransection = async event => {
         event.preventDefault();
         const idx = this.props.match.params.idx;
-
+        const isLoginExit = getCookieKeyInfo(getAccessTokenName);
         if (this.state.warehouse_id == 0) {
             Swal.fire({
                 title: "WareHouse Cannot Be Empty!!",
@@ -484,7 +485,9 @@ class IssueStoreInvoice extends Component {
                 {
                     params: {
                         type: idx,
-                        invoice_id: 0
+                        invoice_id: 0,
+                        user_id: isLoginExit
+
                     }
                 }
             );
@@ -639,11 +642,12 @@ class IssueStoreInvoice extends Component {
     // for getting warehouse ,store ,product , vendor ,customer,vat....
     fetchalldata = async () => {
         const idx = this.props.match.params.idx;
-
+        const isLoginExit = getCookieKeyInfo(getAccessTokenName);
         const response = await axios.get(defaultRouteLink + "/api/all-data", {
             params: {
                 type: idx,
-                invoice_id: 0
+                invoice_id: 0,
+                user_id:isLoginExit
             }
         });
 
@@ -656,6 +660,7 @@ class IssueStoreInvoice extends Component {
                 customerList: response.data.customer,
                 vatList: response.data.vats,
                 isInvEdit:false,
+                user_id: isLoginExit,
                 invoicetransectionList: response.data.invotransec,
                 bankdetailsList: response.data.bankdetails,
                 cashamountList: response.data.cashaccount,

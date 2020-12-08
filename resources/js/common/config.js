@@ -29,6 +29,7 @@ export const getApiServerDashboard =
     "http://localhost/estores/admin_dashboard/";
 
 export const defaultRouteLink = "/estores";
+// export const defaultRouteLink = "/e-store";
 
 export const getAccessTokenName = "userId";
 export const getAccessTokenNameInfo = "userInfo";

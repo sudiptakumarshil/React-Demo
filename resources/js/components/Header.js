@@ -85,7 +85,9 @@ const Header = props => {
                     </div>
                     <div className="header-right">
                         <div className="page-title-box pull-left">
-                            <h3>Admin</h3>
+                            <h3>
+                                Textile Engineering College, Noakhali E-Store
+                            </h3>
                         </div>
                         <div style={{ textAlign: "center" }}>
                             <ul className="nav navbar-nav navbar-right user-menu pull-right">

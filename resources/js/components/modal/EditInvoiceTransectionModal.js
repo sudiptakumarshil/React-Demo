@@ -309,30 +309,6 @@ const EditInvoiceTransectionModal = props => {
                                                                         Product
                                                                         Name
                                                                     </label>
-
-                                                                    {/* <Typeahead
-                                                                        id="labelkey-example"
-                                                                        labelKey={products =>
-                                                                            `${products.product_name}`
-                                                                        }
-                                                                        name="product_id"
-                                                                        onChange={e =>
-                                                                            handleProductPrice(
-                                                                                e
-                                                                            )
-                                                                        }
-                                                                        value={
-                                                                            formData.pname
-                                                                        }
-                                                                        defaultSelected={
-                                                                            selected
-                                                                        }
-                                                                        options={
-                                                                            productList
-                                                                        }
-                                                                        placeholder="Select your product"
-                                                                    /> */}
-
                                                                     <Typeahead
                                                                         id="labelkey-example"
                                                                         labelKey={products =>
