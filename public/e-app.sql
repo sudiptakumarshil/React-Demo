@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 18, 2020 at 02:19 PM
+-- Generation Time: Dec 10, 2020 at 02:08 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.10
 
@@ -60,6 +60,8 @@ CREATE TABLE `bank_details` (
   `branch` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `address` varchar(11) COLLATE utf8mb4_unicode_ci NOT NULL,
   `account_id` int(11) NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'active=1 inactive=2',
+  `trash` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'delete=2',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -68,8 +70,8 @@ CREATE TABLE `bank_details` (
 -- Dumping data for table `bank_details`
 --
 
-INSERT INTO `bank_details` (`id`, `bank_no`, `bank_name`, `account_number`, `branch`, `address`, `account_id`, `created_at`, `updated_at`) VALUES
-(1, 23456, 'Ucb', 1234, 'gec', 'ctg', 0, '2020-11-15 03:25:33', '2020-11-15 03:25:49');
+INSERT INTO `bank_details` (`id`, `bank_no`, `bank_name`, `account_number`, `branch`, `address`, `account_id`, `status`, `trash`, `created_at`, `updated_at`) VALUES
+(1, 23456, 'Ucb', 1234, 'gec', 'ctg', 3000, 1, 0, '2020-11-15 03:25:33', '2020-11-15 03:25:49');
 
 -- --------------------------------------------------------
 
@@ -83,6 +85,8 @@ CREATE TABLE `cash_account_details` (
   `cash_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `remarks` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `account_no` int(11) NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'active=1 inactive=2',
+  `trash` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'delete=2',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -91,8 +95,8 @@ CREATE TABLE `cash_account_details` (
 -- Dumping data for table `cash_account_details`
 --
 
-INSERT INTO `cash_account_details` (`id`, `cash_no`, `cash_name`, `remarks`, `account_no`, `created_at`, `updated_at`) VALUES
-(1, 2002, 'bkash', 'good day', 0, '2020-11-15 03:28:28', '2020-11-15 03:28:53');
+INSERT INTO `cash_account_details` (`id`, `cash_no`, `cash_name`, `remarks`, `account_no`, `status`, `trash`, `created_at`, `updated_at`) VALUES
+(1, 2002, 'bkash', 'good day', 2000, 1, 1, '2020-11-15 03:28:28', '2020-11-15 03:28:53');
 
 -- --------------------------------------------------------
 
@@ -130,7 +134,8 @@ CREATE TABLE `cost_centers` (
 --
 
 INSERT INTO `cost_centers` (`id`, `name`, `code`, `ware_id`, `status`, `trash`, `created_at`, `updated_at`) VALUES
-(1, 'cost2', 200, 1, 1, 1, '2020-11-15 03:30:45', '2020-11-15 03:30:45');
+(1, 'cost2', 200, 1, 1, 1, '2020-11-15 03:30:45', '2020-11-15 03:30:45'),
+(2, 'tttt', 201, 1, 1, 1, '2020-12-06 01:20:37', '2020-12-06 01:20:37');
 
 -- --------------------------------------------------------
 
@@ -204,20 +209,20 @@ INSERT INTO `inventory_categories` (`id`, `root_id`, `category_name`, `category_
 
 CREATE TABLE `inventory_products` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `product_code` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `product_code` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `product_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pices_of_carton` int(11) NOT NULL DEFAULT 0,
-  `category_id` int(10) UNSIGNED NOT NULL,
-  `warehouse_id` int(10) UNSIGNED NOT NULL,
-  `sorting` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
-  `reorder_level` int(11) NOT NULL,
-  `category_autocode` int(11) NOT NULL,
-  `unit_id` int(255) UNSIGNED NOT NULL,
+  `pices_of_carton` int(11) DEFAULT 0,
+  `category_id` int(10) UNSIGNED DEFAULT NULL,
+  `warehouse_id` int(10) UNSIGNED DEFAULT NULL,
+  `sorting` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '0',
+  `reorder_level` int(11) DEFAULT NULL,
+  `category_autocode` int(11) DEFAULT NULL,
+  `unit_id` int(255) UNSIGNED DEFAULT NULL,
   `opening_stock` int(10) UNSIGNED DEFAULT NULL,
-  `buy_price` double(8,2) NOT NULL,
-  `cost` double(8,2) NOT NULL,
+  `buy_price` double(8,2) DEFAULT 0.00,
+  `cost` double(8,2) DEFAULT 0.00,
   `selling_price` double(8,2) NOT NULL DEFAULT 0.00,
-  `price_type` tinyint(4) NOT NULL COMMENT ' Customize Price = 1 Fixed Price =2',
+  `price_type` tinyint(4) DEFAULT 0 COMMENT ' Customize Price = 1 Fixed Price =2',
   `product_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'active=1 inactive=2',
   `trash` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'delete=2',
@@ -231,7 +236,20 @@ CREATE TABLE `inventory_products` (
 
 INSERT INTO `inventory_products` (`id`, `product_code`, `product_name`, `pices_of_carton`, `category_id`, `warehouse_id`, `sorting`, `reorder_level`, `category_autocode`, `unit_id`, `opening_stock`, `buy_price`, `cost`, `selling_price`, `price_type`, `product_image`, `status`, `trash`, `created_at`, `updated_at`) VALUES
 (1, '12345', 'vue.js', 2, 2, 1, '2', 2, 500, 1, 2, 200.00, 100.00, 400.00, 1, NULL, 1, 1, '2020-11-15 02:48:58', '2020-11-15 02:48:58'),
-(2, '1234', 'react', 2, 2, 1, '23', 2, 501, 1, 2, 200.00, 300.00, 500.00, 2, NULL, 1, 1, '2020-11-16 23:26:36', '2020-11-16 23:26:36');
+(2, '1234', 'react', 2, 2, 1, '23', 2, 501, 1, 2, 200.00, 300.00, 500.00, 2, NULL, 1, 1, '2020-11-16 23:26:36', '2020-11-16 23:26:36'),
+(3, '777', 'python', 2, 2, 1, '2', 2, 501, 1, 2, 2000.00, 2000.00, 3000.00, 1, NULL, 1, 1, '2020-11-19 00:36:37', '2020-11-19 00:36:37'),
+(4, NULL, 'acer asiore 4567', NULL, 2, 0, NULL, NULL, 501, 0, NULL, 0.00, 0.00, 0.00, 0, NULL, 1, 1, '2020-12-01 01:49:41', '2020-12-01 01:49:41'),
+(5, NULL, 'hp', NULL, 2, 0, NULL, NULL, 501, 0, NULL, 0.00, 0.00, 0.00, 0, NULL, 1, 1, '2020-12-01 03:02:52', '2020-12-01 03:02:52'),
+(6, '5678', 'redmi 6', 2, 2, 1, '2', 2, 502, 1, 2, 2000.00, 2000.00, 3000.00, 1, NULL, 1, 1, '2020-12-05 04:33:41', '2020-12-05 04:33:41'),
+(7, '5000', 'microsoft lumia', 2, 2, 1, '2', 2, 503, 1, 2, 2000.00, 2000.00, 3000.00, 1, NULL, 1, 1, '2020-12-05 04:34:07', '2020-12-05 04:34:07'),
+(8, '3000', 'walton primo', 2, 2, 1, '2', 2, 504, 1, 2, 2000.00, 2000.00, 3000.00, 1, NULL, 1, 1, '2020-12-05 04:34:27', '2020-12-05 04:34:27'),
+(9, '6000', 'macbook pro', 4, 1, 2, '2', 2, 1234, 1, 2, 2000.00, 5000.00, 10000.00, 1, NULL, 1, 1, '2020-12-05 04:35:43', '2020-12-05 04:35:43'),
+(10, '8000', 'samsung s5', 4, 1, 2, '2', 2, 1235, 1, 2, 2000.00, 5000.00, 10000.00, 1, NULL, 1, 1, '2020-12-05 04:36:05', '2020-12-05 04:36:05'),
+(11, '8000', 'microsoft lumia 532', 4, 1, 2, '2', 2, 1236, 1, 2, 2000.00, 5000.00, 10000.00, 1, NULL, 1, 1, '2020-12-05 04:36:22', '2020-12-05 04:36:22'),
+(12, '2300', 'window', 2, 2, 1, '2', 2, 505, 1, 2, 2000.00, 2000.00, 3000.00, 1, '1607230328.png', 1, 1, '2020-12-05 05:21:49', '2020-12-05 22:52:08'),
+(13, '5600', 'microsoft lumia 550', 4, 1, 1, '2', 2, 1237, 1, 2, 2000.00, 2000.00, 10000.00, 2, '1607171578.png', 1, 1, '2020-12-05 05:54:10', '2020-12-05 06:33:40'),
+(14, '6000', 'react16.2', 2, 1, 2, '2', 2, 1238, 1, 2, 2000.00, 2000.00, 3000.00, 1, '1607171500.png', 1, 1, '2020-12-05 06:29:29', '2020-12-05 06:31:40'),
+(15, '2008', 'windows-10', NULL, 2, 0, NULL, NULL, 506, 1, 2, 0.00, NULL, 0.00, 2, '1607230012.png', 1, 1, '2020-12-05 22:46:53', '2020-12-05 23:36:26');
 
 -- --------------------------------------------------------
 
@@ -242,13 +260,16 @@ INSERT INTO `inventory_products` (`id`, `product_code`, `product_name`, `pices_o
 CREATE TABLE `invoice_account_details` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `ware_id` int(11) NOT NULL,
-  `invoice_type` int(11) NOT NULL COMMENT 'cash =2 cash=1 ',
+  `invoice_type` int(11) NOT NULL COMMENT 'bank =2 cash=1 ',
+  `bank_id` int(11) NOT NULL DEFAULT 0,
+  `cash_id` int(11) NOT NULL DEFAULT 0,
   `voucher_no` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `date` date NOT NULL,
-  `ammount` int(11) NOT NULL,
-  `description` int(11) NOT NULL,
+  `gross_amount` int(11) NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `cost_center_id` int(11) NOT NULL,
   `posting_type_id` int(11) NOT NULL,
+  `doctype_id` int(11) NOT NULL,
   `ref_no` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `doc_no` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `trash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1' COMMENT 'delete=2',
@@ -256,6 +277,17 @@ CREATE TABLE `invoice_account_details` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `invoice_account_details`
+--
+
+INSERT INTO `invoice_account_details` (`id`, `ware_id`, `invoice_type`, `bank_id`, `cash_id`, `voucher_no`, `date`, `gross_amount`, `description`, `cost_center_id`, `posting_type_id`, `doctype_id`, `ref_no`, `doc_no`, `trash`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 2, 0, 2000, '0', '2020-12-07', 15000, 'hello world', 1, 2, 1, '3000', '4000', '1', '2', '2020-12-07 00:17:35', '2020-12-07 05:10:23'),
+(2, 1, 2, 0, 2000, '0', '2020-12-07', 1000, 'ffffff', 1, 2, 1, '4000', '4000', '1', '2', '2020-12-07 06:22:35', '2020-12-07 06:22:35'),
+(3, 1, 2, 0, 2000, '0', '2020-12-08', 13000, 'done', 1, 2, 1, '4000', '7000', '1', '2', '2020-12-08 02:20:25', '2020-12-08 02:20:25'),
+(4, 1, 2, 0, 2000, '0', '2020-12-08', 1000, 'done', 1, 2, 1, '2000', '4000', '1', '2', '2020-12-08 03:29:53', '2020-12-08 03:29:53'),
+(5, 2, 1, 3000, 2000, '0', '2020-12-08', 1000, 'eeee', 2, 2, 1, '0', 'qww', '1', '1', '2020-12-08 04:30:09', '2020-12-08 05:07:15');
 
 -- --------------------------------------------------------
 
@@ -265,22 +297,37 @@ CREATE TABLE `invoice_account_details` (
 
 CREATE TABLE `invoice_account_transec_details` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `debit_id` int(10) UNSIGNED NOT NULL,
+  `debit_id` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
   `credit_id` int(10) UNSIGNED NOT NULL,
-  `group_account_code` int(11) NOT NULL,
+  `group_account_code` varchar(11) COLLATE utf8mb4_unicode_ci NOT NULL,
   `invoice_acc_details_id` int(10) UNSIGNED NOT NULL,
   `date` date NOT NULL,
   `ware_id` int(10) UNSIGNED NOT NULL,
   `remarks` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ammount` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `amount` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `cost_center_id` int(11) NOT NULL,
   `cheque_number` int(11) NOT NULL,
-  `cheque_date` int(11) NOT NULL,
+  `cheque_date` date NOT NULL,
   `trash` int(11) NOT NULL DEFAULT 1 COMMENT 'delete=2',
   `status` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'active=1,inactive=2',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `invoice_account_transec_details`
+--
+
+INSERT INTO `invoice_account_transec_details` (`id`, `debit_id`, `credit_id`, `group_account_code`, `invoice_acc_details_id`, `date`, `ware_id`, `remarks`, `amount`, `cost_center_id`, `cheque_number`, `cheque_date`, `trash`, `status`, `created_at`, `updated_at`) VALUES
+(14, '751', 2000, '3', 1, '2020-12-07', 1, 'done', '5000', 1, 0, '0000-00-00', 1, 1, '2020-12-07 05:21:37', '2020-12-07 05:21:37'),
+(15, '751', 2000, '2', 2, '2020-12-07', 1, 'done', '300', 1, 0, '0000-00-00', 1, 1, '2020-12-07 06:22:35', '2020-12-07 06:22:35'),
+(16, '751', 2000, '15', 2, '2020-12-07', 1, 'ok', '700', 1, 0, '0000-00-00', 1, 1, '2020-12-07 06:22:35', '2020-12-07 06:22:35'),
+(17, '751', 2000, '10', 3, '2020-12-08', 1, 'done', '6000', 1, 0, '0000-00-00', 1, 1, '2020-12-08 02:20:25', '2020-12-08 02:20:25'),
+(18, '751', 2000, '111', 3, '2020-12-08', 1, 'done', '7000', 1, 0, '0000-00-00', 1, 1, '2020-12-08 02:20:25', '2020-12-08 02:20:25'),
+(21, '751', 2000, '4', 4, '2020-12-08', 1, 'ok', '500', 1, 0, '0000-00-00', 1, 1, '2020-12-08 03:31:50', '2020-12-08 03:31:50'),
+(22, '751', 2000, '11', 4, '2020-12-08', 1, 'done', '500', 1, 0, '0000-00-00', 1, 1, '2020-12-08 03:31:50', '2020-12-08 03:31:50'),
+(27, '751', 3000, '1', 5, '2020-12-08', 2, 'eee', '500', 2, 5000, '2020-12-09', 1, 1, '2020-12-08 05:07:15', '2020-12-08 05:07:15'),
+(28, '751', 3000, '3', 5, '2020-12-08', 2, 'ttttttttttttt', '500', 2, 5000, '2020-12-09', 1, 1, '2020-12-08 05:07:15', '2020-12-08 05:07:15');
 
 -- --------------------------------------------------------
 
@@ -290,12 +337,13 @@ CREATE TABLE `invoice_account_transec_details` (
 
 CREATE TABLE `invoice_parameters` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `type` tinyint(4) NOT NULL COMMENT 'new purshase =1 ,purshase return = 2, sale return =4 sale = 3\r\nquick Purshase =5\r\nissue = 6\r\nissue return =7',
+  `type` tinyint(4) NOT NULL COMMENT 'new purshase =1 ,purshase return = 2, sale return =4 sale = 3\r\nquick Purshase =5\r\nissue = 6\r\nissue return =7\r\npayment Voucher =8',
   `discount_method` tinyint(4) NOT NULL COMMENT 'invoice wise = 1 product wise = 2',
   `invoice_start_no` int(11) NOT NULL,
+  `voucher_seq` varchar(11) COLLATE utf8mb4_unicode_ci NOT NULL,
   `is_due_allow` tinyint(4) NOT NULL COMMENT 'id due allow = 2 or not allow = 3',
   `ware_id` int(11) NOT NULL,
-  `status` tinyint(4) NOT NULL COMMENT 'active = 2 inactive = 3',
+  `status` tinyint(4) NOT NULL COMMENT 'active = 1 inactive = 2',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -304,14 +352,15 @@ CREATE TABLE `invoice_parameters` (
 -- Dumping data for table `invoice_parameters`
 --
 
-INSERT INTO `invoice_parameters` (`id`, `type`, `discount_method`, `invoice_start_no`, `is_due_allow`, `ware_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 2, 1000, 2, 1, 2, NULL, '2020-11-15 00:37:56'),
-(2, 2, 1, 2000, 2, 1, 2, NULL, NULL),
-(3, 3, 2, 3000, 2, 1, 2, NULL, NULL),
-(4, 4, 2, 4000, 2, 1, 2, NULL, NULL),
-(5, 5, 1, 5000, 0, 0, 0, NULL, NULL),
-(6, 6, 2, 6000, 0, 0, 0, NULL, NULL),
-(7, 7, 1, 7000, 0, 1, 0, NULL, NULL);
+INSERT INTO `invoice_parameters` (`id`, `type`, `discount_method`, `invoice_start_no`, `voucher_seq`, `is_due_allow`, `ware_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 2, 1000, '0', 2, 1, 1, NULL, '2020-11-15 00:37:56'),
+(2, 2, 1, 2000, '0', 2, 1, 1, NULL, NULL),
+(3, 3, 2, 3000, '0', 2, 1, 1, NULL, NULL),
+(4, 4, 2, 4000, '0', 2, 1, 1, NULL, NULL),
+(5, 5, 1, 5000, '0', 0, 0, 1, NULL, NULL),
+(6, 6, 2, 6000, '0', 0, 0, 1, NULL, NULL),
+(7, 7, 1, 7000, '0', 0, 1, 1, NULL, '2020-11-19 01:21:31'),
+(8, 0, 0, 0, '8000', 2, 1, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -325,9 +374,11 @@ CREATE TABLE `invoice_trasections` (
   `d_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `c_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `item_id` int(10) UNSIGNED NOT NULL,
+  `size_id` int(11) NOT NULL,
   `party_id` int(10) UNSIGNED NOT NULL COMMENT 'vendor id or customer id',
   `date` date NOT NULL,
   `ware_id` int(10) UNSIGNED NOT NULL,
+  `salesman_id` int(11) NOT NULL,
   `status` tinyint(4) NOT NULL,
   `store_id` int(10) UNSIGNED NOT NULL,
   `quantity` int(11) NOT NULL,
@@ -346,51 +397,61 @@ CREATE TABLE `invoice_trasections` (
 -- Dumping data for table `invoice_trasections`
 --
 
-INSERT INTO `invoice_trasections` (`id`, `invoice_id`, `d_id`, `c_id`, `item_id`, `party_id`, `date`, `ware_id`, `status`, `store_id`, `quantity`, `price`, `discount_taka`, `discount_percent`, `vat`, `publishing_by`, `type`, `trash`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 0, 1, 1, '2020-11-15', 1, 1, 1, 1, 400, 0.00, 0.00, 0, '1', 1, 1, '2020-11-15 03:03:35', '2020-11-15 03:03:35'),
-(2, 6, 1, 0, 1, 1, '2020-11-15', 1, 1, 1, 1, 400, 0.00, 0.00, 0, '1', 2, 1, '2020-11-15 03:05:05', '2020-11-15 03:05:05'),
-(3, 6, 1, 0, 1, 1, '2020-11-15', 1, 1, 1, 1, 400, 0.00, 0.00, 0, '1', 1, 1, '2020-11-15 04:16:42', '2020-11-15 04:16:42'),
-(4, 6, 1, 0, 1, 1, '2020-11-15', 1, 1, 1, 1, 400, 0.00, 0.00, 0, '1', 2, 1, '2020-11-15 06:34:33', '2020-11-15 06:34:33'),
-(5, 6, 0, 1, 1, 2, '2020-11-16', 1, 1, 1, 3, 400, 0.00, 0.00, 0, '1', 3, 1, '2020-11-16 02:41:53', '2020-11-16 06:34:57'),
-(6, 6, 0, 1, 1, 1, '2020-11-16', 1, 1, 1, 1, 400, 0.00, 0.00, 0, '1', 6, 1, '2020-11-16 06:41:16', '2020-11-16 06:41:16'),
-(7, 3, 2, 0, 2, 2, '2020-11-17', 1, 1, 1, 2, 400, 0.00, 0.00, 0, '1', 1, 1, '2020-11-16 23:27:59', '2020-11-16 23:27:59'),
-(8, 6, 0, 2, 2, 1, '2020-11-16', 1, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 6, 1, '2020-11-16 23:29:13', '2020-11-16 23:29:13'),
-(9, 4, 2, 0, 2, 1, '2020-11-17', 1, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 7, 1, '2020-11-17 00:10:38', '2020-11-17 00:10:38'),
-(10, 7, 2, 0, 2, 1, '2020-11-17', 1, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 1, 1, '2020-11-17 02:13:57', '2020-11-17 02:13:57'),
-(11, 8, 0, 2, 2, 1, '2020-11-17', 1, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 6, 1, '2020-11-17 02:14:36', '2020-11-17 02:14:36'),
-(12, 8, 0, 2, 2, 1, '2020-11-17', 1, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 6, 1, '2020-11-17 02:17:25', '2020-11-17 02:17:25'),
-(13, 8, 1, 0, 1, 2, '2020-11-17', 1, 1, 1, 1, 400, 0.00, 0.00, 0, '1', 1, 1, '2020-11-17 02:36:49', '2020-11-17 02:36:49'),
-(14, 10, 0, 1, 1, 1, '2020-11-17', 1, 1, 1, 1, 400, 0.00, 0.00, 0, '1', 6, 1, '2020-11-17 02:37:41', '2020-11-17 02:37:41'),
-(15, 11, 2, 0, 2, 1, '2020-11-17', 1, 1, 1, 100, 500, 0.00, 0.00, 0, '1', 1, 2, '2020-11-17 02:50:44', '2020-11-17 02:51:19'),
-(16, 11, 2, 0, 2, 1, '2020-11-17', 1, 1, 1, 1000, 500, NULL, 0.00, 0, '1', 1, 1, '2020-11-17 02:57:07', '2020-11-17 02:57:07'),
-(17, 13, 0, 2, 2, 1, '2020-11-17', 1, 1, 1, 10, 500, 0.00, 0.00, 0, '1', 6, 1, '2020-11-17 02:57:50', '2020-11-17 02:57:50'),
-(18, 14, 2, 0, 2, 2, '2020-11-17', 1, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 2, 1, '2020-11-17 03:01:15', '2020-11-17 03:01:15'),
-(19, 16, 2, 0, 2, 1, '2020-11-17', 1, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 2, 1, '2020-11-17 05:42:07', '2020-11-17 05:42:07'),
-(20, 17, 0, 2, 2, 1, '2020-11-18', 1, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 6, 1, '2020-11-17 23:11:57', '2020-11-17 23:11:57'),
-(21, 19, 1, 0, 1, 1, '2020-11-18', 1, 1, 1, 200, 400, 0.00, 0.00, 0, '1', 1, 1, '2020-11-17 23:38:07', '2020-11-17 23:38:07'),
-(22, 19, 0, 1, 1, 1, '2020-11-18', 1, 1, 1, 1, 400, 0.00, 0.00, 0, '1', 6, 1, '2020-11-17 23:44:15', '2020-11-17 23:44:15'),
-(23, 19, 0, 2, 2, 1, '2020-11-18', 1, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 6, 1, '2020-11-17 23:44:28', '2020-11-17 23:44:28'),
-(24, 23, 0, 1, 1, 1, '2020-11-18', 1, 1, 1, 2, 400, 0.00, 0.00, 0, '1', 6, 1, '2020-11-18 00:17:15', '2020-11-18 00:17:15'),
-(25, 23, 0, 2, 2, 1, '2020-11-18', 1, 1, 1, 2, 500, 0.00, 0.00, 0, '1', 6, 1, '2020-11-18 00:17:23', '2020-11-18 00:17:23'),
-(26, 24, 0, 1, 1, 1, '2020-11-18', 1, 1, 1, 1, 400, 0.00, 0.00, 0, '1', 6, 1, '2020-11-18 00:24:26', '2020-11-18 00:24:26'),
-(27, 24, 0, 2, 2, 1, '2020-11-18', 1, 1, 1, 2, 500, 0.00, 0.00, 0, '1', 6, 1, '2020-11-18 00:24:35', '2020-11-18 00:24:35'),
-(28, 25, 0, 1, 1, 1, '2020-11-18', 1, 1, 1, 2, 400, 0.00, 0.00, 0, '1', 6, 1, '2020-11-18 00:31:55', '2020-11-18 00:31:55'),
-(29, 48, 0, 1, 1, 1, '2020-11-18', 1, 1, 1, 1, 400, 0.00, 0.00, 0, '1', 6, 1, '2020-11-18 00:37:33', '2020-11-18 00:37:33'),
-(30, 48, 0, 2, 2, 2, '2020-11-18', 1, 1, 1, 187, 500, 0.00, 0.00, 0, '1', 6, 1, '2020-11-18 01:10:23', '2020-11-18 01:10:23'),
-(31, 49, 0, 1, 1, 2, '2020-11-18', 1, 1, 1, 3, 400, 0.00, 0.00, 0, '1', 6, 1, '2020-11-18 01:11:26', '2020-11-18 01:11:26'),
-(32, 51, 0, 2, 2, 2, '2020-11-18', 1, 1, 1, 100, 500, 0.00, 0.00, 0, '1', 6, 1, '2020-11-18 01:23:31', '2020-11-18 01:23:31'),
-(33, 56, 0, 2, 2, 1, '2020-11-18', 1, 1, 1, 13, 500, 0.00, 0.00, 0, '1', 6, 1, '2020-11-18 01:34:01', '2020-11-18 01:56:57'),
-(34, 56, 0, 1, 1, 1, '2020-11-18', 1, 1, 1, 52, 400, 0.00, 0.00, 0, '1', 6, 1, '2020-11-18 01:42:37', '2020-11-18 02:12:13'),
-(35, 56, 0, 1, 1, 1, '2020-11-18', 1, 1, 1, 5, 400, 0.00, 0.00, 0, '1', 6, 1, '2020-11-18 01:43:31', '2020-11-18 01:43:31'),
-(36, 57, 0, 1, 1, 2, '2020-11-18', 1, 1, 1, 5, 400, 0.00, 0.00, 0, '1', 6, 1, '2020-11-18 02:17:11', '2020-11-18 02:17:22'),
-(37, 58, 0, 1, 1, 2, '2020-11-18', 1, 1, 1, 5, 400, 0.00, 0.00, 0, '1', 6, 1, '2020-11-18 02:18:10', '2020-11-18 02:18:10'),
-(38, 59, 0, 1, 1, 1, '2020-11-18', 1, 1, 1, 2, 400, 0.00, 0.00, 0, '1', 6, 1, '2020-11-18 02:20:24', '2020-11-18 02:20:24'),
-(39, 0, 2, 0, 2, 1, '2020-11-18', 1, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 2, 1, '2020-11-18 06:06:27', '2020-11-18 06:06:27'),
-(40, 0, 1, 0, 1, 1, '2020-11-18', 1, 1, 1, 2, 400, 0.00, 0.00, 0, '1', 1, 1, '2020-11-18 06:51:29', '2020-11-18 06:51:29'),
-(41, 0, 1, 0, 1, 3, '2020-11-18', 1, 1, 1, 1, 400, 0.00, 0.00, 0, '1', 2, 1, '2020-11-18 06:51:48', '2020-11-18 06:51:48'),
-(42, 0, 0, 1, 1, 1, '2020-11-18', 1, 1, 1, 1, 400, 0.00, 0.00, 0, '1', 3, 1, '2020-11-18 06:52:19', '2020-11-18 06:52:19'),
-(43, 0, 0, 1, 1, 1, '2020-11-18', 1, 1, 1, 1, 400, 0.00, 0.00, 0, '1', 4, 1, '2020-11-18 06:52:37', '2020-11-18 06:52:37'),
-(44, 0, 0, 2, 2, 4, '2020-11-18', 1, 1, 1, 2, 500, 0.00, 0.00, 0, '1', 3, 1, '2020-11-18 07:04:45', '2020-11-18 07:04:45');
+INSERT INTO `invoice_trasections` (`id`, `invoice_id`, `d_id`, `c_id`, `item_id`, `size_id`, `party_id`, `date`, `ware_id`, `salesman_id`, `status`, `store_id`, `quantity`, `price`, `discount_taka`, `discount_percent`, `vat`, `publishing_by`, `type`, `trash`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 0, 1, 0, 3, '2020-11-30', 1, 0, 1, 1, 300, 300, 0.00, 0.00, 0, '1', 1, 1, '2020-11-30 06:34:56', '2020-11-30 06:34:56'),
+(2, 1, 2, 0, 2, 0, 3, '2020-11-30', 1, 0, 1, 1, 300, 300, 0.00, 0.00, 0, '1', 1, 1, '2020-11-30 06:35:12', '2020-11-30 06:35:12'),
+(3, 1, 3, 0, 3, 0, 3, '2020-11-30', 1, 0, 1, 1, 400, 300, 0.00, 0.00, 0, '1', 1, 1, '2020-11-30 06:35:24', '2020-11-30 06:35:24'),
+(4, 2, 0, 1, 1, 0, 0, '2020-11-30', 1, 0, 1, 1, 2, 400, 0.00, 0.00, 0, '1', 6, 1, '2020-11-30 06:35:43', '2020-11-30 06:35:43'),
+(5, 2, 0, 2, 2, 0, 0, '2020-11-30', 1, 0, 1, 1, 3, 500, 0.00, 0.00, 0, '1', 6, 1, '2020-11-30 06:35:52', '2020-11-30 06:35:52'),
+(6, 3, 0, 1, 1, 0, 3, '2020-11-30', 1, 0, 1, 1, 1, 0, 0.00, 0.00, 0, '1', 7, 1, '2020-11-30 06:38:14', '2020-11-30 06:38:14'),
+(7, 3, 0, 2, 2, 0, 3, '2020-11-30', 1, 0, 1, 1, 3, 0, 0.00, 0.00, 0, '1', 7, 1, '2020-11-30 06:38:14', '2020-11-30 06:38:14'),
+(8, 4, 0, 1, 1, 0, 4, '2020-12-01', 2, 0, 1, 2, 1, 400, 0.00, 0.00, 0, '1', 6, 1, '2020-11-30 23:11:19', '2020-11-30 23:11:19'),
+(9, 4, 0, 2, 2, 0, 4, '2020-12-01', 2, 0, 1, 2, 1, 500, 0.00, 0.00, 0, '1', 6, 1, '2020-11-30 23:11:27', '2020-11-30 23:11:27'),
+(10, 5, 0, 1, 1, 0, 4, '2020-12-01', 2, 0, 1, 2, 1, 0, 0.00, 0.00, 0, '1', 7, 1, '2020-11-30 23:12:05', '2020-11-30 23:12:05'),
+(11, 5, 0, 2, 2, 0, 4, '2020-12-01', 2, 0, 1, 2, 1, 0, 0.00, 0.00, 0, '1', 7, 1, '2020-11-30 23:12:05', '2020-11-30 23:12:05'),
+(12, 6, 2, 0, 2, 0, 1, '2020-12-01', 1, 0, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 1, 2, '2020-12-01 02:23:35', '2020-12-03 04:07:54'),
+(13, 6, 2, 0, 2, 0, 1, '2020-12-01', 1, 0, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 1, 2, '2020-12-01 02:23:50', '2020-12-03 04:07:25'),
+(14, 6, 2, 0, 2, 0, 1, '2020-12-01', 1, 0, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 1, 2, '2020-12-01 02:23:56', '2020-12-03 04:05:36'),
+(15, 6, 0, 2, 2, 0, 1, '2020-12-01', 1, 0, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 4, 1, '2020-12-01 04:52:33', '2020-12-01 04:52:33'),
+(16, 6, 0, 2, 2, 0, 1, '2020-12-01', 2, 0, 1, 2, 1, 500, 0.00, 0.00, 0, '1', 3, 1, '2020-12-01 04:53:05', '2020-12-01 04:53:05'),
+(17, 6, 3, 0, 3, 0, 7, '2020-12-01', 1, 0, 1, 1, 4, 3000, 0.00, 0.00, 0, '1', 2, 1, '2020-12-01 07:02:54', '2020-12-08 04:45:46'),
+(18, 6, 0, 2, 2, 0, 0, '2020-12-02', 1, 0, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 7, 1, '2020-12-02 00:34:36', '2020-12-02 00:34:36'),
+(19, 6, 2, 0, 2, 0, 1, '2020-12-02', 1, 0, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 1, 2, '2020-12-02 00:35:51', '2020-12-03 01:42:25'),
+(20, 0, 2, 0, 2, 0, 3, '2020-12-03', 1, 0, 1, 1, 3, 500, 0.00, 0.00, 0, '2', 1, 1, '2020-12-03 03:57:24', '2020-12-03 04:26:51'),
+(21, 0, 1, 0, 1, 0, 3, '2020-12-03', 1, 0, 1, 1, 1, 400, 0.00, 0.00, 0, '2', 1, 1, '2020-12-03 04:04:57', '2020-12-03 04:04:57'),
+(22, 6, 4, 0, 4, 0, 10, '2020-12-03', 1, 0, 1, 1, 1, 300, 0.00, 0.00, 0, '1', 1, 2, '2020-12-03 04:10:06', '2020-12-03 04:10:24'),
+(23, 6, 3, 0, 3, 0, 10, '2020-12-03', 2, 0, 1, 1, 1, 3000, 0.00, 0.00, 0, '1', 1, 2, '2020-12-03 04:10:16', '2020-12-03 04:10:37'),
+(24, 6, 5, 0, 5, 0, 10, '2020-12-03', 1, 0, 1, 1, 400, 0, 0.00, 0.00, 0, '1', 1, 2, '2020-12-03 04:10:33', '2020-12-05 00:58:50'),
+(25, 0, 2, 0, 2, 0, 9, '2020-12-03', 1, 0, 1, 1, 1, 500, 0.00, 0.00, 0, '2', 2, 1, '2020-12-03 04:51:55', '2020-12-03 04:51:55'),
+(26, 0, 3, 0, 3, 0, 9, '2020-12-03', 1, 0, 1, 1, 1, 3000, 0.00, 0.00, 0, '2', 2, 1, '2020-12-03 04:52:15', '2020-12-03 04:52:15'),
+(27, 0, 0, 3, 3, 0, 1, '2020-12-03', 1, 0, 1, 1, 1, 3000, 0.00, 0.00, 0, '2', 4, 1, '2020-12-03 05:13:43', '2020-12-03 05:13:43'),
+(28, 6, 1, 0, 1, 0, 1, '2020-12-05', 1, 0, 1, 1, 1, 400, 0.00, 0.00, 0, '1', 1, 1, '2020-12-05 00:58:43', '2020-12-05 00:58:43'),
+(29, 6, 0, 15, 15, 0, 0, '2020-12-06', 1, 0, 1, 1, 1, 0, 0.00, 0.00, 0, '1', 7, 1, '2020-12-05 23:37:37', '2020-12-05 23:37:37'),
+(30, 6, 4, 0, 4, 0, 1, '2020-12-06', 1, 0, 1, 1, 1, 300, 0.00, 0.00, 0, '1', 1, 1, '2020-12-06 02:17:09', '2020-12-06 02:17:09'),
+(31, 6, 2, 0, 2, 0, 1, '2020-12-06', 1, 0, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 2, 1, '2020-12-06 04:28:46', '2020-12-06 04:28:46'),
+(32, 6, 3, 0, 3, 0, 1, '2020-12-06', 1, 0, 1, 1, 97, 3000, 0.00, 0.00, 0, '1', 1, 1, '2020-12-06 04:38:14', '2020-12-06 04:38:14'),
+(33, 6, 3, 0, 3, 0, 1, '2020-12-06', 1, 0, 1, 1, 400, 3000, 0.00, 0.00, 0, '1', 2, 1, '2020-12-06 04:38:42', '2020-12-06 04:38:42'),
+(34, 7, 0, 2, 2, 0, 6, '2020-12-06', 2, 0, 1, 2, 3, 500, 0.00, 0.00, 0, '1', 7, 1, '2020-12-06 05:05:52', '2020-12-08 01:38:20'),
+(35, 8, 0, 2, 2, 0, 1, '2020-12-07', 1, 0, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 3, 1, '2020-12-07 04:57:27', '2020-12-07 04:57:27'),
+(36, 8, 0, 2, 2, 0, 0, '2020-12-08', 1, 0, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 7, 1, '2020-12-08 01:00:51', '2020-12-08 01:00:59'),
+(37, 8, 0, 1, 1, 0, 0, '2020-12-08', 1, 0, 1, 1, 1, 400, 0.00, 0.00, 0, '1', 7, 1, '2020-12-08 01:01:14', '2020-12-08 01:01:14'),
+(38, 8, 0, 2, 2, 0, 0, '2020-12-08', 1, 0, 1, 1, 3, 500, 0.00, 0.00, 0, '1', 6, 1, '2020-12-08 01:33:40', '2020-12-08 01:34:10'),
+(39, 0, 3, 0, 3, 0, 1, '2020-12-08', 1, 0, 1, 1, 10, 3000, 0.00, 0.00, 0, '1', 1, 1, '2020-12-08 01:53:37', '2020-12-08 02:07:04'),
+(40, 0, 0, 2, 2, 0, 0, '2020-12-08', 1, 0, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 7, 2, '2020-12-08 01:55:20', '2020-12-08 04:42:19'),
+(41, 0, 2, 0, 2, 0, 1, '2020-12-08', 1, 0, 1, 1, 8, 500, 0.00, 0.00, 0, '1', 2, 1, '2020-12-08 02:03:22', '2020-12-08 02:04:26'),
+(42, 0, 4, 0, 4, 0, 1, '2020-12-08', 1, 0, 1, 1, 1, 300, 0.00, 0.00, 0, '1', 1, 2, '2020-12-08 02:16:56', '2020-12-08 02:29:40'),
+(43, 0, 3, 0, 3, 0, 1, '2020-12-08', 1, 0, 1, 1, 1, 3000, 0.00, 0.00, 0, '1', 1, 2, '2020-12-08 02:29:32', '2020-12-08 02:29:37'),
+(44, 0, 0, 3, 3, 0, 1, '2020-12-08', 1, 0, 1, 1, 1, 3000, 0.00, 0.00, 0, '1', 4, 1, '2020-12-08 02:51:32', '2020-12-08 02:51:32'),
+(45, 0, 3, 0, 3, 0, 1, '2020-12-08', 1, 0, 1, 1, 1, 3000, 0.00, 0.00, 0, '1', 1, 1, '2020-12-08 02:56:55', '2020-12-08 02:56:55'),
+(46, 0, 0, 2, 2, 0, 0, '2020-12-08', 1, 0, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 6, 1, '2020-12-08 03:05:20', '2020-12-08 03:05:20'),
+(47, 0, 0, 3, 3, 0, 2, '2020-12-08', 1, 0, 1, 1, 1, 3000, 0.00, 0.00, 0, '1', 6, 1, '2020-12-08 04:04:08', '2020-12-08 04:04:08'),
+(48, 0, 0, 3, 3, 0, 1, '2020-12-08', 1, 0, 1, 1, 1, 3000, 0.00, 0.00, 0, '1', 3, 2, '2020-12-08 04:16:58', '2020-12-08 04:35:44'),
+(49, 0, 0, 1, 1, 0, 1, '2020-12-08', 1, 0, 1, 1, 1, 400, 0.00, 0.00, 0, '1', 3, 2, '2020-12-08 04:35:38', '2020-12-08 04:35:42'),
+(50, 0, 0, 3, 3, 0, 1, '2020-12-08', 2, 0, 1, 2, 1, 3000, 0.00, 0.00, 0, '1', 3, 1, '2020-12-08 04:37:29', '2020-12-08 04:37:29'),
+(51, 0, 0, 2, 2, 0, 0, '2020-12-08', 1, 0, 1, 1, 1, 500, 0.00, 0.00, 0, '1', 7, 2, '2020-12-08 04:38:15', '2020-12-08 04:38:23'),
+(52, 0, 0, 1, 1, 0, 0, '2020-12-08', 1, 0, 1, 1, 1, 400, 0.00, 0.00, 0, '1', 7, 2, '2020-12-08 04:38:16', '2020-12-08 04:43:06'),
+(53, 0, 3, 0, 3, 0, 1, '2020-12-08', 1, 0, 1, 1, 1, 3000, 0.00, 0.00, 0, '1', 1, 2, '2020-12-08 05:16:06', '2020-12-08 05:16:12'),
+(54, 0, 4, 0, 4, 0, 1, '2020-12-08', 1, 0, 1, 1, 6, 0, 0.00, 0.00, 0, '1', 1, 1, '2020-12-08 05:16:31', '2020-12-08 05:16:42');
 
 -- --------------------------------------------------------
 
@@ -854,13 +915,13 @@ INSERT INTO `ledgers` (`id`, `parent_head_id`, `ledger_title`, `opening_balance`
 CREATE TABLE `menu_submenu_settings` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `root_id` int(11) NOT NULL,
+  `root_id` int(11) NOT NULL DEFAULT 0,
   `ware_id` int(10) UNSIGNED NOT NULL,
   `sequence_id` int(11) NOT NULL,
-  `link_id` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `link_id` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `sort_id` int(10) UNSIGNED NOT NULL DEFAULT 10000,
-  `type` int(11) NOT NULL COMMENT 'menu=1,submenu=2,module=3',
-  `status` tinyint(4) NOT NULL,
+  `type` int(11) NOT NULL DEFAULT 1 COMMENT 'menu=1,submenu=2,module=3',
+  `status` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'active=1 inactive=2',
   `trash` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'delete=2',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -873,7 +934,7 @@ CREATE TABLE `menu_submenu_settings` (
 INSERT INTO `menu_submenu_settings` (`id`, `name`, `root_id`, `ware_id`, `sequence_id`, `link_id`, `sort_id`, `type`, `status`, `trash`, `created_at`, `updated_at`) VALUES
 (1, 'Setup', 0, 0, 0, '', 10000, 1, 1, 1, NULL, NULL),
 (2, 'Input', 0, 0, 0, '', 10000, 1, 1, 1, NULL, NULL),
-(3, 'Transection', 0, 0, 0, '', 10000, 1, 1, 1, NULL, NULL),
+(3, 'Transection', 0, 0, 0, '', 10000, 1, 1, 1, NULL, '2020-11-26 03:46:36'),
 (4, 'Manage Invoice Params', 1, 0, 0, 'manage-invoiceparams', 10000, 2, 1, 1, NULL, NULL),
 (5, ' Manage WareHouse', 2, 0, 0, 'manage-warehouse', 10000, 2, 1, 1, NULL, NULL),
 (6, 'Manage All Vendor', 2, 0, 0, 'manage-vendor', 10000, 2, 1, 1, NULL, NULL),
@@ -881,22 +942,46 @@ INSERT INTO `menu_submenu_settings` (`id`, `name`, `root_id`, `ware_id`, `sequen
 (8, 'Create Inventory Category', 2, 0, 0, 'create-invent-category', 10000, 2, 1, 1, NULL, NULL),
 (9, 'Manage Inventory Product', 2, 0, 0, 'manage-product', 10000, 2, 1, 1, NULL, NULL),
 (10, 'Manage Store', 2, 0, 0, 'manage-store', 10000, 2, 1, 1, NULL, NULL),
-(11, 'Issue', 2, 0, 0, 'issue/6', 10000, 2, 1, 1, NULL, NULL),
+(11, 'Issue', 3, 0, 0, 'issue/6', 10000, 2, 1, 2, NULL, '2020-11-26 03:38:53'),
 (12, 'Bank Details', 2, 0, 0, 'manage-bank-details', 10000, 2, 1, 1, NULL, NULL),
-(13, 'Manage Store Invoice', 2, 0, 0, 'manage-store-invoice', 10000, 2, 1, 1, NULL, NULL),
+(13, 'Manage Store Invoice', 2, 0, 0, 'manage-store-invoice', 10000, 2, 1, 2, NULL, '2020-11-26 04:19:09'),
 (14, ' Manage Unit', 2, 0, 0, 'manage-unit', 10000, 2, 1, 1, NULL, NULL),
 (15, 'Manage Account Input', 2, 0, 0, 'manage-account-input', 10000, 2, 1, 1, NULL, NULL),
-(16, 'New Purshase', 3, 0, 0, 'new-purshase/1', 10000, 2, 1, 1, NULL, NULL),
+(16, 'New Purshase', 3, 0, 0, 'new-purshase/1', 10000, 2, 1, 1, NULL, '2020-11-26 04:00:28'),
 (17, 'Purshase Return', 3, 0, 0, 'purshase-return/2', 10000, 2, 1, 1, NULL, NULL),
-(18, 'Sale Return', 3, 0, 0, 'sale-return/4', 10000, 3, 1, 1, NULL, NULL),
-(19, 'Sale', 3, 0, 0, 'sale/3', 10000, 2, 1, 1, NULL, NULL),
-(20, 'Quick Purshase', 3, 0, 0, 'quick-purshase/5', 10000, 2, 1, 1, NULL, NULL),
+(20, 'Quick Purshase', 3, 0, 0, NULL, 10000, 2, 2, 1, NULL, '2020-11-30 00:50:23'),
 (21, 'Manage Cash Account', 3, 0, 0, 'manage-cash-account', 10000, 2, 1, 1, NULL, NULL),
 (22, 'Manage Cost Center', 3, 0, 0, 'manage-costcenter', 10000, 2, 1, 1, NULL, NULL),
-(23, 'Payment Vaucher', 3, 0, 0, 'paymentvaucher', 10000, 2, 1, 1, NULL, NULL),
+(23, 'Payment Vaucher', 3, 0, 0, NULL, 10000, 2, 2, 1, NULL, '2020-11-29 06:08:19'),
 (24, 'Report', 0, 0, 0, '', 10000, 1, 1, 1, NULL, NULL),
-(25, 'Stock Report', 24, 0, 0, 'stock-report', 10000, 2, 0, 1, NULL, NULL),
-(26, 'Product Report', 24, 0, 0, 'product-report', 10000, 0, 0, 1, NULL, NULL);
+(25, 'Stock Report', 24, 0, 0, 'stock-report', 10000, 2, 1, 1, NULL, NULL),
+(26, 'Product Report', 24, 0, 0, 'product-report', 10000, 2, 1, 1, NULL, NULL),
+(27, 'Issue return', 3, 0, 0, 'issue-return/7', 10000, 2, 1, 1, NULL, NULL),
+(28, 'SalesMan', 2, 0, 0, 'manage-salesman', 10000, 0, 1, 1, NULL, NULL),
+(29, 'Manage Size', 2, 0, 0, 'manage-size', 10000, 0, 1, 1, NULL, NULL),
+(30, 'Sale Return', 3, 0, 0, 'sale-return/4', 10000, 0, 1, 1, NULL, NULL),
+(31, 'Sale', 3, 0, 0, 'sale/3', 10000, 0, 1, 1, NULL, NULL),
+(32, 'Sales Report', 24, 0, 0, 'sales-report', 10000, 0, 1, 1, NULL, NULL),
+(33, 'Manage Module', 2, 0, 0, 'manage-module', 10000, 0, 1, 1, NULL, NULL),
+(37, 'test', 24, 0, 0, NULL, 10000, 2, 2, 2, '2020-11-26 02:04:39', '2020-11-30 00:22:25'),
+(38, 'test3', 24, 0, 0, 'test2', 10000, 2, 2, 2, '2020-11-26 02:06:39', '2020-11-30 00:22:30'),
+(40, 'Manage Setting', 1, 0, 0, NULL, 10000, 0, 2, 1, '2020-11-26 02:09:46', '2020-11-30 00:47:54'),
+(41, 'testing', 5, 0, 0, 'testing', 10000, 2, 1, 2, '2020-11-26 03:17:33', '2020-11-26 04:03:12'),
+(42, 'done', 0, 0, 0, NULL, 10000, 1, 1, 2, NULL, '2020-11-26 03:59:47'),
+(43, 'Menu Submenu', 2, 0, 0, 'menu-submenu', 10000, 2, 1, 1, '2020-11-26 04:12:38', '2020-11-26 04:12:38'),
+(44, 'testinglevel', 0, 0, 0, NULL, 10000, 1, 1, 2, '2020-11-26 04:34:40', '2020-11-29 02:39:30'),
+(45, 'done', 0, 0, 0, NULL, 10000, 1, 1, 2, '2020-11-26 04:38:55', '2020-11-29 02:39:35'),
+(52, 'okdone', 0, 0, 0, NULL, 10000, 1, 1, 2, '2020-11-26 05:48:31', '2020-11-29 02:39:25'),
+(54, 'Module', 0, 0, 0, NULL, 10000, 3, 1, 1, '2020-11-26 05:50:32', '2020-11-26 05:50:32'),
+(55, 'Accounts', 54, 0, 0, NULL, 10000, 3, 1, 1, '2020-11-26 05:52:58', '2020-11-26 05:52:58'),
+(56, 'Accounts Receivable', 55, 0, 0, NULL, 10000, 3, 1, 1, '2020-11-26 05:53:17', '2020-11-26 05:53:17'),
+(57, 'Accounts Payable', 55, 0, 0, NULL, 10000, 3, 1, 1, '2020-11-26 05:53:31', '2020-11-26 05:53:31'),
+(58, 'Input', 56, 0, 0, NULL, 10000, 3, 1, 1, '2020-11-26 05:53:57', '2020-11-26 05:53:57'),
+(59, 'Setup', 56, 0, 0, NULL, 10000, 3, 1, 1, '2020-11-26 05:54:08', '2020-11-26 05:54:08'),
+(60, 'Transaction', 56, 0, 0, NULL, 10000, 3, 1, 1, '2020-11-26 05:54:20', '2020-11-26 05:54:20'),
+(61, 'Manage Cash Account', 58, 0, 0, 'test', 10000, 2, 1, 1, '2020-11-26 05:54:32', '2020-11-26 05:54:32'),
+(62, 'Report', 58, 0, 0, '5555', 10000, 2, 1, 1, '2020-11-26 05:55:21', '2020-11-26 05:55:21'),
+(63, 'Manage Payment Voucher', 3, 0, 0, 'manage-paymentvoucher', 10000, 2, 1, 1, '2020-11-29 00:25:37', '2020-11-29 00:25:37');
 
 -- --------------------------------------------------------
 
@@ -938,30 +1023,33 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (37, '2020_11_12_092332_create_invoice_account_transec_details_table', 16),
 (38, '2020_11_14_051059_create_menu_submenu_settings_table', 17),
 (39, '2020_11_14_080736_create_role_settings_table', 18),
-(40, '2020_11_14_081127_create_user_role_details_table', 18);
+(40, '2020_11_14_081127_create_user_role_details_table', 18),
+(41, '2020_11_22_092438_create_sales_men_table', 19),
+(42, '2020_11_22_111551_create_sizes_table', 20),
+(43, '2020_11_25_050604_create_modules_table', 21);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `module_lists`
+-- Table structure for table `modules`
 --
 
-CREATE TABLE `module_lists` (
+CREATE TABLE `modules` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'active=1,inactive=2',
+  `status` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'active =1 inactive =2',
   `trash` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'delete=2',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `module_lists`
+-- Dumping data for table `modules`
 --
 
-INSERT INTO `module_lists` (`id`, `name`, `status`, `trash`, `created_at`, `updated_at`) VALUES
-(1, 'inventory', 1, 1, NULL, NULL),
-(2, 'sample2', 1, 1, NULL, NULL);
+INSERT INTO `modules` (`id`, `name`, `status`, `trash`, `created_at`, `updated_at`) VALUES
+(1, 'inventory2', 1, 1, '2020-11-24 23:33:32', '2020-11-24 23:44:18'),
+(2, 'pos2', 2, 1, '2020-11-24 23:45:05', '2020-11-24 23:45:15');
 
 -- --------------------------------------------------------
 
@@ -990,6 +1078,30 @@ CREATE TABLE `role_settings` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sales_men`
+--
+
+CREATE TABLE `sales_men` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ware_id` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'active =1 and inactive = 2',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `sales_men`
+--
+
+INSERT INTO `sales_men` (`id`, `name`, `ware_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'minhaj23', 1, 1, '2020-11-22 04:26:23', '2020-11-22 05:07:04'),
+(2, 'ok2', 0, 1, '2020-11-22 04:34:51', '2020-11-22 05:11:36'),
+(3, 'hello', 1, 1, '2020-11-25 23:28:50', '2020-11-25 23:28:50');
 
 -- --------------------------------------------------------
 
@@ -1089,6 +1201,31 @@ INSERT INTO `settings` (`id`, `head`, `type`, `name`, `foreign_name`, `ware`, `b
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `sizes`
+--
+
+CREATE TABLE `sizes` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'active = 1 inactive = 2',
+  `trash` tinyint(4) NOT NULL COMMENT 'delete=2',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `sizes`
+--
+
+INSERT INTO `sizes` (`id`, `name`, `status`, `trash`, `created_at`, `updated_at`) VALUES
+(1, 'xl', 1, 0, '2020-11-22 06:51:15', '2020-11-22 06:51:15'),
+(2, 'm', 1, 0, '2020-11-22 06:57:07', '2020-11-22 06:57:07'),
+(3, 'm', 1, 0, '2020-12-06 02:15:17', '2020-12-06 02:16:08'),
+(4, 'large', 1, 0, '2020-12-06 02:50:35', '2020-12-06 02:50:35');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `stores`
 --
 
@@ -1108,7 +1245,8 @@ CREATE TABLE `stores` (
 --
 
 INSERT INTO `stores` (`id`, `store_name`, `remarks`, `ware_id`, `status`, `trash`, `created_at`, `updated_at`) VALUES
-(1, 'Common', '', 1, 1, 3, NULL, NULL);
+(1, 'Common', '', 1, 1, 3, NULL, NULL),
+(2, 'uncommon', 'LOL', 2, 1, 1, '2020-11-19 00:46:27', '2020-11-19 00:46:27');
 
 -- --------------------------------------------------------
 
@@ -1132,6 +1270,7 @@ CREATE TABLE `store_invoices` (
   `cash_id` int(10) UNSIGNED DEFAULT 0,
   `bank_amount` float DEFAULT 0,
   `bank_id` int(11) DEFAULT 0,
+  `salesman_id` int(11) NOT NULL,
   `ref_inv` int(10) UNSIGNED DEFAULT 0,
   `ref_product_id` int(11) NOT NULL DEFAULT 0,
   `return_quantity` int(11) NOT NULL,
@@ -1146,50 +1285,15 @@ CREATE TABLE `store_invoices` (
 -- Dumping data for table `store_invoices`
 --
 
-INSERT INTO `store_invoices` (`id`, `invoice_number`, `type`, `vendor_id`, `ware_id`, `date`, `posting_by`, `store_id`, `gross_amount`, `discount_taka`, `discount_percent`, `cash_amount`, `cash_id`, `bank_amount`, `bank_id`, `ref_inv`, `ref_product_id`, `return_quantity`, `remarks`, `total_quantity`, `total_rqty`, `created_at`, `updated_at`) VALUES
-(1, 1000, '1', 1, 1, '2020-11-15', 1, 1, 400.00, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, 'good day', NULL, 0, '2020-11-15 03:04:37', '2020-11-15 03:04:37'),
-(2, 6000, '6', 1, 1, '2020-11-16', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, 0, 0, '2020-11-16 06:41:20', '2020-11-16 06:41:20'),
-(3, 1001, '1', 1, 1, '2020-11-17', 1, 1, 800.00, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, NULL, 0, '2020-11-16 23:28:36', '2020-11-16 23:28:36'),
-(4, 7000, '7', 1, 1, '2020-11-17', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, 0, 0, '2020-11-17 00:11:03', '2020-11-17 00:11:03'),
-(5, 6001, '6', 1, 1, '2020-11-16', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 2, 0, 0, NULL, NULL, 0, '2020-11-17 01:05:03', '2020-11-17 01:05:03'),
-(6, 7000, '7', 1, 1, '2020-11-16', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, NULL, 0, '2020-11-17 02:09:29', '2020-11-17 02:09:29'),
-(7, 1002, '1', 1, 1, '2020-11-17', 1, 1, 0.00, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, NULL, 0, '2020-11-17 02:14:02', '2020-11-17 02:14:02'),
-(8, 1003, '1', 2, 1, '2020-11-17', 1, 1, 0.00, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, NULL, 0, '2020-11-17 02:36:59', '2020-11-17 02:36:59'),
-(9, 6002, '6', 1, 1, '2020-11-17', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, 0, 0, '2020-11-17 02:44:10', '2020-11-17 02:44:10'),
-(10, 7000, '7', 1, 1, '2020-11-17', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 9, 0, 1, NULL, NULL, 0, '2020-11-17 02:45:23', '2020-11-17 02:45:23'),
-(11, 1004, '1', 1, 1, '2020-11-17', 1, 1, 50000.00, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, NULL, 0, '2020-11-17 02:56:36', '2020-11-17 02:56:36'),
-(12, 6003, '6', 1, 1, '2020-11-17', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, 0, 0, '2020-11-17 02:57:53', '2020-11-17 02:57:53'),
-(13, 7000, '7', 1, 1, '2020-11-17', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 12, 0, 5, NULL, NULL, 0, '2020-11-17 02:58:13', '2020-11-17 02:58:13'),
-(14, 2000, '2', 1, 1, '2020-11-17', 1, 1, 500.00, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, NULL, 0, '2020-11-17 03:02:22', '2020-11-17 03:02:22'),
-(15, 7000, '7', 1, 1, '2020-11-17', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, NULL, 0, '2020-11-17 05:08:35', '2020-11-17 05:08:35'),
-(16, 2001, '2', 1, 1, '2020-11-17', 1, 1, 500.00, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, NULL, 0, '2020-11-17 05:42:19', '2020-11-17 05:42:19'),
-(17, 6004, '6', 1, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, 0, 0, '2020-11-17 23:12:04', '2020-11-17 23:12:04'),
-(18, 7000, '7', 1, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 17, 2, 12, NULL, NULL, 0, '2020-11-17 23:36:11', '2020-11-17 23:36:11'),
-(19, 6005, '6', 1, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, 0, 0, '2020-11-17 23:44:31', '2020-11-17 23:44:31'),
-(20, 7000, '7', 1, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 19, 1, 23, NULL, NULL, 0, '2020-11-17 23:45:06', '2020-11-17 23:45:06'),
-(21, 7000, '7', 1, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 19, 2, 20, NULL, NULL, 0, '2020-11-17 23:45:06', '2020-11-17 23:45:06'),
-(22, 7001, '7', 1, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 17, 2, 4, NULL, NULL, 0, '2020-11-17 23:51:46', '2020-11-17 23:51:46'),
-(23, 6006, '6', 1, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, 0, 0, '2020-11-18 00:20:58', '2020-11-18 00:20:58'),
-(24, 6007, '6', 1, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, NULL, 284, '2020-11-18 00:24:45', '2020-11-18 01:05:05'),
-(25, 6008, '6', 1, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, NULL, 0, '2020-11-18 00:32:01', '2020-11-18 00:32:01'),
-(44, 7003, '7', 1, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 24, 1, 2, NULL, NULL, 8, '2020-11-18 01:08:41', '2020-11-18 01:08:41'),
-(45, 7003, '7', 1, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 24, 2, 2, NULL, NULL, 8, '2020-11-18 01:08:41', '2020-11-18 01:08:41'),
-(46, 7003, '7', 1, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 24, 1, 2, NULL, NULL, 8, '2020-11-18 01:09:49', '2020-11-18 01:09:49'),
-(47, 7003, '7', 1, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 24, 2, 2, NULL, NULL, 8, '2020-11-18 01:09:49', '2020-11-18 01:09:49'),
-(48, 6009, '6', 2, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, NULL, 0, '2020-11-18 01:10:27', '2020-11-18 01:10:27'),
-(49, 6010, '6', 2, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, NULL, 0, '2020-11-18 01:11:31', '2020-11-18 01:11:31'),
-(50, 6011, '6', 2, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, NULL, 0, '2020-11-18 01:12:15', '2020-11-18 01:12:15'),
-(51, 0, '6', 2, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, NULL, 73, '2020-11-18 01:23:34', '2020-11-18 01:23:34'),
-(52, 7004, '7', 2, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 51, 2, 50, NULL, NULL, 60, '2020-11-18 01:23:46', '2020-11-18 01:23:46'),
-(53, 7005, '7', 2, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 51, 2, 10, NULL, NULL, 60, '2020-11-18 01:24:57', '2020-11-18 01:24:57'),
-(54, 7005, '7', 2, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 51, 2, 10, NULL, NULL, 0, '2020-11-18 01:29:32', '2020-11-18 01:29:32'),
-(55, 7006, '7', 2, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 51, 2, 3, NULL, NULL, 0, '2020-11-18 01:32:02', '2020-11-18 01:32:02'),
-(56, 0, '6', 2, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, NULL, 0, '2020-11-18 01:48:00', '2020-11-18 01:48:00'),
-(57, 0, '6', 2, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, NULL, 0, '2020-11-18 02:17:25', '2020-11-18 02:17:25'),
-(58, 0, '6', 2, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, 2, 2, '2020-11-18 02:18:20', '2020-11-18 02:18:20'),
-(59, 0, '6', 1, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, NULL, 2, 2001, '2020-11-18 02:20:27', '2020-11-18 02:20:27'),
-(60, 7007, '7', 1, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 59, 1, 2000, NULL, NULL, 0, '2020-11-18 02:38:16', '2020-11-18 02:38:16'),
-(61, 7007, '7', 1, 1, '2020-11-18', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 59, 1, 1, NULL, NULL, 0, '2020-11-18 02:38:46', '2020-11-18 02:38:46');
+INSERT INTO `store_invoices` (`id`, `invoice_number`, `type`, `vendor_id`, `ware_id`, `date`, `posting_by`, `store_id`, `gross_amount`, `discount_taka`, `discount_percent`, `cash_amount`, `cash_id`, `bank_amount`, `bank_id`, `salesman_id`, `ref_inv`, `ref_product_id`, `return_quantity`, `remarks`, `total_quantity`, `total_rqty`, `created_at`, `updated_at`) VALUES
+(1, 1000, '1', 3, 1, '2020-11-30', 1, 1, 300000.00, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, 0, NULL, NULL, 0, '2020-11-30 06:35:29', '2020-11-30 06:35:29'),
+(2, 6000, '6', 3, 1, '2020-11-30', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, 0, NULL, 5, 5, '2020-11-30 06:36:02', '2020-11-30 06:36:02'),
+(3, 7000, '7', 3, 1, '2020-11-30', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 2, 0, 0, NULL, NULL, 0, '2020-11-30 06:38:14', '2020-11-30 06:38:14'),
+(4, 6001, '6', 4, 2, '2020-12-01', 1, 2, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, 0, NULL, 2, 2, '2020-11-30 23:11:34', '2020-11-30 23:11:34'),
+(5, 7001, '7', 4, 2, '2020-12-01', 1, 2, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 4, 0, 0, NULL, NULL, 0, '2020-11-30 23:12:05', '2020-11-30 23:12:05'),
+(6, 2000, '2', 1, 1, '2020-12-06', 1, 1, 999999.99, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, 0, NULL, NULL, 0, '2020-12-06 04:38:49', '2020-12-06 04:38:49'),
+(7, 7001, '7', 6, 2, '2020-12-06', 1, 2, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, 0, NULL, 1, 0, '2020-12-06 05:06:06', '2020-12-06 05:06:06'),
+(8, 6001, '6', 0, 1, '2020-12-08', 1, 1, NULL, 0.00, NULL, 0.00, NULL, 0, NULL, 0, 0, 0, 0, NULL, 3, 0, '2020-12-08 01:34:40', '2020-12-08 01:34:40');
 
 -- --------------------------------------------------------
 
@@ -1211,7 +1315,8 @@ CREATE TABLE `units` (
 --
 
 INSERT INTO `units` (`id`, `unit_name`, `unit_code`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'component', 100, 1, '2020-11-15 02:44:17', '2020-11-15 02:44:17');
+(1, 'component', 100, 1, '2020-11-15 02:44:17', '2020-11-15 02:44:17'),
+(2, 'piece', 101, 1, '2020-12-06 01:31:50', '2020-12-06 01:31:50');
 
 -- --------------------------------------------------------
 
@@ -1238,7 +1343,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `ware_id`, `role_id`, `status`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'sudipto kumar shil', 'sudiptoshil@outlook.com', NULL, '$2y$10$HgeE3AlnBidwVEN74yKeH.LmG/UvJf2WjzngJi4KOWluXLNhTxwga', 1, 0, 1, NULL, NULL, NULL);
+(1, 'sudipto kumar shil', 'sudiptoshil@outlook.com', NULL, '$2y$10$HgeE3AlnBidwVEN74yKeH.LmG/UvJf2WjzngJi4KOWluXLNhTxwga', 1, 0, 1, NULL, NULL, NULL),
+(2, 'sudipto kumar shil', 'sudipto@gmail.com', NULL, '$2y$10$2EMjRm40h8OKg3qQubbVeeyaJSKmFEEOaIDXCDYUSxIk2ZWxo8b.m', 1, 0, 1, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1284,13 +1390,13 @@ CREATE TABLE `vats` (
 
 CREATE TABLE `vendors` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `remarks` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `accounts_no` int(10) UNSIGNED NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `accounts_no` int(10) UNSIGNED DEFAULT 0,
+  `status` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'active =1 inactive =2',
   `type` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'vendor=1 customer =2',
   `ware_id` int(3) UNSIGNED NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -1302,10 +1408,16 @@ CREATE TABLE `vendors` (
 --
 
 INSERT INTO `vendors` (`id`, `name`, `email`, `address`, `phone`, `remarks`, `accounts_no`, `status`, `type`, `ware_id`, `created_at`, `updated_at`) VALUES
-(1, 'vendors', 'vendor@gmail.com', 'ctg', '01624772008', 'good day', 0, 0, 1, 1, '2020-11-15 02:39:28', '2020-11-15 02:39:37'),
-(2, 'test', 'sodipto@outlook.com', 'test', '444', '444', 0, 0, 2, 1, '2020-11-15 07:32:41', '2020-11-15 07:32:47'),
-(3, 'vendor1', 'vendor@email.com', 'ctg', '01624772008', 'ok', 192, 0, 1, 1, '2020-11-18 05:45:59', '2020-11-18 05:45:59'),
-(4, 'customer', 'customer@gmail.com', 'ctg', '08766', 'cutomer', 204, 0, 2, 1, '2020-11-18 05:51:18', '2020-11-18 05:51:18');
+(1, 'vendors', 'vendor@gmail.com', 'ctg', '01624772008', 'good day', 0, 1, 1, 1, '2020-11-15 02:39:28', '2020-11-15 02:39:37'),
+(2, 'tester', 'sudipto@outlook.com', 'test', '444', '099', 751, 1, 2, 1, '2020-11-15 07:32:41', '2020-12-05 23:40:10'),
+(3, 'vendor1', 'vendor@email.com', 'ctg', '01624772008', 'ok', 192, 1, 1, 1, '2020-11-18 05:45:59', '2020-11-18 05:45:59'),
+(4, 'customer', 'customer@gmail.com', 'ctg', '08766', 'LOL customer', 0, 1, 2, 1, '2020-11-18 05:51:18', '2020-11-19 00:35:06'),
+(5, 'vendor23', 'lol@gmail.com', 'ctg', '01624772008', '233', 204, 2, 1, 2, '2020-11-19 01:35:35', '2020-11-19 01:35:35'),
+(6, 'test2', 'test2@gmail.com', 'ctg', '223', 'good', 203, 1, 2, 1, '2020-11-25 00:43:03', '2020-11-25 00:43:03'),
+(7, 'rqwetwer', 'vendor@email.com', 'sadaf', '56575765', 'etrwetwer', 205, 1, 1, 1, '2020-11-25 00:45:56', '2020-11-25 00:45:56'),
+(8, 'werqwr', 'admin@admin.com', 'qwerq', '5', '444', 192, 1, 2, 1, '2020-11-25 00:46:28', '2020-11-25 00:46:28'),
+(9, 'checkvendor', 'lol@gmail.com', 'ctg', '01624772008', 'done', 203, 1, 1, 2, '2020-11-25 00:54:29', '2020-11-25 00:54:29'),
+(10, 'ok2', NULL, NULL, '223', NULL, NULL, 1, 1, 1, '2020-11-25 00:59:44', '2020-11-25 00:59:44');
 
 -- --------------------------------------------------------
 
@@ -1333,6 +1445,7 @@ CREATE TABLE `ware_house_details` (
   `longitude` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `latitude` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `address` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'active=1 inactive=2',
   `foreign_address` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -1342,8 +1455,10 @@ CREATE TABLE `ware_house_details` (
 -- Dumping data for table `ware_house_details`
 --
 
-INSERT INTO `ware_house_details` (`id`, `name`, `foreign_name`, `wh_keeper`, `location`, `telephone`, `sequence`, `province_no`, `resign_code`, `wh_transfer_interface_account`, `item_activity`, `default_cc_code`, `account_name`, `branch`, `pricing_level`, `global_location_no`, `longitude`, `latitude`, `address`, `foreign_address`, `created_at`, `updated_at`) VALUES
-(1, 'E-Store', '', '', '', '', '', 0, 0, '', '', 0, '', '', '', 0, '', '', '', '', NULL, '2020-11-15 07:28:27');
+INSERT INTO `ware_house_details` (`id`, `name`, `foreign_name`, `wh_keeper`, `location`, `telephone`, `sequence`, `province_no`, `resign_code`, `wh_transfer_interface_account`, `item_activity`, `default_cc_code`, `account_name`, `branch`, `pricing_level`, `global_location_no`, `longitude`, `latitude`, `address`, `status`, `foreign_address`, `created_at`, `updated_at`) VALUES
+(1, 'E-Store', '', '', '', '', '', 0, 0, '', '', 0, '', '', '', 0, '', '', 'lorem ipsum dolor emit', 1, '', NULL, '2020-11-15 07:28:27'),
+(2, 'central office', 'cn', '12', 'ctg', '01624772008', '234', 234, 2345, '3455', '23', 33, 'hello', 'ctg', '23', 3344, '344', '34', 'ctg', 1, 'no', '2020-11-19 00:22:26', '2020-11-19 01:31:36'),
+(3, 'LOL Warhouse', 'eee', '12', 'ctg', '2345', '123', 12, 334, '44', '3', 44, '44', '44', '44', 123, '344', '34', 'ctg', 2, 'no', '2020-11-19 01:25:42', '2020-11-19 01:25:42');
 
 --
 -- Indexes for dumped tables
@@ -1446,9 +1561,9 @@ ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `module_lists`
+-- Indexes for table `modules`
 --
-ALTER TABLE `module_lists`
+ALTER TABLE `modules`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1464,11 +1579,23 @@ ALTER TABLE `role_settings`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `sales_men`
+--
+ALTER TABLE `sales_men`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `settings`
 --
 ALTER TABLE `settings`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id` (`id`);
+
+--
+-- Indexes for table `sizes`
+--
+ALTER TABLE `sizes`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `stores`
@@ -1551,7 +1678,7 @@ ALTER TABLE `contacts`
 -- AUTO_INCREMENT for table `cost_centers`
 --
 ALTER TABLE `cost_centers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `customers`
@@ -1575,31 +1702,31 @@ ALTER TABLE `inventory_categories`
 -- AUTO_INCREMENT for table `inventory_products`
 --
 ALTER TABLE `inventory_products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `invoice_account_details`
 --
 ALTER TABLE `invoice_account_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `invoice_account_transec_details`
 --
 ALTER TABLE `invoice_account_transec_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `invoice_parameters`
 --
 ALTER TABLE `invoice_parameters`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `invoice_trasections`
 --
 ALTER TABLE `invoice_trasections`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT for table `ledgers`
@@ -1611,18 +1738,18 @@ ALTER TABLE `ledgers`
 -- AUTO_INCREMENT for table `menu_submenu_settings`
 --
 ALTER TABLE `menu_submenu_settings`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
--- AUTO_INCREMENT for table `module_lists`
+-- AUTO_INCREMENT for table `modules`
 --
-ALTER TABLE `module_lists`
+ALTER TABLE `modules`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
@@ -1632,34 +1759,46 @@ ALTER TABLE `role_settings`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `sales_men`
+--
+ALTER TABLE `sales_men`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
   MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=498;
 
 --
+-- AUTO_INCREMENT for table `sizes`
+--
+ALTER TABLE `sizes`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `stores`
 --
 ALTER TABLE `stores`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `store_invoices`
 --
 ALTER TABLE `store_invoices`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `units`
 --
 ALTER TABLE `units`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `user_role_details`
@@ -1677,13 +1816,13 @@ ALTER TABLE `vats`
 -- AUTO_INCREMENT for table `vendors`
 --
 ALTER TABLE `vendors`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `ware_house_details`
 --
 ALTER TABLE `ware_house_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

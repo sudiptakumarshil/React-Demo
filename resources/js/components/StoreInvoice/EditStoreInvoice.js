@@ -764,12 +764,14 @@ class EditStoreInvoice extends Component {
         const removeId = e.target.getAttribute("data-id");
         const idx = this.props.match.params.idx;
         const invoice_id = this.props.match.params.id;
+        const isLoginExit = getCookieKeyInfo(getAccessTokenName);
         const response = await axios.get(
             defaultRouteLink + "/api/delete-invoice-transec/" + removeId,
             {
                 params: {
                     type: idx,
-                    invoice_id: invoice_id
+                    invoice_id: invoice_id,
+                    user_id:isLoginExit
                 }
             }
         );
@@ -1327,7 +1329,10 @@ class EditStoreInvoice extends Component {
                                                             <div className="container">
                                                                 <div className="row">
                                                                     <div className="col-md-3">
-                                                                        <label className="control-label"></label>
+                                                                        <label className="control-label">
+                                                                            Product
+                                                                            Name
+                                                                        </label>
                                                                         {/* <select
                                                                             // className="form-control"
                                                                             name="product_id"
@@ -1407,7 +1412,10 @@ class EditStoreInvoice extends Component {
                                                                         .price_type ==
                                                                     2 ? (
                                                                         <div className="col-md-3">
-                                                                            <label className="control-label"></label>
+                                                                            <label className="control-label">
+                                                                                Product
+                                                                                Price
+                                                                            </label>
                                                                             <input
                                                                                 type="text"
                                                                                 name="price"
@@ -1427,7 +1435,10 @@ class EditStoreInvoice extends Component {
                                                                         </div>
                                                                     ) : (
                                                                         <div className="col-md-3">
-                                                                            <label className="control-label"></label>
+                                                                            <label className="control-label">
+                                                                                Product
+                                                                                Price
+                                                                            </label>
                                                                             <input
                                                                                 type="text"
                                                                                 name="price"
@@ -1447,7 +1458,9 @@ class EditStoreInvoice extends Component {
                                                                     )}
 
                                                                     <div className="col-md-3">
-                                                                        <label className="control-label"></label>
+                                                                        <label className="control-label">
+                                                                            Quantity
+                                                                        </label>
                                                                         <input
                                                                             type="text"
                                                                             onChange={
@@ -1466,7 +1479,10 @@ class EditStoreInvoice extends Component {
                                                                     </div>
 
                                                                     <div className="col-md-3">
-                                                                        <label className="control-label"></label>
+                                                                        <label className="control-label">
+                                                                            Discount
+                                                                            Taka
+                                                                        </label>
                                                                         <input
                                                                             type="text"
                                                                             name="discount_taka"
@@ -1485,7 +1501,9 @@ class EditStoreInvoice extends Component {
                                                                         ></input>
                                                                     </div>
                                                                     <div className="col-md-3">
-                                                                        <label className="control-label"></label>
+                                                                        <label className="control-label">
+                                                                            Vat
+                                                                        </label>
                                                                         <select
                                                                             className="form-control"
                                                                             data-live-search="true"
@@ -1507,7 +1525,10 @@ class EditStoreInvoice extends Component {
                                                                         </select>
                                                                     </div>
                                                                     <div className="col-md-3">
-                                                                        <label className="control-label"></label>
+                                                                        <label className="control-label">
+                                                                            Discount
+                                                                            Percent
+                                                                        </label>
                                                                         <input
                                                                             type="text"
                                                                             readOnly
@@ -1549,7 +1570,10 @@ class EditStoreInvoice extends Component {
                                                             <div className="container">
                                                                 <div className="row">
                                                                     <div className="col-md-3">
-                                                                        <label className="control-label"></label>
+                                                                        <label className="control-label">
+                                                                            Product
+                                                                            Name
+                                                                        </label>
                                                                         {/* <select
                                                                             className="form-control"
                                                                             data-live-search="true"
@@ -1614,7 +1638,10 @@ class EditStoreInvoice extends Component {
                                                                         .price_type ==
                                                                     2 ? (
                                                                         <div className="col-md-3">
-                                                                            <label className="control-label"></label>
+                                                                            <label className="control-label">
+                                                                                Product
+                                                                                Price
+                                                                            </label>
                                                                             <input
                                                                                 type="text"
                                                                                 name="price"
@@ -1634,7 +1661,10 @@ class EditStoreInvoice extends Component {
                                                                         </div>
                                                                     ) : (
                                                                         <div className="col-md-3">
-                                                                            <label className="control-label"></label>
+                                                                            <label className="control-label">
+                                                                                Product
+                                                                                Price
+                                                                            </label>
                                                                             <input
                                                                                 type="text"
                                                                                 name="price"
@@ -1654,7 +1684,9 @@ class EditStoreInvoice extends Component {
                                                                     )}
 
                                                                     <div className="col-md-3">
-                                                                        <label className="control-label"></label>
+                                                                        <label className="control-label">
+                                                                            Quantity
+                                                                        </label>
                                                                         <input
                                                                             type="text"
                                                                             onChange={
@@ -1673,7 +1705,10 @@ class EditStoreInvoice extends Component {
                                                                     </div>
 
                                                                     <div className="col-md-3">
-                                                                        <label className="control-label"></label>
+                                                                        <label className="control-label">
+                                                                            Discount
+                                                                            Taka
+                                                                        </label>
                                                                         <input
                                                                             type="text"
                                                                             name="discount_taka"
@@ -1691,7 +1726,9 @@ class EditStoreInvoice extends Component {
                                                                         ></input>
                                                                     </div>
                                                                     <div className="col-md-3">
-                                                                        <label className="control-label"></label>
+                                                                        <label className="control-label">
+                                                                            Vat
+                                                                        </label>
                                                                         <select
                                                                             className="form-control"
                                                                             data-live-search="true"
@@ -1712,7 +1749,10 @@ class EditStoreInvoice extends Component {
                                                                         </select>
                                                                     </div>
                                                                     <div className="col-md-3">
-                                                                        <label className="control-label"></label>
+                                                                        <label className="control-label">
+                                                                            Discount
+                                                                            Percent
+                                                                        </label>
                                                                         <input
                                                                             type="text"
                                                                             name="discount_percent"

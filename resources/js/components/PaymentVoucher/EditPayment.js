@@ -18,8 +18,8 @@ function EditPayment(props) {
     const [ledgers, setLedgers] = useState([]);
     const [Setting, setSetting] = useState([]);
     const [bankList, setbankList] = useState([]);
-    const [selected, setSelected] = useState([0]);
-    const [selected_item, setselected_item] = useState([]);
+    // const [selected, setSelected] = useState([0]);
+    // const [selected_item, setselected_item] = useState([]);
     const { id } = useParams();
     const data = {
         name: "",
@@ -73,14 +73,6 @@ function EditPayment(props) {
         }));
     };
 
-    // const filter_accountId = async value => {
-    //     const res = await axios.get("/dbBackup/api/filter-accounts", {
-    //         params: {
-    //             filterdata: value
-    //         }
-    //     });
-    //     setAccountsList(res.data.result);
-    // };
     const handleModalWithValue = obj => {
         setShow(false);
         props.handleAccountsid(obj);
@@ -103,9 +95,9 @@ function EditPayment(props) {
         const res = await axios.get(
             defaultRouteLink + `/api/edit-paymentvoucher/${id}`
         );
-        const AccGroupId = res.data.accountTransec[0].acc_group_id;
+        // const AccGroupId = res.data.accountTransec[0].acc_group_id;
         const acc_info = res.data.accountDetails;
-        fetchalldata(AccGroupId);
+        // fetchalldata(AccGroupId);
         setFormData(oldState => ({
             ...oldState,
             ware_id: acc_info.ware_id,
@@ -131,7 +123,7 @@ function EditPayment(props) {
         // setFormData(res.data.accountDetails);
     };
 
-    const fetchalldata = async AccGroupId => {
+    const fetchalldata = async () => {
         const res = await axios.get(defaultRouteLink + "/api/all-data");
         setwarhouseList(res.data.warehouses);
         setcashList(res.data.cashaccount);
@@ -143,11 +135,11 @@ function EditPayment(props) {
         setSetting(res.data.setting);
         setLedgers(res.data.ledgers);
 
-        var isExist = res.data.setting.find(item => item.id == AccGroupId);
-        // var list = [];
-        // list.push(isExist);
-        // var data_set = JSON.stringify(list);
-        setSelected(isExist ? [isExist] : []);
+        // var isExist = res.data.setting.find(item => item.id == AccGroupId);
+        // // var list = [];
+        // // list.push(isExist);
+        // // var data_set = JSON.stringify(list);
+        // setSelected(isExist ? [isExist] : []);
     };
 
     const warehouse = warhouseList.map(function(item, index) {
@@ -823,12 +815,12 @@ function EditPayment(props) {
                                                             item.acc_group_id
                                                         }
                                                         data-rowId={item.id}
-                                                        // selected={
-                                                        //     item.selected_item
-                                                        //         ? item.selected_item
-                                                        //         : null
-                                                        // }
-                                                        selected={selected}
+                                                        selected={
+                                                            item.selected_item
+                                                                ? item.selected_item
+                                                                : null
+                                                        }
+                                                        // selected={selected}
                                                         onChange={event =>
                                                             handleDataInput(
                                                                 event,

@@ -321,17 +321,16 @@ function AddPaymentVoucher(props) {
     //     }
     // };
 
-    const handleDataInput = (event, item_obj,input_name) => {
+    const handleDataInput = (event, item_obj, input_name) => {
         // console.log("target", event.target);
 
-         //console.log("event", event);
-         //console.log("id", id);
+        //console.log("event", event);
+        //console.log("id", id);
 
         if (typeof event.target != "undefined") {
             const { name, files, value } = event.target;
             if (typeof event != "undefined") {
                 let rowId = event.target.getAttribute("data-rowId");
-
 
                 let isExist = formData.allData.find(item => item.id == rowId);
                 if (typeof isExist != "undefined") {
@@ -345,19 +344,19 @@ function AddPaymentVoucher(props) {
                     }));
                 }
             }
-        }
-        else if(typeof event != 'undefined'){
-
+        } else if (typeof event != "undefined") {
             let isExist = formData.allData.find(item => item.id == item_obj.id);
             //console.log("json="+JSON.stringify(event[0]));
 
-            if(typeof isExist != 'undefined' && typeof event[0] != 'undefined'){
-
-                   isExist[input_name] = event[0].id;
-                   setFormData(oldState => ({
-                       ...oldState,
-                       ["allData"]: formData.allData
-                   }));
+            if (
+                typeof isExist != "undefined" &&
+                typeof event[0] != "undefined"
+            ) {
+                isExist[input_name] = event[0].id;
+                setFormData(oldState => ({
+                    ...oldState,
+                    ["allData"]: formData.allData
+                }));
             }
         }
 
@@ -486,7 +485,6 @@ function AddPaymentVoucher(props) {
 
     useEffect(() => {
         fetchalldata();
-
     }, []);
 
     return (
@@ -552,7 +550,7 @@ function AddPaymentVoucher(props) {
                                                 onChange={handleInput}
                                                 required
                                             >
-                                                <option selected>
+                                                <option selected value="0">
                                                     Choose one{" "}
                                                 </option>
                                                 {cashDetails}
@@ -818,9 +816,8 @@ function AddPaymentVoucher(props) {
                                                                 "acc_group_id"
                                                             )
                                                         }
-
                                                     />
-{/*
+                                                    {/*
                                                     <div className="input-group">
                                                         <select
                                                             className="form-control"

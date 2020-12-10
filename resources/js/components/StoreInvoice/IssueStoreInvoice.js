@@ -60,7 +60,7 @@ class IssueStoreInvoice extends Component {
             remarks: "",
             warehouse_id: 1,
             vendor_id: 0,
-            isInvEdit:false,
+            isInvEdit: false,
             vendorlist: [],
             date: year + "-" + month + "-" + date,
             store_id: 1,
@@ -201,7 +201,7 @@ class IssueStoreInvoice extends Component {
                 params: {
                     type: idx,
                     invoice_id: 0,
-                    user_id:isLoginExit
+                    user_id: isLoginExit
                 }
             }
         );
@@ -284,12 +284,12 @@ class IssueStoreInvoice extends Component {
         }
     };
 
-    handlecustomerInput = (event)=>{
+    handlecustomerInput = event => {
         this.setState({
             vendor_id: event.target.value
         });
         // console.log("customer_d",event.target.value);
-    }
+    };
 
     WarehousehandleInput = event => {
         this.setState({ [event.target.name]: event.target.value });
@@ -487,7 +487,6 @@ class IssueStoreInvoice extends Component {
                         type: idx,
                         invoice_id: 0,
                         user_id: isLoginExit
-
                     }
                 }
             );
@@ -647,7 +646,7 @@ class IssueStoreInvoice extends Component {
             params: {
                 type: idx,
                 invoice_id: 0,
-                user_id:isLoginExit
+                user_id: isLoginExit
             }
         });
 
@@ -659,7 +658,7 @@ class IssueStoreInvoice extends Component {
                 productList: response.data.products,
                 customerList: response.data.customer,
                 vatList: response.data.vats,
-                isInvEdit:false,
+                isInvEdit: false,
                 user_id: isLoginExit,
                 invoicetransectionList: response.data.invotransec,
                 bankdetailsList: response.data.bankdetails,
@@ -680,14 +679,13 @@ class IssueStoreInvoice extends Component {
             // });
         }
     };
-    handleEditUpdate=(data)=>{
-
+    handleEditUpdate = data => {
         this.fetchalldata();
         this.setState({
             isModalShow: false,
-            isInvEdit:true,
+            isInvEdit: true
         });
-    }
+    };
 
     // FOR GETTING AUTO INVOICE NUMBER .............
     // getinvoiceNumber = async () => {
@@ -715,12 +713,14 @@ class IssueStoreInvoice extends Component {
         if (delcheck) {
             const idx = this.props.match.params.idx;
             const removeId = e.target.getAttribute("data-id");
+            const isLoginExit = getCookieKeyInfo(getAccessTokenName);
             const response = await axios.get(
                 defaultRouteLink + "/api/delete-invoice-transec/" + removeId,
                 {
                     params: {
                         type: idx,
-                        invoice_id: 0
+                        invoice_id: 0,
+                        user_id:isLoginExit
                     }
                 }
             );
@@ -761,12 +761,11 @@ class IssueStoreInvoice extends Component {
         // console.log("clossingTest",response.data.plusClosingStock);
 
         this.setState({
-             modalData: response.data.invoice,
-             isModalShow: true ,
-             closingStock: response.data.plusClosingStock
-            });
+            modalData: response.data.invoice,
+            isModalShow: true,
+            closingStock: response.data.plusClosingStock
+        });
     };
-
 
     render() {
         // console.log("product lsit="+this.state.data_p_list);
@@ -902,14 +901,10 @@ class IssueStoreInvoice extends Component {
             pagetitle1 = "ISSUE RETURN";
         }
         if (this.state.loading) {
-            return (
-                <MyBulletListLoader />
-            );
+            return <MyBulletListLoader />;
         }
         if (this.state.delloading) {
-            return (
-                 <MyBulletListLoader />
-            );
+            return <MyBulletListLoader />;
         }
 
         return (
@@ -917,7 +912,7 @@ class IssueStoreInvoice extends Component {
                 <EditInvoiceTransec
                     show={this.state.isModalShow}
                     modalData={this.state.modalData}
-                    closingStock ={this.state.closingStock}
+                    closingStock={this.state.closingStock}
                     handleClose={this.handleModalClose}
                     handleUpdate={this.handleEditUpdate}
                     {...this.props}
@@ -1050,35 +1045,32 @@ class IssueStoreInvoice extends Component {
                                                             </select>
                                                         </div>
 
-                                                            <div className="col-md-2">
-                                                                <label className="control-label">
-                                                                    Customer
-                                                                </label>
-                                                                <select
-                                                                    className="form-control"
-                                                                    data-live-search="true"
-                                                                    name="vendor_id"
-                                                                    value={
-                                                                        this
-                                                                            .state
-                                                                            .vendor_id
-                                                                    }
-                                                                    onChange={
-                                                                        this
-                                                                            .handlecustomerInput
-                                                                    }
+                                                        <div className="col-md-2">
+                                                            <label className="control-label">
+                                                                Customer
+                                                            </label>
+                                                            <select
+                                                                className="form-control"
+                                                                data-live-search="true"
+                                                                name="vendor_id"
+                                                                value={
+                                                                    this.state
+                                                                        .vendor_id
+                                                                }
+                                                                onChange={
+                                                                    this
+                                                                        .handlecustomerInput
+                                                                }
+                                                            >
+                                                                <option
+                                                                    selected
+                                                                    value="0"
                                                                 >
-                                                                    <option
-                                                                        selected
-                                                                        value="0"
-                                                                    >
-                                                                        Choose
-                                                                        One
-                                                                    </option>
-                                                                    {customers}
-                                                                </select>
-                                                            </div>
-
+                                                                    Choose One
+                                                                </option>
+                                                                {customers}
+                                                            </select>
+                                                        </div>
 
                                                         <div className="col-md-2">
                                                             <label className="control-label">

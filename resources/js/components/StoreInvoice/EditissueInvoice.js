@@ -203,7 +203,7 @@ class EditissueInvoice extends Component {
                 params: {
                     type: idx,
                     invoice_id: invoice_id,
-                    user_id:isLoginExit
+                    user_id: isLoginExit
                 }
             }
         );
@@ -646,12 +646,14 @@ class EditissueInvoice extends Component {
         const removeId = e.target.getAttribute("data-id");
         const invoice_id = this.props.match.params.id;
         const idx = this.props.match.params.idx;
+        const isLoginExit = getCookieKeyInfo(getAccessTokenName);
         const response = await axios.get(
             defaultRouteLink + "/api/delete-invoice-transec/" + removeId,
             {
                 params: {
                     type: idx,
-                    invoice_id: invoice_id
+                    invoice_id: invoice_id,
+                    user_id:isLoginExit
                 }
             }
         );
@@ -890,7 +892,7 @@ class EditissueInvoice extends Component {
                                 >
                                     Purshase Return{" "}
                                 </Link>
-                                {/* <Link
+                                <Link
                                     to={defaultRouteLink + `/sale-return/${3}`}
                                     type="button"
                                     className="btn btn-success"
@@ -905,7 +907,7 @@ class EditissueInvoice extends Component {
                                     style={{ marginLeft: 15 }}
                                 >
                                     Sale Return
-                                </Link> */}
+                                </Link>
                                 <Link
                                     to={
                                         defaultRouteLink +
